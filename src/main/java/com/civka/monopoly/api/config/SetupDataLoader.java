@@ -1,0 +1,52 @@
+package com.civka.monopoly.api.config;
+
+import com.civka.monopoly.api.entity.Role;
+import com.civka.monopoly.api.entity.User;
+import com.civka.monopoly.api.repository.RoleRepository;
+import com.civka.monopoly.api.repository.UserRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.lang.NonNull;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+import java.util.Set;
+
+@Component
+@RequiredArgsConstructor
+public class SetupDataLoader implements
+        ApplicationListener<ContextRefreshedEvent> {
+
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @Override
+    @Transactional
+    public void onApplicationEvent(@NonNull ContextRefreshedEvent event) {
+
+        Role userRole = createRoleIfNotFound("ROLE_USER");
+        Role adminRole = createRoleIfNotFound("ROLE_ADMIN");
+
+        if (userRepository.existsByUsernameOrEmail("admin", "mamchenko2210@gmail.com")) return;
+        User user = User.builder()
+                .username("admin")
+                .email("mamchenko2210@gmail.com")
+                .password(passwordEncoder.encode("gk7dlA9grTjpIP12"))
+                .roles(Set.of(userRole, adminRole))
+                .build();
+        userRepository.save(user);
+    }
+
+    @Transactional
+    Role createRoleIfNotFound(String name) {
+
+        return roleRepository.findByName(name).orElseGet(() -> {
+            Role role = Role.builder().name(name).build();
+            roleRepository.save(role);
+            return role;
+        });
+    }
+}
