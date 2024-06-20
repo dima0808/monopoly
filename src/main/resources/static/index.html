@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Test</title>
+</head>
+
+<body>
+<div>
+    <label for="name"></label><input type="text" id="name" placeholder="Room name"/>
+    <label for="size"></label><input type="number" id="size" placeholder="Room size"/>
+    <button onclick="sendRoom()">Send</button>
+
+    <label for="roomId"></label><input type="number" id="roomId" placeholder="Room ID to delete"/>
+    <button onclick="deleteRoom()">Delete</button>
+</div>
+
+
+<div id="rooms-area">
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.2/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="/scripts/main.js"></script>
+</body>
+</html>

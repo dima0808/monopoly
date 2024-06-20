@@ -44,10 +44,10 @@ public class AuthServiceImpl implements AuthService {
     public User signUp(SignUpDto signUpDto) {
 
         if (userRepository.existsByUsername(signUpDto.getUsername())) {
-            throw new UserAlreadyExistException("username", signUpDto.getUsername());
+            throw new UserAlreadyExistException("User with username " + signUpDto.getUsername() + " already exists");
         }
         if (userRepository.existsByEmail(signUpDto.getEmail())) {
-            throw new UserAlreadyExistException("email", signUpDto.getEmail());
+            throw new UserAlreadyExistException("User with email " + signUpDto.getEmail() + " already exists");
         }
 
         User user = User.builder()
