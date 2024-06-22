@@ -6,9 +6,15 @@ import java.util.List;
 
 public interface RoomService {
 
-    Room createRoom(Room room);
+    Room create(Room room, String username);
 
-    List<Room> findAllRooms();
+    Room findById(Long roomId);
 
-    void deleteRoom(Long roomId);
+    List<Room> findAll();
+
+    void deleteById(Long roomId);
+
+    Room addMember(Room room, String username);
+
+    Room addMember(Long roomId, String username);
 }

@@ -5,6 +5,7 @@ import com.civka.monopoly.api.dto.SignUpDto;
 import com.civka.monopoly.api.entity.User;
 import com.civka.monopoly.api.payload.JwtResponse;
 import com.civka.monopoly.api.service.AuthService;
+import com.civka.monopoly.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,13 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final UserService userService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@RequestBody SignInDto signInDto) {
         String jwt = authService.signIn(signInDto);
-        return ResponseEntity.ok(new JwtResponse(jwt));
+        return ResponseEntity.ok(new JwtResponse(jwt,
+                userService.findByUsernameOrEmail(signInDto.getLogin()).getUsername()));
     }
 
     @PostMapping("/signup")

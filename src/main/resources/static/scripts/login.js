@@ -8,7 +8,6 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
         password: password
     };
 
-    console.log(requestBody);
     fetch('/api/auth/signin', {
         method: 'POST',
         headers: {
@@ -25,6 +24,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
         .then(data => {
             if (data.token) {
                 document.cookie = `token=${data.token}`
+                document.cookie = `username=${data.username}`
                 alert('Good');
             } else {
                 alert('Login failed: Invalid response from server');

@@ -18,19 +18,25 @@ public class RoomController {
 
     @MessageMapping("/rooms/addRoom")
     @SendTo("/topic/public")
-    public Room addRoom(@Payload Room room) {
-        return roomService.createRoom(room);
+    public Room addRoom(@Payload Room room, @Header("username") String username) {
+        return roomService.create(room, username);
+    }
+
+    @MessageMapping("/rooms/joinRoom/{roomId}")
+    @SendTo("/topic/public")
+    public Room joinRoom(@DestinationVariable Long roomId, @Header("username") String username) {
+        return roomService.addMember(roomId, username);
     }
 
     @MessageMapping("/rooms/deleteRoom/{roomId}")
     @SendTo("/topic/public")
     public Long deleteRoom(@DestinationVariable Long roomId) {
-        roomService.deleteRoom(roomId);
+        roomService.deleteById(roomId);
         return roomId;
     }
 
     @GetMapping("/api/rooms")
     public ResponseEntity<List<Room>> getAllRooms() {
-        return ResponseEntity.ok(roomService.findAllRooms());
+        return ResponseEntity.ok(roomService.findAll());
     }
 }

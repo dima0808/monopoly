@@ -3,7 +3,8 @@ package com.civka.monopoly.api.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,6 +28,6 @@ public class Room {
     @OneToOne
     private User creator;
 
-    @OneToMany
-    private Collection<User> members;
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<User> members = new ArrayList<>();
 }

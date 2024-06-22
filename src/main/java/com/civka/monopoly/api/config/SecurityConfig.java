@@ -1,6 +1,6 @@
 package com.civka.monopoly.api.config;
 
-import com.civka.monopoly.api.security.CustomUserDetailsService;
+import com.civka.monopoly.api.security.UserDetailsServiceImpl;
 import com.civka.monopoly.api.security.jwt.AuthEntryPointJwt;
 import com.civka.monopoly.api.security.jwt.AuthTokenFilter;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomUserDetailsService userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
     private final AuthEntryPointJwt unauthorizedHandler;
 
     @Bean
