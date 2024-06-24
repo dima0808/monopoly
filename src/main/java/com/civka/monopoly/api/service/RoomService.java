@@ -12,9 +12,15 @@ public interface RoomService {
 
     List<Room> findAll();
 
-    void deleteById(Long roomId);
+    void deleteById(Long roomId, String username);
 
     Room addMember(Room room, String username);
 
+    Room removeMember(Room room, String username);
+
     Room addMember(Long roomId, String username);
+
+    Room removeMember(Long roomId, String username);
+
+    Room kickMember(Long roomId, String member, String username);
 }

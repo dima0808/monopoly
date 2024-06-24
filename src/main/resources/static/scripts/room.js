@@ -24,9 +24,9 @@ document.addEventListener("DOMContentLoaded", function () {
     connect();
 });
 
-const roomsArea = document.querySelector('#rooms-area');
-
+const roomInfoArea = document.querySelector('#room-info-area');
 let stompClient = null;
+let roomId;
 
 function connect() {
 
@@ -37,56 +37,65 @@ function connect() {
 }
 
 function onConnected() {
+    fetchRoom().then(room => {
+        roomId = room.id;
 
-    stompClient.subscribe('/topic/public', onRoomMessageReceived);
-    stompClient.subscribe('/user/' + getUsername() + '/queue/errors', onErrorReceived);
-    stompClient.subscribe('/user/' + getUsername() + '/queue/notifications', onNotificationReceived);
+        const urlParams = new URLSearchParams(window.location.search);
+        if (roomId !== parseInt(urlParams.get('roomId'))) {
+            alert('Invalid room id');
+            window.location.href = '/';
+            return;
+        }
 
-    fetchAndDisplayRooms().then();
-}
+        fetchAndDisplayRoomInfo(roomId).then();
 
-async function fetchAndDisplayRooms() {
-
-    const roomsResponse = await fetch(`/api/rooms`);
-    const rooms = await roomsResponse.json();
-
-    rooms.forEach(room => {
-       displayRoom(room);
+        stompClient.subscribe(`/topic/public/${roomId}`, onRoomMessageReceived);
+        stompClient.subscribe('/user/' + getUsername() + '/queue/errors', onErrorReceived);
+        stompClient.subscribe('/user/' + getUsername() + '/queue/notifications', onNotificationReceived);
+    }).catch(error => {
+        console.error('Error fetching room:', error);
     });
+
 }
 
-function displayRoom(room) {
-    const roomContainer = document.createElement('div');
-    roomContainer.setAttribute('id', `room-${room.id}`);
+async function fetchRoom() {
+    const roomResponse = await fetch(`/api/user/room`, {
+        headers: {
+            'Authorization': `Bearer ${getAuthToken()}`
+        }
+    });
 
-    const nameElement = document.createElement('p');
-    nameElement.textContent = `${room.id}) Name: ${room.name}`;
-    roomContainer.appendChild(nameElement);
+    if (!roomResponse.ok) {
+        throw new Error(`Error fetching room: ${roomResponse.statusText}`);
+    }
 
-    const sizeElement = document.createElement('p');
-    sizeElement.textContent = `Size: ${room.size}`;
-    roomContainer.appendChild(sizeElement);
+    return await roomResponse.json();
+}
+
+async function fetchAndDisplayRoomInfo(roomId) {
+
+    const roomResponse = await fetch(`/api/rooms/${roomId}`);
+    const room = await roomResponse.json();
+
+    const roomName = document.createElement('h3');
+    roomName.textContent = room.name;
+    roomInfoArea.appendChild(roomName);
 
     const deleteRoomButton = document.createElement('button');
     deleteRoomButton.textContent = 'Delete room';
     deleteRoomButton.classList.add('delete-room-button');
     deleteRoomButton.setAttribute('hidden', 'true');
-    roomContainer.appendChild(deleteRoomButton);
-
-    const lobbyButton = document.createElement('button');
-    lobbyButton.textContent = 'To lobby';
-    lobbyButton.classList.add('lobby-button');
-    lobbyButton.setAttribute('hidden', 'true');
-    roomContainer.appendChild(lobbyButton);
-
-    roomsArea.appendChild(roomContainer);
+    roomInfoArea.appendChild(deleteRoomButton);
 
     displayRoomMembers(room);
+
+    const startGameButton = document.createElement('button');
+    startGameButton.textContent = 'START';
+    roomInfoArea.appendChild(startGameButton);
 }
 
 function displayRoomMembers(room) {
-    const roomContainer = document.querySelector(`#room-${room.id}`);
-    const existingMemberList = roomContainer.querySelector('ul');
+    const existingMemberList = roomInfoArea.querySelector('ul');
     const membersList = document.createElement('ul');
 
     for (let i = 0; i < room.members.length; i++) {
@@ -116,40 +125,17 @@ function displayRoomMembers(room) {
         membersList.appendChild(memberItem);
     }
 
-    for (let i = room.members.length; i < room.size; i++) {
-        const memberItem = document.createElement('li');
-        memberItem.setAttribute('id', `room-${room.id}-member-${i + 1}`);
-
-        const joinButton = document.createElement('button');
-        joinButton.textContent = '+';
-        joinButton.classList.add('join-room-button');
-        memberItem.appendChild(joinButton);
-
-        membersList.appendChild(memberItem);
-    }
-
     if (existingMemberList) {
         existingMemberList.innerHTML = membersList.innerHTML;
     } else {
-        roomContainer.appendChild(membersList);
+        roomInfoArea.appendChild(membersList);
     }
 
     activateButtons(room);
 }
 
 function activateButtons(room) {
-    const roomContainer = document.getElementById(`room-${room.id}`);
-    const lobbyButton = roomContainer.querySelector('.lobby-button');
-    if (room.members.some(member => member.username === getUsername())) {
-        lobbyButton.removeAttribute('hidden');
-        lobbyButton.addEventListener('click', () => {
-            window.location.href = '/room.html?roomId=' + room.id;
-        });
-    } else {
-        lobbyButton.setAttribute('hidden', 'true');
-    }
-
-    const deleteRoomButton = roomContainer.querySelector('.delete-room-button');
+    const deleteRoomButton = roomInfoArea.querySelector('.delete-room-button');
     if (getUsername() === room.members[0].username) {
         deleteRoomButton.removeAttribute('hidden');
         deleteRoomButton.addEventListener('click', () => {
@@ -159,44 +145,19 @@ function activateButtons(room) {
         deleteRoomButton.setAttribute('hidden', 'true');
     }
 
-    const joinButtons = roomContainer.querySelectorAll('.join-room-button');
-    joinButtons.forEach(joinButton => {
-        joinButton.addEventListener('click', () => {
-            joinRoom(room.id);
-        });
-    });
-
-    const leaveButtons = roomContainer.querySelectorAll('.leave-room-button');
+    const leaveButtons = roomInfoArea.querySelectorAll('.leave-room-button');
     leaveButtons.forEach(leaveButton => {
         leaveButton.addEventListener('click', () => {
             leaveRoom(room.id);
         });
     });
 
-    const kickButtons = roomContainer.querySelectorAll('.kick-member-button');
+    const kickButtons = roomInfoArea.querySelectorAll('.kick-member-button');
     kickButtons.forEach(kickButton => {
         kickButton.addEventListener('click', () => {
             kickMember(kickButton.id.split('-')[0], kickButton.id.split('-')[1]);
         });
     });
-}
-
-function removeRoom(roomId) {
-    const roomContainer = document.getElementById(`room-${roomId}`);
-    if (roomContainer) {
-        roomsArea.removeChild(roomContainer);
-    }
-}
-
-function addRoom() {
-    let name = document.getElementById('name').value;
-    let size = document.getElementById('size').value;
-    stompClient.send("/app/rooms/addRoom",
-        {
-            Authorization: `Bearer ${getAuthToken()}`,
-            username: getUsername()
-        },
-        JSON.stringify({'name': name, 'size': size}));
 }
 
 function deleteRoom(roomId) {
@@ -205,14 +166,7 @@ function deleteRoom(roomId) {
             Authorization: `Bearer ${getAuthToken()}`,
             username: getUsername()
         });
-}
-
-function joinRoom(roomId) {
-    stompClient.send(`/app/rooms/joinRoom/${roomId}`,
-        {
-            Authorization: `Bearer ${getAuthToken()}`,
-            username: getUsername()
-        });
+    window.location.href = '/';
 }
 
 function leaveRoom(roomId) {
@@ -220,7 +174,8 @@ function leaveRoom(roomId) {
         {
             Authorization: `Bearer ${getAuthToken()}`,
             username: getUsername()
-        });
+        })
+    window.location.href = '/';
 }
 
 function kickMember(roomId, member) {
@@ -232,26 +187,24 @@ function kickMember(roomId, member) {
 }
 
 function onError() {
-    roomsArea.innerHTML = 'Failed to connect';
+    roomInfoArea.innerHTML = 'Failed to connect';
 }
 
 function showNotification(notification) {
     console.log('Notification:', notification);
     alert(notification);
+    if (notification === 'You have been kicked from the room') {
+        window.location.href = '/';
+    }
 }
 
 function onRoomMessageReceived(payload) {
     const message = JSON.parse(payload.body);
 
     if (message.hasOwnProperty('members')) {
-        const existingRoomContainer = document.getElementById(`room-${message.id}`);
-        if (existingRoomContainer) {
-            displayRoomMembers(message);
-        } else {
-            displayRoom(message);
-        }
+        displayRoomMembers(message);
     } else {
-        removeRoom(message);
+        window.location.href = '/';
     }
 }
 

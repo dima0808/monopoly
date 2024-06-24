@@ -3,7 +3,7 @@ package com.civka.monopoly.api.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -25,9 +25,6 @@ public class Room {
     @Column(nullable = false)
     private Integer size;
 
-    @OneToOne
-    private User creator;
-
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<User> members = new ArrayList<>();
+    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
+    private List<User> members = new LinkedList<>();
 }

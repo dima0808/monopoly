@@ -1,5 +1,6 @@
 package com.civka.monopoly.api.controller;
 
+import com.civka.monopoly.api.entity.Room;
 import com.civka.monopoly.api.entity.User;
 import com.civka.monopoly.api.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +21,11 @@ public class MainController {
     public ResponseEntity<User> getUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return ResponseEntity.ok(userService.findByUsername(username));
+    }
+
+    @GetMapping("/user/room")
+    public ResponseEntity<Room> getUserRoom() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return ResponseEntity.ok(userService.findByUsername(username).getRoom());
     }
 }

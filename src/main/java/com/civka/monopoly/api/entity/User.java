@@ -1,7 +1,10 @@
 package com.civka.monopoly.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Collection;
 
@@ -37,4 +40,9 @@ public class User {
                             foreignKeyDefinition = "FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE"))
     )
     private Collection<Role> roles;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Room room;
 }
