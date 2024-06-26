@@ -26,5 +26,5 @@ public class Room {
     private Integer size;
 
     @OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
-    private List<User> members = new LinkedList<>();
+    private List<Member> members = new LinkedList<>();
 }

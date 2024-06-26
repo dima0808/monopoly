@@ -1,5 +1,7 @@
 package com.civka.monopoly.api.service.impl;
 
+import com.civka.monopoly.api.entity.Civilization;
+import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.entity.Room;
 import com.civka.monopoly.api.entity.User;
 import com.civka.monopoly.api.repository.RoomRepository;
@@ -14,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
 
+    private final MemberService memberService;
     @Value("${monopoly.app.room.maxSize}")
     private Integer maxSize;
 
@@ -26,7 +29,7 @@ public class RoomServiceImpl implements RoomService {
             throw new IllegalRoomSizeException(room.getSize(), maxSize);
         }
         User user = userService.findByUsername(username);
-        if (user.getRoom() != null) {
+        if (user.getMember() != null) {
             throw new UserAlreadyJoinedException(username);
         }
         roomRepository.save(room);
@@ -47,12 +50,13 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void deleteById(Long roomId, String username) {
         Room room = findById(roomId);
-        if (!room.getMembers().get(0).getUsername().equals(username)) {
+        if (!room.getMembers().get(0).getUser().getUsername().equals(username)) {
             throw new UserNotAllowedException();
         }
-        for (User user : room.getMembers()) {
-            user.setRoom(null);
-            userService.update(user);
+        for (Member temp : room.getMembers()) {
+            temp.getUser().setMember(null);
+            userService.update(temp.getUser());
+            memberService.delete(temp);
         }
         roomRepository.deleteById(roomId);
     }
@@ -60,15 +64,25 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room addMember(Room room, String username) {
         User user = userService.findByUsername(username);
-        if (user.getRoom() != null) throw new UserAlreadyJoinedException(username);
+        if (user.getMember() != null) throw new UserAlreadyJoinedException(username);
         if (room.getMembers().size() == room.getSize()) throw new RoomFullException(room.getId(), room.getSize());
-        List<User> members = room.getMembers();
-        for (User temp : members) {
-            if (temp.getUsername().equals(username)) throw new UserAlreadyJoinedException(username);
+        List<Member> members = room.getMembers();
+        for (Member temp : members) {
+            if (temp.getUser().getUsername().equals(username)) throw new UserAlreadyJoinedException(username);
         }
-        members.add(user);
+
+        Member member = Member.builder()
+                .user(user)
+                .room(room)
+                .isLeader(members.isEmpty())
+                .civilization(Civilization.RANDOM)
+                .build();
+
+        member = memberService.save(member);
+
+        members.add(member);
+        user.setMember(member);
         room.setMembers(members);
-        user.setRoom(room);
         userService.update(user);
         return roomRepository.save(room);
     }
@@ -76,18 +90,23 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room removeMember(Room room, String username) {
         User user = userService.findByUsername(username);
-        List<User> members = room.getMembers();
-        for (User temp : members) {
-            if (temp.getUsername().equals(username)) {
+        List<Member> members = room.getMembers();
+        for (Member temp : members) {
+            if (temp.getUser().getUsername().equals(username)) {
                 members.remove(temp);
                 room.setMembers(members);
-                user.setRoom(null);
+                user.setMember(null);
+                if (temp.getIsLeader() && members.size() > 1) {
+                    members.get(1).setIsLeader(true);
+                }
                 userService.update(user);
+                Room updatedRoom = roomRepository.save(room);
+                memberService.delete(temp);
                 if (members.isEmpty()) {
                     roomRepository.deleteById(room.getId());
                     return null;
                 }
-                return roomRepository.save(room);
+                return updatedRoom;
             }
         }
         throw new UserNotJoinedException(username);
@@ -105,7 +124,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Room kickMember(Long roomId, String member, String username) {
-        if (username.equals(findById(roomId).getMembers().get(0).getUsername())) {
+        if (username.equals(findById(roomId).getMembers().get(0).getUser().getUsername())) {
             return removeMember(roomId, member);
         } else {
             throw new UserNotAllowedException();

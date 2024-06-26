@@ -3,8 +3,6 @@ package com.civka.monopoly.api.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Collection;
 
@@ -41,8 +39,7 @@ public class User {
     )
     private Collection<Role> roles;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
     @JsonIgnore
-    private Room room;
+    private Member member;
 }

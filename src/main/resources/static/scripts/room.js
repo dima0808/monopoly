@@ -100,27 +100,48 @@ function displayRoomMembers(room) {
 
     for (let i = 0; i < room.members.length; i++) {
         const memberItem = document.createElement('li');
-        memberItem.setAttribute('id', `room-${room.id}-member-${i + 1}`);
+        memberItem.setAttribute('id', `room-${room.id}-member-${room.members[i].user.username}`);
 
         if (i === 0) {
-            memberItem.textContent = `Creator: ${room.members[i].username} `;
+            memberItem.textContent = `Creator: ${room.members[i].user.username} `;
         } else {
-            memberItem.textContent = `Member: ${room.members[i].username} `;
-            if (getUsername() === room.members[0].username) {
+            memberItem.textContent = `Member: ${room.members[i].user.username} `;
+            if (getUsername() === room.members[0].user.username) {
                 let kickButton = document.createElement('button');
                 kickButton.textContent = 'kick';
                 kickButton.classList.add('kick-member-button');
-                kickButton.id = `${room.id}-${room.members[i].username}`
+                kickButton.id = `${room.id}-${room.members[i].user.username}`
                 memberItem.appendChild(kickButton);
             }
         }
 
-        if (getUsername() === room.members[i].username) {
+        if (getUsername() === room.members[i].user.username) {
             let leaveButton = document.createElement('button');
             leaveButton.textContent = 'leave';
             leaveButton.classList.add('leave-room-button');
             memberItem.appendChild(leaveButton);
         }
+
+        let civSelect = document.createElement('select');
+        civSelect.classList.add('civ-select');
+        civSelect.innerHTML = `
+                <option value="RANDOM">Random</option>
+                <option value="COLOMBIA">Colombia</option>
+                <option value="EGYPT">Egypt</option>
+                <option value="GERMANY">Germany</option>
+                <option value="JAPAN">Japan</option>
+                <option value="KOREA">Korea</option>
+                <option value="ROME">Rome</option>
+                <option value="SWEDEN">Sweden</option>
+            `;
+        civSelect.value = room.members[i].civilization;
+        if (getUsername() !== room.members[i].user.username) {
+            civSelect.disabled = true;
+        }
+        memberItem.appendChild(civSelect);
+        civSelect.addEventListener('change', () => {
+            changeCivilization(room.members[i].user.username, civSelect.value);
+        });
 
         membersList.appendChild(memberItem);
     }
@@ -136,7 +157,7 @@ function displayRoomMembers(room) {
 
 function activateButtons(room) {
     const deleteRoomButton = roomInfoArea.querySelector('.delete-room-button');
-    if (getUsername() === room.members[0].username) {
+    if (getUsername() === room.members[0].user.username) {
         deleteRoomButton.removeAttribute('hidden');
         deleteRoomButton.addEventListener('click', () => {
             deleteRoom(room.id);
@@ -160,6 +181,11 @@ function activateButtons(room) {
     });
 }
 
+function updateRoomMember(member) {
+    const memberItem = document.getElementById(`room-${roomId}-member-${member.user.username}`);
+    memberItem.querySelector('.civ-select').value = member.civilization;
+}
+
 function deleteRoom(roomId) {
     stompClient.send(`/app/rooms/deleteRoom/${roomId}`,
         {
@@ -174,8 +200,16 @@ function leaveRoom(roomId) {
         {
             Authorization: `Bearer ${getAuthToken()}`,
             username: getUsername()
-        })
+        });
     window.location.href = '/';
+}
+
+function changeCivilization(member, civilization) {
+    stompClient.send(`/app/rooms/${roomId}/changeCivilization/${civilization}`,
+        {
+            Authorization: `Bearer ${getAuthToken()}`,
+            username: getUsername()
+        });
 }
 
 function kickMember(roomId, member) {
@@ -203,6 +237,8 @@ function onRoomMessageReceived(payload) {
 
     if (message.hasOwnProperty('members')) {
         displayRoomMembers(message);
+    } else if (message.hasOwnProperty('civilization')) {
+      updateRoomMember(message);
     } else {
         window.location.href = '/';
     }

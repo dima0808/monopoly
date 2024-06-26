@@ -91,22 +91,22 @@ function displayRoomMembers(room) {
 
     for (let i = 0; i < room.members.length; i++) {
         const memberItem = document.createElement('li');
-        memberItem.setAttribute('id', `room-${room.id}-member-${i + 1}`);
+        memberItem.setAttribute('id', `room-${room.id}-member-${room.members[i].user.username}`);
 
         if (i === 0) {
-            memberItem.textContent = `Creator: ${room.members[i].username} `;
+            memberItem.textContent = `Creator: ${room.members[i].user.username} `;
         } else {
-            memberItem.textContent = `Member: ${room.members[i].username} `;
-            if (getUsername() === room.members[0].username) {
+            memberItem.textContent = `Member: ${room.members[i].user.username} `;
+            if (getUsername() === room.members[0].user.username) {
                 let kickButton = document.createElement('button');
                 kickButton.textContent = 'kick';
                 kickButton.classList.add('kick-member-button');
-                kickButton.id = `${room.id}-${room.members[i].username}`
+                kickButton.id = `${room.id}-${room.members[i].user.username}`
                 memberItem.appendChild(kickButton);
             }
         }
 
-        if (getUsername() === room.members[i].username) {
+        if (getUsername() === room.members[i].user.username) {
             let leaveButton = document.createElement('button');
             leaveButton.textContent = 'leave';
             leaveButton.classList.add('leave-room-button');
@@ -140,7 +140,7 @@ function displayRoomMembers(room) {
 function activateButtons(room) {
     const roomContainer = document.getElementById(`room-${room.id}`);
     const lobbyButton = roomContainer.querySelector('.lobby-button');
-    if (room.members.some(member => member.username === getUsername())) {
+    if (room.members.some(member => member.user.username === getUsername())) {
         lobbyButton.removeAttribute('hidden');
         lobbyButton.addEventListener('click', () => {
             window.location.href = '/room.html?roomId=' + room.id;
@@ -150,7 +150,7 @@ function activateButtons(room) {
     }
 
     const deleteRoomButton = roomContainer.querySelector('.delete-room-button');
-    if (getUsername() === room.members[0].username) {
+    if (getUsername() === room.members[0].user.username) {
         deleteRoomButton.removeAttribute('hidden');
         deleteRoomButton.addEventListener('click', () => {
             deleteRoom(room.id);

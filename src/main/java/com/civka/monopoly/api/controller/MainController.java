@@ -26,6 +26,7 @@ public class MainController {
     @GetMapping("/user/room")
     public ResponseEntity<Room> getUserRoom() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return ResponseEntity.ok(userService.findByUsername(username).getRoom());
+        User user = userService.findByUsername(username);
+        return ResponseEntity.ok(user.getMember().getRoom());
     }
 }
