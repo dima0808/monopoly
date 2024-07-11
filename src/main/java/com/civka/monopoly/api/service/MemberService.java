@@ -7,4 +7,6 @@ public interface MemberService {
     Member save(Member member);
 
     void delete(Member member);
+
+    void deleteById(Long id);
 }

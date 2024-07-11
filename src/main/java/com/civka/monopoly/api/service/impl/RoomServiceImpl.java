@@ -50,13 +50,14 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void deleteById(Long roomId, String username) {
         Room room = findById(roomId);
-        if (!room.getMembers().get(0).getUser().getUsername().equals(username)) {
+        Member leader = userService.findByUsername(username).getMember();
+        if (leader == null || !leader.getIsLeader() || !leader.getRoom().getId().equals(roomId)) {
             throw new UserNotAllowedException();
         }
         for (Member temp : room.getMembers()) {
             temp.getUser().setMember(null);
             userService.update(temp.getUser());
-            memberService.delete(temp);
+            memberService.deleteById(temp.getId());
         }
         roomRepository.deleteById(roomId);
     }
@@ -67,19 +68,13 @@ public class RoomServiceImpl implements RoomService {
         if (user.getMember() != null) throw new UserAlreadyJoinedException(username);
         if (room.getMembers().size() == room.getSize()) throw new RoomFullException(room.getId(), room.getSize());
         List<Member> members = room.getMembers();
-        for (Member temp : members) {
-            if (temp.getUser().getUsername().equals(username)) throw new UserAlreadyJoinedException(username);
-        }
-
         Member member = Member.builder()
                 .user(user)
                 .room(room)
                 .isLeader(members.isEmpty())
                 .civilization(Civilization.RANDOM)
                 .build();
-
         member = memberService.save(member);
-
         members.add(member);
         user.setMember(member);
         room.setMembers(members);
@@ -94,14 +89,17 @@ public class RoomServiceImpl implements RoomService {
         for (Member temp : members) {
             if (temp.getUser().getUsername().equals(username)) {
                 members.remove(temp);
+                if (temp.getIsLeader() && !members.isEmpty()) {
+                    Member newLeader = members.get(0);
+                    newLeader.setIsLeader(true);
+                    members.set(0, newLeader);
+                    memberService.save(newLeader);
+                }
                 room.setMembers(members);
                 user.setMember(null);
-                if (temp.getIsLeader() && members.size() > 1) {
-                    members.get(1).setIsLeader(true);
-                }
                 userService.update(user);
                 Room updatedRoom = roomRepository.save(room);
-                memberService.delete(temp);
+                memberService.deleteById(temp.getId());
                 if (members.isEmpty()) {
                     roomRepository.deleteById(room.getId());
                     return null;

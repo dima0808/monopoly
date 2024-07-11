@@ -134,14 +134,11 @@ function displayRoomMembers(room) {
                 <option value="ROME">Rome</option>
                 <option value="SWEDEN">Sweden</option>
             `;
-        civSelect.value = room.members[i].civilization;
+        civSelect.id = `${room.members[i].user.username}-${room.members[i].civilization}`;
         if (getUsername() !== room.members[i].user.username) {
             civSelect.disabled = true;
         }
         memberItem.appendChild(civSelect);
-        civSelect.addEventListener('change', () => {
-            changeCivilization(room.members[i].user.username, civSelect.value);
-        });
 
         membersList.appendChild(memberItem);
     }
@@ -177,6 +174,14 @@ function activateButtons(room) {
     kickButtons.forEach(kickButton => {
         kickButton.addEventListener('click', () => {
             kickMember(kickButton.id.split('-')[0], kickButton.id.split('-')[1]);
+        });
+    });
+
+    const civSelects = roomInfoArea.querySelectorAll('.civ-select');
+    civSelects.forEach(civSelect => {
+        civSelect.value = civSelect.id.split('-')[1];
+        civSelect.addEventListener('change', () => {
+            changeCivilization(civSelect.id.split('-')[0], civSelect.value);
         });
     });
 }
