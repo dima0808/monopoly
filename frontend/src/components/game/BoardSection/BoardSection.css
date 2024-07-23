@@ -1,0 +1,157 @@
+.border {
+    border: 1px solid #636466;
+}
+
+.board {
+    /* макет 1700 на 1500 */
+    margin: 0 auto;
+    background-color: #a699af;
+    /* поділити на 2 і -6px з кожної сторони, щоб вмістилася сама гра хоч якось,
+    можливо ще обрізання треба */
+    height: 720px;
+    width: 820px;
+    display: grid;
+    /* За макетом 100 звичайна клітинка, тому кути: (1700-1200)/2=250, а під наший екран 250/2-6й */
+    grid-template-columns: 110px 600px 110px;
+    grid-template-rows: 110px 500px 110px;
+}
+
+.board__element-edge {
+    background-color: #222222;
+}
+.board__element-center {
+    background-color: #eee;
+}
+.board__element-side {
+    background-color: #eee;
+}
+.object-vertical__upgrades,
+.object-horizontal__upgrades {
+    background-color: #aaaa86;
+}
+.object-vertical__price,
+.object-horizontal__price {
+    background-color: #888;
+}
+.object-vertical__price-military-camp {
+    background-color: #743027;
+}
+.object-vertical__barbarians-color {
+    background-color: #982a29;
+}
+.object-vertical__village-color {
+    background-color: #47622d;
+}
+.object-vertical__price-wonder {
+    background-color: #736388;
+}
+.object-vertical__price-government {
+    background-color: #791498;
+}
+.edge__img {
+    width: 110px;
+    height: 110px;
+}
+
+.edge__img-left-up {
+    border-top-left-radius: 9px;
+}
+.edge__img-right-up {
+    border-top-right-radius: 9px;
+}
+.edge__img-left-down {
+    border-bottom-left-radius: 9px;
+}
+.edge__img-right-down {
+    border-bottom-right-radius: 9px;
+}
+.board__element-side-vertical {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+}
+
+.object-vertical {
+    display: grid;
+
+    grid-template-rows: 2fr 7fr 2fr;
+}
+
+.object-horizontal {
+    display: grid;
+    grid-template-columns: 2fr 7fr 2fr;
+    grid-template-rows: 50px;
+}
+
+.object-vertical__cell-none-upgrades {
+    grid-row: 2/4;
+}
+.mirror .object-vertical__cell-none-upgrades {
+    grid-row: 1/3;
+}
+.object-horizontal__cell-none-upgrades {
+    grid-column: 2/4;
+}
+.mirror .object-horizontal__cell-none-upgrades {
+    grid-column: 1/3;
+}
+.mirror .object-horizontal__upgrades {
+    grid-column: 1;
+    grid-row: 1;
+}
+.mirror .object-horizontal__price {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.mirror .object-vertical__price {
+    grid-row: 3;
+}
+.mirror .object-vertical__upgrades {
+    grid-row: 1;
+}
+.cell-img {
+    width: 50px;
+    height: 50px;
+}
+.up .cell-img {
+    margin-top: 10px;
+}
+.left .cell-img {
+    margin-left: 10px;
+}
+.right .cell-img {
+    margin-right: 10px;
+}
+.down .cell-img {
+    margin-bottom: 10px;
+}
+.mirror .object-vertical__cell {
+    display: flex;
+    align-items: end;
+}
+.mirror .object-horizontal__cell {
+    display: flex;
+    justify-content: end;
+}
+.object-vertical__upgrades,
+.object-horizontal__upgrades {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.object-horizontal__upgrades {
+    flex-direction: column;
+}
+.star-blue {
+    width: 17px;
+    height: 17px;
+}
+.star-yellow {
+    width: 19px;
+    height: 19px;
+}
+.logo-center {
+    width: 100%;
+    height: 100%;
+    opacity: 0.2;
+}
