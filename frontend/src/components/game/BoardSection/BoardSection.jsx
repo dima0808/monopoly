@@ -7,7 +7,7 @@ import civLogoImg from '../../../images/civ-logo.png';
 
 // import startPlanetImg from '../../../images/start_planet.png';
 // import projectsImg from '../../../images/projects.png';
-import bermudaTriangleImg from '../../../images/bermuda_triangle.png';
+import bermudaTriangleImg from '../../../images/corner_bermuda_triangle.png';
 
 import resourceDeerImg from '../../../images/icon_resource_deer.png';
 
