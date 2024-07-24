@@ -2,8 +2,8 @@ import './BoardSection.css';
 
 import civkaLogoImg from '../../../images/civka-logo.png';
 
-import blueStarImg from '../../../images/star-blue.png';
-import yellowStarImg from '../../../images/star-yellow.png';
+// import blueStarImg from '../../../images/star-blue.png';
+// import yellowStarImg from '../../../images/star-yellow.png';
 
 import startImg from '../../../images/corner_start.png';
 import projectsImg from '../../../images/corner-projects.png';
@@ -49,541 +49,166 @@ import wonderRuhrValleyImg from '../../../images/wonder_ruhr_valley.png';
 import wonderTempleOfArtemisImg from '../../../images/wonder_temple_of_artemis.png';
 import wonderTerracottaArmyImg from '../../../images/wonder_terracotta_army.png';
 
+function EdgeCell({src, alt, position}) {
+    const positionClass = `edge__img-${position}`;
+    return (
+        <div className="board__element board__element-edge">
+            <img
+                src={src}
+                alt={alt}
+                className={`edge__img ${positionClass}`}
+            />
+        </div>
+    );
+}
+
+function Cell({src, alt, position, mirror = false, noneUpgrades = false, specialType}) {
+    const baseClass = `object-${position}`;
+    const priceClass = specialType ? `${baseClass}__price ${baseClass}__price-${specialType}` : `${baseClass}__price`;
+    const cellClass = noneUpgrades ? `${baseClass}__cell ${baseClass}__cell-none-upgrades` : `${baseClass}__cell`;
+    return (
+        <div className={`${baseClass} ${mirror && 'mirror'} border`}>
+            <div className={priceClass}></div>
+            <div className={cellClass}>
+                <img
+                    src={src}
+                    alt={alt}
+                    className="cell-img"
+                />
+            </div>
+            {noneUpgrades ? null : <div className={`${baseClass}__upgrades`}></div>}
+        </div>
+    );
+}
+
+function BarbCell() {
+    return (
+        <div className="object-vertical mirror border">
+            <div className="object-vertical__barbarians-color"></div>
+            <div className="object-vertical__cell">
+                <img
+                    src={barbariansImg}
+                    alt="barbarians"
+                    className="cell-img"
+                />
+            </div>
+            <div className="object-vertical__barbarians-color"></div>
+        </div>
+    );
+}
+
+function GoodyHutCell() {
+    return (
+        <div className="object-vertical border">
+            <div className="object-vertical__village-color"></div>
+            <div className="object-vertical__cell">
+                <img
+                    src={goodyHutImg}
+                    alt="goody hut"
+                    className="cell-img"
+                />
+            </div>
+            <div className="object-vertical__village-color"></div>
+        </div>
+    );
+}
+
+function Chat() {
+    return (
+        <div className="board__element board__element-center border">
+            <img src={civkaLogoImg} alt="civka logo" className="logo-center"/>
+        </div>
+    );
+}
 
 export default function BoardSection() {
     return (
         <section className="board">
 
-            <div className="board__element board__element-edge">
-                <img
-                    src={startImg}
-                    alt="start"
-                    className="edge__img edge__img-left-up"
-                />
-            </div>
+            <EdgeCell src={startImg} alt="start" position="left-up"/>
 
             <div className="board__element board__element-side board__element-side-vertical up">
-                <div className="object-vertical border">
-                    <div className="object-vertical__price"></div>
-                    <div className="object-vertical__cell">
-                        <img
-                            src={resourceHorsesImg}
-                            alt="horses"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-vertical__upgrades"></div>
-                </div>
-                <div className="object-vertical border">
-                    <div className="object-vertical__price"></div>
-                    <div className="object-vertical__cell">
-                        <img
-                            src={resourceBananasImg}
-                            alt="bananas"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-vertical__upgrades">
-                        <img src={blueStarImg} alt="star" className="star-blue"/>
-                        <img src={blueStarImg} alt="star" className="star-blue"/>
-                    </div>
-                </div>
-                <div className="object-vertical border">
-                    <div className="object-vertical__price"></div>
-                    <div className="object-vertical__cell">
-                        <img
-                            src={resourceDeerImg}
-                            alt="deer"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-vertical__upgrades">
-                        <img src={yellowStarImg} alt="star" className="star-yellow"/>
-                    </div>
-                </div>
-                <div className="object-vertical border">
-                    <div className="object-vertical__price object-vertical__price-wonder"></div>
-                    <div className="object-vertical__cell object-vertical__cell-none-upgrades">
-                        <img
-                            src={wonderTempleOfArtemisImg}
-                            alt="temple of artemis"
-                            className="cell-img"
-                        />
-                    </div>
-                </div>
-                <div className="object-vertical border">
-                    <div className="object-vertical__price"></div>
-                    <div className="object-vertical__cell">
-                        <img
-                            src={resourceFursImg}
-                            alt="furs"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-vertical__upgrades"></div>
-                </div>
-                <div className="object-vertical border">
-                    <div className="object-vertical__village-color"></div>
-                    <div className="object-vertical__cell">
-                        <img
-                            src={goodyHutImg}
-                            alt="goody hut"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-vertical__village-color"></div>
-                </div>
-                <div className="object-vertical border">
-                    <div className="object-vertical__price object-vertical__price-military-camp"></div>
-                    <div className="object-vertical__cell">
-                        <img
-                            src={districtEncampmentImg}
-                            alt="encampment"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-vertical__upgrades">
-                        <img src={blueStarImg} alt="star" className="star-blue"/>
-                    </div>
-                </div>
-                <div className="object-vertical border">
-                    <div className="object-vertical__price object-vertical__price-wonder"></div>
-                    <div className="object-vertical__cell object-vertical__cell-none-upgrades">
-                        <img
-                            src={wonderTerracottaArmyImg}
-                            alt="terrakota army"
-                            className="cell-img"
-                        />
-                    </div>
-                </div>
-                <div className="object-vertical border">
-                    <div className="object-vertical__price object-vertical__price-government"></div>
-                    <div className="object-vertical__cell">
-                        <img
-                            src={districtGovernmentPlazaImg}
-                            alt="government plaza"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-vertical__upgrades"></div>
-                </div>
-                <div className="object-vertical border">
-                    <div className="object-vertical__price"></div>
-                    <div className="object-vertical__cell">
-                        <img
-                            src={districtIndustrialZoneImg}
-                            alt="industrial zone"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-vertical__upgrades"></div>
-                </div>
-                <div className="object-vertical border">
-                    <div className="object-vertical__price"></div>
-                    <div className="object-vertical__cell">
-                        <img
-                            src={resourceIronImg}
-                            alt="iron"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-vertical__upgrades"></div>
-                </div>
-                <div className="object-vertical border">
-                    <div className="object-vertical__price"></div>
-                    <div className="object-vertical__cell">
-                        <img
-                            src={resourceCrabsImg}
-                            alt="crabs"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-vertical__upgrades"></div>
-                </div>
+                <Cell src={resourceHorsesImg} alt="horses" position="vertical" />
+                <Cell src={resourceBananasImg} alt="bananas" position="vertical" />
+                <Cell src={resourceDeerImg} alt="deer" position="vertical" />
+                <Cell src={wonderTempleOfArtemisImg} alt="temple of artemis" position="vertical"
+                      noneUpgrades={true} specialType="wonder" />
+                <Cell src={resourceFursImg} alt="furs" position="vertical" />
+                <GoodyHutCell />
+                <Cell src={districtEncampmentImg} alt="encampment" position="vertical"
+                      specialType="encampment" />
+                <Cell src={wonderTerracottaArmyImg} alt="terrakota army" position="vertical"
+                      noneUpgrades={true} specialType="wonder" />
+                <Cell src={districtGovernmentPlazaImg} alt="government plaza" position="vertical"
+                      specialType="government" />
+                <Cell src={districtIndustrialZoneImg} alt="industrial zone" position="vertical" />
+                <Cell src={resourceIronImg} alt="iron" position="vertical" />
+                <Cell src={resourceCrabsImg} alt="crabs" position="vertical" />
             </div>
 
-            <div className="board__element board__element-edge">
-                <img
-                    src={projectsImg}
-                    alt="projects"
-                    className="edge__img edge__img-right-up"
-                />
-            </div>
+            <EdgeCell src={projectsImg} alt="projects" position="right-up" />
 
             <div className="board__element board__element-side board__element-side-horizontal left">
-                <div className="object-horizontal border">
-                    <div className="object-horizontal__price"></div>
-                    <div className="object-horizontal__cell object-horizontal__cell-none-upgrades">
-                        <img
-                            src={districtSpaceportImg}
-                            alt="spaceport"
-                            className="cell-img"
-                        />
-                    </div>
-                </div>
-                <div className="object-horizontal border">
-                    <div className="object-horizontal__price object-vertical__price-wonder"></div>
-                    <div className="object-horizontal__cell object-horizontal__cell-none-upgrades">
-                        <img
-                            src={wonderOxfordUniversityImg}
-                            alt="oxford university"
-                            className="cell-img"
-                        />
-                    </div>
-                </div>
-                <div className="object-horizontal border">
-                    <div className="object-horizontal__price"></div>
-                    <div className="object-horizontal__cell">
-                        <img
-                            src={districtCampusImg}
-                            alt="campus"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-horizontal__upgrades"></div>
-                </div>
-                <div className="object-horizontal border">
-                    <div className="object-horizontal__price object-vertical__price-government"></div>
-                    <div className="object-horizontal__cell">
-                        <img
-                            src={districtGovernmentPlazaImg}
-                            alt="government plaza"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-horizontal__upgrades"></div>
-                </div>
-                <div className="object-horizontal border">
-                    <div className="object-horizontal__price"></div>
-                    <div className="object-horizontal__cell">
-                        <img
-                            src={districtCommercialHubImg}
-                            alt="commercial hub"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-horizontal__upgrades">
-                        <img src={blueStarImg} alt="star" className="star-blue"/>
-                        <img src={blueStarImg} alt="star" className="star-blue"/>
-                    </div>
-                </div>
-                <div className="object-horizontal border">
-                    <div className="object-horizontal__price object-vertical__price-wonder"></div>
-                    <div className="object-horizontal__cell object-horizontal__cell-none-upgrades">
-                        <img
-                            src={wonderBigBenImg}
-                            alt="big ben"
-                            className="cell-img"
-                        />
-                    </div>
-                </div>
-                <div className="object-horizontal border">
-                    <div className="object-horizontal__price"></div>
-                    <div className="object-horizontal__cell">
-                        <img
-                            src={districtNeighborhoodImg}
-                            alt="neighborhood"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-horizontal__upgrades">
-                        <img src={yellowStarImg} alt="star" className="star-yellow"/>
-                    </div>
-                </div>
-                <div className="object-horizontal border">
-                    <div className="object-horizontal__price object-vertical__price-wonder"></div>
-                    <div className="object-horizontal__cell object-horizontal__cell-none-upgrades">
-                        <img
-                            src={wonderEstadioDoMaracanaImg}
-                            alt="estadio do maracana"
-                            className="cell-img"
-                        />
-                    </div>
-                </div>
-                <div className="object-horizontal border">
-                    <div className="object-horizontal__price"></div>
-                    <div className="object-horizontal__cell">
-                        <img
-                            src={districtTheatreSquareImg}
-                            alt="theatre square"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-horizontal__upgrades"></div>
-                </div>
-                <div className="object-horizontal border">
-                    <div className="object-horizontal__price"></div>
-                    <div className="object-horizontal__cell">
-                        <img
-                            src={districtEntertainmentComplexImg}
-                            alt="entertainment complex"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-horizontal__upgrades"></div>
-                </div>
+                <Cell src={districtSpaceportImg} alt="spaceport" position="horizontal"
+                      noneUpgrades={true} />
+                <Cell src={wonderOxfordUniversityImg} alt="oxford university" position="horizontal"
+                      noneUpgrades={true} specialType="wonder" />
+                <Cell src={districtCampusImg} alt="campus" position="horizontal" />
+                <Cell src={districtGovernmentPlazaImg} alt="government plaza" position="horizontal"
+                      specialType="government" />
+                <Cell src={districtCommercialHubImg} alt="commercial hub" position="horizontal" />
+                <Cell src={wonderBigBenImg} alt="big ben" position="horizontal"
+                      noneUpgrades={true} specialType="wonder" />
+                <Cell src={districtNeighborhoodImg} alt="neighborhood" position="horizontal" />
+                <Cell src={wonderEstadioDoMaracanaImg} alt="estadio do maracana" position="horizontal"
+                      noneUpgrades={true} specialType="wonder" />
+                <Cell src={districtTheatreSquareImg} alt="theatre square" position="horizontal" />
+                <Cell src={districtEntertainmentComplexImg} alt="entertainment complex" position="horizontal" />
             </div>
 
-            <div className="board__element board__element-center border">
-                <img src={civkaLogoImg} alt="civka logo" className="logo-center"/>
-            </div>
+            <Chat />
 
             <div className="board__element board__element-side board__element-side-horizontal right">
-                <div className="object-horizontal mirror border">
-                    <div className="object-horizontal__price"></div>
-                    <div className="object-horizontal__cell object-horizontal__cell-none-upgrades">
-                        <img
-                            src={featureReefImg}
-                            alt="reef"
-                            className="cell-img"
-                        />
-                    </div>
-                </div>
-                <div className="object-horizontal mirror border">
-                    <div className="object-horizontal__price"></div>
-                    <div className="object-horizontal__cell">
-                        <img
-                            src={districtCampusImg}
-                            alt="campus"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-horizontal__upgrades"></div>
-                </div>
-                <div className="object-horizontal mirror border">
-                    <div className="object-horizontal__price object-vertical__price-wonder"></div>
-                    <div className="object-horizontal__cell object-horizontal__cell-none-upgrades">
-                        <img
-                            src={wonderGreatLibraryImg}
-                            alt="great library"
-                            className="cell-img"
-                        />
-                    </div>
-                </div>
-                <div className="object-horizontal mirror border">
-                    <div className="object-horizontal__price"></div>
-                    <div className="object-horizontal__cell">
-                        <img
-                            src={districtHarborImg}
-                            alt="harbor"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-horizontal__upgrades"></div>
-                </div>
-                <div className="object-horizontal mirror border">
-                    <div className="object-horizontal__price object-vertical__price-government"></div>
-                    <div className="object-horizontal__cell">
-                        <img
-                            src={districtGovernmentPlazaImg}
-                            alt="government plaza"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-horizontal__upgrades"></div>
-                </div>
-                <div className="object-horizontal mirror border">
-                    <div className="object-horizontal__price"></div>
-                    <div className="object-horizontal__cell">
-                        <img
-                            src={districtCommercialHubImg}
-                            alt="commercial hub"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-horizontal__upgrades"></div>
-                </div>
-                <div className="object-horizontal mirror border">
-                    <div className="object-horizontal__price object-vertical__price-wonder"></div>
-                    <div className="object-horizontal__cell object-horizontal__cell-none-upgrades">
-                        <img
-                            src={wonderCasaDeContratacionImg}
-                            alt="cas de contratacion"
-                            className="cell-img"
-                        />
-                    </div>
-                </div>
-                <div className="object-horizontal mirror border">
-                    <div className="object-horizontal__price"></div>
-                    <div className="object-horizontal__cell">
-                        <img
-                            src={districtTheatreSquareImg}
-                            alt="theatre square"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-horizontal__upgrades"></div>
-                </div>
-                <div className="object-horizontal mirror border">
-                    <div className="object-horizontal__price"></div>
-                    <div className="object-horizontal__cell">
-                        <img
-                            src={districtEntertainmentComplexImg}
-                            alt="entertainment complex"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-horizontal__upgrades"></div>
-                </div>
-                <div className="object-horizontal mirror border">
-                    <div className="object-horizontal__price object-vertical__price-wonder"></div>
-                    <div className="object-horizontal__cell object-horizontal__cell-none-upgrades">
-                        <img
-                            src={wonderColosseumImg}
-                            alt="colosseum"
-                            className="cell-img"
-                        />
-                    </div>
-                </div>
+                <Cell src={featureReefImg} alt="reef" position="horizontal" mirror={true}
+                      noneUpgrades={true} />
+                <Cell src={districtCampusImg} alt="campus" position="horizontal" mirror={true} />
+                <Cell src={wonderGreatLibraryImg} alt="great library" position="horizontal" mirror={true}
+                      noneUpgrades={true} specialType="wonder" />
+                <Cell src={districtHarborImg} alt="harbor" position="horizontal" mirror={true} />
+                <Cell src={districtGovernmentPlazaImg} alt="government plaza" position="horizontal" mirror={true}
+                      specialType="government" />
+                <Cell src={districtCommercialHubImg} alt="commercial hub" position="horizontal" mirror={true} />
+                <Cell src={wonderCasaDeContratacionImg} alt="cas de contratacion" position="horizontal" mirror={true}
+                      noneUpgrades={true} specialType="wonder" />
+                <Cell src={districtTheatreSquareImg} alt="theatre square" position="horizontal" mirror={true} />
+                <Cell src={districtEntertainmentComplexImg} alt="entertainment complex" position="horizontal" mirror={true} />
+                <Cell src={wonderColosseumImg} alt="colosseum" position="horizontal" mirror={true}
+                      noneUpgrades={true} specialType="wonder" />
             </div>
 
-            <div className="board__element board__element-edge">
-                <img
-                    src={projectsImg}
-                    alt="projects"
-                    className="edge__img edge__img-left-down"
-                />
-            </div>
+            <EdgeCell src={projectsImg} alt="projects" position="left-down" />
 
             <div className="board__element board__element-side board__element-side-vertical down">
-
-                <div className="object-vertical mirror border">
-                    <div className="object-vertical__price object-vertical__price-wonder"></div>
-                    <div className="object-vertical__cell object-vertical__cell-none-upgrades">
-                        <img
-                            src={wonderRuhrValleyImg}
-                            alt="ruhr valley"
-                            className="cell-img"
-                        />
-                    </div>
-                </div>
-                <div className="object-vertical mirror border">
-                    <div className="object-vertical__price"></div>
-                    <div className="object-vertical__cell">
-                        <img
-                            src={districtDamImg}
-                            alt="dam"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-vertical__upgrades"></div>
-                </div>
-                <div className="object-vertical mirror border">
-                    <div className="object-vertical__price"></div>
-                    <div className="object-vertical__cell">
-                        <img
-                            src={districtIndustrialZoneImg}
-                            alt="industrial zone"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-vertical__upgrades"></div>
-                </div>
-                <div className="object-vertical mirror border">
-                    <div className="object-vertical__price"></div>
-                    <div className="object-vertical__cell object-vertical__cell-none-upgrades">
-                        <img
-                            src={districtAqueductImg}
-                            alt="aqueduct"
-                            className="cell-img"
-                        />
-                    </div>
-                </div>
-                <div className="object-vertical mirror border">
-                    <div className="object-vertical__price object-vertical__price-wonder"></div>
-                    <div className="object-vertical__cell object-vertical__cell-none-upgrades">
-                        <img
-                            src={wonderMausoleumAtHalicarnassusImg}
-                            alt="mausoleum at halicarnassus"
-                            className="cell-img"
-                        />
-                    </div>
-                </div>
-                <div className="object-vertical mirror border">
-                    <div className="object-vertical__price"></div>
-                    <div className="object-vertical__cell">
-                        <img
-                            src={districtHarborImg}
-                            alt="harbor"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-vertical__upgrades"></div>
-                </div>
-                <div className="object-vertical mirror border">
-                    <div className="object-vertical__price object-vertical__price-military-camp"></div>
-                    <div className="object-vertical__cell">
-                        <img
-                            src={districtEncampmentImg}
-                            alt="encampment"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-vertical__upgrades"></div>
-                </div>
-                <div className="object-vertical mirror border">
-                    <div className="object-vertical__barbarians-color"></div>
-                    <div className="object-vertical__cell">
-                        <img
-                            src={barbariansImg}
-                            alt="barbarians"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-vertical__barbarians-color"></div>
-                </div>
-                <div className="object-vertical mirror border">
-                    <div className="object-vertical__price"></div>
-                    <div className="object-vertical__cell">
-                        <img
-                            src={resourceRiceImg}
-                            alt="rice"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-vertical__upgrades"></div>
-                </div>
-                <div className="object-vertical mirror border">
-                    <div className="object-vertical__price object-vertical__price-wonder"></div>
-                    <div className="object-vertical__cell object-vertical__cell-none-upgrades">
-                        <img
-                            src={wonderEtemenankiImg}
-                            alt="etemenanki"
-                            className="cell-img"
-                        />
-                    </div>
-                </div>
-                <div className="object-vertical mirror border">
-                    <div className="object-vertical__price"></div>
-                    <div className="object-vertical__cell">
-                        <img
-                            src={resourceWheatImg}
-                            alt="wheat"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-vertical__upgrades"></div>
-                </div>
-                <div className="object-vertical mirror border">
-                    <div className="object-vertical__price"></div>
-                    <div className="object-vertical__cell">
-                        <img
-                            src={resourceMaizeImg}
-                            alt="maize"
-                            className="cell-img"
-                        />
-                    </div>
-                    <div className="object-vertical__upgrades"></div>
-                </div>
+                <Cell src={wonderRuhrValleyImg} alt="ruhr valley" position="vertical" mirror={true}
+                      noneUpgrades={true} specialType="wonder" />
+                <Cell src={districtDamImg} alt="dam" position="vertical" mirror={true} />
+                <Cell src={districtIndustrialZoneImg} alt="industrial zone" position="vertical" mirror={true} />
+                <Cell src={districtAqueductImg} alt="aqueduct" position="vertical" mirror={true}
+                      noneUpgrades={true} />
+                <Cell src={wonderMausoleumAtHalicarnassusImg} alt="mausoleum at halicarnassus" position="vertical" mirror={true}
+                      noneUpgrades={true} specialType="wonder" />
+                <Cell src={districtHarborImg} alt="harbor" position="vertical" mirror={true} />
+                <Cell src={districtEncampmentImg} alt="encampment" position="vertical" mirror={true}
+                      specialType="encampment" />
+                <BarbCell />
+                <Cell src={resourceRiceImg} alt="rice" position="vertical" mirror={true} />
+                <Cell src={wonderEtemenankiImg} alt="etemenanki" position="vertical" mirror={true}
+                      noneUpgrades={true} specialType="wonder" />
+                <Cell src={resourceWheatImg} alt="wheat" position="vertical" mirror={true} />
+                <Cell src={resourceMaizeImg} alt="maize" position="vertical" mirror={true} />
             </div>
 
-            <div className="board__element board__element-edge">
-                <img
-                    src={bermudaTriangleImg}
-                    alt="bermuda triangle"
-                    className="edge__img edge__img-right-down"
-                />
-            </div>
+            <EdgeCell src={bermudaTriangleImg} alt="bermuda triangle" position="right-down" />
 
         </section>
     );
