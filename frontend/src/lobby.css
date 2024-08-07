@@ -1,0 +1,364 @@
+.section__preview {
+  border-radius: 9px;
+  padding: 48px 210px 0 24px;
+  padding-top: 48px;
+  padding-left: 24px;
+  position: relative;
+}
+.section__preview::before {
+  opacity: 0.9; /* Зменшити прозорість картинки */
+  z-index: 8;
+  transform: scaleX(-1);
+  content: "";
+  position: absolute; /* Абсолютне позиціонування всередині батьківського елемента */
+  bottom: -36px;
+  right: 10px;
+  width: 260px; /* Ширина картинки */
+  height: 260px; /* Висота картинки */
+  background: url("images/icon_unit_scout.png") no-repeat center center; /* Вставити картинку */
+  background-size: cover; /* Підлаштовує розмір картинки під псевдоелемент */
+}
+.gradiant-violet {
+  background: linear-gradient(to bottom, #d7beeb, #f1e4fb);
+  margin: 0;
+}
+.gradiant-violet-reverse {
+  background: linear-gradient(to bottom, #f1e4fb, #d7beeb);
+  margin: 0;
+}
+.section__preview-h1 {
+  text-transform: uppercase;
+  width: 550px;
+  word-spacing: 6px;
+  color: #271d37;
+  font-weight: 300;
+  font-size: 60px;
+
+  border-bottom: 3px solid #5c4284;
+}
+.section__preview-p {
+  z-index: 999;
+  margin-top: 5px;
+  font-weight: 400;
+  font-size: 24px;
+  letter-spacing: -0.5px;
+  line-height: 1.4;
+}
+.section-grid {
+  padding-top: 90px;
+  padding-bottom: 30px;
+  display: grid;
+  grid-template-columns: 5fr 3fr;
+  gap: 40px;
+}
+.lobby {
+  background-color: #f7edfe;
+  border-radius: 9px;
+  overflow: hidden;
+  border: 2px solid #271d37;
+}
+.chat {
+  border-radius: 9px;
+  height: 600px;
+  background-color: #f7edfe;
+  border: 2px solid #271d37;
+  overflow: hidden;
+}
+.title-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  font-size: 24px;
+  font-weight: 500;
+  color: #4a3f5bf0;
+  width: 100%;
+  border-bottom: 2px solid #271d37;
+  height: 54px;
+  background-color: #f9edff;
+  /* box-shadow: inset 0 0 16px 1px rgba(92, 66, 132, 0.6); */
+  box-shadow: inset 0 0 16px 1px rgba(110, 66, 132, 0.5);
+}
+.create-btn {
+  background-color: #d1b5e8;
+  border-radius: 8px;
+  font-size: 24px;
+  padding: 2px 6px 3px 6px;
+  border: 2px solid #271d37;
+  transition: 0.3s ease;
+}
+.create-btn:hover,
+.create-btn:active {
+  cursor: pointer;
+  background-color: #d7beeb;
+  color: #5c4284;
+}
+.create-btn:active {
+  background-color: #f7edfe;
+}
+
+.chat__text {
+  width: 560;
+  height: 486px;
+  overflow: auto;
+  padding: 10px 20px;
+  /* scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1; */
+}
+.chat__text:before {
+  background-color: #888;
+  border-radius: 6px;
+}
+
+.chat__typing {
+  height: 60px;
+  display: flex;
+  align-items: center;
+
+  justify-content: space-between;
+  padding: 0 20px;
+  font-size: 24px;
+  font-weight: 500;
+  color: #4a3f5bf0;
+  width: 100%;
+  border-top: 2px solid #271d37;
+  background-color: #f9edff;
+  box-shadow: inset 0 0 16px 1px rgba(110, 66, 132, 0.2);
+}
+.chat__element {
+  color: #271d37;
+  font-size: 18px;
+  letter-spacing: 0.5px; /* Невеликий відступ між літерами */
+  line-height: 1.25; /* Оптимальний відступ між рядками */
+  margin-top: 4px;
+}
+.chat__element-userneme {
+  color: #f1e4fb;
+  text-decoration: none;
+  background-color: #5c4284;
+  padding: 1px 2px;
+  border-radius: 6px;
+  margin-right: 3px;
+  transition: 0.3s ease;
+}
+.chat__element-userneme:hover,
+.chat__element-userneme:active {
+  opacity: 0.7;
+}
+.chat__typing-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: #d1b5e8;
+  border-radius: 8px;
+  font-size: 24px;
+  border: 2px solid #271d37;
+  transition: 0.3s ease;
+}
+.chat__typing-btn:hover,
+.chat__typing-btn:active {
+  cursor: pointer;
+  background-color: #d7beeb;
+  color: #5c4284;
+}
+.chat__typing-btn:active {
+  background-color: #f7edfe;
+}
+
+.chat__typing-btn-svg {
+  width: 32px;
+  height: 32px;
+}
+.chat__typing-input {
+  width: 380px;
+  height: 40px;
+  background-color: #f9edff;
+  padding: 10px 16px;
+  font-size: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  color: #271d37;
+  border: 2px solid #271d37;
+}
+.lobby__area {
+  width: 100%;
+  overflow: auto;
+  padding: 0px 20px;
+  height: 542px;
+}
+.lobby__room {
+  margin-top: 16px;
+  padding-bottom: 8px;
+}
+.lobby__room:not(:last-child) {
+  border-bottom: 3px solid #271d37;
+}
+.lobby__name {
+  display: flex;
+  justify-content: space-between;
+  color: #271d37;
+  font-size: 24px;
+  text-decoration: none;
+  background-color: #f1e4fb;
+  padding: 3px 6px;
+  border-radius: 6px;
+  margin-right: 3px;
+  transition: 0.3s ease;
+  border: none;
+  margin-bottom: 14px;
+}
+.lobby__members {
+  display: flex;
+  gap: 40px;
+}
+.lobby__member {
+  width: 90px;
+  position: relative;
+}
+.lobby__member-avatar {
+  display: inline-block;
+  margin-left: 5px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+
+  box-shadow: 0 0 5px 1px rgba(39, 29, 55, 0.7);
+}
+.lobby__member-avatar-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+.lobby__member-neekname {
+  width: 100%;
+  text-align: center;
+  color: #271d37;
+  text-decoration: underline 1px solid;
+  letter-spacing: 0.5px; /* Невеликий відступ між літерами */
+  line-height: 0.9; /* Оптимальний відступ між рядками */
+  display: inline-block; /* Зробити елемент блочним, але таким, що вписується в текстовий рядок */
+  /* Обмежити ширину до 100px */
+  word-wrap: break-word; /* Переносити слова, якщо вони завеликі */
+  transition: 0.3s ease-in;
+  overflow-wrap: break-word; /* Додаткове правило для переносу довгих слів */
+}
+.lobby__member-neekname:hover,
+.lobby__member-neekname:active,
+.lobby__member-neekname:focus {
+  color: #5c4284;
+}
+img {
+  transition: 0.1s ease-out;
+}
+.lobby__member-btn img:hover {
+  cursor: pointer;
+
+  filter: contrast(108%);
+}
+.lobby__member-btn img:active {
+  filter: contrast(120%);
+}
+.lobby__member-btn:hover,
+.lobby__member-btn:active {
+  box-shadow: 0 0 5px 2px rgba(39, 29, 55, 0.5);
+}
+.leader {
+  position: relative;
+}
+.leader::before {
+  content: "";
+  position: absolute;
+  top: -18%;
+  left: -16%;
+  transform: translate(-50%, -50%); /* Централізує зображення */
+  width: 70px; /* Задайте ширину зображення */
+  height: 70px; /* Задайте висоту зображення */
+  background-image: url("images/leader-crown.png"); /* Посилання на зображення */
+  background-size: contain;
+  background-repeat: no-repeat;
+  transform: rotate(-35deg);
+}
+.lobby__member-avatar {
+  position: relative;
+}
+.lobby__member {
+  position: relative;
+}
+
+.lobby__member::before {
+  content: "";
+  position: absolute;
+
+  z-index: 300;
+  transition: transform 0.3s ease;
+  transform: scale(0);
+  transform-origin: center;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="%23f7edfe"%3E%3Cpath stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/%3E%3C/svg%3E');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.kick-btn {
+  position: absolute;
+  color: #f1e4fb;
+  top: 0;
+  right: 0;
+  width: 24px;
+  height: 24px;
+  background-color: #fe0e3ee3;
+  border-radius: 50%;
+  border: none;
+  transform: scale(0); /* Початковий скейл 0 */
+  transition: sll 0.3s ease; /* Плавний перехід */
+}
+.kick-btn:hover {
+  background-color: #ff0033;
+  cursor: pointer;
+}
+.lobby__member:hover .kick-btn {
+  transform: scale(
+    1
+  ); /* Зміна скейлу на 1 при наведенні на батьківський елемент */
+}
+.kick-svg {
+  width: 24px;
+}
+.lobby__member:hover::before {
+  cursor: pointer;
+  transform: scale(1);
+  transition: transform 0.3s ease-in;
+}
+.in-room-btns {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+}
+
+.btn-in {
+  color: #271d37;
+  cursor: pointer;
+  padding: 5px 10px;
+  font-size: 24px;
+  background-color: #d1b5e8;
+  border: none;
+  border-radius: 6px;
+  transition: all 0.15s ease-in;
+}
+.btn-in:hover {
+  color: #f1e4fb;
+}
+.leave-btn:hover,
+.leave-btn:active {
+  background-color: #fe0e3ee3;
+}
+.move-to-lobby-btn:hover,
+.move-to-lobby-btn:active {
+  background-color: #a5d97acf;
+}
