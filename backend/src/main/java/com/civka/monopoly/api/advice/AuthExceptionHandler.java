@@ -34,7 +34,7 @@ public class AuthExceptionHandler {
         ErrorResponse error = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.UNAUTHORIZED.value())
-                .message("Wrong login or password")
+                .message("Wrong password")
                 .path(request.getRequestURI()).build();
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
