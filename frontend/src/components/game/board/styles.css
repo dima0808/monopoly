@@ -3,9 +3,11 @@
   border-collapse: collapse;
   outline-offset: -1px;
 }
-.mozila .border {
+
+.firefox .border {
   outline-offset: 0;
 }
+
 .board {
   /* макет 1700 на 1500 */
   margin: 0 auto;
@@ -52,6 +54,7 @@
 .object-vertical__price-government {
   background-color: #791498;
 }
+
 .edge__img {
   width: 110px;
   height: 110px;

@@ -1,6 +1,6 @@
-import './ActionsSection.css';
+import './styles.css';
 
-export default function ActionsSection() {
+export default function Actions() {
     return (
         <section className="actions">
             d

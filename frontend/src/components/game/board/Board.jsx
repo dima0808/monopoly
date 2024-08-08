@@ -1,4 +1,4 @@
-import "./BoardSection.css";
+import "./styles.css";
 
 import civkaLogoImg from "../../../images/civka-logo.png";
 
@@ -120,7 +120,7 @@ function Chat() {
   );
 }
 
-export default function BoardSection() {
+export default function Board() {
   return (
     <section className="board">
       <EdgeCell src={startImg} alt="start" position="left-up" />

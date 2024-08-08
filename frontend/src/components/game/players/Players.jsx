@@ -1,6 +1,6 @@
-import './PlayersSection.css';
+import './styles.css';
 
-export default function PlayersSection() {
+export default function Players() {
     return (
         <section className="players">
             d

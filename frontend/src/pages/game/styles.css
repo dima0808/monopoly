@@ -1,0 +1,21 @@
+.grid-3 {
+    justify-content: center;
+    display: grid;
+    grid-template-columns: 250px 820px 300px;
+    gap: 40px;
+}
+
+.game-html body {
+    background-color: #222222;
+}
+
+.game-html header {
+    display: none;
+}
+
+.game-html,
+.game-html body {
+    height: 100%;
+    display: grid;
+    place-items: center;
+}
