@@ -1,3 +1,4 @@
+import "./styles.css";
 import { useRef, useState } from "react";
 import { signUp } from "../../http";
 import { Link } from "react-router-dom";
@@ -35,40 +36,45 @@ export default function SignUp() {
 
   return (
     <main>
-      <h1 className="authentication-h1">Sign Up</h1>
-      <form onSubmit={handleSubmit} className="authentication-section">
-        <input
-          type="text"
-          placeholder="Username"
-          ref={usernameRef}
-          className="authentication-input"
-        />
-        <input
-          type="text"
-          placeholder="Email"
-          ref={emailRef}
-          className="authentication-input"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          ref={passwordRef}
-          className="authentication-input"
-        />
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          ref={confirmPasswordRef}
-          className="authentication-input"
-        />
-        {error && <p className="error-message"> {error.message}</p>}
-        <button type="submit" className="authentication-btn">
-          Sign Up
-        </button>
-        <Link to={"/signin"} className="authentication-link">
-          Already have an account? Sign In
-        </Link>
-      </form>
+      <div className="authentication-section-fon gradiant-violet">
+        <div className="authentication-section">
+          <h1 className="authentication-h1">Sign Up</h1>
+          <form onSubmit={handleSubmit} className="authentication-form">
+            <input
+              type="text"
+              placeholder="Username"
+              ref={usernameRef}
+              className="authentication-input"
+            />
+            <input
+              type="text"
+              placeholder="Email"
+              ref={emailRef}
+              className="authentication-input"
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              ref={passwordRef}
+              className="authentication-input"
+            />
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              ref={confirmPasswordRef}
+              className="authentication-input"
+            />
+            {error && <p className="error-message"> {error.message}</p>}
+            <button type="submit" className="authentication-btn">
+              🠚
+            </button>
+
+            <Link to={"/signin"} className="authentication-link">
+              Already have an account? Sign In
+            </Link>
+          </form>
+        </div>
+      </div>
     </main>
   );
 }
