@@ -10,6 +10,14 @@ body {
   font-size: 20px;
 }
 
+.no-scroll {
+  overflow: hidden;
+}
+
+.hide-scrollbars {
+  display: none;
+}
+
 .section {
   width: 1300px;
   margin: 0 auto;

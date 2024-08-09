@@ -31,3 +31,14 @@ export async function signIn({ login, password }) {
 
     return resData;
 }
+
+export async function getAllRooms() {
+    const response = await fetch('http://localhost:8080/api/rooms');
+    const resData = await response.json();
+
+    if (!response.ok) {
+        throw new Error(resData.message);
+    }
+
+    return resData;
+}

@@ -9,10 +9,6 @@
     background-color: #222222;
 }
 
-.game-html header {
-    display: none;
-}
-
 .game-html,
 .game-html body {
     height: 100%;

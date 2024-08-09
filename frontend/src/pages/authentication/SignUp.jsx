@@ -10,6 +10,7 @@ export default function SignUp() {
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
   const [error, setError] = useState(null);
+  const [isDisabled, setIsDisabled] = useState(true);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -34,6 +35,14 @@ export default function SignUp() {
     }
   };
 
+  const handleInputChange = () => {
+    const username = usernameRef.current.value;
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
+    const confirmPassword = confirmPasswordRef.current.value;
+    setIsDisabled(!(username && password && email && confirmPassword));
+  };
+
   return (
     <main>
       <div className="authentication-section-fon gradiant-violet">
@@ -45,27 +54,35 @@ export default function SignUp() {
               placeholder="Username"
               ref={usernameRef}
               className="authentication-input"
+              onChange={handleInputChange}
             />
             <input
               type="text"
               placeholder="Email"
               ref={emailRef}
               className="authentication-input"
+              onChange={handleInputChange}
             />
             <input
               type="password"
               placeholder="Password"
               ref={passwordRef}
               className="authentication-input"
+              onChange={handleInputChange}
             />
             <input
               type="password"
               placeholder="Confirm Password"
               ref={confirmPasswordRef}
               className="authentication-input"
+              onChange={handleInputChange}
             />
             {error && <p className="error-message"> {error.message}</p>}
-            <button type="submit" className="authentication-btn">
+            <button
+                type="submit"
+                className={`authentication-btn ${!isDisabled ? "continue-button " : ""}`}
+                disabled={isDisabled}
+            >
               🠚
             </button>
 
