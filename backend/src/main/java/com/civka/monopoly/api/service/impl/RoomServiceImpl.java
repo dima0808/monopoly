@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -48,7 +49,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void deleteById(Long roomId, String username) {
+    public Room deleteById(Long roomId, String username) {
         Room room = findById(roomId);
         Member leader = userService.findByUsername(username).getMember();
         if (leader == null || !leader.getIsLeader() || !leader.getRoom().getId().equals(roomId)) {
@@ -60,6 +61,8 @@ public class RoomServiceImpl implements RoomService {
             memberService.deleteById(temp.getId());
         }
         roomRepository.deleteById(roomId);
+        room.setMembers(new ArrayList<>());
+        return room;
     }
 
     @Override
@@ -102,7 +105,6 @@ public class RoomServiceImpl implements RoomService {
                 memberService.deleteById(temp.getId());
                 if (members.isEmpty()) {
                     roomRepository.deleteById(room.getId());
-                    return null;
                 }
                 return updatedRoom;
             }

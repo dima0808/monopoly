@@ -12,7 +12,7 @@ public interface RoomService {
 
     List<Room> findAll();
 
-    void deleteById(Long roomId, String username);
+    Room deleteById(Long roomId, String username);
 
     Room addMember(Room room, String username);
 
