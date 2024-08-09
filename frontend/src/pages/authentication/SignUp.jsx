@@ -1,66 +1,74 @@
-import { useRef, useState } from 'react';
+import { useRef, useState } from "react";
 import { signUp } from "../../http";
 import { Link } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
-    const usernameRef = useRef();
-    const emailRef = useRef();
-    const passwordRef = useRef();
-    const confirmPasswordRef = useRef();
-    const [error, setError] = useState(null);
-    const navigate = useNavigate();
+  const usernameRef = useRef();
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const confirmPasswordRef = useRef();
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const username = usernameRef.current.value;
-        const email = emailRef.current.value;
-        const password = passwordRef.current.value;
-        const confirmPassword = confirmPasswordRef.current.value;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const username = usernameRef.current.value;
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
+    const confirmPassword = confirmPasswordRef.current.value;
 
-        if (password !== confirmPassword) {
-            setError({ message: 'Passwords do not match' });
-            return;
-        }
+    if (password !== confirmPassword) {
+      setError({ message: "Passwords do not match" });
+      return;
+    }
 
-        try {
-            await signUp({ username, email, password });
-            setError(null);
-            alert('User created successfully');
-            navigate('/signin');
-        } catch (error) {
-            setError({ message: error.message || 'An error occurred' });
-        }
-    };
+    try {
+      await signUp({ username, email, password });
+      setError(null);
+      alert("User created successfully");
+      navigate("/signin");
+    } catch (error) {
+      setError({ message: error.message || "An error occurred" });
+    }
+  };
 
-    return (
-        <main>
-            <h1>Sign Up</h1>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    placeholder="Username"
-                    ref={usernameRef}
-                />
-                <input
-                    type="text"
-                    placeholder="Email"
-                    ref={emailRef}
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    ref={passwordRef}
-                />
-                <input
-                    type="password"
-                    placeholder="Confirm Password"
-                    ref={confirmPasswordRef}
-                />
-                {error && <p style={{ color: 'red' }}>{error.message}</p>}
-                <button type="submit">Sign Up</button>
-                <Link to={'/signin'}>Already have an account? Sign In</Link>
-            </form>
-        </main>
-    );
+  return (
+    <main>
+      <h1 className="authentication-h1">Sign Up</h1>
+      <form onSubmit={handleSubmit} className="authentication-section">
+        <input
+          type="text"
+          placeholder="Username"
+          ref={usernameRef}
+          className="authentication-input"
+        />
+        <input
+          type="text"
+          placeholder="Email"
+          ref={emailRef}
+          className="authentication-input"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          ref={passwordRef}
+          className="authentication-input"
+        />
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          ref={confirmPasswordRef}
+          className="authentication-input"
+        />
+        {error && <p className="error-message"> {error.message}</p>}
+        <button type="submit" className="authentication-btn">
+          Sign Up
+        </button>
+        <Link to={"/signin"} className="authentication-link">
+          Already have an account? Sign In
+        </Link>
+      </form>
+    </main>
+  );
 }
