@@ -51,3 +51,20 @@ input:focus,
 textarea:focus {
   outline: 2px solid rgba(38, 28, 53, 0.5); /* Задайте тут свій колір */
 }
+.gradiant-violet {
+  background: linear-gradient(to bottom, #d7beeb, #f1e4fb);
+  margin: 0;
+}
+
+.gradiant-violet-reverse {
+  background: linear-gradient(to bottom, #f1e4fb, #d7beeb);
+  margin: 0;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px #d7beeb inset; /* Задає колір фону */
+  box-shadow: 0 0 0px 1000px #d7beeb inset;
+  -webkit-text-fill-color: #271d37; /* Колір тексту */
+}

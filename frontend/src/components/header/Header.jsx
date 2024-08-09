@@ -56,7 +56,9 @@ export default function Header({ username, onLogout }) {
               </Link>
             </>
           ) : (
-            <Link to="/signin">Логін</Link>
+            <Link to="/signin " className="header__anchor">
+              Логін
+            </Link>
           )}
         </ul>
       </div>

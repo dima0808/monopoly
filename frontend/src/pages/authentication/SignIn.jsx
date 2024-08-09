@@ -1,4 +1,6 @@
+import "./styles.css";
 import { useRef, useState } from "react";
+
 import { signIn } from "../../http";
 import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
@@ -27,30 +29,33 @@ export default function SignIn({ onLogin }) {
 
   return (
     <main>
-      <h1 className="authentication-h1">Sign In</h1>
-      <form onSubmit={handleSubmit} className="authentication-section">
-        <input
-          type="text"
-          placeholder="Login"
-          ref={loginRef}
-          className="authentication-input"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          ref={passwordRef}
-          className="authentication-input"
-        />
-        {error && <p className="error-message">{error.message}</p>}
-        <div className="flex-between">
-          <button type="submit" className="authentication-btn">
-            Sign In
-          </button>
-          <Link to={"/signup"} className="authentication-link">
-            Don't have an account? Sign Up
-          </Link>
+      <div className="authentication-section-fon gradiant-violet">
+        <div className="authentication-section">
+          <h1 className="authentication-h1">Sign In</h1>
+          <form onSubmit={handleSubmit} className="authentication-form">
+            <input
+              type="text"
+              placeholder="Login"
+              ref={loginRef}
+              className="authentication-input"
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              ref={passwordRef}
+              className="authentication-input"
+            />
+            {error && <p className="error-message">{error.message}</p>}
+
+            <button type="submit" className="authentication-btn">
+              🠚
+            </button>
+            <Link to={"/signup"} className="authentication-link">
+              Don't have an account? Sign Up
+            </Link>
+          </form>
         </div>
-      </form>
+      </div>
     </main>
   );
 }
