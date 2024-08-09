@@ -31,7 +31,7 @@ public class SecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthEntryPointJwt unauthorizedHandler;
 
-    @Value("${cors.allowed.origins}")
+    @Value("${monopoly.app.cors.allowed.origins}")
     private String allowedOrigins;
 
     @Bean
