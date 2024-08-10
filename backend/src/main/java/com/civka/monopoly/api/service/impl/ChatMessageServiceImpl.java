@@ -7,8 +7,8 @@ import com.civka.monopoly.api.repository.ChatMessageRepository;
 import com.civka.monopoly.api.repository.ChatRepository;
 import com.civka.monopoly.api.service.ChatMessageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -19,8 +19,10 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRepository chatRepository;
 
+    @Value("${monopoly.app.chat.max-size}")
+    private Integer maxSize;
+
     @Override
-    @Transactional
     public ChatMessage save(Chat chat, ChatMessageDto chatMessageDto) {
         ChatMessage chatMessage = ChatMessage.builder()
                 .sender(chatMessageDto.getSender())
@@ -31,11 +33,11 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 .build();
 
         chat.getMessages().add(chatMessage);
-        if (chat.getMessages().size() > 50) {
+        if (chat.getMessages().size() > maxSize) {
             chat.getMessages().remove(0);
-            chatRepository.save(chat);
         }
 
-        return chatMessageRepository.save(chatMessage);
+        chatRepository.save(chat);
+        return chatMessage;
     }
 }

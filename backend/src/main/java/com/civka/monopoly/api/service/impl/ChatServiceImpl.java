@@ -20,30 +20,36 @@ public class ChatServiceImpl implements ChatService {
     private final SimpMessagingTemplate messagingTemplate;
 
     @Override
-    public ChatMessage sendPublicMessage(String name, ChatMessageDto chatMessageDto) {
-        Chat chat = findByName(name);
-        return chatMessageService.save(chat, chatMessageDto);
-    }
-
-    @Override
-    public ChatMessage sendPrivateMessage(String name, ChatMessageDto chatMessageDto) {
-        Chat chat = findByName(name);
-        ChatMessage chatMessage = chatMessageService.save(chat, chatMessageDto);
-        messagingTemplate.convertAndSendToUser(chatMessage.getReceiver(), "/topic/chat/" + chat.getName(), chatMessage);
-        return chatMessage;
-    }
-
-    @Override
     public Chat findByName(String name) {
         return chatRepository.findByName(name)
                 .orElseThrow(() -> new ChatNotFoundException(name));
     }
 
     @Override
-    public void clearMessages(String name, String admin) {
+    public Chat save(Chat chat) {
+        return chatRepository.save(chat);
+    }
+
+    @Override
+    public ChatMessage sendPublicMessage(String chatName, ChatMessageDto chatMessageDto) {
+        Chat chat = findByName(chatName);
+        return chatMessageService.save(chat, chatMessageDto);
+    }
+
+    @Override
+    public ChatMessage sendPrivateMessage(String chatName, ChatMessageDto chatMessageDto) {
+        Chat chat = findByName(chatName);
+        ChatMessage chatMessage = chatMessageService.save(chat, chatMessageDto);
+        messagingTemplate.convertAndSendToUser(chatMessage.getReceiver(), "/topic/chat/" + chat.getName(), chatMessage);
+        messagingTemplate.convertAndSendToUser(chatMessage.getSender(), "/topic/chat/" + chat.getName(), chatMessage);
+        return chatMessage;
+    }
+
+    @Override
+    public void clearMessages(String chatName, String admin) {
         User adminUser = userService.findByUsername(admin);
         if (adminUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))) {
-            Chat chat = findByName(name);
+            Chat chat = findByName(chatName);
             chat.getMessages().clear();
             chatRepository.save(chat);
         } else {
@@ -52,7 +58,21 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Chat save(Chat chat) {
-        return chatRepository.save(chat);
+    public void clearMessages(Integer clearCount, String chatName, String admin) {
+        if (clearCount < 1) {
+            throw new InvalidCommandException();
+        }
+        User adminUser = userService.findByUsername(admin);
+        if (adminUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))) {
+            Chat chat = findByName(chatName);
+            int size = chat.getMessages().size();
+            for (int i = 0; i < clearCount && size > 0; i++) {
+                chat.getMessages().remove(size - 1);
+                size--;
+            }
+            chatRepository.save(chat);
+        } else {
+            throw new UserNotAllowedException();
+        }
     }
 }

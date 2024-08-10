@@ -19,12 +19,20 @@ public class ChatController {
     private final ChatService chatService;
 
     @MessageMapping("/chat/sendPublicMessage/{name}")
-    @SendTo("/topic/chat")
+    @SendTo("/topic/chat/{name}")
     public ChatMessage sendMessage(@Payload ChatMessageDto chatMessageDto,
                                    @Header("username") String username,
                                    @DestinationVariable String name) {
         chatMessageDto.setSender(username);
         return chatService.sendPublicMessage(name, chatMessageDto);
+    }
+
+    @MessageMapping("/chat/sendPrivateMessage/{name}")
+    public ChatMessage sendPrivateMessage(@Payload ChatMessageDto chatMessageDto,
+                                          @Header("username") String username,
+                                          @DestinationVariable String name) {
+        chatMessageDto.setSender(username);
+        return chatService.sendPrivateMessage(name, chatMessageDto);
     }
 
     @GetMapping("/api/chat")

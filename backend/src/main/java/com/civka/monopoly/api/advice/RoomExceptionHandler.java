@@ -21,7 +21,7 @@ public class RoomExceptionHandler {
 
     @MessageExceptionHandler({UserAlreadyJoinedException.class, RoomNotFoundException.class,
             UserNotAllowedException.class, IllegalRoomSizeException.class, RoomFullException.class,
-            WrongLobbyPasswordException.class})
+            WrongLobbyPasswordException.class, InvalidCommandException.class})
     public ErrorResponse handleException(RuntimeException exc, @Header("username") String username) {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
@@ -39,7 +39,8 @@ public class RoomExceptionHandler {
         HttpStatus status;
         if (exc instanceof UserAlreadyJoinedException ||
                 exc instanceof IllegalRoomSizeException ||
-                exc instanceof RoomFullException) {
+                exc instanceof RoomFullException ||
+                exc instanceof InvalidCommandException) {
             status = HttpStatus.BAD_REQUEST;
         } else if (exc instanceof RoomNotFoundException) {
             status = HttpStatus.NOT_FOUND;

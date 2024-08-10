@@ -6,13 +6,15 @@ import com.civka.monopoly.api.entity.ChatMessage;
 
 public interface ChatService {
 
-    ChatMessage sendPublicMessage(String name, ChatMessageDto chatMessageDto);
-
-    ChatMessage sendPrivateMessage(String name, ChatMessageDto chatMessageDto);
-
     Chat findByName(String name);
 
-    void clearMessages(String name, String admin);
-
     Chat save(Chat chat);
+
+    ChatMessage sendPublicMessage(String chatName, ChatMessageDto chatMessageDto);
+
+    ChatMessage sendPrivateMessage(String chatName, ChatMessageDto chatMessageDto);
+
+    void clearMessages(String chatName, String admin);
+
+    void clearMessages(Integer clearCount, String chatName, String admin);
 }

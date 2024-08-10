@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
 
-    @Value("${monopoly.app.room.maxSize}")
+    @Value("${monopoly.app.room.max-size}")
     private Integer maxSize;
 
     private final RoomRepository roomRepository;
