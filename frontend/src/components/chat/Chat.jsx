@@ -15,7 +15,12 @@ export default function Chat({ client, isConnected, setNotifications }) {
         if (parsedMessage.type) {
             switch (parsedMessage.type) {
                 case 'CLEAR':
-                    setMessages([]);
+                    if (parsedMessage.content.split(' ')[0] === 'All') {
+                        setMessages([]);
+                    } else {
+                        const clearCount = parseInt(parsedMessage.content.split(' ')[0], 10);
+                        setMessages((prevMessages) => prevMessages.slice(0, -clearCount));
+                    }
                     return;
                 case 'DELETE':
                     return;
@@ -42,9 +47,12 @@ export default function Chat({ client, isConnected, setNotifications }) {
         scrollToBottom();
 
         if (client && isConnected) {
-            const subscription = client.subscribe('/topic/chat', onChatMessageReceived);
+            const username = Cookies.get('username');
+            const publicMessagesSubscription = client.subscribe('/topic/chat/public', onChatMessageReceived);
+            const privateMessagesSubscription = client.subscribe('/user/' + username + '/topic/chat/public', onChatMessageReceived);
             return () => {
-                subscription.unsubscribe();
+                publicMessagesSubscription.unsubscribe();
+                privateMessagesSubscription.unsubscribe();
             };
         }
     }, [client, isConnected]);
@@ -79,16 +87,30 @@ export default function Chat({ client, isConnected, setNotifications }) {
             }]);
             return;
         }
+        const [command, param] = messageContent.split(' ');
         try {
-            switch (messageContent) {
+            switch (command) {
                 case '/clear':
-                    client.publish({
-                        destination: '/app/chat/clear/public',
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            username: username
-                        }
-                    });
+                    if (param) {
+                        const clearCount = parseInt(param, 10);
+                        client.publish({
+                            destination: '/app/chat/clear/public',
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                username: username,
+                                clearCount : clearCount
+                            }
+                        });
+                    } else {
+                        client.publish({
+                            destination: '/app/chat/clear/public',
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                username: username,
+                                clearCount : 'All'
+                            }
+                        });
+                    }
                     break;
                 default:
                     client.publish({
@@ -100,6 +122,7 @@ export default function Chat({ client, isConnected, setNotifications }) {
                         body: JSON.stringify({ content: messageContent })
                     });
             }
+
             console.log('Sending message: ' + messageContent);
             messageInputRef.current.value = '';
             scrollToBottom();

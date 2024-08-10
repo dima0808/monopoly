@@ -1,5 +1,5 @@
 import "./styles.css";
-import React, { useRef } from "react";
+import React, {useEffect, useRef} from "react";
 import { createPortal } from "react-dom";
 
 export default function JoinLobbyDialog({ isOpen, onClose, onJoin }) {
@@ -11,6 +11,22 @@ export default function JoinLobbyDialog({ isOpen, onClose, onJoin }) {
     onJoin(password);
     onClose();
   };
+
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+    if (isOpen) {
+      document.addEventListener("keydown", handleEsc);
+    } else {
+      document.removeEventListener("keydown", handleEsc);
+    }
+    return () => {
+      document.removeEventListener("keydown", handleEsc);
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 

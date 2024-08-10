@@ -30,13 +30,11 @@ export default function CreateLobbyDialog({ isOpen, onClose, onCreate }) {
         onClose();
       }
     };
-
     if (isOpen) {
       document.addEventListener("keydown", handleEsc);
     } else {
       document.removeEventListener("keydown", handleEsc);
     }
-
     return () => {
       document.removeEventListener("keydown", handleEsc);
     };
