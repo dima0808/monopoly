@@ -42,3 +42,14 @@ export async function getAllRooms() {
 
     return resData;
 }
+
+export async function getAllMessages() {
+    const response = await fetch('http://localhost:8080/api/chat');
+    const resData = await response.json();
+
+    if (!response.ok) {
+        throw new Error(resData.message);
+    }
+
+    return resData;
+}
