@@ -1,16 +1,162 @@
 import './styles.css';
+import React, { useEffect, useRef, useState } from "react";
+import { getAllMessages } from "../../http";
+import Message from "./Message";
+import Cookies from "js-cookie";
 
-export default function Chat({ children }) {
+export default function Chat({ client, isConnected, setNotifications }) {
+    const [messages, setMessages] = useState([]);
+    const [error, setError] = useState(null);
+    const messageInputRef = useRef();
+    const chatContainerRef = useRef();
+
+    function onChatMessageReceived(message) {
+        const parsedMessage = JSON.parse(message.body);
+        if (parsedMessage.type) {
+            switch (parsedMessage.type) {
+                case 'CLEAR':
+                    setMessages([]);
+                    return;
+                case 'DELETE':
+                    return;
+                default:
+                    return;
+            }
+        }
+        const { id, sender, content, timestamp, receiver } = parsedMessage;
+        setMessages((prevMessages) => {
+            const newMessages = [...prevMessages, {
+                id: id,
+                sender: sender,
+                content: content,
+                timestamp: timestamp,
+                receiver: receiver
+            }];
+            return newMessages.length > 50 ? newMessages.slice(-50) : newMessages;
+        });
+    }
+
+    useEffect(() => {
+        getAllMessages().then(setMessages)
+            .catch((error) => setError({ message: error.message || "An error occurred" }));
+        scrollToBottom();
+
+        if (client && isConnected) {
+            const subscription = client.subscribe('/topic/chat', onChatMessageReceived);
+            return () => {
+                subscription.unsubscribe();
+            };
+        }
+    }, [client, isConnected]);
+
+    useEffect(() => {
+        if (isScrolledToBottom()) {
+            scrollToBottom();
+        }
+    }, [messages]);
+
+    function handleSendMessage() {
+        const token = Cookies.get('token');
+        const username = Cookies.get('username');
+        const messageContent = messageInputRef.current.value.trim();
+        if (!messageContent) {
+            messageInputRef.current.value = '';
+            return;
+        }
+        if (messageContent.length > 250) {
+            setNotifications(prev => [...prev, {
+                message: 'Message exceeds 300 characters',
+                duration: 3500,
+                isError: true
+            }]);
+            return;
+        }
+        if (!client || !client.publish) {
+            setNotifications(prev => [...prev, {
+                message: 'Client is not initialized or publish method is not available',
+                duration: 3500,
+                isError: true
+            }]);
+            return;
+        }
+        try {
+            switch (messageContent) {
+                case '/clear':
+                    client.publish({
+                        destination: '/app/chat/clear/public',
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            username: username
+                        }
+                    });
+                    break;
+                default:
+                    client.publish({
+                        destination: '/app/chat/sendPublicMessage/public',
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            username: username
+                        },
+                        body: JSON.stringify({ content: messageContent })
+                    });
+            }
+            console.log('Sending message: ' + messageContent);
+            messageInputRef.current.value = '';
+            scrollToBottom();
+        } catch (error) {
+            setNotifications(prev => [...prev, {
+                message: 'Error sending message (no connection)',
+                duration: 3500,
+                isError: true
+            }]);
+        }
+    }
+
+    function handleKeyDown(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleSendMessage();
+        }
+    }
+
+    function handleInputChange(event) {
+        if (event.target.value.length > 250) {
+            event.target.value = event.target.value.slice(0, 250);
+        }
+    }
+
+    function isScrolledToBottom() {
+        const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+        return scrollHeight - scrollTop < clientHeight + 80 && scrollHeight - scrollTop > clientHeight - 80;
+    }
+
+    function scrollToBottom() {
+        chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+
     return (
         <section className="chat">
             <div className="chat__title title-box">Public Chat</div>
-            <div className="chat__text scroll" id="chat">
-                {children}
+            <div className="chat__text scroll" id="chat" ref={chatContainerRef}>
+                {!error && messages
+                    .map((message) => (
+                        <Message key={message.id} username={message.sender}>
+                            {message.content}
+                        </Message>
+                    ))}
+                {error && <p>{error.message}</p>}
             </div>
 
             <div className="chat__typing">
-                <input type="text" className="chat__typing-input"/>
-                <button className="chat__typing-btn">
+                <input
+                    type="text"
+                    className="chat__typing-input"
+                    ref={messageInputRef}
+                    onKeyDown={handleKeyDown}
+                    onChange={handleInputChange}
+                    maxLength="300"
+                />
+                <button className="chat__typing-btn" onClick={handleSendMessage}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"

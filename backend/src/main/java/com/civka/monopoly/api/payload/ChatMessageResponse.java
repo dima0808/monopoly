@@ -1,6 +1,6 @@
 package com.civka.monopoly.api.payload;
 
-import com.civka.monopoly.api.entity.Room;
+import com.civka.monopoly.api.entity.ChatMessage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,17 +10,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class RoomMessage {
+public class ChatMessageResponse {
 
     private MessageType type;
     private String content;
-    private Room room;
+    private ChatMessage chatMessage;
 
     public enum MessageType {
-        CREATE,
-        JOIN,
-        LEAVE,
-        KICK,
+        CLEAR,
         DELETE
     }
 }

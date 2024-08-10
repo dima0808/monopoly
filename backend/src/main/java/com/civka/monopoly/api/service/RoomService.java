@@ -1,12 +1,13 @@
 package com.civka.monopoly.api.service;
 
+import com.civka.monopoly.api.dto.RoomDto;
 import com.civka.monopoly.api.entity.Room;
 
 import java.util.List;
 
 public interface RoomService {
 
-    Room create(Room room, String username);
+    Room create(RoomDto roomDto, String username);
 
     Room findById(Long roomId);
 
