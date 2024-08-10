@@ -23,4 +23,6 @@ public interface RoomService {
     Room removeMember(Long roomId, String username);
 
     Room kickMember(Long roomId, String member, String username);
+
+    void handlePassword(Long roomId, String password);
 }

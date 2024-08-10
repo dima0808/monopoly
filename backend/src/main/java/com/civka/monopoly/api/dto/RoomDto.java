@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class RoomDto {
 
-    private Long id;
     private String name;
     private Integer size;
+    private String password;
 }

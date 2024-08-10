@@ -2,18 +2,17 @@ package com.civka.monopoly.api.controller;
 
 import com.civka.monopoly.api.entity.Room;
 import com.civka.monopoly.api.payload.MessageType;
-import com.civka.monopoly.api.payload.NotificationResponse;
+import com.civka.monopoly.api.payload.PasswordMessage;
 import com.civka.monopoly.api.payload.RoomMessage;
 import com.civka.monopoly.api.service.RoomService;
+import com.civka.monopoly.api.service.WrongLobbyPasswordException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.*;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -21,21 +20,28 @@ import java.util.List;
 public class RoomController {
 
     private final RoomService roomService;
-    private final SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/rooms/addRoom")
     @SendTo("/topic/public")
     public RoomMessage addRoom(@Payload Room room, @Header("username") String username) {
         return RoomMessage.builder()
                 .type(MessageType.CREATE)
-                .content("Room created")
+                .content("Room " + room.getName() + " created")
                 .room(roomService.create(room, username))
                 .build();
     }
 
     @MessageMapping("/rooms/joinRoom/{roomId}")
     @SendTo({"/topic/public", "/topic/public/{roomId}"})
-    public RoomMessage joinRoom(@DestinationVariable Long roomId, @Header("username") String username) {
+    public RoomMessage joinRoom(@Payload PasswordMessage passwordMessage,
+                                @DestinationVariable Long roomId,
+                                @Header("username") String username) {
+        if (roomService.findById(roomId).getPassword() != null) {
+            if (passwordMessage.getPassword() == null) {
+                throw new WrongLobbyPasswordException();
+            }
+            roomService.handlePassword(roomId, passwordMessage.getPassword());
+        }
         return RoomMessage.builder()
                 .type(MessageType.JOIN)
                 .content("Member " + username + " joined the room with id " + roomId)
@@ -61,29 +67,22 @@ public class RoomController {
     public RoomMessage kickMember(@DestinationVariable Long roomId,
                            @DestinationVariable String member,
                            @Header("username") String username) {
-        Room updatedRoom = roomService.kickMember(roomId, member, username);
-        NotificationResponse notificationResponse = NotificationResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .message("You were kicked from the room by " + username)
-                .build();
-        messagingTemplate.convertAndSendToUser(member, "/queue/notifications", notificationResponse);
         return RoomMessage.builder()
                 .type(MessageType.KICK)
                 .content(String.format("Member %s was kicked from the room by %s",
                         member, username))
-                .room(updatedRoom)
+                .room(roomService.kickMember(roomId, member, username))
                 .build();
     }
 
     @MessageMapping("/rooms/deleteRoom/{roomId}")
     @SendTo("/topic/public")
     public RoomMessage deleteRoom(@DestinationVariable Long roomId, @Header("username") String username) {
-        Room deletedRoom = roomService.deleteById(roomId, username);
         return RoomMessage.builder()
                 .type(MessageType.DELETE)
                 .content(String.format("Room with id %d deleted by %s and all members were kicked out",
                         roomId, username))
-                .room(deletedRoom)
+                .room(roomService.deleteById(roomId, username))
                 .build();
     }
 
