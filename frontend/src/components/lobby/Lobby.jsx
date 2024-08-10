@@ -1,5 +1,4 @@
 import './styles.css';
-
 import React from 'react';
 import plusImg from "../../images/plus.png";
 import {Link} from "react-router-dom";
@@ -33,7 +32,8 @@ export default function Lobby({name, size, onJoin, onLeave, onKick, onDelete, ro
                 ))}
                 {Array.from({length: remainingSlots}).map((_, index) => (
                     <div className="lobby__member" key={index}>
-                        <button onClick={onJoin} className="lobby__member-avatar lobby__member-btn">
+                        <button onClick={onJoin} className="lobby__member-avatar lobby__member-btn"
+                                disabled={isUserInRoom()}>
                             <img
                                 src={plusImg}
                                 className="lobby__member-avatar-img"

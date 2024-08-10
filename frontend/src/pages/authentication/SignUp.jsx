@@ -28,7 +28,6 @@ export default function SignUp() {
     try {
       await signUp({ username, email, password });
       setError(null);
-      alert("User created successfully");
       navigate("/signin");
     } catch (error) {
       setError({ message: error.message || "An error occurred" });

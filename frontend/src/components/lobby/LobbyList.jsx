@@ -3,12 +3,15 @@ import React, { useEffect, useState } from 'react';
 import Lobby from "./Lobby";
 import { getAllRooms } from '../../http';
 import CreateLobbyDialog from './CreateLobbyDialog';
+import JoinLobbyDialog from './JoinLobbyDialog';
 import Cookies from 'js-cookie';
 
 export default function LobbyList({ client, isConnected }) {
     const [rooms, setRooms] = useState([]);
     const [error, setError] = useState(null);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+    const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
+    const [roomToJoin, setRoomToJoin] = useState(null);
 
     function onRoomMessageReceived(message) {
         const { type, content, room } = JSON.parse(message.body);
@@ -45,40 +48,52 @@ export default function LobbyList({ client, isConnected }) {
     }, [client, isConnected]);
 
     function handleCreateClick() {
-        setIsDialogOpen(true);
+        setIsCreateDialogOpen(true);
         document.getElementById('modal').classList.add('blur-modal');
         document.getElementById('root').classList.add('blur-background');
     }
 
     function handleDialogClose() {
-        setIsDialogOpen(false);
+        setIsCreateDialogOpen(false);
+        setIsJoinDialogOpen(false);
         document.getElementById('modal').classList.remove('blur-modal');
         document.getElementById('root').classList.remove('blur-background');
     }
 
-    function handleCreateLobby({ name, size }) {
-       const token = Cookies.get('token');
-       const username = Cookies.get('username');
-       if (!client || !client.publish) {
-           console.error('Client is not initialized or publish method is not available');
-           return;
-       }
-       try {
-           client.publish({
-               destination: '/app/rooms/addRoom',
-               headers: {
-                   Authorization: `Bearer ${token}`,
-                   username: username
-               },
-               body: JSON.stringify({ name, size })
-           });
-           console.log('Creating room ' + name + ' size=' + size + '...');
-       } catch (error) {
-           console.error('Error creating lobby: ', error);
-       }
+    function handleCreateRoom({ name, size, password }) {
+        const token = Cookies.get('token');
+        const username = Cookies.get('username');
+        if (!client || !client.publish) {
+            console.error('Client is not initialized or publish method is not available');
+            return;
+        }
+        try {
+            client.publish({
+                destination: '/app/rooms/addRoom',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    username: username
+                },
+                body: JSON.stringify({ name, size, password })
+            });
+            console.log('Creating room ' + name + ' size=' + size + '...');
+        } catch (error) {
+            console.error('Error creating lobby: ', error);
+        }
     }
 
-    function handleJoinRoom(roomId) {
+    function handleJoinClick(room) {
+        if (room.password) {
+            setRoomToJoin(room);
+            setIsJoinDialogOpen(true);
+            document.getElementById('modal').classList.add('blur-modal');
+            document.getElementById('root').classList.add('blur-background');
+        } else {
+            handleJoinRoom(room.id);
+        }
+    }
+
+    function handleJoinRoom(roomId, password = null) {
         const token = Cookies.get('token');
         const username = Cookies.get('username');
         if (!client || !client.publish) {
@@ -91,7 +106,8 @@ export default function LobbyList({ client, isConnected }) {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     username: username
-                }
+                },
+                body: JSON.stringify({ password })
             });
             console.log('Joining room ' + roomId + '...');
         } catch (error) {
@@ -170,9 +186,14 @@ export default function LobbyList({ client, isConnected }) {
     return (
         <section className="lobby">
             <CreateLobbyDialog
-                isOpen={isDialogOpen}
+                isOpen={isCreateDialogOpen}
                 onClose={handleDialogClose}
-                onCreate={handleCreateLobby}
+                onCreate={handleCreateRoom}
+            />
+            <JoinLobbyDialog
+                isOpen={isJoinDialogOpen}
+                onClose={handleDialogClose}
+                onJoin={(password) => handleJoinRoom(roomToJoin.id, password)}
             />
             <div className="lobby__title title-box">
                 <p className="title-box__p">Lobbies</p>
@@ -183,7 +204,7 @@ export default function LobbyList({ client, isConnected }) {
                     .sort((a, b) => isUserInRoom(b) - isUserInRoom(a))
                     .map((room) => (
                         <Lobby key={room.id} name={room.name} size={room.size}
-                               onJoin={() => handleJoinRoom(room.id)}
+                               onJoin={() => handleJoinClick(room)}
                                onLeave={() => handleLeaveRoom(room.id)}
                                onKick={(member) => handleKickMember(room.id, member)}
                                onDelete={() => handleDeleteRoom(room.id)}

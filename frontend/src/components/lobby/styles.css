@@ -119,6 +119,20 @@
     box-shadow: 0 0 5px 2px rgba(39, 29, 55, 0.5);
 }
 
+button:disabled,
+button[disabled] {
+    cursor: not-allowed;
+    pointer-events: none;
+    filter: none; /* Вимкнення будь-яких фільтрів */
+    box-shadow: none; /* Вимкнення тіней */
+}
+
+/* Вимкнення ефектів при наведенні та нажатті для зображень всередині disabled кнопок */
+button:disabled img,
+button[disabled] img {
+    filter: none; /* Вимкнення будь-яких фільтрів */
+}
+
 .leader {
     position: relative;
 }
@@ -255,10 +269,10 @@
 }
 
 .lobby-dialog {
-    width: 350px;
+    width: 370px;
     height: 300px;
     background-color: #f1e4fb;
-    border: 2px solid #271d37;
+    border: 1px solid #271d37;
     border-radius: 10px;
     padding: 20px;
     position: fixed;
@@ -309,4 +323,8 @@
 
 .lobby-dialog button[type="button"]:hover {
     background-color: #ff0033;
+}
+
+.private-lobby-settings {
+
 }

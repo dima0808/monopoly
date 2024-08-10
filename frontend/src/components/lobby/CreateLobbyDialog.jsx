@@ -1,17 +1,24 @@
 import './styles.css';
-import React, {useEffect, useRef} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 export default function CreateLobbyDialog({ isOpen, onClose, onCreate }) {
     const lobbyNameRef = useRef();
     const lobbySizeRef = useRef();
+    const lobbyPasswordRef = useRef();
+    const [isPrivate, setIsPrivate] = useState(false);
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
         const lobbyName = lobbyNameRef.current.value;
         const lobbySize = lobbySizeRef.current.value;
-        onCreate({ name: lobbyName, size: lobbySize });
+        const lobbyPassword = isPrivate ? lobbyPasswordRef.current.value : null;
+        onCreate({ name: lobbyName, size: lobbySize, password: lobbyPassword });
         onClose();
+    };
+
+    const handlePrivateChange = () => {
+        setIsPrivate(!isPrivate);
     };
 
     useEffect(() => {
@@ -38,13 +45,22 @@ export default function CreateLobbyDialog({ isOpen, onClose, onCreate }) {
         <dialog open className="lobby-dialog">
             <form onSubmit={handleFormSubmit}>
                 <label>
-                    Lobby Name:
+                    Name:
                     <input type="text" ref={lobbyNameRef} required />
                 </label>
                 <label>
-                    Lobby Size:
+                    Size:
                     <input type="number" ref={lobbySizeRef} required />
                 </label>
+                <div className="private-lobby-settings">
+                    <label>
+                        Password:
+                        <input type="password" ref={lobbyPasswordRef} disabled={!isPrivate}/>
+                    </label>
+                    <label>
+                        <input type="checkbox" checked={isPrivate} onChange={handlePrivateChange}/>
+                    </label>
+                </div>
                 <button type="submit">Create</button>
                 <button type="button" onClick={onClose}>Cancel</button>
             </form>
