@@ -1,12 +1,12 @@
 import './styles.css';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Lobby from "./Lobby";
-import { getAllRooms } from '../../http';
+import {getAllRooms} from '../../http';
 import CreateLobbyDialog from './CreateLobbyDialog';
 import JoinLobbyDialog from './JoinLobbyDialog';
 import Cookies from 'js-cookie';
 
-export default function LobbyList({ client, isConnected }) {
+export default function LobbyList({client, isConnected, setNotifications}) {
     const [rooms, setRooms] = useState([]);
     const [error, setError] = useState(null);
     const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -14,7 +14,7 @@ export default function LobbyList({ client, isConnected }) {
     const [roomToJoin, setRoomToJoin] = useState(null);
 
     function onRoomMessageReceived(message) {
-        const { type, content, room } = JSON.parse(message.body);
+        const {type, content, room} = JSON.parse(message.body);
         console.log(content);
         setRooms((prevRooms) => {
             switch (type) {
@@ -36,22 +36,15 @@ export default function LobbyList({ client, isConnected }) {
 
     useEffect(() => {
         getAllRooms().then(setRooms)
-            .catch((error) => setError({ message: error.message || "An error occurred" }));
+            .catch((error) => setError({message: error.message || "An error occurred"}));
 
         if (client && isConnected) {
             const subscription = client.subscribe('/topic/public', onRoomMessageReceived);
-
             return () => {
                 subscription.unsubscribe();
             };
         }
     }, [client, isConnected]);
-
-    function handleCreateClick() {
-        setIsCreateDialogOpen(true);
-        document.getElementById('modal').classList.add('blur-modal');
-        document.getElementById('root').classList.add('blur-background');
-    }
 
     function handleDialogClose() {
         setIsCreateDialogOpen(false);
@@ -60,11 +53,21 @@ export default function LobbyList({ client, isConnected }) {
         document.getElementById('root').classList.remove('blur-background');
     }
 
-    function handleCreateRoom({ name, size, password }) {
+    function handleCreateClick() {
+        setIsCreateDialogOpen(true);
+        document.getElementById('modal').classList.add('blur-modal');
+        document.getElementById('root').classList.add('blur-background');
+    }
+
+    function handleCreateRoom({name, size, password}) {
         const token = Cookies.get('token');
         const username = Cookies.get('username');
         if (!client || !client.publish) {
-            console.error('Client is not initialized or publish method is not available');
+            setNotifications(prev => [...prev, {
+                message: 'Client is not initialized or publish method is not available',
+                duration: 3500,
+                isError: true
+            }]);
             return;
         }
         try {
@@ -74,11 +77,15 @@ export default function LobbyList({ client, isConnected }) {
                     Authorization: `Bearer ${token}`,
                     username: username
                 },
-                body: JSON.stringify({ name, size, password })
+                body: JSON.stringify({name, size, password})
             });
-            console.log('Creating room ' + name + ' size=' + size + '...');
+            console.log('Creating lobby ' + name + ' size=' + size + '...');
         } catch (error) {
-            console.error('Error creating lobby: ', error);
+            setNotifications(prev => [...prev, {
+                message: 'Error creating lobby (no connection)',
+                duration: 3500,
+                isError: true
+            }]);
         }
     }
 
@@ -97,7 +104,11 @@ export default function LobbyList({ client, isConnected }) {
         const token = Cookies.get('token');
         const username = Cookies.get('username');
         if (!client || !client.publish) {
-            console.error('Client is not initialized or publish method is not available');
+            setNotifications(prev => [...prev, {
+                message: 'Client is not initialized or publish method is not available',
+                duration: 3500,
+                isError: true
+            }]);
             return;
         }
         try {
@@ -107,11 +118,15 @@ export default function LobbyList({ client, isConnected }) {
                     Authorization: `Bearer ${token}`,
                     username: username
                 },
-                body: JSON.stringify({ password })
+                body: JSON.stringify({password})
             });
-            console.log('Joining room ' + roomId + '...');
+            console.log('Joining lobby ' + roomId + '...');
         } catch (error) {
-            console.error('Error joining room: ', error);
+            setNotifications(prev => [...prev, {
+                message: 'Error joining lobby (no connection)',
+                duration: 3500,
+                isError: true
+            }]);
         }
     }
 
@@ -119,7 +134,11 @@ export default function LobbyList({ client, isConnected }) {
         const token = Cookies.get('token');
         const username = Cookies.get('username');
         if (!client || !client.publish) {
-            console.error('Client is not initialized or publish method is not available');
+            setNotifications(prev => [...prev, {
+                message: 'Client is not initialized or publish method is not available',
+                duration: 3500,
+                isError: true
+            }]);
             return;
         }
         try {
@@ -130,9 +149,13 @@ export default function LobbyList({ client, isConnected }) {
                     username: username
                 }
             });
-            console.log('Leaving room ' + roomId + '...');
+            console.log('Leaving lobby ' + roomId + '...');
         } catch (error) {
-            console.error('Error leaving room: ', error);
+            setNotifications(prev => [...prev, {
+                message: 'Error leaving lobby (no connection)',
+                duration: 3500,
+                isError: true
+            }]);
         }
     }
 
@@ -140,7 +163,11 @@ export default function LobbyList({ client, isConnected }) {
         const token = Cookies.get('token');
         const admin = Cookies.get('username');
         if (!client || !client.publish) {
-            console.error('Client is not initialized or publish method is not available');
+            setNotifications(prev => [...prev, {
+                message: 'Client is not initialized or publish method is not available',
+                duration: 3500,
+                isError: true
+            }]);
             return;
         }
         try {
@@ -153,7 +180,11 @@ export default function LobbyList({ client, isConnected }) {
             });
             console.log('Kicking member ' + member + ' from room ' + roomId + '...');
         } catch (error) {
-            console.error('Error kicking user: ', error);
+            setNotifications(prev => [...prev, {
+                message: 'Error kicking user (no connection)',
+                duration: 3500,
+                isError: true
+            }]);
         }
     }
 
@@ -161,7 +192,11 @@ export default function LobbyList({ client, isConnected }) {
         const token = Cookies.get('token');
         const username = Cookies.get('username');
         if (!client || !client.publish) {
-            console.error('Client is not initialized or publish method is not available');
+            setNotifications(prev => [...prev, {
+                message: 'Client is not initialized or publish method is not available',
+                duration: 3500,
+                isError: true
+            }]);
             return;
         }
         try {
@@ -172,9 +207,13 @@ export default function LobbyList({ client, isConnected }) {
                     username: username
                 }
             });
-            console.log('Deleting room ' + roomId + '...');
+            console.log('Deleting lobby ' + roomId + '...');
         } catch (error) {
-            console.error('Error deleting room: ', error);
+            setNotifications(prev => [...prev, {
+                message: 'Error deleting lobby (no connection)',
+                duration: 3500,
+                isError: true
+            }]);
         }
     }
 

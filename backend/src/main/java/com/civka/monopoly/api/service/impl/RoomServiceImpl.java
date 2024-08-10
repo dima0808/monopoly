@@ -1,5 +1,6 @@
 package com.civka.monopoly.api.service.impl;
 
+import com.civka.monopoly.api.dto.RoomDto;
 import com.civka.monopoly.api.entity.Civilization;
 import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.entity.Room;
@@ -20,23 +21,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
 
-    private final MemberService memberService;
     @Value("${monopoly.app.room.maxSize}")
     private Integer maxSize;
 
     private final RoomRepository roomRepository;
     private final UserService userService;
+    private final MemberService memberService;
     private final SimpMessagingTemplate messagingTemplate;
 
     @Override
-    public Room create(Room room, String username) {
-        if (room.getSize() > maxSize || room.getSize() < 2) {
-            throw new IllegalRoomSizeException(room.getSize(), maxSize);
+    public Room create(RoomDto roomDto, String username) {
+        if (roomDto.getSize() > maxSize || roomDto.getSize() < 2) {
+            throw new IllegalRoomSizeException(roomDto.getSize(), maxSize);
         }
         User user = userService.findByUsername(username);
         if (user.getMember() != null) {
             throw new UserAlreadyJoinedException(username);
         }
+        Room room = Room.builder()
+                .name(roomDto.getName())
+                .size(roomDto.getSize())
+                .password(roomDto.getPassword())
+                .members(new ArrayList<>())
+                .build();
         roomRepository.save(room);
         return addMember(room, username);
     }

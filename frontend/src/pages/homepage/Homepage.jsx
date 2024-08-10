@@ -1,7 +1,6 @@
 import "./styles.css";
 import LobbyList from "../../components/lobby/LobbyList";
 import Chat from "../../components/chat/Chat";
-import Message from "../../components/chat/Message";
 import Notification from '../../components/notification/Notification';
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
@@ -14,14 +13,12 @@ export default function Homepage() {
 
     function onNotificationReceived(message) {
         const notification = JSON.parse(message.body);
-        console.log(notification);
-        setNotifications(prev => [...prev, { message : notification.message, duration: 5000, isError: false }]);
+        setNotifications(prev => [...prev, { message : notification.message, duration: 3500, isError: false }]);
     }
 
     function onErrorReceived(message) {
         const error = JSON.parse(message.body);
-        console.log(error);
-        setNotifications(prev => [...prev, { message : error.message, duration: 5000, isError: true }]);
+        setNotifications(prev => [...prev, { message : error.message, duration: 3500, isError: true }]);
     }
 
     function removeNotification(timeStamp) {
@@ -74,44 +71,8 @@ export default function Homepage() {
 
             <div className="gradiant-violet-reverse">
                 <section className="section section-grid">
-                    <LobbyList client={client} isConnected={isConnected}/>
-                    <Chat>
-                        <Message username="Dimitri">Hello guys!</Message>
-                        <Message username="Nazar">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">HiHiHiHiH iHiHiHiHiH iHiHiHiHiH iHiHiHiHiH
-                            iHiHiHiHiH iHiHiHiHiH iHiHiHiHiH iHiHiHiHiHiHiHiHiHiHiHi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                        <Message username="Alexei">Hi!</Message>
-                    </Chat>
+                    <LobbyList client={client} isConnected={isConnected} setNotifications={setNotifications}/>
+                    <Chat client={client} isConnected={isConnected} setNotifications={setNotifications}/>
                 </section>
             </div>
             <div className="notification-stack">
@@ -121,7 +82,7 @@ export default function Homepage() {
                         message={notification.message}
                         duration={notification.duration}
                         isError={notification.isError}
-                        style={{ top: `${85 + index * 80}px`, right: '20px' }}
+                        style={{ top: `${20 + index * 80}px`, right: '20px' }}
                         onClose={() => removeNotification(notification.timeStamp)}
                     />
                 ))}
