@@ -41,6 +41,7 @@
     letter-spacing: 0.5px; /* Невеликий відступ між літерами */
     line-height: 1.25; /* Оптимальний відступ між рядками */
     margin-top: 4px;
+    overflow-wrap: break-word;
 }
 
 .chat__element-username {

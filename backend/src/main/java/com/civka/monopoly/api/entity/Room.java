@@ -25,6 +25,8 @@ public class Room {
     @Column(nullable = false)
     private Integer size;
 
+    private String password;
+
     @OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
     private List<Member> members = new ArrayList<>();
 }

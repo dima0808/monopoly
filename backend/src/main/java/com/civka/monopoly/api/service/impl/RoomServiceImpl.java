@@ -4,12 +4,16 @@ import com.civka.monopoly.api.entity.Civilization;
 import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.entity.Room;
 import com.civka.monopoly.api.entity.User;
+import com.civka.monopoly.api.payload.NotificationResponse;
 import com.civka.monopoly.api.repository.RoomRepository;
 import com.civka.monopoly.api.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,6 +26,7 @@ public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
     private final UserService userService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Override
     public Room create(Room room, String username) {
@@ -48,7 +53,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void deleteById(Long roomId, String username) {
+    public Room deleteById(Long roomId, String username) {
         Room room = findById(roomId);
         Member leader = userService.findByUsername(username).getMember();
         if (leader == null || !leader.getIsLeader() || !leader.getRoom().getId().equals(roomId)) {
@@ -60,6 +65,18 @@ public class RoomServiceImpl implements RoomService {
             memberService.deleteById(temp.getId());
         }
         roomRepository.deleteById(roomId);
+        NotificationResponse notificationResponse = NotificationResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .message("Room " + room.getName() + " was deleted and you were kicked out")
+                .build();
+        for (Member temp : room.getMembers()) {
+            String tempUsername = temp.getUser().getUsername();
+            if (!tempUsername.equals(username)) {
+                messagingTemplate.convertAndSendToUser(tempUsername, "/queue/notifications", notificationResponse);
+            }
+        }
+        room.setMembers(new ArrayList<>());
+        return room;
     }
 
     @Override
@@ -102,7 +119,6 @@ public class RoomServiceImpl implements RoomService {
                 memberService.deleteById(temp.getId());
                 if (members.isEmpty()) {
                     roomRepository.deleteById(room.getId());
-                    return null;
                 }
                 return updatedRoom;
             }
@@ -122,10 +138,24 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Room kickMember(Long roomId, String member, String username) {
-        if (username.equals(findById(roomId).getMembers().get(0).getUser().getUsername())) {
-            return removeMember(roomId, member);
-        } else {
+        Member leader = userService.findByUsername(username).getMember();
+        if (leader == null || !leader.getIsLeader() || !leader.getRoom().getId().equals(roomId)) {
             throw new UserNotAllowedException();
+        }
+        Room updatedRoom = removeMember(roomId, member);
+        NotificationResponse notificationResponse = NotificationResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .message("You were kicked from the room by " + username)
+                .build();
+        messagingTemplate.convertAndSendToUser(member, "/queue/notifications", notificationResponse);
+        return updatedRoom;
+    }
+
+    @Override
+    public void handlePassword(Long roomId, String password) {
+        Room room = findById(roomId);
+        if (!room.getPassword().equals(password)) {
+            throw new WrongLobbyPasswordException();
         }
     }
 }

@@ -20,7 +20,8 @@ public class RoomExceptionHandler {
     private final SimpMessagingTemplate messagingTemplate;
 
     @MessageExceptionHandler({UserAlreadyJoinedException.class, RoomNotFoundException.class,
-            UserNotAllowedException.class, IllegalRoomSizeException.class})
+            UserNotAllowedException.class, IllegalRoomSizeException.class, RoomFullException.class,
+            WrongLobbyPasswordException.class})
     public ErrorResponse handleException(RuntimeException exc, @Header("username") String username) {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
@@ -42,7 +43,7 @@ public class RoomExceptionHandler {
             status = HttpStatus.BAD_REQUEST;
         } else if (exc instanceof RoomNotFoundException) {
             status = HttpStatus.NOT_FOUND;
-        } else if (exc instanceof UserNotAllowedException) {
+        } else if (exc instanceof UserNotAllowedException || exc instanceof WrongLobbyPasswordException) {
             status = HttpStatus.FORBIDDEN;
         } else {
             status = HttpStatus.INTERNAL_SERVER_ERROR;

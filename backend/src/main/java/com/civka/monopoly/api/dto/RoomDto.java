@@ -9,4 +9,5 @@ public class RoomDto {
 
     private String name;
     private Integer size;
+    private String password;
 }

@@ -250,7 +250,10 @@ function onRoomMessageReceived(payload) {
         } else {
             displayRoom(message);
         }
-    } else {
+    } else if (message.hasOwnProperty('type') && message.type === 'CREATE') {
+        displayRoom(message.room);
+    }
+    else {
         removeRoom(message);
     }
 }

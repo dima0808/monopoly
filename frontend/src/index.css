@@ -1,57 +1,78 @@
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-weight: 400;
-    font-family: "Ubuntu", sans-serif;
-    font-size: 20px;
+  font-weight: 400;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 20px;
 }
 
-.root {
+.no-scroll {
+  overflow: hidden;
+}
 
+.hide-scrollbars {
+  display: none;
 }
 
 .section {
-    width: 1300px;
-    margin: 0 auto;
+  width: 1300px;
+  margin: 0 auto;
 }
 
 /* Загальний стиль для скроллбарів */
 .firefox .scroll {
-    scrollbar-width: thin; /* Тонкий скроллбар */
-    scrollbar-color: #d1b5e8 #e0e0f9; /* Фіолетовий ползунок і світло-фіолетовий фон треку */
+  scrollbar-width: thin; /* Тонкий скроллбар */
+  scrollbar-color: #d1b5e8 #e0e0f9; /* Фіолетовий ползунок і світло-фіолетовий фон треку */
 }
 
 /* Для Chrome, Edge, Safari */
 .scroll::-webkit-scrollbar {
-    width: 12px; /* Ширина скроллбару */
-    height: 12px;
+  width: 12px; /* Ширина скроллбару */
+  height: 12px;
 }
 
 .scroll::-webkit-scrollbar-track {
-    background: #e0e0f9;
-    border-radius: 10px;
+  background: #e0e0f9;
+  border-radius: 10px;
 }
 
 .scroll::-webkit-scrollbar-thumb {
-    background-color: #c396e8;
-    border-radius: 10px;
-    border: 3px solid #e0e0f9;
+  background-color: #c396e8;
+  border-radius: 10px;
+  border: 3px solid #e0e0f9;
 }
 
 .scroll::-webkit-scrollbar-thumb:hover {
-    background-color: #c396e8; /* Можна змінити на інший фіолетовий відтінок */
+  background-color: #c396e8; /* Можна змінити на інший фіолетовий відтінок */
 }
 
 /* Прибираємо стрілочки на скроллбарі в Chrome, Edge, Safari */
 .scroll::-webkit-scrollbar-button {
-    display: none;
+  display: none;
 }
 
 input:focus,
 textarea:focus {
-    outline: 2px solid rgba(38, 28, 53, 0.5); /* Задайте тут свій колір */
+  outline: 2px solid rgba(38, 28, 53, 0.5); /* Задайте тут свій колір */
+}
+.gradiant-violet {
+  background: linear-gradient(to bottom, #d7beeb, #f1e4fb);
+  margin: 0;
+}
+
+.gradiant-violet-reverse {
+  background: linear-gradient(to bottom, #f1e4fb, #d7beeb);
+  margin: 0;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px #d7beeb inset; /* Задає колір фону */
+  box-shadow: 0 0 0px 1000px #d7beeb inset;
+  -webkit-text-fill-color: #271d37; /* Колір тексту */
 }
