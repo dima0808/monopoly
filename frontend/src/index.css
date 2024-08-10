@@ -76,3 +76,8 @@ input:-webkit-autofill:active {
   box-shadow: 0 0 0px 1000px #d7beeb inset;
   -webkit-text-fill-color: #271d37; /* Колір тексту */
 }
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
