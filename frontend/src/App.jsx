@@ -10,17 +10,22 @@ import Cookies from "js-cookie";
 import { Scrollbars } from "react-custom-scrollbars";
 import Profile from "./pages/profile/Profile";
 import Maintenance from "./pages/maintenance/Maintenance";
+import Admin from "./pages/admin/Admin";
+import Rules from "./pages/rules/Rules";
+import NotFound from "./pages/notFound/NotFound";
 
 function AppRoutes({ setUsername }) {
     return (
         <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/game" element={<Game />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/rules" element={<Rules />} />
             <Route path="/signin" element={<SignIn onLogin={setUsername} />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/profile/:username" element={<Profile />} />
             <Route path="/maintenance" element={<Maintenance />} />
-            <Route path="*" element={<div>404 Not Found</div>} /> {/*todo: 404 page*/}
+            <Route path="*" element={<NotFound />} />
         </Routes>
     );
 }
