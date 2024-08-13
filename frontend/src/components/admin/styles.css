@@ -1,0 +1,14 @@
+.update-user-dialog {
+    width: 400px;
+    height: 400px;
+    background-color: #f1e4fb;
+    border: 1px solid #271d37;
+    border-radius: 10px;
+    padding: 40px 20px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1001; /* Ensure the dialog is above the blurred background */
+}
