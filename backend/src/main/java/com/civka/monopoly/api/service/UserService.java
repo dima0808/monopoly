@@ -13,9 +13,9 @@ public interface UserService {
 
     User findByUsernameOrEmail(String usernameOrEmail);
 
-    User update(Long id, UserDto userDto);
+    User update(User user, UserDto userDto);
 
-    User updateFields(Long id, UserDto userDto);
+    User updateFields(User user, UserDto userDto);
 
     void deleteById(Long id);
 }

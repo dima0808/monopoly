@@ -4,6 +4,7 @@ import com.civka.monopoly.api.dto.UserDto;
 import com.civka.monopoly.api.entity.User;
 import com.civka.monopoly.api.repository.UserRepository;
 import com.civka.monopoly.api.service.UserAlreadyExistException;
+import com.civka.monopoly.api.service.UserNotAllowedException;
 import com.civka.monopoly.api.service.UserNotFoundException;
 import com.civka.monopoly.api.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -39,25 +40,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(Long id, UserDto userDto) {
+    public User update(User user, UserDto userDto) {
+        if (!userDto.getUsername().equals(user.getUsername())) {
+            throw new UserNotAllowedException();
+        }
         if (userRepository.existsByEmail(userDto.getEmail())) {
             throw new UserAlreadyExistException("User with email " + userDto.getEmail() + " already exists");
         }
-        User existingUser = findById(id);
-        existingUser.setEmail(userDto.getEmail());
-        existingUser.setPassword(userDto.getPassword());
-        return userRepository.save(existingUser);
+        user.setEmail(userDto.getEmail());
+        user.setPassword(userDto.getPassword());
+        return userRepository.save(user);
     }
 
     @Override
-    public User updateFields(Long id, UserDto userDto) {
-        if (userRepository.existsByEmail(userDto.getEmail())) {
+    public User updateFields(User user, UserDto userDto) {
+        if (!userDto.getUsername().equals(user.getUsername())) {
+            throw new UserNotAllowedException();
+        }
+        if (userDto.getEmail() != null && userRepository.existsByEmail(userDto.getEmail())) {
             throw new UserAlreadyExistException("User with email " + userDto.getEmail() + " already exists");
         }
-        User existingUser = findById(id);
-        if (userDto.getEmail() != null) existingUser.setEmail(userDto.getEmail());
-        if (userDto.getPassword() != null) existingUser.setPassword(userDto.getPassword());
-        return userRepository.save(existingUser);
+        if (userDto.getEmail() != null) user.setEmail(userDto.getEmail());
+        if (userDto.getPassword() != null) user.setPassword(userDto.getPassword());
+        return userRepository.save(user);
     }
 
     @Override

@@ -35,11 +35,6 @@ public class ChatController {
         return chatService.sendPrivateMessage(name, chatMessageDto);
     }
 
-    @GetMapping("/api/chat")
-    public ResponseEntity<List<ChatMessage>> getAllMessages() {
-        return ResponseEntity.ok(chatService.findByName("public").getMessages());
-    }
-
     @GetMapping("/api/chat/{name}")
     public ResponseEntity<List<ChatMessage>> getAllRoomMessages(@PathVariable String name) {
         return ResponseEntity.ok(chatService.findByName(name).getMessages());

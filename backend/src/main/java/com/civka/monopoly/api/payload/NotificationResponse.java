@@ -13,6 +13,12 @@ import java.time.LocalDateTime;
 @Builder
 public class NotificationResponse {
 
+    private NotificationType type;
     private LocalDateTime timestamp;
     private String message;
+
+    public enum NotificationType {
+        DELETE,
+        KICK
+    }
 }

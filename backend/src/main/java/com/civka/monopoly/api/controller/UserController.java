@@ -38,14 +38,14 @@ public class UserController {
     public ResponseEntity<User> updateUser(UserDto userDto) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByUsername(username);
-        return ResponseEntity.ok(userService.update(user.getId(), userDto));
+        return ResponseEntity.ok(userService.update(user, userDto));
     }
 
     @PatchMapping
     public ResponseEntity<User> updateUserFields(UserDto userDto) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByUsername(username);
-        return ResponseEntity.ok(userService.updateFields(user.getId(), userDto));
+        return ResponseEntity.ok(userService.updateFields(user, userDto));
     }
 
     @DeleteMapping

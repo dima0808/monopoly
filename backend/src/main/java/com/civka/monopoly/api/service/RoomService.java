@@ -11,19 +11,21 @@ public interface RoomService {
 
     Room findById(Long roomId);
 
+    Room findByName(String roomName);
+
     List<Room> findAll();
 
-    Room deleteById(Long roomId, String username);
+    Room deleteByName(String roomName, String username);
 
     Room addMember(Room room, String username);
 
     Room removeMember(Room room, String username);
 
-    Room addMember(Long roomId, String username);
+    Room addMember(String roomName, String username);
 
-    Room removeMember(Long roomId, String username);
+    Room removeMember(String roomName, String username);
 
-    Room kickMember(Long roomId, String member, String username);
+    Room kickMember(String roomName, String member, String username);
 
-    void handlePassword(Long roomId, String password);
+    void handlePassword(String roomName, String password);
 }
