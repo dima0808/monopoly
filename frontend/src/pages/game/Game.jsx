@@ -7,21 +7,17 @@ import Board from "../../components/game/board/Board";
 import Actions from "../../components/game/actions/Actions";
 import Cookies from "js-cookie";
 import {Client} from "@stomp/stompjs";
-import NotificationList from "../../components/notification/NotificationList";
-import {onErrorReceived, onNotificationReceived, removeNotification} from "../../utils/notifications";
 import {useParams} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 
-export default function Game() {
+export default function Game({setNotifications}) {
     const [client, setClient] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
-    const [notifications, setNotifications] = useState([]);
     const {roomName} = useParams();
     const navigate = useNavigate();
 
     useEffect(() => {
         const token = Cookies.get('token');
-        const username = Cookies.get('username');
         const client = new Client({
             brokerURL: 'ws://localhost:8080/ws',
             connectHeaders: {
@@ -29,10 +25,6 @@ export default function Game() {
             },
             onConnect: () => {
                 console.log('Game connected');
-                client.subscribe('/user/' + username + '/queue/notifications',
-                    (message) => onNotificationReceived(navigate, message, setNotifications));
-                client.subscribe('/user/' + username + '/queue/errors',
-                    (message) => onErrorReceived(message, setNotifications));
                 setIsConnected(true);
             },
             onStompError: () => {
@@ -62,10 +54,6 @@ export default function Game() {
                         setNotifications={setNotifications}/>
             <Board/>
             <Actions/>
-            <NotificationList
-                notifications={notifications}
-                onRemove={(timestamp) => removeNotification(timestamp, setNotifications)}
-            />
         </div>
     );
 }

@@ -3,6 +3,7 @@ import {getAllPlayers} from "../../../utils/http";
 import Player from "./Player";
 import './styles.css';
 import Cookies from "js-cookie";
+import {Link} from "react-router-dom";
 
 export default function PlayerList({client, isConnected, roomName, setNotifications}) {
     const [players, setPlayers] = useState([]);
@@ -66,6 +67,7 @@ export default function PlayerList({client, isConnected, roomName, setNotificati
     return (
         <section className="players">
             <h2>Players</h2>
+            <Link to="/">Homepage</Link>
             <div>
                 {!error && players.map(player => (
                     <Player key={player.id} player={player} onCivChange={handleChangeCivilization}/>

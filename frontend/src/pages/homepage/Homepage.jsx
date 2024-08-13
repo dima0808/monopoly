@@ -4,17 +4,13 @@ import Chat from "../../components/chat/Chat";
 import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import {Client} from "@stomp/stompjs";
-import {onErrorReceived, onNotificationReceived, removeNotification} from "../../utils/notifications";
-import NotificationList from "../../components/notification/NotificationList";
 
-export default function Homepage() {
+export default function Homepage({setNotifications}) {
     const [client, setClient] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
-    const [notifications, setNotifications] = useState([]);
 
     useEffect(() => {
         const token = Cookies.get('token');
-        const username = Cookies.get('username');
         const client = new Client({
             brokerURL: 'ws://localhost:8080/ws',
             connectHeaders: {
@@ -22,10 +18,6 @@ export default function Homepage() {
             },
             onConnect: () => {
                 console.log('Homepage connected');
-                client.subscribe('/user/' + username + '/queue/notifications',
-                    (message) => onNotificationReceived(message, setNotifications));
-                client.subscribe('/user/' + username + '/queue/errors',
-                    (message) => onErrorReceived(message, setNotifications));
                 setIsConnected(true);
             },
             onStompError: () => {
@@ -64,10 +56,6 @@ export default function Homepage() {
                     <Chat client={client} isConnected={isConnected} setNotifications={setNotifications}/>
                 </section>
             </div>
-            <NotificationList
-                notifications={notifications}
-                onRemove={(timestamp) => removeNotification(timestamp, setNotifications)}
-            />
         </main>
     );
 }

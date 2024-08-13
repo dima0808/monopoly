@@ -1,11 +1,11 @@
 import './App.css';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import {Routes, Route, useLocation, useNavigate} from 'react-router-dom';
 import Homepage from './pages/homepage/Homepage';
 import Game from './pages/game/Game';
 import SignIn from "./pages/authentication/SignIn";
 import SignUp from "./pages/authentication/SignUp";
 import Header from "./components/header/Header";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import { Scrollbars } from "react-custom-scrollbars";
 import Profile from "./pages/profile/Profile";
@@ -13,37 +13,76 @@ import Maintenance from "./pages/maintenance/Maintenance";
 import Admin from "./pages/admin/Admin";
 import Rules from "./pages/rules/Rules";
 import NotFound from "./pages/notFound/NotFound";
+import {Client} from "@stomp/stompjs";
+import {onErrorReceived, onNotificationReceived, removeNotification} from "./utils/notifications";
+import NotificationList from "./components/notification/NotificationList";
 
-function AppRoutes({ setUsername }) {
+function AppRoutes({ setUsername, setNotifications }) {
+
     return (
-        <Routes>
-            <Route path="/" element={<Homepage />} />
-            <Route path="/game/:roomName" element={<Game />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/rules" element={<Rules />} />
-            <Route path="/signin" element={<SignIn onLogin={setUsername} />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/profile/:username" element={<Profile />} />
-            <Route path="/maintenance" element={<Maintenance />} />
-            <Route path="*" element={<NotFound />} />
-        </Routes>
+        <>
+            <Routes>
+                <Route path="/" element={<Homepage setNotifications={setNotifications} />} />
+                <Route path="/game/:roomName" element={<Game setNotifications={setNotifications} />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/rules" element={<Rules />} />
+                <Route path="/signin" element={<SignIn onLogin={setUsername} />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/profile/:username" element={<Profile />} />
+                <Route path="/maintenance" element={<Maintenance />} />
+                <Route path="*" element={<NotFound />} />
+            </Routes>
+        </>
     );
 }
 
 export default function App() {
     const [username, setUsername] = useState(Cookies.get('username'));
     const location = useLocation();
+    const [notifications, setNotifications] = useState([]);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = Cookies.get('token');
+        const username = Cookies.get('username');
+        const client = new Client({
+            brokerURL: 'ws://localhost:8080/ws',
+            connectHeaders: {
+                Authorization: `Bearer ${token}`
+            },
+            onConnect: () => {
+                console.log('App connected');
+                client.subscribe('/user/' + username + '/queue/notifications',
+                    (message) => onNotificationReceived(navigate, message, setNotifications));
+                client.subscribe('/user/' + username + '/queue/errors',
+                    (message) => onErrorReceived(message, setNotifications));
+            },
+            onStompError: () => {
+                console.log('Failed to connect');
+            },
+        });
+
+        client.activate();
+
+        return () => {
+            client.deactivate();
+        };
+    }, [navigate]);
 
     return (
         <>
             {!(location.pathname.startsWith('/game/') || location.pathname === '/maintenance') ? (
                 <Scrollbars style={{ height: '100vh' }}>
                     <Header username={username} onLogout={setUsername} />
-                    <AppRoutes setUsername={setUsername} />
+                    <AppRoutes setUsername={setUsername} setNotifications={setNotifications} />
                 </Scrollbars>
             ) : (
-                <AppRoutes setUsername={setUsername} />
+                <AppRoutes setUsername={setUsername} setNotifications={setNotifications} />
             )}
+            <NotificationList
+                notifications={notifications}
+                onRemove={(timestamp) => removeNotification(timestamp, setNotifications)}
+            />
         </>
     );
 }
