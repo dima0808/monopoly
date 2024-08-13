@@ -54,13 +54,15 @@ export default function SignUp() {
               ref={usernameRef}
               className="authentication-input"
               onChange={handleInputChange}
+              autoComplete="new-password"
             />
             <input
-              type="text"
+              type="email"
               placeholder="Email"
               ref={emailRef}
               className="authentication-input"
               onChange={handleInputChange}
+              autoComplete="new-password"
             />
             <input
               type="password"
@@ -68,6 +70,7 @@ export default function SignUp() {
               ref={passwordRef}
               className="authentication-input"
               onChange={handleInputChange}
+              autoComplete="new-password"
             />
             <input
               type="password"
@@ -75,6 +78,7 @@ export default function SignUp() {
               ref={confirmPasswordRef}
               className="authentication-input"
               onChange={handleInputChange}
+              autoComplete="new-password"
             />
             {error && <p className="error-message"> {error.message}</p>}
             <button

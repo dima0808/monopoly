@@ -21,8 +21,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false)
+    private String nickname;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -45,4 +48,12 @@ public class User {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Member member;
+
+    private Integer elo;
+
+    private Integer matchesPlayed;
+
+    private Integer matchesWon;
+
+    private Float averagePlacement;
 }

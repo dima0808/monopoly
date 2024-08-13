@@ -29,11 +29,12 @@ export default function SignIn({onLogin}) {
         const password = passwordRef.current.value;
 
         try {
-            const resData = await signIn({login, password});
+            const { token, username, nickname } = await signIn({login, password});
             setError(null);
-            Cookies.set("token", resData.token);
-            Cookies.set("username", resData.username);
-            onLogin(resData.username);
+            Cookies.set("token", token);
+            Cookies.set("username", username);
+            Cookies.set("nickname", nickname);
+            onLogin(nickname);
             navigate("/");
         } catch (error) {
             setError({message: error.message || "An error occurred"});

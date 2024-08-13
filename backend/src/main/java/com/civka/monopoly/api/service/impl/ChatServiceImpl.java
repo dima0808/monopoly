@@ -40,8 +40,8 @@ public class ChatServiceImpl implements ChatService {
     public ChatMessage sendPrivateMessage(String chatName, ChatMessageDto chatMessageDto) {
         Chat chat = findByName(chatName);
         ChatMessage chatMessage = chatMessageService.save(chat, chatMessageDto);
-        messagingTemplate.convertAndSendToUser(chatMessage.getReceiver(), "/topic/chat/" + chat.getName(), chatMessage);
-        messagingTemplate.convertAndSendToUser(chatMessage.getSender(), "/topic/chat/" + chat.getName(), chatMessage);
+        messagingTemplate.convertAndSendToUser(chatMessage.getReceiver().getUsername(), "/topic/chat/" + chat.getName(), chatMessage);
+        messagingTemplate.convertAndSendToUser(chatMessage.getSender().getUsername(), "/topic/chat/" + chat.getName(), chatMessage);
         return chatMessage;
     }
 

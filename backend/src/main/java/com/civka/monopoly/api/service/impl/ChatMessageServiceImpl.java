@@ -3,9 +3,9 @@ package com.civka.monopoly.api.service.impl;
 import com.civka.monopoly.api.dto.ChatMessageDto;
 import com.civka.monopoly.api.entity.Chat;
 import com.civka.monopoly.api.entity.ChatMessage;
-import com.civka.monopoly.api.repository.ChatMessageRepository;
 import com.civka.monopoly.api.repository.ChatRepository;
 import com.civka.monopoly.api.service.ChatMessageService;
+import com.civka.monopoly.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ChatMessageServiceImpl implements ChatMessageService {
 
-    private final ChatMessageRepository chatMessageRepository;
     private final ChatRepository chatRepository;
+    private final UserService userService;
 
     @Value("${monopoly.app.chat.max-size}")
     private Integer maxSize;
@@ -25,10 +25,11 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     @Override
     public ChatMessage save(Chat chat, ChatMessageDto chatMessageDto) {
         ChatMessage chatMessage = ChatMessage.builder()
-                .sender(chatMessageDto.getSender())
+                .sender(userService.findByUsername(chatMessageDto.getSender()))
                 .content(chatMessageDto.getContent())
                 .timestamp(LocalDateTime.now())
-                .receiver(chatMessageDto.getReceiver())
+                .receiver(chatMessageDto.getReceiver() != null ?
+                        userService.findByUsername(chatMessageDto.getReceiver()) : null)
                 .chat(chat)
                 .build();
 

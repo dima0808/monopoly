@@ -64,3 +64,34 @@ export async function getAllPlayers(roomName) {
 
     return resData;
 }
+
+export async function getUser(nickname) {
+    const response = await fetch('http://localhost:8080/api/users/' + nickname);
+    const resData = await response.json();
+
+    if (!response.ok) {
+        throw new Error(resData.message);
+    }
+
+    return resData;
+}
+
+export async function updateProfile({nickname, email, password}, token) {
+    console.log(JSON.stringify({nickname, email, password}));
+    const response = await fetch('http://localhost:8080/api/users', {
+        method: 'PATCH',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({nickname, email, password}),
+    });
+    const resData = await response.json();
+
+    if (!response.ok) {
+        throw new Error(resData.message);
+    }
+
+    return resData;
+
+}

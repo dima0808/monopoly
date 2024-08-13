@@ -17,8 +17,7 @@ import {Client} from "@stomp/stompjs";
 import {onErrorReceived, onNotificationReceived, removeNotification} from "./utils/notifications";
 import NotificationList from "./components/notification/NotificationList";
 
-function AppRoutes({ setUsername, setNotifications }) {
-
+function AppRoutes({ setNickname, setNotifications }) {
     return (
         <>
             <Routes>
@@ -26,9 +25,9 @@ function AppRoutes({ setUsername, setNotifications }) {
                 <Route path="/game/:roomName" element={<Game setNotifications={setNotifications} />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/rules" element={<Rules />} />
-                <Route path="/signin" element={<SignIn onLogin={setUsername} />} />
+                <Route path="/signin" element={<SignIn onLogin={setNickname} />} />
                 <Route path="/signup" element={<SignUp />} />
-                <Route path="/profile/:username" element={<Profile />} />
+                <Route path="/profile/:nickname" element={<Profile onUpdate={setNickname} />} />
                 <Route path="/maintenance" element={<Maintenance />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
@@ -37,7 +36,7 @@ function AppRoutes({ setUsername, setNotifications }) {
 }
 
 export default function App() {
-    const [username, setUsername] = useState(Cookies.get('username'));
+    const [nickname, setNickname] = useState(Cookies.get('nickname'));
     const location = useLocation();
     const [notifications, setNotifications] = useState([]);
     const navigate = useNavigate();
@@ -58,7 +57,7 @@ export default function App() {
                     (message) => onErrorReceived(message, setNotifications));
             },
             onStompError: () => {
-                console.log('Failed to connect');
+                console.log('Failed to connect notification client');
             },
         });
 
@@ -73,11 +72,11 @@ export default function App() {
         <>
             {!(location.pathname.startsWith('/game/') || location.pathname === '/maintenance') ? (
                 <Scrollbars style={{ height: '100vh' }}>
-                    <Header username={username} onLogout={setUsername} />
-                    <AppRoutes setUsername={setUsername} setNotifications={setNotifications} />
+                    <Header nickname={nickname} onLogout={setNickname} />
+                    <AppRoutes setNickname={setNickname} setNotifications={setNotifications} />
                 </Scrollbars>
             ) : (
-                <AppRoutes setUsername={setUsername} setNotifications={setNotifications} />
+                <AppRoutes setNickname={setNickname} setNotifications={setNotifications} />
             )}
             <NotificationList
                 notifications={notifications}

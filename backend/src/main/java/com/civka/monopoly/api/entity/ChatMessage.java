@@ -19,8 +19,8 @@ public class ChatMessage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String sender;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User sender;
 
     @Column(nullable = false)
     private String content;
@@ -32,5 +32,6 @@ public class ChatMessage {
     @JsonIgnore
     private Chat chat;
 
-    private String receiver;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User receiver;
 }

@@ -10,7 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -35,14 +35,14 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<User> updateUser(UserDto userDto) {
+    public ResponseEntity<User> updateUser(@RequestBody UserDto userDto) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByUsername(username);
         return ResponseEntity.ok(userService.update(user, userDto));
     }
 
     @PatchMapping
-    public ResponseEntity<User> updateUserFields(UserDto userDto) {
+    public ResponseEntity<User> updateUserFields(@RequestBody UserDto userDto) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByUsername(username);
         return ResponseEntity.ok(userService.updateFields(user, userDto));
@@ -54,5 +54,10 @@ public class UserController {
         User user = userService.findByUsername(username);
         userService.deleteById(user.getId());
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{nickname}")
+    public ResponseEntity<User> getUserByNickname(@PathVariable String nickname) {
+        return ResponseEntity.ok(userService.findByNickname(nickname));
     }
 }

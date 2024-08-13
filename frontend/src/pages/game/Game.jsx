@@ -28,7 +28,7 @@ export default function Game({setNotifications}) {
                 setIsConnected(true);
             },
             onStompError: () => {
-                console.log('Failed to connect');
+                console.log('Failed to connect game client');
                 setIsConnected(false);
             },
         });

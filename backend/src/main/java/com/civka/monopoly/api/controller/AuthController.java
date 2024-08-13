@@ -22,8 +22,12 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@RequestBody SignInDto signInDto) {
         String jwt = authService.signIn(signInDto);
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                userService.findByUsernameOrEmail(signInDto.getLogin()).getUsername()));
+        User user = userService.findByUsernameOrEmail(signInDto.getLogin());
+        return ResponseEntity.ok(JwtResponse.builder()
+                .token(jwt)
+                .username(user.getUsername())
+                .nickname(user.getNickname())
+                .build());
     }
 
     @PostMapping("/signup")

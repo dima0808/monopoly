@@ -41,6 +41,7 @@ public class SetupDataLoader implements
         if (!userRepository.existsByUsernameOrEmail("admin", "mamchenko2210@gmail.com")) {
             User user = User.builder()
                     .username("admin")
+                    .nickname("admin")
                     .email("mamchenko2210@gmail.com")
                     .password(passwordEncoder.encode("gk7dlA9grTjpIP12"))
                     .roles(Set.of(userRole, adminRole))

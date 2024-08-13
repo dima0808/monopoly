@@ -21,7 +21,7 @@ export default function Homepage({setNotifications}) {
                 setIsConnected(true);
             },
             onStompError: () => {
-                console.log('Failed to connect');
+                console.log('Failed to connect homepage client');
                 setIsConnected(false);
             },
         });

@@ -42,11 +42,10 @@ export default function Chat({ client, isConnected, setNotifications }) {
     }
 
     useEffect(() => {
-        getAllMessages('public').then(setMessages)
-            .catch((error) => setError({ message: error.message || "An error occurred" }));
-        scrollToBottom();
-
         if (client && isConnected) {
+            getAllMessages('public').then(setMessages)
+                .catch((error) => setError({ message: error.message || "An error occurred" }));
+            scrollToBottom();
             const username = Cookies.get('username');
             const publicMessagesSubscription = client.subscribe('/topic/chat/public', onChatMessageReceived);
             const privateMessagesSubscription = client.subscribe('/user/' + username + '/topic/chat/public', onChatMessageReceived);
@@ -163,7 +162,7 @@ export default function Chat({ client, isConnected, setNotifications }) {
             <div className="chat__text scroll" id="chat" ref={chatContainerRef}>
                 {!error && messages
                     .map((message, index) => (
-                        <Message key={index} username={message.sender}>
+                        <Message key={index} nickname={message.sender.nickname}>
                             {message.content}
                         </Message>
                     ))}

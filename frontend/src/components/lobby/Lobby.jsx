@@ -26,6 +26,7 @@ export default function Lobby({name, size, onJoin, onLeave, onKick, onDelete, ro
                 {room.members.map((member, index) => (
                     <Member key={index}
                             username={member.user.username}
+                            nickname={member.user.nickname}
                             isLeader={member.isLeader}
                             onKick={onKick}
                             showKickButton={isUserLeader() && !member.isLeader}/>

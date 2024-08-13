@@ -1,9 +1,10 @@
 import './styles.css';
+import {Link} from "react-router-dom";
 
-export default function Message({ username, children }) {
+export default function Message({ nickname, children }) {
     return (
         <p className="chat__element">
-            <a className="chat__element chat__element-username" href="#">{username}:</a> {/*todo: add profile link*/}
+            <Link to={"/profile/" + nickname} className="chat__element chat__element-username">{nickname}:</Link>
             {children}
         </p>
     );

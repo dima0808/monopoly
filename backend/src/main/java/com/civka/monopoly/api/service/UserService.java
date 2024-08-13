@@ -9,6 +9,8 @@ public interface UserService {
 
     User findByUsername(String username);
 
+    User findByNickname(String nickname);
+
     User findById(Long id);
 
     User findByUsernameOrEmail(String usernameOrEmail);
