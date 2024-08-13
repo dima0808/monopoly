@@ -47,7 +47,7 @@ export default function Game() {
         return () => {
             client.deactivate();
         };
-    }, []);
+    }, [navigate]);
 
     useEffect(() => {
         document.documentElement.classList.add('game-html');
