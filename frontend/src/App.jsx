@@ -18,7 +18,7 @@ function AppRoutes({ setUsername }) {
     return (
         <Routes>
             <Route path="/" element={<Homepage />} />
-            <Route path="/game" element={<Game />} />
+            <Route path="/game/:roomName" element={<Game />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/rules" element={<Rules />} />
             <Route path="/signin" element={<SignIn onLogin={setUsername} />} />
@@ -36,7 +36,7 @@ export default function App() {
 
     return (
         <>
-            {location.pathname !== '/game' && location.pathname !== '/maintenance' ? (
+            {!(location.pathname.startsWith('/game/') || location.pathname === '/maintenance') ? (
                 <Scrollbars style={{ height: '100vh' }}>
                     <Header username={username} onLogout={setUsername} />
                     <AppRoutes setUsername={setUsername} />

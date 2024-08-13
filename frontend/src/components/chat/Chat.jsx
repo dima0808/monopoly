@@ -1,6 +1,6 @@
 import './styles.css';
 import React, { useEffect, useRef, useState } from "react";
-import { getAllMessages } from "../../http";
+import { getAllMessages } from "../../utils/http";
 import Message from "./Message";
 import Cookies from "js-cookie";
 
@@ -37,12 +37,12 @@ export default function Chat({ client, isConnected, setNotifications }) {
                 timestamp: timestamp,
                 receiver: receiver
             }];
-            return newMessages.length > 50 ? newMessages.slice(-50) : newMessages;
+            return newMessages.length > 80 ? newMessages.slice(-80) : newMessages;
         });
     }
 
     useEffect(() => {
-        getAllMessages().then(setMessages)
+        getAllMessages('public').then(setMessages)
             .catch((error) => setError({ message: error.message || "An error occurred" }));
         scrollToBottom();
 
@@ -87,7 +87,7 @@ export default function Chat({ client, isConnected, setNotifications }) {
             }]);
             return;
         }
-        const [command, param] = messageContent.split(' ');
+        const [command, param] = messageContent.split(' ').filter(Boolean);
         try {
             switch (command) {
                 case '/clear':
@@ -98,7 +98,7 @@ export default function Chat({ client, isConnected, setNotifications }) {
                             headers: {
                                 Authorization: `Bearer ${token}`,
                                 username: username,
-                                clearCount : clearCount
+                                clearCount: clearCount
                             }
                         });
                     } else {
@@ -107,7 +107,7 @@ export default function Chat({ client, isConnected, setNotifications }) {
                             headers: {
                                 Authorization: `Bearer ${token}`,
                                 username: username,
-                                clearCount : 'All'
+                                clearCount: 'All'
                             }
                         });
                     }
@@ -162,8 +162,8 @@ export default function Chat({ client, isConnected, setNotifications }) {
             <div className="chat__title title-box">Public Chat</div>
             <div className="chat__text scroll" id="chat" ref={chatContainerRef}>
                 {!error && messages
-                    .map((message) => (
-                        <Message key={message.id} username={message.sender}>
+                    .map((message, index) => (
+                        <Message key={index} username={message.sender}>
                             {message.content}
                         </Message>
                     ))}

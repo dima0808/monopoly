@@ -1,6 +1,6 @@
 import "./styles.css";
 import { useRef, useState } from "react";
-import { signUp } from "../../http";
+import { signUp } from "../../utils/http";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 

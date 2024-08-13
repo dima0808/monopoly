@@ -1,7 +1,7 @@
 import './styles.css';
 import React, {useEffect, useState} from 'react';
 import Lobby from "./Lobby";
-import {getAllRooms} from '../../http';
+import {getAllRooms} from '../../utils/http';
 import CreateLobbyDialog from './CreateLobbyDialog';
 import JoinLobbyDialog from './JoinLobbyDialog';
 import Cookies from 'js-cookie';
@@ -35,10 +35,9 @@ export default function LobbyList({client, isConnected, setNotifications}) {
     }
 
     useEffect(() => {
-        getAllRooms().then(setRooms)
-            .catch((error) => setError({message: error.message || "An error occurred"}));
-
         if (client && isConnected) {
+            getAllRooms().then(setRooms)
+                .catch((error) => setError({message: error.message || "An error occurred"}));
             const subscription = client.subscribe('/topic/public', onRoomMessageReceived);
             return () => {
                 subscription.unsubscribe();
@@ -96,11 +95,11 @@ export default function LobbyList({client, isConnected, setNotifications}) {
             document.getElementById('modal').classList.add('blur-modal');
             document.getElementById('root').classList.add('blur-background');
         } else {
-            handleJoinRoom(room.id);
+            handleJoinRoom(room.name);
         }
     }
 
-    function handleJoinRoom(roomId, password = null) {
+    function handleJoinRoom(roomName, password = null) {
         const token = Cookies.get('token');
         const username = Cookies.get('username');
         if (!client || !client.publish) {
@@ -113,14 +112,14 @@ export default function LobbyList({client, isConnected, setNotifications}) {
         }
         try {
             client.publish({
-                destination: '/app/rooms/joinRoom/' + roomId,
+                destination: '/app/rooms/joinRoom/' + roomName,
                 headers: {
                     Authorization: `Bearer ${token}`,
                     username: username
                 },
                 body: JSON.stringify({password})
             });
-            console.log('Joining lobby ' + roomId + '...');
+            console.log('Joining lobby ' + roomName + '...');
         } catch (error) {
             setNotifications(prev => [...prev, {
                 message: 'Error joining lobby (no connection)',
@@ -130,7 +129,7 @@ export default function LobbyList({client, isConnected, setNotifications}) {
         }
     }
 
-    function handleLeaveRoom(roomId) {
+    function handleLeaveRoom(roomName) {
         const token = Cookies.get('token');
         const username = Cookies.get('username');
         if (!client || !client.publish) {
@@ -143,13 +142,13 @@ export default function LobbyList({client, isConnected, setNotifications}) {
         }
         try {
             client.publish({
-                destination: '/app/rooms/leaveRoom/' + roomId,
+                destination: '/app/rooms/leaveRoom/' + roomName,
                 headers: {
                     Authorization: `Bearer ${token}`,
                     username: username
                 }
             });
-            console.log('Leaving lobby ' + roomId + '...');
+            console.log('Leaving lobby ' + roomName + '...');
         } catch (error) {
             setNotifications(prev => [...prev, {
                 message: 'Error leaving lobby (no connection)',
@@ -159,7 +158,7 @@ export default function LobbyList({client, isConnected, setNotifications}) {
         }
     }
 
-    function handleKickMember(roomId, member) {
+    function handleKickMember(roomName, member) {
         const token = Cookies.get('token');
         const admin = Cookies.get('username');
         if (!client || !client.publish) {
@@ -172,13 +171,13 @@ export default function LobbyList({client, isConnected, setNotifications}) {
         }
         try {
             client.publish({
-                destination: `/app/rooms/kickMember/${roomId}/${member}`,
+                destination: `/app/rooms/kickMember/${roomName}/${member}`,
                 headers: {
                     Authorization: `Bearer ${token}`,
                     username: admin
                 }
             });
-            console.log('Kicking member ' + member + ' from room ' + roomId + '...');
+            console.log('Kicking member ' + member + ' from room ' + roomName + '...');
         } catch (error) {
             setNotifications(prev => [...prev, {
                 message: 'Error kicking user (no connection)',
@@ -188,7 +187,7 @@ export default function LobbyList({client, isConnected, setNotifications}) {
         }
     }
 
-    function handleDeleteRoom(roomId) {
+    function handleDeleteRoom(roomName) {
         const token = Cookies.get('token');
         const username = Cookies.get('username');
         if (!client || !client.publish) {
@@ -201,13 +200,13 @@ export default function LobbyList({client, isConnected, setNotifications}) {
         }
         try {
             client.publish({
-                destination: '/app/rooms/deleteRoom/' + roomId,
+                destination: '/app/rooms/deleteRoom/' + roomName,
                 headers: {
                     Authorization: `Bearer ${token}`,
                     username: username
                 }
             });
-            console.log('Deleting lobby ' + roomId + '...');
+            console.log('Deleting lobby ' + roomName + '...');
         } catch (error) {
             setNotifications(prev => [...prev, {
                 message: 'Error deleting lobby (no connection)',
@@ -232,7 +231,7 @@ export default function LobbyList({client, isConnected, setNotifications}) {
             <JoinLobbyDialog
                 isOpen={isJoinDialogOpen}
                 onClose={handleDialogClose}
-                onJoin={(password) => handleJoinRoom(roomToJoin.id, password)}
+                onJoin={(password) => handleJoinRoom(roomToJoin.name, password)}
             />
             <div className="lobby__title title-box">
                 <p className="title-box__p">Lobbies</p>
@@ -244,9 +243,9 @@ export default function LobbyList({client, isConnected, setNotifications}) {
                     .map((room) => (
                         <Lobby key={room.id} name={room.name} size={room.size}
                                onJoin={() => handleJoinClick(room)}
-                               onLeave={() => handleLeaveRoom(room.id)}
-                               onKick={(member) => handleKickMember(room.id, member)}
-                               onDelete={() => handleDeleteRoom(room.id)}
+                               onLeave={() => handleLeaveRoom(room.name)}
+                               onKick={(member) => handleKickMember(room.name, member)}
+                               onDelete={() => handleDeleteRoom(room.name)}
                                room={room}/>
                     ))}
                 {error && <p>{error.message}</p>}

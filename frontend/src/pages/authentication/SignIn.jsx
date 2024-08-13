@@ -1,5 +1,5 @@
 import {useRef, useState, useEffect} from "react";
-import {signIn} from "../../http";
+import {signIn} from "../../utils/http";
 import Cookies from "js-cookie";
 import {Link, useNavigate} from "react-router-dom";
 import "./styles.css";

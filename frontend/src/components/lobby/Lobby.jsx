@@ -49,7 +49,7 @@ export default function Lobby({name, size, onJoin, onLeave, onKick, onDelete, ro
                         <button onClick={onLeave} className="leave-btn btn-in">leave</button>
                         {isUserLeader() && <button onClick={onDelete} className="leave-btn btn-in">delete room</button>}
                     </div>
-                    <Link to="/game" className="move-to-lobby-btn btn-in">Move to Lobby</Link>
+                    <Link to={"/game/" + room.name} className="move-to-lobby-btn btn-in">Move to Lobby</Link>
                 </div>
             )}
         </div>

@@ -25,7 +25,7 @@ export default function Header({ username, onLogout }) {
           {username ? (
             <>
               <Link
-                to="/profile"
+                to={"/profile/" + username}
                 className="header__anchor header__anchor-username"
               >
                 {username}
