@@ -13,6 +13,9 @@ body {
 .no-scroll {
   overflow: hidden;
 }
+.scroll {
+  overflow: auto;
+}
 
 .hide-scrollbars {
   display: none;
@@ -25,6 +28,7 @@ body {
 
 /* Загальний стиль для скроллбарів */
 .firefox .scroll {
+  cursor: pointer;
   scrollbar-width: thin; /* Тонкий скроллбар */
   scrollbar-color: #d1b5e8 #e0e0f9; /* Фіолетовий ползунок і світло-фіолетовий фон треку */
 }
@@ -36,11 +40,13 @@ body {
 }
 
 .scroll::-webkit-scrollbar-track {
+  cursor: pointer;
   background: #e0e0f9;
   border-radius: 10px;
 }
 
 .scroll::-webkit-scrollbar-thumb {
+  cursor: pointer;
   background-color: #c396e8;
   border-radius: 10px;
   border: 3px solid #e0e0f9;
@@ -85,4 +91,7 @@ input:-webkit-autofill:active {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.none {
+  display: none;
 }
