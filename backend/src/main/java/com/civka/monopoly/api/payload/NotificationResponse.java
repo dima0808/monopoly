@@ -15,10 +15,12 @@ public class NotificationResponse {
 
     private NotificationType type;
     private LocalDateTime timestamp;
+    private String sender;
     private String message;
 
     public enum NotificationType {
         DELETE,
-        KICK
+        KICK,
+        MESSAGE
     }
 }

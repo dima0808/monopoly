@@ -7,7 +7,7 @@ import SignUp from "./pages/authentication/SignUp";
 import Header from "./components/header/Header";
 import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
-import { Scrollbars } from "react-custom-scrollbars";
+import {Scrollbars} from "react-custom-scrollbars";
 import Profile from "./pages/profile/Profile";
 import Maintenance from "./pages/maintenance/Maintenance";
 import Admin from "./pages/admin/Admin";
@@ -17,19 +17,24 @@ import {Client} from "@stomp/stompjs";
 import {onErrorReceived, onNotificationReceived, removeNotification} from "./utils/notifications";
 import NotificationList from "./components/notification/NotificationList";
 
-function AppRoutes({ setNickname, setNotifications }) {
+function AppRoutes({setNickname, notifications, setNotifications, isPrivateChatOpen, setIsPrivateChatOpen}) {
     return (
         <>
             <Routes>
-                <Route path="/" element={<Homepage setNotifications={setNotifications} />} />
-                <Route path="/game/:roomName" element={<Game setNotifications={setNotifications} />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/rules" element={<Rules />} />
-                <Route path="/signin" element={<SignIn onLogin={setNickname} />} />
-                <Route path="/signup" element={<SignUp />} />
-                <Route path="/profile/:nickname" element={<Profile onUpdate={setNickname} />} />
-                <Route path="/maintenance" element={<Maintenance />} />
-                <Route path="*" element={<NotFound />} />
+                <Route path="/" element={<Homepage setNotifications={setNotifications}/>}/>
+                <Route path="/game/:roomName" element={<Game setNotifications={setNotifications}/>}/>
+                <Route path="/admin" element={<Admin/>}/>
+                <Route path="/rules" element={<Rules/>}/>
+                <Route path="/signin" element={<SignIn onLogin={setNickname}/>}/>
+                <Route path="/signup" element={<SignUp/>}/>
+                <Route path="/profile/:nickname"
+                       element={<Profile onUpdate={setNickname}
+                                         notifications={notifications}
+                                         setNotifications={setNotifications}
+                                         isPrivateChatOpen={isPrivateChatOpen}
+                                         setIsPrivateChatOpen={setIsPrivateChatOpen}/>}/>
+                <Route path="/maintenance" element={<Maintenance/>}/>
+                <Route path="*" element={<NotFound/>}/>
             </Routes>
         </>
     );
@@ -39,6 +44,7 @@ export default function App() {
     const [nickname, setNickname] = useState(Cookies.get('nickname'));
     const location = useLocation();
     const [notifications, setNotifications] = useState([]);
+    const [isPrivateChatOpen, setIsPrivateChatOpen] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -71,16 +77,25 @@ export default function App() {
     return (
         <>
             {!(location.pathname.startsWith('/game/') || location.pathname === '/maintenance') ? (
-                <Scrollbars style={{ height: '100vh' }}>
-                    <Header nickname={nickname} onLogout={setNickname} />
-                    <AppRoutes setNickname={setNickname} setNotifications={setNotifications} />
+                <Scrollbars style={{height: '100vh'}}>
+                    <Header nickname={nickname} onLogout={setNickname}/>
+                    <AppRoutes setNickname={setNickname}
+                               notifications={notifications}
+                               setNotifications={setNotifications}
+                               isPrivateChatOpen={isPrivateChatOpen}
+                               setIsPrivateChatOpen={setIsPrivateChatOpen}/>
                 </Scrollbars>
             ) : (
-                <AppRoutes setNickname={setNickname} setNotifications={setNotifications} />
+                <AppRoutes setNickname={setNickname}
+                           notifications={notifications}
+                           setNotifications={setNotifications}
+                           isPrivateChatOpen={isPrivateChatOpen}
+                           setIsPrivateChatOpen={setIsPrivateChatOpen}/>
             )}
             <NotificationList
                 notifications={notifications}
                 onRemove={(timestamp) => removeNotification(timestamp, setNotifications)}
+                isPrivateChatOpen={isPrivateChatOpen}
             />
         </>
     );

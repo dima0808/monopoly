@@ -1,7 +1,7 @@
 import React from 'react';
 import Cookies from "js-cookie";
 
-export default function Player({player: {user, isLeader, civilization}, onCivChange}) {
+export default function Player({player: {user, isLeader, civilization}, onCivChange, onKick, showKickButton}) {
     return (
         <div>
             <h4>{isLeader && <span>👑</span>} {user.nickname}</h4>
@@ -16,6 +16,9 @@ export default function Player({player: {user, isLeader, civilization}, onCivCha
                 <option value="ROME">Rome</option>
                 <option value="SWEDEN">Sweden</option>
             </select>
+            {showKickButton && (
+                <button onClick={() => onKick(user.username)}>kick</button>
+            )}
         </div>
     );
 }

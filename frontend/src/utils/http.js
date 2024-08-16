@@ -43,8 +43,12 @@ export async function getAllRooms() {
     return resData;
 }
 
-export async function getAllMessages(chatName) {
-    const response = await fetch('http://localhost:8080/api/chat/' + chatName);
+export async function getAllMessages(chatName, token, isPrivate = false) {
+    const response = await fetch('http://localhost:8080/api/chat/' + (isPrivate ? 'private/' : '') + chatName, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    });
     const resData = await response.json();
 
     if (!response.ok) {
@@ -77,7 +81,6 @@ export async function getUser(nickname) {
 }
 
 export async function updateProfile({nickname, email, password}, token) {
-    console.log(JSON.stringify({nickname, email, password}));
     const response = await fetch('http://localhost:8080/api/users', {
         method: 'PATCH',
         headers: {
@@ -93,5 +96,19 @@ export async function updateProfile({nickname, email, password}, token) {
     }
 
     return resData;
+}
 
+export async function getUserContacts(username, token) {
+    const response = await fetch('http://localhost:8080/api/users/' + username + '/contacts', {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    });
+    const resData = await response.json();
+
+    if (!response.ok) {
+        throw new Error(resData.message);
+    }
+
+    return resData;
 }

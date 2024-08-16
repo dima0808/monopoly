@@ -2,7 +2,14 @@ import './styles.css';
 import unknownImg from "../../images/unknown.png";
 import React from "react";
 
-export default function ProfileStats({ user : {nickname, elo, matchesPlayed, matchesWon, averagePlacement} }) {
+export default function ProfileStats({
+                                         user: {nickname, elo, matchesPlayed, matchesWon, averagePlacement},
+                                         setIsPrivateChatOpen
+                                     }) {
+
+    function writeMessage() {
+        setIsPrivateChatOpen(true);
+    }
 
     return (
         <div className="profile-right-top">
@@ -24,7 +31,7 @@ export default function ProfileStats({ user : {nickname, elo, matchesPlayed, mat
                     </div>
                 </div>
                 <div className="profile-right-top-flex-btns">
-                    <button className="update-profile-btn profile-btn">
+                    <button onClick={writeMessage} className="update-profile-btn profile-btn">
                         Write a Message
                     </button>
                     <div className="profile-right-top-btns">

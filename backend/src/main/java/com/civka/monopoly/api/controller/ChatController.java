@@ -28,15 +28,22 @@ public class ChatController {
     }
 
     @MessageMapping("/chat/sendPrivateMessage/{chatName}")
+    @SendTo("/topic/chat/{chatName}")
     public ChatMessage sendPrivateMessage(@Payload ChatMessageDto chatMessageDto,
                                           @Header("username") String username,
                                           @DestinationVariable String chatName) {
         chatMessageDto.setSender(username);
+        chatMessageDto.setReceiver(chatName.replace(username, "").trim());
         return chatService.sendPrivateMessage(chatName, chatMessageDto);
     }
 
     @GetMapping("/api/chat/{chatName}")
-    public ResponseEntity<List<ChatMessage>> getAllRoomMessages(@PathVariable String chatName) {
+    public ResponseEntity<List<ChatMessage>> getAllChatMessages(@PathVariable String chatName) {
         return ResponseEntity.ok(chatService.findByName(chatName).getMessages());
+    }
+
+    @GetMapping("/api/chat/private/{chatName}")
+    public ResponseEntity<List<ChatMessage>> getAllPrivateChatMessages(@PathVariable String chatName) {
+        return ResponseEntity.ok(chatService.findPrivateChatByName(chatName).getMessages());
     }
 }

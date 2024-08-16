@@ -38,6 +38,8 @@ export default function Game({setNotifications}) {
 
         return () => {
             client.deactivate();
+            setClient(null);
+            setIsConnected(false);
         };
     }, [navigate]);
 

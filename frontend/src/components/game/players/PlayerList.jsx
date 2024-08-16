@@ -3,14 +3,16 @@ import {getAllPlayers} from "../../../utils/http";
 import Player from "./Player";
 import './styles.css';
 import Cookies from "js-cookie";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import {handleDeleteRoom, handleKickMember, handleLeaveRoom, isUserLeaderCookies} from "../../../utils/lobby";
 
 export default function PlayerList({client, isConnected, roomName, setNotifications}) {
     const [players, setPlayers] = useState([]);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     function onPlayerMessageReceived(message) {
-        const { type, content, room, member } = JSON.parse(message.body);
+        const {type, content, room, member} = JSON.parse(message.body);
         console.log(content);
         setPlayers((prevPlayers) => {
             switch (type) {
@@ -68,9 +70,17 @@ export default function PlayerList({client, isConnected, roomName, setNotificati
         <section className="players">
             <h2>Players</h2>
             <Link to="/">Homepage</Link>
+            <button onClick={() => {
+                handleLeaveRoom(roomName, client, setNotifications);
+                navigate('/');
+            }}>Leave</button>
+            {isUserLeaderCookies(players) &&
+                <button onClick={() => handleDeleteRoom(roomName, client, setNotifications)}>delete room</button>}
             <div>
                 {!error && players.map(player => (
-                    <Player key={player.id} player={player} onCivChange={handleChangeCivilization}/>
+                    <Player key={player.id} player={player} onCivChange={handleChangeCivilization}
+                            onKick={(member) => handleKickMember(roomName, member, client, setNotifications)}
+                            showKickButton={isUserLeaderCookies(players) && !player.isLeader}/>
                 ))}
                 {error && <p>{error.message}</p>}
             </div>

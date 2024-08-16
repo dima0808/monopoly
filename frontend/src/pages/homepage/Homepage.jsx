@@ -1,6 +1,6 @@
 import "./styles.css";
 import LobbyList from "../../components/lobby/LobbyList";
-import Chat from "../../components/chat/Chat";
+import Chat from "../../components/chat/public/Chat";
 import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import {Client} from "@stomp/stompjs";
@@ -31,6 +31,8 @@ export default function Homepage({setNotifications}) {
 
         return () => {
             client.deactivate();
+            setClient(null);
+            setIsConnected(false);
         };
     }, []);
 

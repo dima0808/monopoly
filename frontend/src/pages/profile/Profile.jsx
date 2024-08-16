@@ -9,9 +9,9 @@ import ProfileImage from "../../components/profile/ProfileImage";
 import ProfileStats from "../../components/profile/ProfileStats";
 import ProfileCredentials from "../../components/profile/ProfileCredentials";
 import Achievements from "../../components/profile/Achievements";
-import PrivateChatDialog from "../../components/chat/PrivateChatDialog";
+import PrivateChatDialog from "../../components/chat/private/PrivateChatDialog";
 
-export default function Profile({onUpdate}) {
+export default function Profile({onUpdate, notifications, setNotifications, isPrivateChatOpen, setIsPrivateChatOpen}) {
     const {nickname} = useParams();
     const cookiesNickname = Cookies.get('nickname');
     const [user, setUser] = useState({});
@@ -26,12 +26,14 @@ export default function Profile({onUpdate}) {
 
     return (
         <main>
-            <PrivateChatDialog />
+            <PrivateChatDialog notifications={notifications}
+                               setNotifications={setNotifications}
+                               isOpen={isPrivateChatOpen} onClose={() => setIsPrivateChatOpen(false)}/>
             <div className={"gradiant-violet profile " + (isYourProfile ? "your-profile" : "")}>
                 {error && <p className="error-message">{error.message}</p>}
                 <div className="section profile-grid">
                     <ProfileImage src={avatarImg} />
-                    <ProfileStats user={user} />
+                    <ProfileStats user={user} setIsPrivateChatOpen={setIsPrivateChatOpen} />
                     {isYourProfile && <ProfileCredentials user={user} onUpdate={onUpdate} />}
                     <Achievements />
                 </div>

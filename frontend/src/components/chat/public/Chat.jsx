@@ -1,6 +1,6 @@
-import "./styles.css";
+import "../styles.css";
 import React, { useEffect, useRef, useState } from "react";
-import { getAllMessages } from "../../utils/http";
+import { getAllMessages } from "../../../utils/http";
 import Message from "./Message";
 import Cookies from "js-cookie";
 
@@ -49,7 +49,8 @@ export default function Chat({ client, isConnected, setNotifications }) {
 
   useEffect(() => {
     if (client && isConnected) {
-      getAllMessages("public")
+      const token = Cookies.get("token");
+      getAllMessages("public", token)
         .then(setMessages)
         .catch((error) =>
           setError({ message: error.message || "An error occurred" })
@@ -100,8 +101,7 @@ export default function Chat({ client, isConnected, setNotifications }) {
       setNotifications((prev) => [
         ...prev,
         {
-          message:
-            "Client is not initialized or publish method is not available",
+          message: "Client is not initialized or publish method is not available",
           duration: 3500,
           isError: true,
         },
@@ -199,12 +199,11 @@ export default function Chat({ client, isConnected, setNotifications }) {
 
       <div className="chat__typing">
         <textarea
-          type="text"
           className="chat__typing-input scroll"
           ref={messageInputRef}
           onKeyDown={handleKeyDown}
           onChange={handleInputChange}
-          maxLength="300"
+          maxLength={250}
         ></textarea>
         <button className="chat__typing-btn" onClick={handleSendMessage}>
           <svg
