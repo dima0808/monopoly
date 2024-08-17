@@ -1,0 +1,111 @@
+.sort-up {
+  background-color: #2a91ff;
+}
+.sort-up:hover {
+  background-color: #449eff;
+}
+.sort-down {
+  background-color: #ff9742;
+}
+.sort-down:hover {
+  background-color: #fdac69;
+}
+
+.section-admin {
+  width: 1400px;
+  margin: 0 auto;
+}
+.server-maintenance {
+  padding-top: 20px;
+}
+.table-div {
+  margin-top: 20px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th,
+td {
+  border: 1px solid #000;
+  padding: 8px 1px;
+  text-align: center;
+}
+td {
+  font-size: 16px;
+}
+th {
+  cursor: pointer;
+  background-color: #ac68e4;
+  color: white;
+  transition: all 0.2s ease-in;
+}
+th:hover {
+  background-color: #ac68e4e9;
+}
+th:active {
+  background-color: #ac68e4ae;
+}
+tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+tr:nth-child(even) {
+  background-color: #ddd;
+}
+.th1 {
+  width: 230px;
+  height: 50px;
+}
+.th2 {
+  width: 230px;
+}
+.th3 {
+  width: 230px;
+}
+.th4 {
+  width: 100px;
+}
+.th5 {
+  width: 100px;
+}
+.th6 {
+  width: 100px;
+}
+.th7 {
+  width: 100px;
+}
+.th8 {
+  width: 100px;
+}
+.th9 {
+  width: 60px;
+}
+.th10 {
+  width: 60px;
+  cursor: auto;
+}
+.td-a:link,
+.td-a:visited {
+  transition: all 0.2s ease-in;
+  color: #271d37;
+}
+.td-a:hover,
+.td-a:active {
+  color: #5c4284;
+}
+.td-change {
+  color: #5c4284;
+  cursor: pointer;
+  background-color: #e4cff5;
+  transition: all 0.2s ease-in;
+}
+.table-div tr:nth-child(even) .td-change {
+  background-color: #d7b7f0;
+}
+.td-change:hover {
+  background-color: #fe0e3ee3 !important;
+  color: #f1e4fb;
+}
+.td-change:active {
+  background-color: #ff496ee3 !important;
+}

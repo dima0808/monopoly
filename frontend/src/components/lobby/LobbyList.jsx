@@ -55,22 +55,16 @@ export default function LobbyList({client, isConnected, setNotifications}) {
     function handleDialogClose() {
         setIsCreateDialogOpen(false);
         setIsJoinDialogOpen(false);
-        document.getElementById('modal').classList.remove('blur-modal');
-        document.getElementById('root').classList.remove('blur-background');
     }
 
     function handleCreateClick() {
         setIsCreateDialogOpen(true);
-        document.getElementById('modal').classList.add('blur-modal');
-        document.getElementById('root').classList.add('blur-background');
     }
 
     function handleJoinClick(room) {
         if (room.password) {
             setRoomToJoin(room);
             setIsJoinDialogOpen(true);
-            document.getElementById('modal').classList.add('blur-modal');
-            document.getElementById('root').classList.add('blur-background');
         } else {
             handleJoinRoom(room.name, client, setNotifications);
         }
