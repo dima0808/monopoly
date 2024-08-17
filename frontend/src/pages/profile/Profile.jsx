@@ -9,9 +9,8 @@ import ProfileImage from "../../components/profile/ProfileImage";
 import ProfileStats from "../../components/profile/ProfileStats";
 import ProfileCredentials from "../../components/profile/ProfileCredentials";
 import Achievements from "../../components/profile/Achievements";
-import PrivateChatDialog from "../../components/chat/private/PrivateChatDialog";
 
-export default function Profile({onUpdate, notifications, setNotifications, isPrivateChatOpen, setIsPrivateChatOpen}) {
+export default function Profile({onUpdate, setIsPrivateChatOpen, setSelectedUser}) {
     const {nickname} = useParams();
     const cookiesNickname = Cookies.get('nickname');
     const [user, setUser] = useState({});
@@ -26,16 +25,15 @@ export default function Profile({onUpdate, notifications, setNotifications, isPr
 
     return (
         <main>
-            <PrivateChatDialog notifications={notifications}
-                               setNotifications={setNotifications}
-                               isOpen={isPrivateChatOpen} onClose={() => setIsPrivateChatOpen(false)}/>
             <div className={"gradiant-violet profile " + (isYourProfile ? "your-profile" : "")}>
                 {error && <p className="error-message">{error.message}</p>}
                 <div className="section profile-grid">
-                    <ProfileImage src={avatarImg} />
-                    <ProfileStats user={user} setIsPrivateChatOpen={setIsPrivateChatOpen} />
-                    {isYourProfile && <ProfileCredentials user={user} onUpdate={onUpdate} />}
-                    <Achievements />
+                    <ProfileImage src={avatarImg}/>
+                    <ProfileStats user={user}
+                                  setIsPrivateChatOpen={setIsPrivateChatOpen}
+                                  setSelectedUser={() => setSelectedUser(user)}/>
+                    {isYourProfile && <ProfileCredentials user={user} onUpdate={onUpdate}/>}
+                    <Achievements/>
                 </div>
             </div>
         </main>

@@ -88,6 +88,10 @@ public class ChatServiceImpl implements ChatService {
                 .message(chatMessage.getContent())
                 .build();
         messagingTemplate.convertAndSendToUser(chatMessage.getReceiver().getUsername(), "/queue/notifications", notificationResponse);
+        ContactDto contactDtoForReceiver = new ContactDto(chatMessage.getSender().getNickname(), chatMessageDto);
+        ContactDto contactDtoForSender = new ContactDto(chatMessage.getReceiver().getNickname(), chatMessageDto);
+        messagingTemplate.convertAndSendToUser(chatMessage.getReceiver().getUsername(), "/chat/contacts", contactDtoForReceiver);
+        messagingTemplate.convertAndSendToUser(chatMessage.getSender().getUsername(), "/chat/contacts", contactDtoForSender);
         return chatMessage;
     }
 

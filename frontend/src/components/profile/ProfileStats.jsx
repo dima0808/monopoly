@@ -4,11 +4,12 @@ import React from "react";
 
 export default function ProfileStats({
                                          user: {nickname, elo, matchesPlayed, matchesWon, averagePlacement},
-                                         setIsPrivateChatOpen
+                                         setIsPrivateChatOpen, setSelectedUser
                                      }) {
 
     function writeMessage() {
         setIsPrivateChatOpen(true);
+        setSelectedUser();
     }
 
     return (

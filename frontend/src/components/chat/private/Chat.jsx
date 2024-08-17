@@ -36,10 +36,10 @@ export default function Chat({selectedUser, client, isConnected, setNotification
             const token = Cookies.get("token");
             getAllMessages(chatName, token, true).then(setMessages)
                 .catch((error) => setError({message: error.message || "An error occurred"}));
-            const publicMessagesSubscription = client.subscribe(
+            const privateMessagesSubscription = client.subscribe(
                 "/user/" + username + "/chat/private/" + selectedUser.username, onChatMessageReceived);
             return () => {
-                publicMessagesSubscription.unsubscribe();
+                privateMessagesSubscription.unsubscribe();
             };
         }
     }, [selectedUser, client, isConnected]);

@@ -4,7 +4,9 @@ export function onNotificationReceived(navigate, message, setNotifications) {
         navigate('/');
     }
     setNotifications(prev => [...prev, {
+        sender: notification.sender,
         message: notification.message,
+        type: notification.type,
         duration: 3500,
         isError: false,
         timestamp: notification.timestamp

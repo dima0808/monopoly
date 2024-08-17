@@ -16,8 +16,9 @@ import NotFound from "./pages/notFound/NotFound";
 import {Client} from "@stomp/stompjs";
 import {onErrorReceived, onNotificationReceived, removeNotification} from "./utils/notifications";
 import NotificationList from "./components/notification/NotificationList";
+import PrivateChatDialog from "./components/chat/private/PrivateChatDialog";
 
-function AppRoutes({setNickname, notifications, setNotifications, isPrivateChatOpen, setIsPrivateChatOpen}) {
+function AppRoutes({setNickname, setNotifications, setIsPrivateChatOpen, setSelectedUser}) {
     return (
         <>
             <Routes>
@@ -29,10 +30,8 @@ function AppRoutes({setNickname, notifications, setNotifications, isPrivateChatO
                 <Route path="/signup" element={<SignUp/>}/>
                 <Route path="/profile/:nickname"
                        element={<Profile onUpdate={setNickname}
-                                         notifications={notifications}
-                                         setNotifications={setNotifications}
-                                         isPrivateChatOpen={isPrivateChatOpen}
-                                         setIsPrivateChatOpen={setIsPrivateChatOpen}/>}/>
+                                         setIsPrivateChatOpen={setIsPrivateChatOpen}
+                                         setSelectedUser={setSelectedUser}/>}/>
                 <Route path="/maintenance" element={<Maintenance/>}/>
                 <Route path="*" element={<NotFound/>}/>
             </Routes>
@@ -45,6 +44,7 @@ export default function App() {
     const location = useLocation();
     const [notifications, setNotifications] = useState([]);
     const [isPrivateChatOpen, setIsPrivateChatOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -80,23 +80,28 @@ export default function App() {
                 <Scrollbars style={{height: '100vh'}}>
                     <Header nickname={nickname} onLogout={setNickname}/>
                     <AppRoutes setNickname={setNickname}
-                               notifications={notifications}
                                setNotifications={setNotifications}
-                               isPrivateChatOpen={isPrivateChatOpen}
-                               setIsPrivateChatOpen={setIsPrivateChatOpen}/>
+                               setIsPrivateChatOpen={setIsPrivateChatOpen}
+                               setSelectedUser={setSelectedUser}/>
                 </Scrollbars>
             ) : (
                 <AppRoutes setNickname={setNickname}
-                           notifications={notifications}
                            setNotifications={setNotifications}
-                           isPrivateChatOpen={isPrivateChatOpen}
-                           setIsPrivateChatOpen={setIsPrivateChatOpen}/>
+                           setIsPrivateChatOpen={setIsPrivateChatOpen}
+                           setSelectedUser={setSelectedUser}/>
             )}
             <NotificationList
                 notifications={notifications}
                 onRemove={(timestamp) => removeNotification(timestamp, setNotifications)}
                 isPrivateChatOpen={isPrivateChatOpen}
+                setIsPrivateChatOpen={setIsPrivateChatOpen}
+                setSelectedUser={setSelectedUser}
             />
+            <PrivateChatDialog setNotifications={setNotifications}
+                               isOpen={isPrivateChatOpen}
+                               onClose={() => setIsPrivateChatOpen(false)}
+                               selectedUser={selectedUser}
+                               setSelectedUser={setSelectedUser}/>
         </>
     );
 }

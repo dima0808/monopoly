@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import "../styles.css";
 import {createPortal} from "react-dom";
 import Contact from "./Contact";
@@ -7,16 +7,25 @@ import {getUser, getUserContacts} from "../../../utils/http";
 import Cookies from "js-cookie";
 import {Client} from "@stomp/stompjs";
 
-export default function PrivateChatDialog({notifications, setNotifications, isOpen, onClose}) {
-    const [selectedUser, setSelectedUser] = useState(null);
+export default function PrivateChatDialog({setNotifications, isOpen, onClose, selectedUser, setSelectedUser}) {
     const [error, setError] = useState(null);
     const [contacts, setContacts] = useState([]);
     const [client, setClient] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
 
+    function onNewMessageReceived(message) {
+        const parsedMessage = JSON.parse(message.body);
+        setContacts((prevContacts) => {
+            return prevContacts.map((contact) => {
+                return contact.nickname === parsedMessage.nickname ? parsedMessage : contact;
+            });
+        });
+    }
+
     useEffect(() => {
         if (isOpen) {
             const token = Cookies.get('token');
+            const username = Cookies.get('username');
             const client = new Client({
                 brokerURL: 'ws://localhost:8080/ws',
                 connectHeaders: {
@@ -24,6 +33,7 @@ export default function PrivateChatDialog({notifications, setNotifications, isOp
                 },
                 onConnect: () => {
                     console.log('Private chat connected');
+                    client.subscribe('/user/' + username + '/chat/contacts', onNewMessageReceived);
                     setIsConnected(true);
                 },
                 onStompError: () => {
@@ -82,7 +92,10 @@ export default function PrivateChatDialog({notifications, setNotifications, isOp
                   client={client}
                   isConnected={isConnected}
                   setNotifications={setNotifications}
-                  onClose={onClose}/>
+                  onClose={() => {
+                      onClose();
+                      setSelectedUser(null);
+                  }}/>
         </dialog>,
         document.getElementById("modal")
     );
