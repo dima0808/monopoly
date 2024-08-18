@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 @Controller
 @RequiredArgsConstructor
-public class RoomExceptionHandler {
+public class ExceptionHandler {
 
     private final SimpMessagingTemplate messagingTemplate;
 
@@ -46,7 +46,7 @@ public class RoomExceptionHandler {
                 exc instanceof RoomAlreadyExistException ||
                 exc instanceof UserAlreadyExistException) {
             status = HttpStatus.BAD_REQUEST;
-        } else if (exc instanceof RoomNotFoundException) {
+        } else if (exc instanceof RoomNotFoundException || exc instanceof UserNotFoundException) {
             status = HttpStatus.NOT_FOUND;
         } else if (exc instanceof UserNotAllowedException || exc instanceof WrongLobbyPasswordException) {
             status = HttpStatus.FORBIDDEN;

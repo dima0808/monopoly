@@ -4,7 +4,7 @@ import civkaLogoImg from "../../images/civka-logo.png";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 
-export default function Header({ nickname, onLogout }) {
+export default function Header({ nickname, onLogout, setIsPrivateChatOpen }) {
   return (
     <header className="header">
       <div className="header-flex">
@@ -16,9 +16,10 @@ export default function Header({ nickname, onLogout }) {
             {" "}
             Правила{" "}
           </Link>
-          <Link to="/admin" className="header__anchor">
-            Адмін
-          </Link>
+          {Cookies.get("role") === "ROLE_ADMIN" &&
+              <Link to="/admin" className="header__anchor">
+                Адмін
+              </Link>}
         </ul>
         <ul className="header__ul">
           <button className="header-localization"></button>
@@ -36,6 +37,8 @@ export default function Header({ nickname, onLogout }) {
                   Cookies.remove("token");
                   Cookies.remove("username");
                   Cookies.remove("nickname");
+                  Cookies.remove("role");
+                  setIsPrivateChatOpen(false);
                 }}
                 to="/"
                 className="header__anchor"

@@ -75,7 +75,10 @@ export default function PlayerList({client, isConnected, roomName, setNotificati
                 navigate('/');
             }}>Leave</button>
             {isUserLeaderCookies(players) &&
-                <button onClick={() => handleDeleteRoom(roomName, client, setNotifications)}>delete room</button>}
+                <button onClick={() => {
+                    handleDeleteRoom(roomName, client, setNotifications);
+                    navigate('/');
+                }}>delete room</button>}
             <div>
                 {!error && players.map(player => (
                     <Player key={player.id} player={player} onCivChange={handleChangeCivilization}

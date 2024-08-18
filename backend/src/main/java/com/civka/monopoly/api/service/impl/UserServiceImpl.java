@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -26,6 +28,11 @@ public class UserServiceImpl implements UserService {
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
     @Override
@@ -69,11 +76,19 @@ public class UserServiceImpl implements UserService {
             throw new UserAlreadyExistException("User with nickname " + userDto.getNickname() + " already exists");
         }
         if (userDto.getEmail() != null) user.setEmail(userDto.getEmail());
-        if (userDto.getNickname() != null) {
-            user.setNickname(userDto.getNickname());
-        }
+        if (userDto.getNickname() != null) user.setNickname(userDto.getNickname());
         if (userDto.getPassword() != null) user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         return userRepository.save(user);
+    }
+
+    @Override
+    public User updateFieldsAdmin(User user, UserDto userDto) {
+        User updatedUser = updateFields(user, userDto);
+        if (userDto.getElo() != null) updatedUser.setElo(userDto.getElo());
+        if (userDto.getMatchesPlayed() != null) updatedUser.setMatchesPlayed(userDto.getMatchesPlayed());
+        if (userDto.getMatchesWon() != null) updatedUser.setMatchesWon(userDto.getMatchesWon());
+        if (userDto.getAveragePlacement() != null) updatedUser.setAveragePlacement(userDto.getAveragePlacement());
+        return userRepository.save(updatedUser);
     }
 
     @Override

@@ -16,9 +16,14 @@ export default function PrivateChatDialog({setNotifications, isOpen, onClose, se
     function onNewMessageReceived(message) {
         const parsedMessage = JSON.parse(message.body);
         setContacts((prevContacts) => {
-            return prevContacts.map((contact) => {
-                return contact.nickname === parsedMessage.nickname ? parsedMessage : contact;
-            });
+            const contactExists = prevContacts.some(contact => contact.nickname === parsedMessage.nickname);
+            if (contactExists) {
+                return prevContacts.map(contact =>
+                    contact.nickname === parsedMessage.nickname ? parsedMessage : contact
+                );
+            } else {
+                return [...prevContacts, parsedMessage];
+            }
         });
     }
 
@@ -45,6 +50,9 @@ export default function PrivateChatDialog({setNotifications, isOpen, onClose, se
             client.activate();
             setClient(client);
 
+            getUserContacts(username, token).then(setContacts)
+                .catch((error) => setError({message: error.message || "An error occurred"}));
+
             return () => {
                 client.deactivate();
                 setClient(null);
@@ -53,13 +61,6 @@ export default function PrivateChatDialog({setNotifications, isOpen, onClose, se
             };
         }
     }, [isOpen]);
-
-    useEffect(() => {
-        const username = Cookies.get("username");
-        const token = Cookies.get("token");
-        getUserContacts(username, token).then(setContacts)
-            .catch((error) => setError({message: error.message || "An error occurred"}));
-    }, []);
 
     function handleContactClick(nickname) {
         getUser(nickname).then(setSelectedUser);
@@ -78,13 +79,15 @@ export default function PrivateChatDialog({setNotifications, isOpen, onClose, se
                     ></input>
                 </div>
                 <div className="your-contacts scroll">
-                    {!error && contacts.map((contact) => (
-                        <Contact key={contact.nickname}
-                                 nickname={contact.nickname}
-                                 lastMessage={contact.lastMessage.content}
-                                 onClick={() => handleContactClick(contact.nickname)}
-                                 isSelected={contact.nickname === selectedUser?.nickname}/>
-                    ))}
+                    {!error && contacts
+                        .sort((a, b) => Date.parse(b.lastMessage.timestamp) - Date.parse(a.lastMessage.timestamp))
+                        .map((contact) => (
+                            <Contact key={contact.nickname}
+                                     nickname={contact.nickname}
+                                     lastMessage={contact.lastMessage.content}
+                                     onClick={() => handleContactClick(contact.nickname)}
+                                     isSelected={contact.nickname === selectedUser?.nickname}/>
+                        ))}
                     {error && <p className="error-message">{error.message}</p>}
                 </div>
             </div>

@@ -11,6 +11,7 @@ import com.civka.monopoly.api.service.ChatService;
 import com.civka.monopoly.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,14 +27,8 @@ public class UserController {
     private final ChatService chatService;
 
     @GetMapping
-    public ResponseEntity<User> getUser() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return ResponseEntity.ok(userService.findByUsername(username));
-    }
-
-    @GetMapping("/username")
-    public ResponseEntity<String> getUsername() {
-        return ResponseEntity.ok(SecurityContextHolder.getContext().getAuthentication().getName());
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.findAll());
     }
 
     @GetMapping("/{username}/contacts")

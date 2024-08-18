@@ -23,10 +23,13 @@ public class AuthController {
     public ResponseEntity<?> signIn(@RequestBody SignInDto signInDto) {
         String jwt = authService.signIn(signInDto);
         User user = userService.findByUsernameOrEmail(signInDto.getLogin());
+        String role = user.getRoles().stream()
+                .anyMatch(r -> r.getName().equals("ROLE_ADMIN")) ? "ROLE_ADMIN" : "ROLE_USER";
         return ResponseEntity.ok(JwtResponse.builder()
                 .token(jwt)
                 .username(user.getUsername())
                 .nickname(user.getNickname())
+                .role(role)
                 .build());
     }
 

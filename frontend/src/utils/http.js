@@ -1,10 +1,10 @@
-export async function signUp({ username, email, password }) {
+export async function signUp({username, email, password}) {
     const response = await fetch('http://localhost:8080/api/auth/signup', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({username, email, password}),
     });
     const resData = await response.json();
 
@@ -15,13 +15,13 @@ export async function signUp({ username, email, password }) {
     return resData;
 }
 
-export async function signIn({ login, password }) {
+export async function signIn({login, password}) {
     const response = await fetch('http://localhost:8080/api/auth/signin', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ login, password }),
+        body: JSON.stringify({login, password}),
     });
     const resData = await response.json();
 
@@ -98,10 +98,53 @@ export async function updateProfile({nickname, email, password}, token) {
     return resData;
 }
 
+export async function updateUser({
+                                     username,
+                                     nickname,
+                                     email,
+                                     password,
+                                     elo,
+                                     matchesPlayed,
+                                     matchesWon,
+                                     averagePlacement
+                                 }, token) {
+
+    const response = await fetch('http://localhost:8080/api/admin/users/' + username, {
+        method: 'PATCH',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({nickname, email, password, elo, matchesPlayed, matchesWon, averagePlacement}),
+    });
+    const resData = await response.json();
+
+    if (!response.ok) {
+        throw new Error(resData.message);
+    }
+
+    return resData;
+}
+
 export async function getUserContacts(username, token) {
     const response = await fetch('http://localhost:8080/api/users/' + username + '/contacts', {
         headers: {
             'Authorization': `Bearer ${token}`,
+        }
+    });
+    const resData = await response.json();
+
+    if (!response.ok) {
+        throw new Error(resData.message);
+    }
+
+    return resData;
+}
+
+export async function getAllUsers(token) {
+    const response = await fetch('http://localhost:8080/api/admin/users', {
+        headers: {
+            'Authorization': `Bearer ${token}`
         }
     });
     const resData = await response.json();

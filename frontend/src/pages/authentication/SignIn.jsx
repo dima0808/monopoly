@@ -29,11 +29,12 @@ export default function SignIn({onLogin}) {
         const password = passwordRef.current.value;
 
         try {
-            const { token, username, nickname } = await signIn({login, password});
+            const { token, username, nickname, role } = await signIn({login, password});
             setError(null);
             Cookies.set("token", token);
             Cookies.set("username", username);
             Cookies.set("nickname", nickname);
+            Cookies.set("role", role);
             onLogin(nickname);
             navigate("/");
         } catch (error) {

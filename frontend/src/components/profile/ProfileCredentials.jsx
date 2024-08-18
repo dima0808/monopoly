@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { updateProfile } from "../../utils/http";
 import Cookies from "js-cookie";
 
-export default function ProfileCredentials({ user: { nickname, email }, onUpdate }) {
+export default function ProfileCredentials({ user: { nickname, email }, onUpdate, setNotifications }) {
     const newNicknameRef = useRef(nickname);
     const newEmailRef = useRef(email);
     const newPasswordRef = useRef("");
@@ -75,6 +75,15 @@ export default function ProfileCredentials({ user: { nickname, email }, onUpdate
                 Cookies.set("nickname", newNickname);
                 onUpdate(newNickname);
             }
+            newPasswordRef.current.value = "";
+            repeatPasswordRef.current.value = "";
+            setNotifications(prev => [...prev, {
+                message: "Profile updated",
+                type: "UPDATE_PROFILE",
+                duration: 3500,
+                isError: false,
+                timestamp: Date.now()
+            }]);
             setIsChanged(false);
         } catch (error) {
             setError({ message: error.message || "An error occurred" });
