@@ -23,6 +23,8 @@ public interface ChatService {
 
     ChatMessage sendPrivateMessage(String chatName, ChatMessageDto chatMessageDto);
 
+    void readMessages(String chatName, String reader);
+
     void clearMessages(String chatName, String admin);
 
     void clearMessages(Integer clearCount, String chatName, String admin);

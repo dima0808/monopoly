@@ -1,13 +1,14 @@
 import "../styles.css";
 import Message from "./Message";
 import {Link} from "react-router-dom";
-import {useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import Cookies from "js-cookie";
 import {getAllMessages} from "../../../utils/http";
 
-export default function Chat({selectedUser, client, isConnected, setNotifications, onClose}) {
+export default function Chat({selectedUser, selectedContact, client, isConnected, setNotifications, onClose}) {
     const [messages, setMessages] = useState([]);
     const [error, setError] = useState(null);
+    const [isInitialLoad, setIsInitialLoad] = useState(false);
     const messageInputRef = useRef();
     const chatContainerRef = useRef();
 
@@ -31,10 +32,13 @@ export default function Chat({selectedUser, client, isConnected, setNotification
 
     useEffect(() => {
         if (selectedUser && client && isConnected) {
-            const chatName = [Cookies.get("username"), selectedUser.username].sort().join(" ");
             const username = Cookies.get("username");
             const token = Cookies.get("token");
-            getAllMessages(chatName, token, true).then(setMessages)
+            const chatName = [username, selectedUser.username].sort().join(" ");
+            getAllMessages(chatName, token, true).then((messages) => {
+                setMessages(messages);
+                setIsInitialLoad(true);
+            })
                 .catch((error) => setError({message: error.message || "An error occurred"}));
             const privateMessagesSubscription = client.subscribe(
                 "/user/" + username + "/chat/private/" + selectedUser.username, onChatMessageReceived);
@@ -45,10 +49,73 @@ export default function Chat({selectedUser, client, isConnected, setNotification
     }, [selectedUser, client, isConnected]);
 
     useEffect(() => {
-        if (isScrolledToBottom()) {
+        if (isInitialLoad) {
             scrollToBottom();
+            setIsInitialLoad(false);
         }
-    }, [messages]);
+    }, [messages, isInitialLoad]);
+
+    const markMessagesAsRead = useCallback(() => {
+        if (!selectedUser ||
+            !selectedContact ||
+            !isScrolledToBottom(chatContainerRef.current) ||
+            selectedContact.unreadMessages < 1 ||
+            selectedContact.lastMessage.receiver === selectedContact.nickname) return;
+        const token = Cookies.get("token");
+        const username = Cookies.get("username");
+        if (!client || !client.publish) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message: "Client is not initialized or publish method is not available",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+            return;
+        }
+        const chatName = [username, selectedUser.username].sort().join(" ");
+        try {
+            client.publish({
+                destination: "/app/chat/readMessages/" + chatName,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    username: username,
+                }
+            });
+        } catch (error) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message: "Error reading message (no connection)",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+        }
+    }, [client, selectedContact, selectedUser, setNotifications]);
+
+    useEffect(() => {
+        function handleScroll() {
+            if (isScrolledToBottom(chatContainerRef.current, 3)) {
+                scrollToBottom();
+                markMessagesAsRead();
+            }
+        }
+
+        const chatContainer = chatContainerRef.current;
+        chatContainer.addEventListener('scroll', handleScroll);
+        return () => {
+            chatContainer.removeEventListener('scroll', handleScroll);
+        };
+    }, [markMessagesAsRead]);
+
+    useEffect(() => {
+        if (isScrolledToBottom(chatContainerRef.current)) {
+            scrollToBottom();
+            markMessagesAsRead();
+        }
+    }, [markMessagesAsRead, messages]);
 
     function handleSendMessage() {
         const token = Cookies.get("token");
@@ -113,16 +180,17 @@ export default function Chat({selectedUser, client, isConnected, setNotification
         }
     };
 
-    function isScrolledToBottom() {
-        const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
-        return (
-            scrollHeight - scrollTop < clientHeight + 80 &&
-            scrollHeight - scrollTop > clientHeight - 80
-        );
+    function isScrolledToBottom(chatContainer, tolerance = 80) {
+        if (!chatContainer) return false;
+        const { scrollHeight, scrollTop, clientHeight } = chatContainer;
+        return Math.abs(scrollHeight - (scrollTop + clientHeight)) <= tolerance;
     }
 
     function scrollToBottom() {
-        chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        const chatContainer = chatContainerRef.current;
+        if (chatContainer) {
+            chatContainer.scrollTop = chatContainer.scrollHeight - chatContainer.clientHeight;
+        }
     }
 
     return (

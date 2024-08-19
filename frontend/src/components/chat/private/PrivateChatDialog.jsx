@@ -63,7 +63,12 @@ export default function PrivateChatDialog({setNotifications, isOpen, onClose, se
     }, [isOpen]);
 
     function handleContactClick(nickname) {
-        getUser(nickname).then(setSelectedUser);
+        getUser(nickname).then(setSelectedUser)
+            .catch((error) => {
+                if (error.status === 404) {
+                    setContacts((prevContacts) => prevContacts.filter(contact => contact.nickname !== nickname));
+                }
+            });
     }
 
     if (!isOpen) return null;
@@ -84,14 +89,16 @@ export default function PrivateChatDialog({setNotifications, isOpen, onClose, se
                         .map((contact) => (
                             <Contact key={contact.nickname}
                                      nickname={contact.nickname}
-                                     lastMessage={contact.lastMessage.content}
+                                     lastMessage={contact.lastMessage}
                                      onClick={() => handleContactClick(contact.nickname)}
-                                     isSelected={contact.nickname === selectedUser?.nickname}/>
+                                     isSelected={contact.nickname === selectedUser?.nickname}
+                                     unreadMessages={contact.unreadMessages}/>
                         ))}
                     {error && <p className="error-message">{error.message}</p>}
                 </div>
             </div>
             <Chat selectedUser={selectedUser}
+                  selectedContact={contacts.find(contact => contact.nickname === selectedUser?.nickname)}
                   client={client}
                   isConnected={isConnected}
                   setNotifications={setNotifications}

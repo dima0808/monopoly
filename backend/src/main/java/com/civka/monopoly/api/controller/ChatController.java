@@ -37,6 +37,12 @@ public class ChatController {
         return chatService.sendPrivateMessage(chatName, chatMessageDto);
     }
 
+    @MessageMapping("/chat/readMessages/{chatName}")
+    public void readMessages(@Header("username") String username,
+                                    @DestinationVariable String chatName) {
+        chatService.readMessages(chatName, username);
+    }
+
     @GetMapping("/api/chat/{chatName}")
     public ResponseEntity<List<ChatMessage>> getAllChatMessages(@PathVariable String chatName) {
         return ResponseEntity.ok(chatService.findByName(chatName).getMessages());

@@ -34,7 +34,12 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Chat findPrivateChatByName(String chatName) {
         return chatRepository.findByName(chatName)
-                .orElseThrow(() -> new ChatNotFoundException(chatName));
+                .orElseGet(() -> {
+                    Chat newChat = new Chat();
+                    newChat.setName(chatName);
+                    newChat.setUnreadMessages(0);
+                    return chatRepository.save(newChat);
+                });
     }
 
     @Override
@@ -51,13 +56,11 @@ public class ChatServiceImpl implements ChatService {
             if (!chat.getMessages().isEmpty()) {
                 ChatMessage lastMessage = chat.getMessages().get(chat.getMessages().size() - 1);
                 User user = userService.findByUsername(chat.getName().replace(username, "").trim());
-                ChatMessageDto lastMessageDto = ChatMessageDto.builder()
-                        .sender((lastMessage.getSender().getUsername()))
-                        .receiver(lastMessage.getReceiver().getUsername())
-                        .content(lastMessage.getContent())
-                        .timestamp(lastMessage.getTimestamp())
-                        .build();
-                contacts.add(new ContactDto(user.getNickname(), lastMessageDto));
+                contacts.add(ContactDto.builder()
+                        .nickname(user.getNickname())
+                        .lastMessage(lastMessage.toDto())
+                        .unreadMessages(chat.getUnreadMessages())
+                        .build());
             }
         }
 
@@ -78,6 +81,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public ChatMessage sendPrivateMessage(String chatName, ChatMessageDto chatMessageDto) {
         Chat chat = findPrivateChatByName(chatName);
+        chat.setUnreadMessages(chat.getUnreadMessages() + 1);
         ChatMessage chatMessage = chatMessageService.save(chat, chatMessageDto);
         messagingTemplate.convertAndSendToUser(chatMessage.getReceiver().getUsername(), "/chat/private/" + chatMessage.getSender().getUsername(), chatMessage);
         messagingTemplate.convertAndSendToUser(chatMessage.getSender().getUsername(), "/chat/private/" + chatMessage.getReceiver().getUsername(), chatMessage);
@@ -88,11 +92,42 @@ public class ChatServiceImpl implements ChatService {
                 .message(chatMessage.getContent())
                 .build();
         messagingTemplate.convertAndSendToUser(chatMessage.getReceiver().getUsername(), "/queue/notifications", notificationResponse);
-        ContactDto contactDtoForReceiver = new ContactDto(chatMessage.getSender().getNickname(), chatMessageDto);
-        ContactDto contactDtoForSender = new ContactDto(chatMessage.getReceiver().getNickname(), chatMessageDto);
+        ContactDto contactDtoForReceiver = ContactDto.builder()
+                .nickname(chatMessage.getSender().getNickname())
+                .lastMessage(chatMessage.toDto())
+                .unreadMessages(chat.getUnreadMessages())
+                .build();
+        ContactDto contactDtoForSender = ContactDto.builder()
+                .nickname(chatMessage.getReceiver().getNickname())
+                .lastMessage(chatMessage.toDto())
+                .unreadMessages(chat.getUnreadMessages())
+                .build();
         messagingTemplate.convertAndSendToUser(chatMessage.getReceiver().getUsername(), "/chat/contacts", contactDtoForReceiver);
         messagingTemplate.convertAndSendToUser(chatMessage.getSender().getUsername(), "/chat/contacts", contactDtoForSender);
         return chatMessage;
+    }
+
+    @Override
+    public void readMessages(String chatName, String reader) {
+        Chat chat = findByName(chatName);
+        ChatMessage lastMessage = chat.getMessages().get(chat.getMessages().size() - 1);
+        if (chat.getUnreadMessages() > 0 && lastMessage.getReceiver().getUsername().equals(reader)) {
+            chat.setUnreadMessages(0);
+            chatRepository.save(chat);
+            String sender = chat.getName().replace(reader, "").trim();
+            ContactDto contactDtoForReader = ContactDto.builder()
+                    .nickname(userService.findByUsername(sender).getNickname())
+                    .lastMessage(lastMessage.toDto())
+                    .unreadMessages(0)
+                    .build();
+            ContactDto contactDtoForSender = ContactDto.builder()
+                    .nickname(userService.findByUsername(reader).getNickname())
+                    .lastMessage(lastMessage.toDto())
+                    .unreadMessages(0)
+                    .build();
+            messagingTemplate.convertAndSendToUser(reader, "/chat/contacts", contactDtoForReader);
+            messagingTemplate.convertAndSendToUser(sender, "/chat/contacts", contactDtoForSender);
+        }
     }
 
     @Override

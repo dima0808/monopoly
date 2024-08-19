@@ -74,7 +74,9 @@ export async function getUser(nickname) {
     const resData = await response.json();
 
     if (!response.ok) {
-        throw new Error(resData.message);
+        const error = new Error(resData.message);
+        error.status = response.status;
+        throw error;
     }
 
     return resData;
