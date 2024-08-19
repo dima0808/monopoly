@@ -28,7 +28,6 @@ body {
 
 /* Загальний стиль для скроллбарів */
 .firefox .scroll {
-  cursor: pointer;
   scrollbar-width: thin; /* Тонкий скроллбар */
   scrollbar-color: #d1b5e8 #e0e0f9; /* Фіолетовий ползунок і світло-фіолетовий фон треку */
 }

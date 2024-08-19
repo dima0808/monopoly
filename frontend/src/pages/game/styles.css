@@ -1,17 +1,20 @@
 .grid-3 {
-    justify-content: center;
-    display: grid;
-    grid-template-columns: 250px 820px 300px;
-    gap: 40px;
+  justify-content: center;
+  display: grid;
+  grid-template-columns: 250px 820px 300px;
+  gap: 40px;
+}
+.grid-3 img {
+  -webkit-user-drag: none;
 }
 
 .game-html body {
-    background-color: #222222;
+  background-color: #222222;
 }
 
 .game-html,
 .game-html body {
-    height: 100%;
-    display: grid;
-    place-items: center;
+  height: 100%;
+  display: grid;
+  place-items: center;
 }
