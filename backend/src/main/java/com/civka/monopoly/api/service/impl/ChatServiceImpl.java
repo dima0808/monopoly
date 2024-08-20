@@ -13,8 +13,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -65,6 +64,41 @@ public class ChatServiceImpl implements ChatService {
         }
 
         return contacts;
+    }
+
+    @Override
+    public List<ContactDto> getUserSuggestedContacts(String username, String suggestedNickname) {
+        List<User> suggestedUsers = userService.findUsersByNicknameContaining(suggestedNickname);
+        List<ContactDto> suggestedContacts = new ArrayList<>();
+
+        for (User suggestedUser : suggestedUsers) {
+            List<String> usernames = Arrays.asList(username, suggestedUser.getUsername());
+            Collections.sort(usernames);
+            String chatName = String.join(" ", usernames);
+            Optional<Chat> chatOptional = chatRepository.findByName(chatName);
+
+            if (chatOptional.isPresent()) {
+                Chat chat = chatOptional.get();
+                if (!chat.getMessages().isEmpty()) {
+                    ChatMessage lastMessage = chat.getMessages().get(chat.getMessages().size() - 1);
+                    suggestedContacts.add(ContactDto.builder()
+                            .nickname(suggestedUser.getNickname())
+                            .lastMessage(lastMessage.toDto())
+                            .unreadMessages(chat.getUnreadMessages())
+                            .build());
+                } else {
+                    suggestedContacts.add(ContactDto.builder()
+                            .nickname(suggestedUser.getNickname())
+                            .build());
+                }
+            } else {
+                suggestedContacts.add(ContactDto.builder()
+                        .nickname(suggestedUser.getNickname())
+                        .build());
+            }
+        }
+
+        return suggestedContacts;
     }
 
     @Override

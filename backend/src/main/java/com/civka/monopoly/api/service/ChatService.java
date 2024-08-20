@@ -17,6 +17,8 @@ public interface ChatService {
 
     List<ContactDto> getUserContacts(String username);
 
+    List<ContactDto> getUserSuggestedContacts(String username, String suggestedNickname);
+
     Chat save(Chat chat);
 
     ChatMessage sendPublicMessage(String chatName, ChatMessageDto chatMessageDto);
