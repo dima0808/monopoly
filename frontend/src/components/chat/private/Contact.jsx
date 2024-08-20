@@ -5,8 +5,8 @@ export default function Contact({nickname, lastMessage, onClick, isSelected, unr
     return (
         <div className={"your-contact" + (isSelected ? " your-contact-active" : "")} onClick={onClick} style={{ position: 'relative' }}>
             <h2 className="your-contact-neekname">{nickname}</h2>
-            <p className="your-contact-p">{lastMessage.content}</p>
-            {(unreadMessages > 0 && Cookies.get("username") === lastMessage.receiver) &&
+            <p className="your-contact-p">{lastMessage?.content}</p>
+            {(unreadMessages > 0 && Cookies.get("username") === lastMessage?.receiver) &&
                 <div className="unread-messages">{unreadMessages > 9 ? "9+" : unreadMessages}</div>}
         </div>
     );

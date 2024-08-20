@@ -157,3 +157,19 @@ export async function getAllUsers(token) {
 
     return resData;
 }
+
+export async function getAllSuggestedContacts(username, token, suggestedNickname) {
+    const response = await fetch('http://localhost:8080/api/users/' + username + '/contacts/suggested?nickname=' + suggestedNickname, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    });
+    const resData = await response.json();
+
+    if (!response.ok) {
+        throw new Error(resData.message);
+    }
+
+    return resData;
+
+}
