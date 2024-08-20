@@ -2,8 +2,8 @@ package com.civka.monopoly.api.service;
 
 public class UserNotFoundException extends RuntimeException {
 
-    public UserNotFoundException(String login) {
-        super(String.format("User with login '%s' not found", login));
+    public UserNotFoundException(String credentials) {
+        super(String.format("User with credentials '%s' not found", credentials));
     }
 
     public UserNotFoundException(Long id) {

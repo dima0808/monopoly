@@ -1,5 +1,5 @@
 import {useRef, useState, useEffect} from "react";
-import {signIn} from "../../http";
+import {signIn} from "../../utils/http";
 import Cookies from "js-cookie";
 import {Link, useNavigate} from "react-router-dom";
 import "./styles.css";
@@ -29,11 +29,13 @@ export default function SignIn({onLogin}) {
         const password = passwordRef.current.value;
 
         try {
-            const resData = await signIn({login, password});
+            const { token, username, nickname, role } = await signIn({login, password});
             setError(null);
-            Cookies.set("token", resData.token);
-            Cookies.set("username", resData.username);
-            onLogin(resData.username);
+            Cookies.set("token", token);
+            Cookies.set("username", username);
+            Cookies.set("nickname", nickname);
+            Cookies.set("role", role);
+            onLogin(nickname);
             navigate("/");
         } catch (error) {
             setError({message: error.message || "An error occurred"});

@@ -1,46 +1,27 @@
 import "./styles.css";
 import LobbyList from "../../components/lobby/LobbyList";
-import Chat from "../../components/chat/Chat";
-import Notification from '../../components/notification/Notification';
-import { useEffect, useState } from "react";
+import Chat from "../../components/chat/public/Chat";
+import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
-import { Client } from "@stomp/stompjs";
+import {Client} from "@stomp/stompjs";
 
-export default function Homepage() {
+export default function Homepage({setNotifications}) {
     const [client, setClient] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
-    const [notifications, setNotifications] = useState([]);
-
-    function onNotificationReceived(message) {
-        const notification = JSON.parse(message.body);
-        setNotifications(prev => [...prev, { message : notification.message, duration: 3500, isError: false }]);
-    }
-
-    function onErrorReceived(message) {
-        const error = JSON.parse(message.body);
-        setNotifications(prev => [...prev, { message : error.message, duration: 3500, isError: true }]);
-    }
-
-    function removeNotification(timeStamp) {
-        setNotifications(prev => prev.filter(notification => notification.timeStamp !== timeStamp));
-    }
 
     useEffect(() => {
         const token = Cookies.get('token');
-        const username = Cookies.get('username');
         const client = new Client({
             brokerURL: 'ws://localhost:8080/ws',
             connectHeaders: {
                 Authorization: `Bearer ${token}`
             },
             onConnect: () => {
-                console.log('Connected!!!!!!!!!!');
-                client.subscribe('/user/' + username + '/queue/notifications', onNotificationReceived);
-                client.subscribe('/user/' + username + '/queue/errors', onErrorReceived);
+                console.log('Homepage connected');
                 setIsConnected(true);
             },
             onStompError: () => {
-                console.log('Failed to connect');
+                console.log('Failed to connect homepage client');
                 setIsConnected(false);
             },
         });
@@ -50,6 +31,8 @@ export default function Homepage() {
 
         return () => {
             client.deactivate();
+            setClient(null);
+            setIsConnected(false);
         };
     }, []);
 
@@ -74,18 +57,6 @@ export default function Homepage() {
                     <LobbyList client={client} isConnected={isConnected} setNotifications={setNotifications}/>
                     <Chat client={client} isConnected={isConnected} setNotifications={setNotifications}/>
                 </section>
-            </div>
-            <div className="notification-stack">
-                {notifications.map((notification, index) => (
-                    <Notification
-                        key={index}
-                        message={notification.message}
-                        duration={notification.duration}
-                        isError={notification.isError}
-                        style={{ top: `${20 + index * 80}px`, right: '20px' }}
-                        onClose={() => removeNotification(notification.timeStamp)}
-                    />
-                ))}
             </div>
         </main>
     );

@@ -1,8 +1,9 @@
 import './styles.css';
 
 import avatarImg from "../../images/avatar.png";
+import {Link} from "react-router-dom";
 
-export default function Member({ username,  isLeader, onKick, showKickButton }) {
+export default function Member({ username, nickname, isLeader, onKick, showKickButton }) {
     return (
         <div className="lobby__member">
             <div className={`lobby__member-avatar ${isLeader ? 'leader' : ''}`}>
@@ -12,7 +13,7 @@ export default function Member({ username,  isLeader, onKick, showKickButton }) 
                     alt="avatar"
                 /> {/*todo: add avatar*/}
             </div>
-            <a className="lobby__member-nickname" href="#"> {username} </a> {/*todo: add profile link*/}
+            <Link to={"/profile/" + nickname} className="lobby__member-nickname">{nickname}</Link>
             {showKickButton && (
                 <button onClick={() => onKick(username)} className="kick-btn">
                     <svg

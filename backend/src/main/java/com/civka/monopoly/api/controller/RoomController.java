@@ -31,58 +31,58 @@ public class RoomController {
                 .build();
     }
 
-    @MessageMapping("/rooms/joinRoom/{roomId}")
-    @SendTo({"/topic/public", "/topic/public/{roomId}"})
+    @MessageMapping("/rooms/joinRoom/{roomName}")
+    @SendTo({"/topic/public", "/topic/public/{roomName}/players"})
     public RoomMessage joinRoom(@Payload PasswordMessage passwordMessage,
-                                @DestinationVariable Long roomId,
+                                @DestinationVariable String roomName,
                                 @Header("username") String username) {
-        if (roomService.findById(roomId).getPassword() != null) {
+        if (roomService.findByName(roomName).getPassword() != null) {
             if (passwordMessage.getPassword() == null) {
                 throw new WrongLobbyPasswordException();
             }
-            roomService.handlePassword(roomId, passwordMessage.getPassword());
+            roomService.handlePassword(roomName, passwordMessage.getPassword());
         }
         return RoomMessage.builder()
                 .type(RoomMessage.MessageType.JOIN)
-                .content("Member " + username + " joined the room with id " + roomId)
-                .room(roomService.addMember(roomId, username))
+                .content("Member " + username + " joined the room " + roomName)
+                .room(roomService.addMember(roomName, username))
                 .build();
     }
 
-    @MessageMapping("/rooms/leaveRoom/{roomId}")
-    @SendTo({"/topic/public", "/topic/public/{roomId}"})
-    public RoomMessage leaveRoom(@DestinationVariable Long roomId, @Header("username") String username) {
-        Room updatedRoom = roomService.removeMember(roomId, username);
+    @MessageMapping("/rooms/leaveRoom/{roomName}")
+    @SendTo({"/topic/public", "/topic/public/{roomName}/players"})
+    public RoomMessage leaveRoom(@DestinationVariable String roomName, @Header("username") String username) {
+        Room updatedRoom = roomService.removeMember(roomName, username);
         boolean deleteCondition = updatedRoom.getMembers().isEmpty();
         return RoomMessage.builder()
                 .type(deleteCondition ? RoomMessage.MessageType.DELETE : RoomMessage.MessageType.LEAVE)
-                .content("Member " + username + " left the room with id " + roomId +
+                .content("Member " + username + " left the room " + roomName +
                         (deleteCondition ? " and room was deleted" : ""))
                 .room(updatedRoom)
                 .build();
     }
 
-    @MessageMapping("/rooms/kickMember/{roomId}/{member}")
-    @SendTo({"/topic/public", "/topic/public/{roomId}"})
-    public RoomMessage kickMember(@DestinationVariable Long roomId,
+    @MessageMapping("/rooms/kickMember/{roomName}/{member}")
+    @SendTo({"/topic/public", "/topic/public/{roomName}/players"})
+    public RoomMessage kickMember(@DestinationVariable String roomName,
                            @DestinationVariable String member,
                            @Header("username") String username) {
         return RoomMessage.builder()
                 .type(RoomMessage.MessageType.KICK)
                 .content(String.format("Member %s was kicked from the room by %s",
                         member, username))
-                .room(roomService.kickMember(roomId, member, username))
+                .room(roomService.kickMember(roomName, member, username))
                 .build();
     }
 
-    @MessageMapping("/rooms/deleteRoom/{roomId}")
+    @MessageMapping("/rooms/deleteRoom/{roomName}")
     @SendTo("/topic/public")
-    public RoomMessage deleteRoom(@DestinationVariable Long roomId, @Header("username") String username) {
+    public RoomMessage deleteRoom(@DestinationVariable String roomName, @Header("username") String username) {
         return RoomMessage.builder()
                 .type(RoomMessage.MessageType.DELETE)
-                .content(String.format("Room with id %d deleted by %s and all members were kicked out",
-                        roomId, username))
-                .room(roomService.deleteById(roomId, username))
+                .content(String.format("Room %s deleted by %s and all members were kicked out",
+                        roomName, username))
+                .room(roomService.deleteByName(roomName, username))
                 .build();
     }
 
@@ -91,8 +91,8 @@ public class RoomController {
         return ResponseEntity.ok(roomService.findAll());
     }
 
-    @GetMapping("/api/rooms/{roomId}")
-    public ResponseEntity<Room> getAllRooms(@PathVariable Long roomId) {
-        return ResponseEntity.ok(roomService.findById(roomId));
+    @GetMapping("/api/rooms/{roomName}")
+    public ResponseEntity<Room> getAllRooms(@PathVariable String roomName) {
+        return ResponseEntity.ok(roomService.findByName(roomName));
     }
 }

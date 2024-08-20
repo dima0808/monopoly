@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
 
-    @Value("${monopoly.app.room.maxSize}")
+    @Value("${monopoly.app.room.max-size}")
     private Integer maxSize;
 
     private final RoomRepository roomRepository;
@@ -31,6 +31,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Room create(RoomDto roomDto, String username) {
+        if (roomRepository.existsByName(roomDto.getName())) {
+            throw new RoomAlreadyExistException(roomDto.getName());
+        }
         if (roomDto.getSize() > maxSize || roomDto.getSize() < 2) {
             throw new IllegalRoomSizeException(roomDto.getSize(), maxSize);
         }
@@ -55,15 +58,21 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    public Room findByName(String roomName) {
+        return roomRepository.findByName(roomName)
+                .orElseThrow(() -> new RoomNotFoundException(roomName));
+    }
+
+    @Override
     public List<Room> findAll() {
         return roomRepository.findAll();
     }
 
     @Override
-    public Room deleteById(Long roomId, String username) {
-        Room room = findById(roomId);
+    public Room deleteByName(String roomName, String username) {
+        Room room = findByName(roomName);
         Member leader = userService.findByUsername(username).getMember();
-        if (leader == null || !leader.getIsLeader() || !leader.getRoom().getId().equals(roomId)) {
+        if (leader == null || !leader.getIsLeader() || !leader.getRoom().getName().equals(roomName)) {
             throw new UserNotAllowedException();
         }
         for (Member temp : room.getMembers()) {
@@ -71,9 +80,10 @@ public class RoomServiceImpl implements RoomService {
             userService.update(temp.getUser());
             memberService.deleteById(temp.getId());
         }
-        roomRepository.deleteById(roomId);
+        roomRepository.deleteById(room.getId());
         NotificationResponse notificationResponse = NotificationResponse.builder()
                 .timestamp(LocalDateTime.now())
+                .type(NotificationResponse.NotificationType.DELETE)
                 .message("Room " + room.getName() + " was deleted and you were kicked out")
                 .build();
         for (Member temp : room.getMembers()) {
@@ -134,24 +144,25 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room addMember(Long roomId, String username) {
-        return addMember(findById(roomId), username);
+    public Room addMember(String roomName, String username) {
+        return addMember(findByName(roomName), username);
     }
 
     @Override
-    public Room removeMember(Long roomId, String username) {
-        return removeMember(findById(roomId), username);
+    public Room removeMember(String roomName, String username) {
+        return removeMember(findByName(roomName), username);
     }
 
     @Override
-    public Room kickMember(Long roomId, String member, String username) {
+    public Room kickMember(String roomName, String member, String username) {
         Member leader = userService.findByUsername(username).getMember();
-        if (leader == null || !leader.getIsLeader() || !leader.getRoom().getId().equals(roomId)) {
+        if (leader == null || !leader.getIsLeader() || !leader.getRoom().getName().equals(roomName)) {
             throw new UserNotAllowedException();
         }
-        Room updatedRoom = removeMember(roomId, member);
+        Room updatedRoom = removeMember(roomName, member);
         NotificationResponse notificationResponse = NotificationResponse.builder()
                 .timestamp(LocalDateTime.now())
+                .type(NotificationResponse.NotificationType.KICK)
                 .message("You were kicked from the room by " + username)
                 .build();
         messagingTemplate.convertAndSendToUser(member, "/queue/notifications", notificationResponse);
@@ -159,8 +170,8 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void handlePassword(Long roomId, String password) {
-        Room room = findById(roomId);
+    public void handlePassword(String roomName, String password) {
+        Room room = findByName(roomName);
         if (!room.getPassword().equals(password)) {
             throw new WrongLobbyPasswordException();
         }

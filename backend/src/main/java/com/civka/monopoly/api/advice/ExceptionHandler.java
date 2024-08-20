@@ -15,13 +15,14 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 @Controller
 @RequiredArgsConstructor
-public class RoomExceptionHandler {
+public class ExceptionHandler {
 
     private final SimpMessagingTemplate messagingTemplate;
 
     @MessageExceptionHandler({UserAlreadyJoinedException.class, RoomNotFoundException.class,
             UserNotAllowedException.class, IllegalRoomSizeException.class, RoomFullException.class,
-            WrongLobbyPasswordException.class})
+            WrongLobbyPasswordException.class, InvalidCommandException.class, RoomAlreadyExistException.class,
+            UserAlreadyExistException.class, UserNotJoinedException.class, UserNotFoundException.class})
     public ErrorResponse handleException(RuntimeException exc, @Header("username") String username) {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
@@ -39,9 +40,13 @@ public class RoomExceptionHandler {
         HttpStatus status;
         if (exc instanceof UserAlreadyJoinedException ||
                 exc instanceof IllegalRoomSizeException ||
-                exc instanceof RoomFullException) {
+                exc instanceof RoomFullException ||
+                exc instanceof InvalidCommandException ||
+                exc instanceof UserNotJoinedException ||
+                exc instanceof RoomAlreadyExistException ||
+                exc instanceof UserAlreadyExistException) {
             status = HttpStatus.BAD_REQUEST;
-        } else if (exc instanceof RoomNotFoundException) {
+        } else if (exc instanceof RoomNotFoundException || exc instanceof UserNotFoundException) {
             status = HttpStatus.NOT_FOUND;
         } else if (exc instanceof UserNotAllowedException || exc instanceof WrongLobbyPasswordException) {
             status = HttpStatus.FORBIDDEN;

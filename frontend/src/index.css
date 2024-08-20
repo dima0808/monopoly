@@ -13,6 +13,9 @@ body {
 .no-scroll {
   overflow: hidden;
 }
+.scroll {
+  overflow: auto;
+}
 
 .hide-scrollbars {
   display: none;
@@ -36,11 +39,13 @@ body {
 }
 
 .scroll::-webkit-scrollbar-track {
+  cursor: pointer;
   background: #e0e0f9;
   border-radius: 10px;
 }
 
 .scroll::-webkit-scrollbar-thumb {
+  cursor: pointer;
   background-color: #c396e8;
   border-radius: 10px;
   border: 3px solid #e0e0f9;
@@ -75,4 +80,28 @@ input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0px 1000px #d7beeb inset; /* Задає колір фону */
   box-shadow: 0 0 0px 1000px #d7beeb inset;
   -webkit-text-fill-color: #271d37; /* Колір тексту */
+}
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.none {
+  display: none;
+}
+.full-screen-div {
+  width: 100vw;
+  border: none;
+  height: 100vh;
+  background-color: rgba(56, 40, 67, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  backdrop-filter: blur(5px);
 }

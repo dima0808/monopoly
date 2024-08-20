@@ -1,7 +1,7 @@
 import './styles.css';
 import React, { useState, useEffect, useRef } from 'react';
 
-export default function Notification({ message, duration, isError, style, onClose }) {
+export default function Notification({ sender = null, message, duration, isError, style, onClose, openChat }) {
     const [visible, setVisible] = useState(false);
     const progressBarRef = useRef(null);
 
@@ -26,7 +26,8 @@ export default function Notification({ message, duration, isError, style, onClos
 
     return (
         <div style={style} className={`notification-container ${isError ? 'error' : ''} ${visible ? 'show' : ''}`}>
-            <div className="notification">{message}</div>
+            {sender && <div onClick={openChat} className="notification"><b>{sender}: </b>{message}</div>}
+            {!sender && <div className="notification">{message}</div>}
             <div className="progressBar" ref={progressBarRef}></div>
         </div>
     );

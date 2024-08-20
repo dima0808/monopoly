@@ -1,14 +1,20 @@
 package com.civka.monopoly.api.service.impl;
 
 import com.civka.monopoly.api.dto.ChatMessageDto;
+import com.civka.monopoly.api.dto.ContactDto;
 import com.civka.monopoly.api.entity.Chat;
 import com.civka.monopoly.api.entity.ChatMessage;
 import com.civka.monopoly.api.entity.User;
+import com.civka.monopoly.api.payload.NotificationResponse;
 import com.civka.monopoly.api.repository.ChatRepository;
 import com.civka.monopoly.api.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,30 +26,115 @@ public class ChatServiceImpl implements ChatService {
     private final SimpMessagingTemplate messagingTemplate;
 
     @Override
-    public ChatMessage sendPublicMessage(String name, ChatMessageDto chatMessageDto) {
-        Chat chat = findByName(name);
+    public Chat findByName(String chatName) {
+        return chatRepository.findByName(chatName)
+                .orElseThrow(() -> new ChatNotFoundException(chatName));
+    }
+
+    @Override
+    public Chat findPrivateChatByName(String chatName) {
+        return chatRepository.findByName(chatName)
+                .orElseGet(() -> {
+                    Chat newChat = new Chat();
+                    newChat.setName(chatName);
+                    newChat.setUnreadMessages(0);
+                    return chatRepository.save(newChat);
+                });
+    }
+
+    @Override
+    public List<Chat> findAllByUsername(String username) {
+        return chatRepository.findAllByUsername(username);
+    }
+
+    @Override
+    public List<ContactDto> getUserContacts(String username) {
+        List<Chat> chats = findAllByUsername(username);
+        List<ContactDto> contacts = new ArrayList<>();
+
+        for (Chat chat : chats) {
+            if (!chat.getMessages().isEmpty()) {
+                ChatMessage lastMessage = chat.getMessages().get(chat.getMessages().size() - 1);
+                User user = userService.findByUsername(chat.getName().replace(username, "").trim());
+                contacts.add(ContactDto.builder()
+                        .nickname(user.getNickname())
+                        .lastMessage(lastMessage.toDto())
+                        .unreadMessages(chat.getUnreadMessages())
+                        .build());
+            }
+        }
+
+        return contacts;
+    }
+
+    @Override
+    public Chat save(Chat chat) {
+        return chatRepository.save(chat);
+    }
+
+    @Override
+    public ChatMessage sendPublicMessage(String chatName, ChatMessageDto chatMessageDto) {
+        Chat chat = findByName(chatName);
         return chatMessageService.save(chat, chatMessageDto);
     }
 
     @Override
-    public ChatMessage sendPrivateMessage(String name, ChatMessageDto chatMessageDto) {
-        Chat chat = findByName(name);
+    public ChatMessage sendPrivateMessage(String chatName, ChatMessageDto chatMessageDto) {
+        Chat chat = findPrivateChatByName(chatName);
+        chat.setUnreadMessages(chat.getUnreadMessages() + 1);
         ChatMessage chatMessage = chatMessageService.save(chat, chatMessageDto);
-        messagingTemplate.convertAndSendToUser(chatMessage.getReceiver(), "/topic/chat/" + chat.getName(), chatMessage);
+        messagingTemplate.convertAndSendToUser(chatMessage.getReceiver().getUsername(), "/chat/private/" + chatMessage.getSender().getUsername(), chatMessage);
+        messagingTemplate.convertAndSendToUser(chatMessage.getSender().getUsername(), "/chat/private/" + chatMessage.getReceiver().getUsername(), chatMessage);
+        NotificationResponse notificationResponse = NotificationResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .type(NotificationResponse.NotificationType.MESSAGE)
+                .sender(chatMessage.getSender().getNickname())
+                .message(chatMessage.getContent())
+                .build();
+        messagingTemplate.convertAndSendToUser(chatMessage.getReceiver().getUsername(), "/queue/notifications", notificationResponse);
+        ContactDto contactDtoForReceiver = ContactDto.builder()
+                .nickname(chatMessage.getSender().getNickname())
+                .lastMessage(chatMessage.toDto())
+                .unreadMessages(chat.getUnreadMessages())
+                .build();
+        ContactDto contactDtoForSender = ContactDto.builder()
+                .nickname(chatMessage.getReceiver().getNickname())
+                .lastMessage(chatMessage.toDto())
+                .unreadMessages(chat.getUnreadMessages())
+                .build();
+        messagingTemplate.convertAndSendToUser(chatMessage.getReceiver().getUsername(), "/chat/contacts", contactDtoForReceiver);
+        messagingTemplate.convertAndSendToUser(chatMessage.getSender().getUsername(), "/chat/contacts", contactDtoForSender);
         return chatMessage;
     }
 
     @Override
-    public Chat findByName(String name) {
-        return chatRepository.findByName(name)
-                .orElseThrow(() -> new ChatNotFoundException(name));
+    public void readMessages(String chatName, String reader) {
+        Chat chat = findByName(chatName);
+        ChatMessage lastMessage = chat.getMessages().get(chat.getMessages().size() - 1);
+        if (chat.getUnreadMessages() > 0 && lastMessage.getReceiver().getUsername().equals(reader)) {
+            chat.setUnreadMessages(0);
+            chatRepository.save(chat);
+            String sender = chat.getName().replace(reader, "").trim();
+            ContactDto contactDtoForReader = ContactDto.builder()
+                    .nickname(userService.findByUsername(sender).getNickname())
+                    .lastMessage(lastMessage.toDto())
+                    .unreadMessages(0)
+                    .build();
+            ContactDto contactDtoForSender = ContactDto.builder()
+                    .nickname(userService.findByUsername(reader).getNickname())
+                    .lastMessage(lastMessage.toDto())
+                    .unreadMessages(0)
+                    .build();
+            messagingTemplate.convertAndSendToUser(reader, "/chat/contacts", contactDtoForReader);
+            messagingTemplate.convertAndSendToUser(sender, "/chat/contacts", contactDtoForSender);
+        }
     }
 
     @Override
-    public void clearMessages(String name, String admin) {
+    public void clearMessages(String chatName, String admin) {
         User adminUser = userService.findByUsername(admin);
         if (adminUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))) {
-            Chat chat = findByName(name);
+            Chat chat = findByName(chatName);
             chat.getMessages().clear();
             chatRepository.save(chat);
         } else {
@@ -52,7 +143,21 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Chat save(Chat chat) {
-        return chatRepository.save(chat);
+    public void clearMessages(Integer clearCount, String chatName, String admin) {
+        if (clearCount < 1) {
+            throw new InvalidCommandException();
+        }
+        User adminUser = userService.findByUsername(admin);
+        if (adminUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))) {
+            Chat chat = findByName(chatName);
+            int size = chat.getMessages().size();
+            for (int i = 0; i < clearCount && size > 0; i++) {
+                chat.getMessages().remove(size - 1);
+                size--;
+            }
+            chatRepository.save(chat);
+        } else {
+            throw new UserNotAllowedException();
+        }
     }
 }

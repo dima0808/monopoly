@@ -21,6 +21,11 @@ public class Chat {
 
     private String name;
 
+    private Integer unreadMessages = 0;
+
     @OneToMany(mappedBy = "chat", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessage> messages = new ArrayList<>();
 }
+
+
+

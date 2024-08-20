@@ -1,5 +1,6 @@
 package com.civka.monopoly.api.entity;
 
+import com.civka.monopoly.api.dto.ChatMessageDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,8 +20,8 @@ public class ChatMessage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String sender;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User sender;
 
     @Column(nullable = false)
     private String content;
@@ -32,5 +33,15 @@ public class ChatMessage {
     @JsonIgnore
     private Chat chat;
 
-    private String receiver;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User receiver;
+
+    public ChatMessageDto toDto() {
+        return ChatMessageDto.builder()
+                .sender(sender.getUsername())
+                .content(content)
+                .timestamp(timestamp)
+                .receiver(receiver.getUsername())
+                .build();
+    }
 }

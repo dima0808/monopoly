@@ -1,10 +1,17 @@
 import './styles.css';
 import React, {useEffect, useState} from 'react';
 import Lobby from "./Lobby";
-import {getAllRooms} from '../../http';
+import {getAllRooms} from '../../utils/http';
 import CreateLobbyDialog from './CreateLobbyDialog';
 import JoinLobbyDialog from './JoinLobbyDialog';
-import Cookies from 'js-cookie';
+import {
+    handleCreateRoom,
+    handleDeleteRoom,
+    handleJoinRoom,
+    handleKickMember,
+    handleLeaveRoom,
+    isUserInRoom
+} from "../../utils/lobby";
 
 export default function LobbyList({client, isConnected, setNotifications}) {
     const [rooms, setRooms] = useState([]);
@@ -35,10 +42,9 @@ export default function LobbyList({client, isConnected, setNotifications}) {
     }
 
     useEffect(() => {
-        getAllRooms().then(setRooms)
-            .catch((error) => setError({message: error.message || "An error occurred"}));
-
         if (client && isConnected) {
+            getAllRooms().then(setRooms)
+                .catch((error) => setError({message: error.message || "An error occurred"}));
             const subscription = client.subscribe('/topic/public', onRoomMessageReceived);
             return () => {
                 subscription.unsubscribe();
@@ -49,177 +55,19 @@ export default function LobbyList({client, isConnected, setNotifications}) {
     function handleDialogClose() {
         setIsCreateDialogOpen(false);
         setIsJoinDialogOpen(false);
-        document.getElementById('modal').classList.remove('blur-modal');
-        document.getElementById('root').classList.remove('blur-background');
     }
 
     function handleCreateClick() {
         setIsCreateDialogOpen(true);
-        document.getElementById('modal').classList.add('blur-modal');
-        document.getElementById('root').classList.add('blur-background');
-    }
-
-    function handleCreateRoom({name, size, password}) {
-        const token = Cookies.get('token');
-        const username = Cookies.get('username');
-        if (!client || !client.publish) {
-            setNotifications(prev => [...prev, {
-                message: 'Client is not initialized or publish method is not available',
-                duration: 3500,
-                isError: true
-            }]);
-            return;
-        }
-        try {
-            client.publish({
-                destination: '/app/rooms/addRoom',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    username: username
-                },
-                body: JSON.stringify({name, size, password})
-            });
-            console.log('Creating lobby ' + name + ' size=' + size + '...');
-        } catch (error) {
-            setNotifications(prev => [...prev, {
-                message: 'Error creating lobby (no connection)',
-                duration: 3500,
-                isError: true
-            }]);
-        }
     }
 
     function handleJoinClick(room) {
         if (room.password) {
             setRoomToJoin(room);
             setIsJoinDialogOpen(true);
-            document.getElementById('modal').classList.add('blur-modal');
-            document.getElementById('root').classList.add('blur-background');
         } else {
-            handleJoinRoom(room.id);
+            handleJoinRoom(room.name, client, setNotifications);
         }
-    }
-
-    function handleJoinRoom(roomId, password = null) {
-        const token = Cookies.get('token');
-        const username = Cookies.get('username');
-        if (!client || !client.publish) {
-            setNotifications(prev => [...prev, {
-                message: 'Client is not initialized or publish method is not available',
-                duration: 3500,
-                isError: true
-            }]);
-            return;
-        }
-        try {
-            client.publish({
-                destination: '/app/rooms/joinRoom/' + roomId,
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    username: username
-                },
-                body: JSON.stringify({password})
-            });
-            console.log('Joining lobby ' + roomId + '...');
-        } catch (error) {
-            setNotifications(prev => [...prev, {
-                message: 'Error joining lobby (no connection)',
-                duration: 3500,
-                isError: true
-            }]);
-        }
-    }
-
-    function handleLeaveRoom(roomId) {
-        const token = Cookies.get('token');
-        const username = Cookies.get('username');
-        if (!client || !client.publish) {
-            setNotifications(prev => [...prev, {
-                message: 'Client is not initialized or publish method is not available',
-                duration: 3500,
-                isError: true
-            }]);
-            return;
-        }
-        try {
-            client.publish({
-                destination: '/app/rooms/leaveRoom/' + roomId,
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    username: username
-                }
-            });
-            console.log('Leaving lobby ' + roomId + '...');
-        } catch (error) {
-            setNotifications(prev => [...prev, {
-                message: 'Error leaving lobby (no connection)',
-                duration: 3500,
-                isError: true
-            }]);
-        }
-    }
-
-    function handleKickMember(roomId, member) {
-        const token = Cookies.get('token');
-        const admin = Cookies.get('username');
-        if (!client || !client.publish) {
-            setNotifications(prev => [...prev, {
-                message: 'Client is not initialized or publish method is not available',
-                duration: 3500,
-                isError: true
-            }]);
-            return;
-        }
-        try {
-            client.publish({
-                destination: `/app/rooms/kickMember/${roomId}/${member}`,
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    username: admin
-                }
-            });
-            console.log('Kicking member ' + member + ' from room ' + roomId + '...');
-        } catch (error) {
-            setNotifications(prev => [...prev, {
-                message: 'Error kicking user (no connection)',
-                duration: 3500,
-                isError: true
-            }]);
-        }
-    }
-
-    function handleDeleteRoom(roomId) {
-        const token = Cookies.get('token');
-        const username = Cookies.get('username');
-        if (!client || !client.publish) {
-            setNotifications(prev => [...prev, {
-                message: 'Client is not initialized or publish method is not available',
-                duration: 3500,
-                isError: true
-            }]);
-            return;
-        }
-        try {
-            client.publish({
-                destination: '/app/rooms/deleteRoom/' + roomId,
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    username: username
-                }
-            });
-            console.log('Deleting lobby ' + roomId + '...');
-        } catch (error) {
-            setNotifications(prev => [...prev, {
-                message: 'Error deleting lobby (no connection)',
-                duration: 3500,
-                isError: true
-            }]);
-        }
-    }
-
-    function isUserInRoom(room) {
-        const username = Cookies.get('username');
-        return room.members.some(member => member.user.username === username);
     }
 
     return (
@@ -227,12 +75,16 @@ export default function LobbyList({client, isConnected, setNotifications}) {
             <CreateLobbyDialog
                 isOpen={isCreateDialogOpen}
                 onClose={handleDialogClose}
-                onCreate={handleCreateRoom}
+                onCreate={({name, size, password}) => handleCreateRoom({
+                    name,
+                    size,
+                    password
+                }, client, setNotifications)}
             />
             <JoinLobbyDialog
                 isOpen={isJoinDialogOpen}
                 onClose={handleDialogClose}
-                onJoin={(password) => handleJoinRoom(roomToJoin.id, password)}
+                onJoin={(password) => handleJoinRoom(roomToJoin.name, client, setNotifications, password)}
             />
             <div className="lobby__title title-box">
                 <p className="title-box__p">Lobbies</p>
@@ -240,13 +92,13 @@ export default function LobbyList({client, isConnected, setNotifications}) {
             </div>
             <div className="lobby__area scroll">
                 {!error && rooms
-                    .sort((a, b) => isUserInRoom(b) - isUserInRoom(a))
+                    .sort((a, b) => isUserInRoom(b.members) - isUserInRoom(a.members))
                     .map((room) => (
-                        <Lobby key={room.id} name={room.name} size={room.size}
+                        <Lobby key={room.id}
                                onJoin={() => handleJoinClick(room)}
-                               onLeave={() => handleLeaveRoom(room.id)}
-                               onKick={(member) => handleKickMember(room.id, member)}
-                               onDelete={() => handleDeleteRoom(room.id)}
+                               onLeave={() => handleLeaveRoom(room.name, client, setNotifications)}
+                               onKick={(member) => handleKickMember(room.name, member, client, setNotifications)}
+                               onDelete={() => handleDeleteRoom(room.name, client, setNotifications)}
                                room={room}/>
                     ))}
                 {error && <p>{error.message}</p>}

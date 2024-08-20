@@ -18,22 +18,38 @@ public class ChatController {
 
     private final ChatService chatService;
 
-    @MessageMapping("/chat/sendPublicMessage/{name}")
-    @SendTo("/topic/chat")
+    @MessageMapping("/chat/sendPublicMessage/{chatName}")
+    @SendTo("/topic/chat/{chatName}")
     public ChatMessage sendMessage(@Payload ChatMessageDto chatMessageDto,
                                    @Header("username") String username,
-                                   @DestinationVariable String name) {
+                                   @DestinationVariable String chatName) {
         chatMessageDto.setSender(username);
-        return chatService.sendPublicMessage(name, chatMessageDto);
+        return chatService.sendPublicMessage(chatName, chatMessageDto);
     }
 
-    @GetMapping("/api/chat")
-    public ResponseEntity<List<ChatMessage>> getAllMessages() {
-        return ResponseEntity.ok(chatService.findByName("public").getMessages());
+    @MessageMapping("/chat/sendPrivateMessage/{chatName}")
+    @SendTo("/topic/chat/{chatName}")
+    public ChatMessage sendPrivateMessage(@Payload ChatMessageDto chatMessageDto,
+                                          @Header("username") String username,
+                                          @DestinationVariable String chatName) {
+        chatMessageDto.setSender(username);
+        chatMessageDto.setReceiver(chatName.replace(username, "").trim());
+        return chatService.sendPrivateMessage(chatName, chatMessageDto);
     }
 
-    @GetMapping("/api/chat/{name}")
-    public ResponseEntity<List<ChatMessage>> getAllRoomMessages(@PathVariable String name) {
-        return ResponseEntity.ok(chatService.findByName(name).getMessages());
+    @MessageMapping("/chat/readMessages/{chatName}")
+    public void readMessages(@Header("username") String username,
+                                    @DestinationVariable String chatName) {
+        chatService.readMessages(chatName, username);
+    }
+
+    @GetMapping("/api/chat/{chatName}")
+    public ResponseEntity<List<ChatMessage>> getAllChatMessages(@PathVariable String chatName) {
+        return ResponseEntity.ok(chatService.findByName(chatName).getMessages());
+    }
+
+    @GetMapping("/api/chat/private/{chatName}")
+    public ResponseEntity<List<ChatMessage>> getAllPrivateChatMessages(@PathVariable String chatName) {
+        return ResponseEntity.ok(chatService.findPrivateChatByName(chatName).getMessages());
     }
 }
