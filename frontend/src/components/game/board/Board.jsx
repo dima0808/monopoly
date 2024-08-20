@@ -127,9 +127,10 @@ function Chat() {
           </div>
           <div className="chat-zone-monopoly-div">
             <p className="chat-zone-monopoly-message">
-              <span className="systam-span">System:</span>
-              гравець <span className="systam-span">'Назарич'</span> викупив
-              коня
+              <span className="system-span">System:</span>
+              гравець <span className="system-span">
+                'Назарич'
+              </span> викупив <span className="system-tile-span">'Коня'</span>
             </p>
             <p className="chat-zone-monopoly-time">12:34</p>
           </div>
@@ -146,7 +147,7 @@ function Chat() {
               viewBox="0 0 24 24"
               strokeWidth="1.5"
               stroke="currentColor"
-              className="chat__typing-btn-svg"
+              className="chat__typing-btn-svg board-chat__typing-btn-svg"
             >
               <path
                 strokeLinecap="round"
