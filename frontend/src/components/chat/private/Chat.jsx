@@ -193,6 +193,26 @@ export default function Chat({selectedUser, selectedContact, client, isConnected
         }
     }
 
+    function getMessageGroups(messages) {
+        const groups = [];
+        let currentGroup = [];
+
+        messages.forEach((message) => {
+            if (currentGroup.length === 0 || currentGroup[0].sender.username === message.sender.username) {
+                currentGroup.push(message);
+            } else {
+                groups.push(currentGroup);
+                currentGroup = [message];
+            }
+        });
+
+        if (currentGroup.length > 0) {
+            groups.push(currentGroup);
+        }
+
+        return groups;
+    }
+
     return (
         <div className="choosen-user">
             <div className="user-and-close">
@@ -217,10 +237,17 @@ export default function Chat({selectedUser, selectedContact, client, isConnected
                 </button>
             </div>
             <div className="chat-zone scroll" ref={chatContainerRef}>
-                {!error && messages.map((message, index) => (
-                    <Message key={index} isYourMessage={Cookies.get("username") === message.sender.username}>
-                        {message.content}
-                    </Message>
+                {!error && getMessageGroups(messages).map((group, groupIndex) => (
+                    group.map((message, messageIndex) => (
+                        <Message
+                            key={groupIndex + "-" + messageIndex}
+                            isYourMessage={Cookies.get("username") === message.sender.username}
+                            isFirst={messageIndex === 0}
+                            isLast={messageIndex === group.length - 1}
+                        >
+                            {message.content}
+                        </Message>
+                    ))
                 ))}
                 {error && <p>{error.message}</p>}
             </div>

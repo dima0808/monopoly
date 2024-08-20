@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 export default function Chat({ client, isConnected, setNotifications }) {
   const [messages, setMessages] = useState([]);
   const [error, setError] = useState(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(false);
   const messageInputRef = useRef();
   const chatContainerRef = useRef();
 
@@ -51,7 +52,10 @@ export default function Chat({ client, isConnected, setNotifications }) {
     if (client && isConnected) {
       const token = Cookies.get("token");
       getAllMessages("public", token)
-        .then(setMessages)
+        .then((messages) => {
+          setMessages(messages);
+          setIsInitialLoad(true);
+        })
         .catch((error) =>
           setError({ message: error.message || "An error occurred" })
         );
@@ -73,7 +77,14 @@ export default function Chat({ client, isConnected, setNotifications }) {
   }, [client, isConnected]);
 
   useEffect(() => {
-    if (isScrolledToBottom()) {
+    if (isInitialLoad) {
+      scrollToBottom();
+      setIsInitialLoad(false);
+    }
+  }, [messages, isInitialLoad]);
+
+  useEffect(() => {
+    if (isScrolledToBottom(chatContainerRef.current)) {
       scrollToBottom();
     }
   }, [messages]);
@@ -172,16 +183,17 @@ export default function Chat({ client, isConnected, setNotifications }) {
     }
   }
 
-  function isScrolledToBottom() {
-    const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
-    return (
-      scrollHeight - scrollTop < clientHeight + 80 &&
-      scrollHeight - scrollTop > clientHeight - 80
-    );
+  function isScrolledToBottom(chatContainer, tolerance = 80) {
+    if (!chatContainer) return false;
+    const { scrollHeight, scrollTop, clientHeight } = chatContainer;
+    return Math.abs(scrollHeight - (scrollTop + clientHeight)) <= tolerance;
   }
 
   function scrollToBottom() {
-    chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    const chatContainer = chatContainerRef.current;
+    if (chatContainer) {
+      chatContainer.scrollTop = chatContainer.scrollHeight - chatContainer.clientHeight;
+    }
   }
 
   return (

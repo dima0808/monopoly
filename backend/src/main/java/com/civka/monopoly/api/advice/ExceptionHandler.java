@@ -22,7 +22,7 @@ public class ExceptionHandler {
     @MessageExceptionHandler({UserAlreadyJoinedException.class, RoomNotFoundException.class,
             UserNotAllowedException.class, IllegalRoomSizeException.class, RoomFullException.class,
             WrongLobbyPasswordException.class, InvalidCommandException.class, RoomAlreadyExistException.class,
-            UserAlreadyExistException.class, UserNotJoinedException.class})
+            UserAlreadyExistException.class, UserNotJoinedException.class, UserNotFoundException.class})
     public ErrorResponse handleException(RuntimeException exc, @Header("username") String username) {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
