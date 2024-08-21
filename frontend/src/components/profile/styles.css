@@ -216,18 +216,18 @@
   padding: 20px 20px 10px 14px;
 }
 .ranked-img {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
 }
 .flex-ranked {
-  padding-left: 5px;
+  padding-left: 2px;
   display: flex;
   align-items: center;
   gap: 2px;
 }
 .flex-ranked-p {
-  font-size: 18px;
+  font-size: 20px;
   color: #271d37;
 }
 .flex-ranked-div {
@@ -282,4 +282,12 @@
 .profile-statistic-p:hover,
 .profile-statistic-p:active {
   color: #5c4284;
+}
+.profile-statuses .in-game-p {
+  margin: -2px 6px 0 4px;
+  font-weight: 500;
+}
+.profile-statuses .view-img-btn {
+  width: 25px;
+  height: 25px;
 }

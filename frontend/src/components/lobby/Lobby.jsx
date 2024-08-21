@@ -1,6 +1,7 @@
 import "./styles.css";
 import React from "react";
 import plusImg from "../../images/plus.png";
+import viewImg from "../../images/view-icon.png";
 import { Link } from "react-router-dom";
 import Member from "./Member";
 import { isUserInRoomCookies, isUserLeaderCookies } from "../../utils/lobby";
@@ -9,9 +10,15 @@ export default function Lobby({ onJoin, onLeave, onKick, onDelete, room }) {
   const remainingSlots = room.size - room.members.length;
 
   return (
-    <div className="lobby__room">
+    <div className="lobby__room game-started">
       <div className="lobby__header">
         <button className="lobby__name">{room.name}</button>
+        <div className="in-game-div">
+          <p className="in-game-p">Game started</p>
+          <button className="view-img-btn">
+            <img src={viewImg} alt="viewImg" className="view-img" />
+          </button>
+        </div>
       </div>
       <div className="lobby__members">
         {room.members.map((member, index) => (
