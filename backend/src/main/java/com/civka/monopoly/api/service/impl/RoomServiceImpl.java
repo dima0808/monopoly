@@ -27,6 +27,7 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final UserService userService;
     private final MemberService memberService;
+    private final ChatService chatService;
     private final SimpMessagingTemplate messagingTemplate;
 
     @Override
@@ -48,6 +49,7 @@ public class RoomServiceImpl implements RoomService {
                 .members(new ArrayList<>())
                 .build();
         roomRepository.save(room);
+        chatService.create(room.getName(), true);
         return addMember(room, username);
     }
 
@@ -81,6 +83,7 @@ public class RoomServiceImpl implements RoomService {
             memberService.deleteById(temp.getId());
         }
         roomRepository.deleteById(room.getId());
+        chatService.deleteByName(room.getName());
         NotificationResponse notificationResponse = NotificationResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .type(NotificationResponse.NotificationType.DELETE)
@@ -136,6 +139,7 @@ public class RoomServiceImpl implements RoomService {
                 memberService.deleteById(temp.getId());
                 if (members.isEmpty()) {
                     roomRepository.deleteById(room.getId());
+                    chatService.deleteByName(room.getName());
                 }
                 return updatedRoom;
             }

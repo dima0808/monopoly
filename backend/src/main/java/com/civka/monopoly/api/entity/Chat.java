@@ -21,9 +21,12 @@ public class Chat {
 
     private String name;
 
-    private Integer unreadMessages = 0;
+    private Integer unreadMessages;
+
+    private Boolean isLobbyChat;
 
     @OneToMany(mappedBy = "chat", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("timestamp")
     private List<ChatMessage> messages = new ArrayList<>();
 }
 

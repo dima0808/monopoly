@@ -20,7 +20,10 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     private final UserService userService;
 
     @Value("${monopoly.app.chat.max-size}")
-    private Integer maxSize;
+    private Integer maxChatSize;
+
+    @Value("${monopoly.app.room.chat.max-size}")
+    private Integer maxLobbyChatSize;
 
     @Override
     public ChatMessage save(Chat chat, ChatMessageDto chatMessageDto) {
@@ -34,7 +37,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 .build();
 
         chat.getMessages().add(chatMessage);
-        if (chat.getMessages().size() > maxSize) {
+        if (chat.getMessages().size() > (chat.getIsLobbyChat() ? maxLobbyChatSize : maxChatSize)) {
             chat.getMessages().remove(0);
         }
 

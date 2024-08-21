@@ -54,7 +54,7 @@ export default function Game({setNotifications}) {
         <div className="grid-3">
             <PlayerList client={client} isConnected={isConnected} roomName={roomName}
                         setNotifications={setNotifications}/>
-            <Board/>
+            <Board roomName={roomName} client={client} isConnected={isConnected} setNotifications={setNotifications} />
             <Actions/>
         </div>
     );

@@ -55,7 +55,7 @@ export async function getAllMessages(chatName, token, isPrivate = false) {
         throw new Error(resData.message);
     }
 
-    return resData.sort((a, b) => a.id - b.id);
+    return resData;
 }
 
 export async function getAllPlayers(roomName) {

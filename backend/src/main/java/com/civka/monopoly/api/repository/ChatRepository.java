@@ -17,4 +17,6 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
 
     @Query("SELECT c FROM Chat c WHERE c.name LIKE %?1% AND (c.name LIKE CONCAT(?1, ' %') OR c.name LIKE CONCAT('% ', ?1, ' %') OR c.name LIKE CONCAT('% ', ?1))")
     List<Chat> findAllByUsername(String username);
+
+    void deleteByName(String chatName);
 }

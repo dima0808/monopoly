@@ -178,7 +178,7 @@ export default function Chat({selectedUser, selectedContact, client, isConnected
     }
 
     const handleKeyDown = (event) => {
-        if (event.key === "Enter") {
+        if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
             handleSendMessage();
         }

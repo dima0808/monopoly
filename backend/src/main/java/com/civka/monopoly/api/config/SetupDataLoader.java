@@ -34,7 +34,10 @@ public class SetupDataLoader implements
         Role adminRole = createRoleIfNotFound("ROLE_ADMIN");
 
         if (!chatRepository.existsByName("public")) {
-            Chat chat = Chat.builder().name("public").build();
+            Chat chat = Chat.builder()
+                    .name("public")
+                    .isLobbyChat(false)
+                    .build();
             chatRepository.save(chat);
         }
 
