@@ -2,6 +2,7 @@ package com.civka.monopoly.api.controller;
 
 import com.civka.monopoly.api.dto.ContactDto;
 import com.civka.monopoly.api.dto.UserDto;
+import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.entity.Room;
 import com.civka.monopoly.api.entity.User;
 import com.civka.monopoly.api.service.ChatService;
@@ -36,11 +37,11 @@ public class UserController {
         return ResponseEntity.ok(chatService.getUserSuggestedContacts(username, nickname));
     }
 
-    @GetMapping("/room")
-    public ResponseEntity<Room> getUserRoom() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    @GetMapping("/{username}/room")
+    public ResponseEntity<Room> getUserRoom(@PathVariable String username) {
         User user = userService.findByUsername(username);
-        return ResponseEntity.ok(user.getMember().getRoom());
+        Member member = user.getMember();
+        return ResponseEntity.ok(member == null ? null : member.getRoom());
     }
 
     @PutMapping

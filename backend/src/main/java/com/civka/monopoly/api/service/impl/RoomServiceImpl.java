@@ -47,6 +47,7 @@ public class RoomServiceImpl implements RoomService {
                 .size(roomDto.getSize())
                 .password(roomDto.getPassword())
                 .members(new ArrayList<>())
+                .isStarted(false)
                 .build();
         roomRepository.save(room);
         chatService.create(room.getName(), true);
