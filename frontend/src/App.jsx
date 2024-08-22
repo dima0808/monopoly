@@ -81,7 +81,7 @@ export default function App() {
         <>
             {!(location.pathname.startsWith('/game/') || location.pathname === '/maintenance') ? (
                 <Scrollbars style={{height: '100vh'}}>
-                    <Header nickname={nickname} onLogout={setNickname} setIsPrivateChatOpen={setIsPrivateChatOpen}/>
+                    <Header nickname={nickname} onLogout={setNickname} setIsPrivateChatOpen={setIsPrivateChatOpen} setSelectedUser={setSelectedUser}/>
                     <AppRoutes setNickname={setNickname}
                                setNotifications={setNotifications}
                                setIsPrivateChatOpen={setIsPrivateChatOpen}

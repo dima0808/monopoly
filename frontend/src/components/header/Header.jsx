@@ -4,7 +4,7 @@ import civkaLogoImg from "../../images/civka-logo.png";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 
-export default function Header({ nickname, onLogout, setIsPrivateChatOpen }) {
+export default function Header({ nickname, onLogout, setIsPrivateChatOpen, setSelectedUser }) {
   return (
     <header className="header">
       <div className="header-flex">
@@ -27,7 +27,10 @@ export default function Header({ nickname, onLogout, setIsPrivateChatOpen }) {
 
           {nickname ? (
             <>
-              <button className="private-chat-btn">
+              <button onClick={() => {
+                setSelectedUser(null);
+                setIsPrivateChatOpen(true);
+              }} className="private-chat-btn">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
