@@ -1,13 +1,13 @@
 import { format } from 'date-fns';
-import {Link} from "react-router-dom";
 
-export default function Message({ nickname, timestamp, children }) {
+export default function Message({ nickname, timestamp, setSelectedUser, children }) {
     const formattedTime = format(new Date(timestamp), 'HH:mm');
 
     return (
         <div className="chat-zone-monopoly-div">
             <p className="chat-zone-monopoly-message">
-                <Link to={"/profile/" + nickname} className="nikname-span">{nickname}:</Link>
+                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                <a onClick={setSelectedUser} className="nikname-span">{nickname}:</a>
                 {children}
             </p>
             <p className="chat-zone-monopoly-time">{formattedTime}</p>

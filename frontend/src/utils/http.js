@@ -49,7 +49,8 @@ export async function getAllMessages(chatName, token, isPrivate = false) {
             'Authorization': `Bearer ${token}`,
         }
     });
-    const resData = await response.json();
+    const text = await response.text();
+    const resData = text ? JSON.parse(text) : [];
 
     if (!response.ok) {
         throw new Error(resData.message);
@@ -171,5 +172,17 @@ export async function getAllSuggestedContacts(username, token, suggestedNickname
     }
 
     return resData;
+}
 
+export async function getRoomByUsername(username) {
+    const response = await fetch('http://localhost:8080/api/users/' + username + '/room');
+
+    const text = await response.text();
+    const resData = text ? JSON.parse(text) : null;
+
+    if (!response.ok) {
+        throw new Error(resData.message);
+    }
+
+    return resData;
 }

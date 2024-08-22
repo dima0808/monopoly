@@ -10,7 +10,7 @@ import {Client} from "@stomp/stompjs";
 import {useParams} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 
-export default function Game({setNotifications}) {
+export default function Game({setNotifications, setSelectedUser, setIsPrivateChatOpen}) {
     const [client, setClient] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
     const {roomName} = useParams();
@@ -54,7 +54,8 @@ export default function Game({setNotifications}) {
         <div className="grid-3">
             <PlayerList client={client} isConnected={isConnected} roomName={roomName}
                         setNotifications={setNotifications}/>
-            <Board roomName={roomName} client={client} isConnected={isConnected} setNotifications={setNotifications} />
+            <Board roomName={roomName} client={client} isConnected={isConnected} setNotifications={setNotifications}
+                   setSelectedUser={setSelectedUser} setIsPrivateChatOpen={setIsPrivateChatOpen}/>
             <Actions/>
         </div>
     );

@@ -23,7 +23,9 @@ function AppRoutes({setNickname, setNotifications, setIsPrivateChatOpen, setSele
         <>
             <Routes>
                 <Route path="/" element={<Homepage setNotifications={setNotifications}/>}/>
-                <Route path="/game/:roomName" element={<Game setNotifications={setNotifications}/>}/>
+                <Route path="/game/:roomName" element={<Game setNotifications={setNotifications}
+                                                             setSelectedUser={setSelectedUser}
+                                                             setIsPrivateChatOpen={setIsPrivateChatOpen}/>}/>
                 <Route path="/admin" element={<Admin/>}/>
                 <Route path="/rules" element={<Rules/>}/>
                 <Route path="/signin" element={<SignIn onLogin={setNickname}/>}/>

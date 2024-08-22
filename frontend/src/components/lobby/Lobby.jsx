@@ -10,22 +10,22 @@ export default function Lobby({ onJoin, onLeave, onKick, onDelete, room }) {
   const remainingSlots = room.size - room.members.length;
 
   return (
-    <div className="lobby__room game-started">
+    <div className={"lobby__room" + (room.isStarted ? " game-started" : "")}>
       <div className="lobby__header">
         <button className="lobby__name">{room.name}</button>
-        <div className="in-game-div">
-          <p className="in-game-p">Game started</p>
-          <button className="view-img-btn">
-            <img src={viewImg} alt="viewImg" className="view-img" />
-          </button>
-        </div>
+          {room.isStarted && <div className="in-game-div">
+              <p className="in-game-p">Game started</p>
+              <Link to={"/game/" + room.name} className="view-img-btn">
+                  <img src={viewImg} alt="viewImg" className="view-img"/>
+              </Link>
+          </div>}
       </div>
-      <div className="lobby__members">
-        {room.members.map((member, index) => (
-          <Member
-            key={index}
-            username={member.user.username}
-            nickname={member.user.nickname}
+        <div className="lobby__members">
+            {room.members.map((member, index) => (
+                <Member
+                    key={index}
+                    username={member.user.username}
+                    nickname={member.user.nickname}
             isLeader={member.isLeader}
             onKick={onKick}
             showKickButton={

@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import {getAllMessages} from "../../../../utils/http";
 import {handleInputChange, handleKeyDown} from "../../../../utils/chat";
 
-export default function Chat({ roomName, client, isConnected, setNotifications }) {
+export default function Chat({roomName, client, isConnected, setNotifications, setSelectedUser, setIsPrivateChatOpen}) {
     const [messages, setMessages] = useState([]);
     const [error, setError] = useState(null);
     const [isInitialLoad, setIsInitialLoad] = useState(false);
@@ -136,12 +136,21 @@ export default function Chat({ roomName, client, isConnected, setNotifications }
 
     return (
         <div className="board__element board__element-center border">
-            <img src={civkaLogoImg} alt="civka logo" className="logo-center" />
+            <img src={civkaLogoImg} alt="civka logo" className="logo-center"/>
             <div className="chat-monopoly">
                 <div className="chat-zone-monopoly scroll" ref={chatContainerRef}>
                     {!error &&
                         messages.map((message, index) => (
-                            <Message key={index} nickname={message.sender.nickname} timestamp={message.timestamp}>
+                            <Message key={index} nickname={message.sender.nickname} timestamp={message.timestamp}
+                                     setSelectedUser={() => {
+                                         if (Cookies.get("nickname") === message.sender.nickname) {
+                                             setSelectedUser(null);
+                                             setIsPrivateChatOpen(true);
+                                         } else {
+                                             setSelectedUser(message.sender);
+                                             setIsPrivateChatOpen(true);
+                                         }
+                                     }}>
                                 {message.content}
                             </Message>
                         ))}

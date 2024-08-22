@@ -57,6 +57,9 @@
     margin-bottom: 3px;
 }
 .nikname-span {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
     cursor: pointer;
     color: #f1e4fb;
     text-decoration: none;
