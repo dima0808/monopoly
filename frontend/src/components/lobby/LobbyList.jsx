@@ -30,6 +30,7 @@ export default function LobbyList({client, isConnected, setNotifications}) {
                 case 'JOIN':
                 case 'LEAVE':
                 case 'KICK':
+                case 'START':
                     return prevRooms.map(tempRoom =>
                         tempRoom.id === room.id ? room : tempRoom
                     );

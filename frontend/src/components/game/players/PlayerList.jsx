@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from "react";
-import {getAllPlayers} from "../../../utils/http";
 import Player from "./Player";
 import './styles.css';
 import Cookies from "js-cookie";
 import {Link, useNavigate} from "react-router-dom";
 import {handleDeleteRoom, handleKickMember, handleLeaveRoom, isUserLeaderCookies} from "../../../utils/lobby";
 
-export default function PlayerList({client, isConnected, roomName, setNotifications}) {
-    const [players, setPlayers] = useState([]);
-    const [error, setError] = useState(null);
+const colors = ["red", "blue", "green", "yellow", "turquoise", "orange", "pink", "violet"];
+const civs = ["Random", "Colombia", "Egypt", "Germany", "Japan", "Korea", "Rome", "Sweden"];
+
+export default function PlayerList({client, isConnected, room, onStartGame, players, setPlayers, setNotifications}) {
     const navigate = useNavigate();
 
     function onPlayerMessageReceived(message) {
@@ -17,14 +17,13 @@ export default function PlayerList({client, isConnected, roomName, setNotificati
         setPlayers((prevPlayers) => {
             switch (type) {
                 case 'JOIN':
-                    return room.members;
                 case 'LEAVE':
-                    return room.members;
                 case 'KICK':
                     return room.members;
                 case 'DELETE':
                     return [];
                 case 'CHANGE_CIVILIZATION':
+                case 'CHANGE_COLOR':
                     return prevPlayers.map(player =>
                         player.id === member.id ? member : player
                     );
@@ -36,21 +35,19 @@ export default function PlayerList({client, isConnected, roomName, setNotificati
 
     useEffect(() => {
         if (client && isConnected) {
-            getAllPlayers(roomName).then(setPlayers)
-                .catch((error) => setError({message: error.message || "An error occurred"}));
-            const subscription = client.subscribe('/topic/public/' + roomName + '/players', onPlayerMessageReceived);
+            const subscription = client.subscribe('/topic/public/' + room.name + '/players', onPlayerMessageReceived);
             return () => {
                 subscription.unsubscribe();
             };
         }
-    }, [client, isConnected, roomName]);
+    }, [client, isConnected, room]);
 
     function handleChangeCivilization(civilization) {
         const token = Cookies.get('token');
         const username = Cookies.get('username');
         try {
             client.publish({
-                destination: `/app/rooms/${roomName}/changeCivilization/${civilization}`,
+                destination: `/app/rooms/${room.name}/changeCivilization/${civilization}`,
                 headers: {
                     Authorization: `Bearer ${token}`,
                     username: username
@@ -66,28 +63,75 @@ export default function PlayerList({client, isConnected, roomName, setNotificati
         }
     }
 
+    function handleChangeColor(color) {
+        const token = Cookies.get('token');
+        const username = Cookies.get('username');
+        try {
+            client.publish({
+                destination: `/app/rooms/${room.name}/changeColor/${color}`,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    username: username
+                }
+            });
+            console.log('Changing color for ' + username + ' to ' + color + '...');
+        } catch (error) {
+            setNotifications(prev => [...prev, {
+                message: 'Error changing color (no connection)',
+                duration: 3500,
+                isError: true
+            }]);
+        }
+    }
+
+    function getAvailableColors() {
+        const selectedColors = players.map(p => p.color);
+        return colors.filter(color => !selectedColors.includes(color));
+    }
+
+    function getAvailableCivs() {
+        const selectedCivs = players.map(p => p.civilization);
+        const availableCivs = civs.filter(civ => !selectedCivs.includes(civ));
+        if (!availableCivs.includes("Random")) {
+            availableCivs.unshift("Random");
+        }
+        return availableCivs;
+    }
+
     return (
         <section className="players">
-            <h2>Players</h2>
-            <Link to="/">Homepage</Link>
-            <button onClick={() => {
-                handleLeaveRoom(roomName, client, setNotifications);
-                navigate('/');
-            }}>Leave</button>
-            {isUserLeaderCookies(players) &&
-                <button onClick={() => {
-                    handleDeleteRoom(roomName, client, setNotifications);
-                    navigate('/');
-                }}>delete room</button>}
-            <div>
-                {!error && players.map(player => (
-                    <Player key={player.id} player={player} onCivChange={handleChangeCivilization}
-                            onKick={(member) => handleKickMember(roomName, member, client, setNotifications)}
-                            showKickButton={isUserLeaderCookies(players) && !player.isLeader}/>
+            <div className="player-game">
+                {players.map(player => (
+                    <Player key={player.id} player={player}
+                            onCivChange={handleChangeCivilization}
+                            onColorChange={handleChangeColor}
+                            onKick={() => handleKickMember(room.name, player.user.username, client, setNotifications)}
+                            showKickButton={isUserLeaderCookies(players) && !player.isLeader}
+                            isStarted={room.isStarted}
+                            availableColors={getAvailableColors()}
+                            availableCivs={getAvailableCivs()}
+                    />
                 ))}
-                {error && <p>{error.message}</p>}
+
+                {!room.isStarted && <div className="btns-player flex-between">
+                    <button className="leave-btn btn-in no-select" onClick={() => {
+                        handleLeaveRoom(room.name, client, setNotifications);
+                        navigate('/');
+                    }}>leave
+                    </button>
+                    <button className="btn-in no-select" onClick={() => navigate('/')}>Home</button>
+                </div>}
+
+                {(!room.isStarted && isUserLeaderCookies(players)) && <div className="btns-player flex-between">
+                    <button onClick={onStartGame} className="move-to-lobby-btn btn-in no-select">start</button>
+                    <button onClick={() => {
+                        handleDeleteRoom(room.name, client, setNotifications);
+                        navigate('/');
+                    }}
+                            className="delete-room-btn btn-in no-select">delete
+                    </button>
+                </div>}
             </div>
         </section>
     );
-
 }

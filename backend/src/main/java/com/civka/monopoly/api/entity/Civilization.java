@@ -1,13 +1,13 @@
 package com.civka.monopoly.api.entity;
 
 public enum Civilization {
-    RANDOM,
-    COLOMBIA,
-    EGYPT,
-    GERMANY,
-    JAPAN,
-    KOREA,
-    ROME,
-    SWEDEN
+    Random,
+    Colombia,
+    Egypt,
+    Germany,
+    Japan,
+    Korea,
+    Rome,
+    Sweden
     // Add more civ leaders here
 }

@@ -1,8 +1,10 @@
 package com.civka.monopoly.api.controller;
 
 import com.civka.monopoly.api.entity.Civilization;
+import com.civka.monopoly.api.entity.Color;
 import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.payload.PlayerMessage;
+import com.civka.monopoly.api.payload.RoomMessage;
 import com.civka.monopoly.api.service.MemberService;
 import com.civka.monopoly.api.service.RoomService;
 import com.civka.monopoly.api.service.UserService;
@@ -33,6 +35,30 @@ public class LobbyController {
                 .type(PlayerMessage.MessageType.CHANGE_CIVILIZATION)
                 .content("Member " + username + " changed civilization to " + civilization)
                 .member(memberService.save(member))
+                .build();
+    }
+
+    @MessageMapping("/rooms/{roomName}/changeColor/{color}")
+    @SendTo({"/topic/public/{roomName}/players"})
+    public PlayerMessage changeColor(@DestinationVariable Color color,
+                                            @Header("username") String username) {
+        Member member = userService.findByUsername(username).getMember();
+        member.setColor(color);
+        return PlayerMessage.builder()
+                .type(PlayerMessage.MessageType.CHANGE_COLOR)
+                .content("Member " + username + " changed color to " + color)
+                .member(memberService.save(member))
+                .build();
+    }
+
+    @MessageMapping("/rooms/{roomName}/startGame")
+    @SendTo({"/topic/public", "/topic/public/{roomName}/game"})
+    public RoomMessage startGame(@DestinationVariable String roomName,
+                                     @Header("username") String username) {
+        return RoomMessage.builder()
+                .type(RoomMessage.MessageType.START)
+                .content("Game started")
+                .room(roomService.startGame(roomName, username))
                 .build();
     }
 

@@ -105,7 +105,7 @@ function GoodyHutCell() {
     );
 }
 
-export default function Board({roomName, client, isConnected, setNotifications, setSelectedUser, setIsPrivateChatOpen}) {
+export default function Board({room, client, isConnected, setNotifications, setSelectedUser, setIsPrivateChatOpen}) {
     return (
         <section className="board">
             <EdgeCell src={startImg} alt="start" position="left-up"/>
@@ -210,7 +210,7 @@ export default function Board({roomName, client, isConnected, setNotifications, 
                 />
             </div>
 
-            <Chat roomName={roomName} client={client} isConnected={isConnected} setNotifications={setNotifications}
+            <Chat roomName={room.name} client={client} isConnected={isConnected} setNotifications={setNotifications}
                   setSelectedUser={setSelectedUser} setIsPrivateChatOpen={setIsPrivateChatOpen}/>
 
             <div className="board__element board__element-side board__element-side-horizontal right">

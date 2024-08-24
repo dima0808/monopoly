@@ -186,3 +186,16 @@ export async function getRoomByUsername(username) {
 
     return resData;
 }
+
+export async function getRoomByName(roomName) {
+    const response = await fetch('http://localhost:8080/api/rooms/' + roomName);
+
+    const text = await response.text();
+    const resData = text ? JSON.parse(text) : null;
+
+    if (!response.ok) {
+        throw new Error(resData.message);
+    }
+
+    return resData;
+}

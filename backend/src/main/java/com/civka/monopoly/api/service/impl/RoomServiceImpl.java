@@ -1,24 +1,25 @@
 package com.civka.monopoly.api.service.impl;
 
 import com.civka.monopoly.api.dto.RoomDto;
-import com.civka.monopoly.api.entity.Civilization;
-import com.civka.monopoly.api.entity.Member;
-import com.civka.monopoly.api.entity.Room;
-import com.civka.monopoly.api.entity.User;
+import com.civka.monopoly.api.entity.*;
 import com.civka.monopoly.api.payload.NotificationResponse;
 import com.civka.monopoly.api.repository.RoomRepository;
 import com.civka.monopoly.api.service.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RoomServiceImpl implements RoomService {
 
     @Value("${monopoly.app.room.max-size}")
@@ -29,6 +30,7 @@ public class RoomServiceImpl implements RoomService {
     private final MemberService memberService;
     private final ChatService chatService;
     private final SimpMessagingTemplate messagingTemplate;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Room create(RoomDto roomDto, String username) {
@@ -45,19 +47,13 @@ public class RoomServiceImpl implements RoomService {
         Room room = Room.builder()
                 .name(roomDto.getName())
                 .size(roomDto.getSize())
-                .password(roomDto.getPassword())
+                .password(roomDto.getPassword() == null ? null : passwordEncoder.encode(roomDto.getPassword()))
                 .members(new ArrayList<>())
                 .isStarted(false)
                 .build();
         roomRepository.save(room);
         chatService.create(room.getName(), true);
         return addMember(room, username);
-    }
-
-    @Override
-    public Room findById(Long roomId) {
-        return roomRepository.findById(roomId)
-                .orElseThrow(() -> new RoomNotFoundException(roomId));
     }
 
     @Override
@@ -103,14 +99,23 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room addMember(Room room, String username) {
         User user = userService.findByUsername(username);
-        if (user.getMember() != null) throw new UserAlreadyJoinedException(username);
-        if (room.getMembers().size() == room.getSize()) throw new RoomFullException(room.getId(), room.getSize());
         List<Member> members = room.getMembers();
+        if (user.getMember() != null) throw new UserAlreadyJoinedException(username);
+        if (members.size() == room.getSize()) throw new RoomFullException(room.getId(), room.getSize());
+        List<Color> allColors = Arrays.asList(Color.values());
+        List<Color> chosenColors = members.stream()
+                .map(Member::getColor)
+                .toList();
+        Color availableColor = allColors.stream()
+                .filter(civ -> !chosenColors.contains(civ))
+                .findFirst()
+                .orElse(Color.turquoise);
         Member member = Member.builder()
                 .user(user)
                 .room(room)
                 .isLeader(members.isEmpty())
-                .civilization(Civilization.RANDOM)
+                .civilization(Civilization.Random)
+                .color(availableColor)
                 .build();
         member = memberService.save(member);
         members.add(member);
@@ -177,8 +182,34 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void handlePassword(String roomName, String password) {
         Room room = findByName(roomName);
-        if (!room.getPassword().equals(password)) {
+        if (!passwordEncoder.matches(password, room.getPassword())) {
             throw new WrongLobbyPasswordException();
         }
+    }
+
+    @Override
+    public Room startGame(String roomName, String username) {
+        Member leader = userService.findByUsername(username).getMember();
+        if (leader == null || !leader.getIsLeader() || !leader.getRoom().getName().equals(roomName)) {
+            throw new UserNotAllowedException();
+        }
+        Room room = findByName(roomName);
+        room.setIsStarted(true);
+        List<Civilization> allCivilizations = Arrays.asList(Civilization.values());
+        List<Civilization> chosenCivilizations = room.getMembers().stream()
+                .map(Member::getCivilization)
+                .filter(civ -> civ != Civilization.Random)
+                .toList();
+        List<Civilization> availableCivilizations = new ArrayList<>(allCivilizations.stream()
+                .filter(civ -> !chosenCivilizations.contains(civ))
+                .toList());
+        for (Member member : room.getMembers()) {
+            if (member.getCivilization() == Civilization.Random) {
+                Civilization randomCivilization = availableCivilizations.remove((int) (Math.random() * availableCivilizations.size()));
+                member.setCivilization(randomCivilization);
+                memberService.save(member);
+            }
+        }
+        return roomRepository.save(room);
     }
 }
