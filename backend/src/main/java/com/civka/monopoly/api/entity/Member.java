@@ -27,4 +27,6 @@ public class Member {
     private Boolean isLeader;
 
     private Civilization civilization;
+
+    private Color color;
 }

@@ -11,6 +11,8 @@ public interface UserService {
 
     User findByUsername(String username);
 
+    List<User> findUsersByNicknameContaining(String nickname);
+
     List<User> findAll();
 
     User findByNickname(String nickname);

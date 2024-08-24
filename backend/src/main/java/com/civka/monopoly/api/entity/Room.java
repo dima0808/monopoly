@@ -29,4 +29,6 @@ public class Room {
 
     @OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
     private List<Member> members = new ArrayList<>();
+
+    private Boolean isStarted;
 }

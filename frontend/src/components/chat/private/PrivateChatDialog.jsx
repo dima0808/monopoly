@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import "../styles.css";
 import {createPortal} from "react-dom";
 import Contact from "./Contact";
 import Chat from "./Chat";
-import {getUser, getUserContacts} from "../../../utils/http";
+import {getUser, getUserContacts, getAllSuggestedContacts} from "../../../utils/http";
 import Cookies from "js-cookie";
 import {Client} from "@stomp/stompjs";
 
@@ -12,6 +12,8 @@ export default function PrivateChatDialog({setNotifications, isOpen, onClose, se
     const [contacts, setContacts] = useState([]);
     const [client, setClient] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+    const searchTimeoutRef = useRef(null);
 
     function onNewMessageReceived(message) {
         const parsedMessage = JSON.parse(message.body);
@@ -71,6 +73,36 @@ export default function PrivateChatDialog({setNotifications, isOpen, onClose, se
             });
     }
 
+    function performSearch(searchTerm) {
+        const token = Cookies.get('token');
+        const username = Cookies.get('username');
+
+        if (searchTerm.trim() === "") {
+            getUserContacts(username, token).then(setContacts)
+                .catch((error) => setError({message: error.message || "An error occurred"}));
+        } else {
+            getAllSuggestedContacts(username, token, searchTerm.trim()).then(setContacts)
+                .catch((error) => setError({message: error.message || "An error occurred"}));
+        }
+    }
+
+    function handleSearchChange(event) {
+        const searchTerm = event.target.value;
+        setSearchTerm(searchTerm);
+
+        if (searchTimeoutRef.current) {
+            clearTimeout(searchTimeoutRef.current);
+        }
+
+        if (searchTerm.trim() === "") {
+            performSearch(searchTerm);
+        } else {
+            searchTimeoutRef.current = setTimeout(() => {
+                performSearch(searchTerm);
+            }, 600);
+        }
+    }
+
     if (!isOpen) return null;
 
     return createPortal(
@@ -81,11 +113,17 @@ export default function PrivateChatDialog({setNotifications, isOpen, onClose, se
                         type="text"
                         className="search-user-contacts search-user-contacts-input"
                         placeholder="Find User"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
                     ></input>
                 </div>
                 <div className="your-contacts scroll">
                     {!error && contacts
-                        .sort((a, b) => Date.parse(b.lastMessage.timestamp) - Date.parse(a.lastMessage.timestamp))
+                        .sort((a, b) => {
+                            const aTimestamp = a.lastMessage ? Date.parse(a.lastMessage.timestamp) : 0;
+                            const bTimestamp = b.lastMessage ? Date.parse(b.lastMessage.timestamp) : 0;
+                            return bTimestamp - aTimestamp;
+                        })
                         .map((contact) => (
                             <Contact key={contact.nickname}
                                      nickname={contact.nickname}
@@ -93,7 +131,8 @@ export default function PrivateChatDialog({setNotifications, isOpen, onClose, se
                                      onClick={() => handleContactClick(contact.nickname)}
                                      isSelected={contact.nickname === selectedUser?.nickname}
                                      unreadMessages={contact.unreadMessages}/>
-                        ))}
+                        ))
+                    }
                     {error && <p className="error-message">{error.message}</p>}
                 </div>
             </div>

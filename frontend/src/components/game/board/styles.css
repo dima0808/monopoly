@@ -41,19 +41,28 @@
 .object-horizontal__price {
   background-color: #888;
 }
-.object-vertical__price-encampment {
-  background-color: #743027;
-}
 .object-vertical__barbarians-color {
   background-color: #982a29;
 }
 .object-vertical__village-color {
   background-color: #47622d;
 }
+.object-vertical__price-encampment {
+  background-color: #743027;
+}
 .object-vertical__price-wonder {
   background-color: #736388;
 }
 .object-vertical__price-government {
+  background-color: #791498;
+}
+.object-horizontal__price-encampment {
+  background-color: #743027;
+}
+.object-horizontal__price-wonder {
+  background-color: #736388;
+}
+.object-horizontal__price-government {
   background-color: #791498;
 }
 
@@ -170,80 +179,24 @@
   height: 100%;
   opacity: 0.2;
 }
-/* center */
-.chat-monopoly {
-  position: absolute;
-  top: 20px;
-  left: 40px;
-  border-radius: 4px;
-  background: linear-gradient(to bottom, #43444700, #43444731);
+/* Загальний стиль для скроллбарів */
+.firefox .chat-monopoly .scroll {
+  scrollbar-width: thin; /* Тонкий скроллбар */
+  scrollbar-color: #9f8bbc #d5cbe7; /* Фіолетовий ползунок і світло-фіолетовий фон треку */
 }
-.chat-zone-monopoly {
-  width: 520px;
-  height: 400px;
-}
-.monopoly-chat__typing-input {
-  background-color: #f0e8f3cb;
-  color: #3a2f4c;
-  border: 1px solid #3a2f4c;
-  width: 100%;
-}
-.monopoly-chat__typing-btn {
-  background-color: #ddd1e3;
-
-  color: #3a2f4c;
-  border: 1px solid #3a2f4c;
-}
-.monopoly-chat__typing-btn:hover {
-  background-color: #eae2ee;
-}
-.monopoly-chat__typing-btn:active {
-  background-color: #f1ecf4;
-}
-.monopoly-flex-between {
-  display: flex;
-  gap: 12px;
-  padding: 5px 10px;
-}
-.chat-zone-monopoly-div {
-  color: #3a2f4c;
-  width: 496px;
-  margin: 0 0 0 10px;
-  font-size: 16px;
-  letter-spacing: 0.5px;
-  line-height: 1.25;
-  display: flex;
-  overflow-wrap: break-word;
-  justify-content: space-between;
-}
-.chat-zone-monopoly-message {
-  width: 430px;
-}
-.chat-zone-monopoly-div:not(:last-child) {
-  margin-bottom: 4px;
-}
-.nikname-span {
+.chat-monopoly .scroll::-webkit-scrollbar-track {
   cursor: pointer;
-  color: #f1e4fb;
-  text-decoration: none;
-  background-color: #846ea4;
-  padding: 1px 2px;
-  border-radius: 6px;
-  margin-right: 3px;
-  transition: 0.3s ease;
+  background: #d5cbe7;
+  border-radius: 10px;
 }
-.nikname-span:hover {
+
+.chat-monopoly .scroll::-webkit-scrollbar-thumb {
+  cursor: pointer;
   background-color: #9f8bbc;
+  border-radius: 10px;
+  border: 3px solid #d5cbe7;
 }
-.nikname-span:active {
-  background-color: #bdadd4;
-}
-.chat-zone-monopoly-time {
-  color: #463c56;
-}
-.systam-span {
-  color: #392954;
-  letter-spacing: -0.5px;
-  font-weight: 500;
-  margin-right: 3px;
+
+.scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #9f8bbc; /* Можна змінити на інший фіолетовий відтінок */
 }

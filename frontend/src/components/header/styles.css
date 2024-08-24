@@ -66,8 +66,27 @@ body {
 .header-svg-exit:active {
   color: #e03131;
 }
+.private-chat-svg {
+  width: 36px;
+  height: 36px;
+}
+.private-chat-btn {
+  margin-right: -6px;
+  cursor: pointer;
+  margin-top: 3px;
+  color: #23053c;
+  border: none;
+  background-color: transparent;
+  transition: all 0.3s ease-in-out;
+}
+.private-chat-btn:hover {
+  color: #8063ad;
+}
+.private-chat-btn:active {
+  color: #bfa4e8;
+}
 .header-localization {
-  margin-top: 5px;
+  margin-top: 2px;
   width: 48px;
   height: 32px;
   /* border: 1px solid #23053c; */

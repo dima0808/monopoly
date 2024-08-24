@@ -49,13 +49,14 @@ export async function getAllMessages(chatName, token, isPrivate = false) {
             'Authorization': `Bearer ${token}`,
         }
     });
-    const resData = await response.json();
+    const text = await response.text();
+    const resData = text ? JSON.parse(text) : [];
 
     if (!response.ok) {
         throw new Error(resData.message);
     }
 
-    return resData.sort((a, b) => a.id - b.id);
+    return resData;
 }
 
 export async function getAllPlayers(roomName) {
@@ -150,6 +151,47 @@ export async function getAllUsers(token) {
         }
     });
     const resData = await response.json();
+
+    if (!response.ok) {
+        throw new Error(resData.message);
+    }
+
+    return resData;
+}
+
+export async function getAllSuggestedContacts(username, token, suggestedNickname) {
+    const response = await fetch('http://localhost:8080/api/users/' + username + '/contacts/suggested?nickname=' + suggestedNickname, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    });
+    const resData = await response.json();
+
+    if (!response.ok) {
+        throw new Error(resData.message);
+    }
+
+    return resData;
+}
+
+export async function getRoomByUsername(username) {
+    const response = await fetch('http://localhost:8080/api/users/' + username + '/room');
+
+    const text = await response.text();
+    const resData = text ? JSON.parse(text) : null;
+
+    if (!response.ok) {
+        throw new Error(resData.message);
+    }
+
+    return resData;
+}
+
+export async function getRoomByName(roomName) {
+    const response = await fetch('http://localhost:8080/api/rooms/' + roomName);
+
+    const text = await response.text();
+    const resData = text ? JSON.parse(text) : null;
 
     if (!response.ok) {
         throw new Error(resData.message);

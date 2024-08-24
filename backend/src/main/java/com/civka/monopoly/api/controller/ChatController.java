@@ -28,7 +28,6 @@ public class ChatController {
     }
 
     @MessageMapping("/chat/sendPrivateMessage/{chatName}")
-    @SendTo("/topic/chat/{chatName}")
     public ChatMessage sendPrivateMessage(@Payload ChatMessageDto chatMessageDto,
                                           @Header("username") String username,
                                           @DestinationVariable String chatName) {

@@ -9,8 +9,6 @@ public interface RoomService {
 
     Room create(RoomDto roomDto, String username);
 
-    Room findById(Long roomId);
-
     Room findByName(String roomName);
 
     List<Room> findAll();
@@ -28,4 +26,6 @@ public interface RoomService {
     Room kickMember(String roomName, String member, String username);
 
     void handlePassword(String roomName, String password);
+
+    Room startGame(String roomName, String username);
 }

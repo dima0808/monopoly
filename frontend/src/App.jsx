@@ -23,7 +23,9 @@ function AppRoutes({setNickname, setNotifications, setIsPrivateChatOpen, setSele
         <>
             <Routes>
                 <Route path="/" element={<Homepage setNotifications={setNotifications}/>}/>
-                <Route path="/game/:roomName" element={<Game setNotifications={setNotifications}/>}/>
+                <Route path="/game/:roomName" element={<Game setNotifications={setNotifications}
+                                                             setSelectedUser={setSelectedUser}
+                                                             setIsPrivateChatOpen={setIsPrivateChatOpen}/>}/>
                 <Route path="/admin" element={<Admin/>}/>
                 <Route path="/rules" element={<Rules/>}/>
                 <Route path="/signin" element={<SignIn onLogin={setNickname}/>}/>
@@ -79,7 +81,7 @@ export default function App() {
         <>
             {!(location.pathname.startsWith('/game/') || location.pathname === '/maintenance') ? (
                 <Scrollbars style={{height: '100vh'}}>
-                    <Header nickname={nickname} onLogout={setNickname} setIsPrivateChatOpen={setIsPrivateChatOpen}/>
+                    <Header nickname={nickname} onLogout={setNickname} setIsPrivateChatOpen={setIsPrivateChatOpen} setSelectedUser={setSelectedUser}/>
                     <AppRoutes setNickname={setNickname}
                                setNotifications={setNotifications}
                                setIsPrivateChatOpen={setIsPrivateChatOpen}

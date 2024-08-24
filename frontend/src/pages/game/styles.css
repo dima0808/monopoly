@@ -5,9 +5,14 @@
   gap: 40px;
 }
 .grid-3 img {
-  -webkit-user-drag: none;
+  -webkit-user-drag: none; /* Safari, Chrome */
+  user-drag: none; /* Firefox */
+  pointer-events: none; /* Забороняє перетягування через всі способи */
+  user-select: none; /* Забороняє виділення */
+  -webkit-user-select: none; /* Safari, Chrome */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
 }
-
 .game-html body {
   background-color: #222222;
 }

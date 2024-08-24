@@ -118,6 +118,10 @@ export default function Chat({selectedUser, selectedContact, client, isConnected
     }, [markMessagesAsRead, messages]);
 
     function handleSendMessage() {
+        if (!selectedUser) {
+            messageInputRef.current.value = "";
+            return;
+        }
         const token = Cookies.get("token");
         const username = Cookies.get("username");
         const messageContent = messageInputRef.current.value.trim();
@@ -174,7 +178,7 @@ export default function Chat({selectedUser, selectedContact, client, isConnected
     }
 
     const handleKeyDown = (event) => {
-        if (event.key === "Enter") {
+        if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
             handleSendMessage();
         }

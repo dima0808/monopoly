@@ -10,11 +10,11 @@ import com.civka.monopoly.api.repository.ChatRepository;
 import com.civka.monopoly.api.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +26,15 @@ public class ChatServiceImpl implements ChatService {
     private final SimpMessagingTemplate messagingTemplate;
 
     @Override
+    public Chat create(String chatName, Boolean isLobbyChat) {
+        Chat newChat = Chat.builder()
+                .name(chatName)
+                .isLobbyChat(isLobbyChat)
+                .build();
+        return chatRepository.save(newChat);
+    }
+
+    @Override
     public Chat findByName(String chatName) {
         return chatRepository.findByName(chatName)
                 .orElseThrow(() -> new ChatNotFoundException(chatName));
@@ -35,9 +44,11 @@ public class ChatServiceImpl implements ChatService {
     public Chat findPrivateChatByName(String chatName) {
         return chatRepository.findByName(chatName)
                 .orElseGet(() -> {
-                    Chat newChat = new Chat();
-                    newChat.setName(chatName);
-                    newChat.setUnreadMessages(0);
+                    Chat newChat = Chat.builder()
+                            .name(chatName)
+                            .isLobbyChat(false)
+                            .unreadMessages(0)
+                            .build();
                     return chatRepository.save(newChat);
                 });
     }
@@ -49,6 +60,9 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public List<ContactDto> getUserContacts(String username) {
+        if (!SecurityContextHolder.getContext().getAuthentication().getName().equals(username)) {
+            throw new UserNotAllowedException();
+        }
         List<Chat> chats = findAllByUsername(username);
         List<ContactDto> contacts = new ArrayList<>();
 
@@ -65,6 +79,43 @@ public class ChatServiceImpl implements ChatService {
         }
 
         return contacts;
+    }
+
+    @Override
+    public List<ContactDto> getUserSuggestedContacts(String username, String suggestedNickname) {
+        if (!SecurityContextHolder.getContext().getAuthentication().getName().equals(username)) {
+            throw new UserNotAllowedException();
+        }
+        List<User> suggestedUsers = userService.findUsersByNicknameContaining(suggestedNickname);
+        List<ContactDto> suggestedContacts = new ArrayList<>();
+
+        for (User suggestedUser : suggestedUsers) {
+            List<String> usernames = Arrays.asList(username, suggestedUser.getUsername());
+            Collections.sort(usernames);
+            String chatName = String.join(" ", usernames);
+            Optional<Chat> chatOptional = chatRepository.findByName(chatName);
+
+            if (chatOptional.isPresent()) {
+                Chat chat = chatOptional.get();
+                if (!chat.getMessages().isEmpty()) {
+                    ChatMessage lastMessage = chat.getMessages().get(chat.getMessages().size() - 1);
+                    suggestedContacts.add(ContactDto.builder()
+                            .nickname(suggestedUser.getNickname())
+                            .lastMessage(lastMessage.toDto())
+                            .unreadMessages(chat.getUnreadMessages())
+                            .build());
+                } else {
+                    suggestedContacts.add(ContactDto.builder()
+                            .nickname(suggestedUser.getNickname())
+                            .build());
+                }
+            } else {
+                suggestedContacts.add(ContactDto.builder()
+                        .nickname(suggestedUser.getNickname())
+                        .build());
+            }
+        }
+        return suggestedContacts;
     }
 
     @Override
@@ -159,5 +210,10 @@ public class ChatServiceImpl implements ChatService {
         } else {
             throw new UserNotAllowedException();
         }
+    }
+
+    @Override
+    public void deleteByName(String chatName) {
+        chatRepository.deleteByName(chatName);
     }
 }

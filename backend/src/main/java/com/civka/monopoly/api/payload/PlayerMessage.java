@@ -17,6 +17,7 @@ public class PlayerMessage {
     private Member member;
 
     public enum MessageType {
+        CHANGE_COLOR,
         CHANGE_CIVILIZATION
     }
 }

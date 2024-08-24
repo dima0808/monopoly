@@ -92,7 +92,7 @@ public class RoomController {
     }
 
     @GetMapping("/api/rooms/{roomName}")
-    public ResponseEntity<Room> getAllRooms(@PathVariable String roomName) {
+    public ResponseEntity<Room> getRoom(@PathVariable String roomName) {
         return ResponseEntity.ok(roomService.findByName(roomName));
     }
 }

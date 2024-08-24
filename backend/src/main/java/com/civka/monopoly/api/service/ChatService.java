@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface ChatService {
 
+    Chat create(String chatName, Boolean isLobbyChat);
+
     Chat findByName(String chatName);
 
     Chat findPrivateChatByName(String chatName);
@@ -16,6 +18,8 @@ public interface ChatService {
     List<Chat> findAllByUsername(String username);
 
     List<ContactDto> getUserContacts(String username);
+
+    List<ContactDto> getUserSuggestedContacts(String username, String suggestedNickname);
 
     Chat save(Chat chat);
 
@@ -28,4 +32,6 @@ public interface ChatService {
     void clearMessages(String chatName, String admin);
 
     void clearMessages(Integer clearCount, String chatName, String admin);
+
+    void deleteByName(String chatName);
 }

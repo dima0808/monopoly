@@ -9,12 +9,62 @@ import Cookies from "js-cookie";
 import {Client} from "@stomp/stompjs";
 import {useParams} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
+import {getRoomByName} from "../../utils/http";
 
-export default function Game({setNotifications}) {
+export default function Game({setNotifications, setSelectedUser, setIsPrivateChatOpen}) {
     const [client, setClient] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
-    const {roomName} = useParams();
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const {roomName} = useParams();
+
+    const [room, setRoom] = useState({});
+    const [players, setPlayers] = useState([]);
+
+    const onGameMessageReceived = (message) => {
+        const {type, content, room} = JSON.parse(message.body);
+        console.log(content);
+        switch (type) {
+            case 'START':
+                setRoom((prevRoom) => {
+                    return {
+                        ...prevRoom,
+                        isStarted: room.isStarted
+                    };
+                });
+                setPlayers((prevPlayers) => {
+                    return prevPlayers.map(player => {
+                        return player.civilization = "Random" ?
+                            room.members.find(member => member.id === player.id) : player;
+                    });
+                });
+                return;
+            default:
+                return;
+        }
+
+    }
+
+    const handleStartGame = () => {
+        const token = Cookies.get('token');
+        const username = Cookies.get('username');
+        try {
+            client.publish({
+                destination: `/app/rooms/${room.name}/startGame`,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    username: username
+                }
+            });
+            console.log('Starting game...');
+        } catch (error) {
+            setNotifications(prev => [...prev, {
+                message: 'Error starting game (no connection)',
+                duration: 3500,
+                isError: true
+            }]);
+        }
+    }
 
     useEffect(() => {
         const token = Cookies.get('token');
@@ -25,6 +75,7 @@ export default function Game({setNotifications}) {
             },
             onConnect: () => {
                 console.log('Game connected');
+                client.subscribe('/topic/public/' + roomName + '/game', onGameMessageReceived);
                 setIsConnected(true);
             },
             onStompError: () => {
@@ -41,7 +92,7 @@ export default function Game({setNotifications}) {
             setClient(null);
             setIsConnected(false);
         };
-    }, [navigate]);
+    }, [navigate, roomName]);
 
     useEffect(() => {
         document.documentElement.classList.add('game-html');
@@ -50,12 +101,32 @@ export default function Game({setNotifications}) {
         };
     }, []);
 
+    useEffect(() => {
+        getRoomByName(roomName)
+            .then((roomData) => {
+                setRoom({
+                    id: roomData.id,
+                    name: roomData.name,
+                    size: roomData.size,
+                    isStarted: roomData.isStarted
+                });
+                setPlayers(roomData.members);
+            })
+            .catch((error) => setError({message: error.message || "An error occurred"}));
+    }, [roomName]);
+
     return (
         <div className="grid-3">
-            <PlayerList client={client} isConnected={isConnected} roomName={roomName}
-                        setNotifications={setNotifications}/>
-            <Board/>
-            <Actions/>
+            {!error && <>
+                <PlayerList client={client} isConnected={isConnected}
+                            room={room} onStartGame={handleStartGame}
+                            players={players} setPlayers={setPlayers}
+                            setNotifications={setNotifications}/>
+                <Board room={room} client={client} isConnected={isConnected}
+                       setSelectedUser={setSelectedUser} setIsPrivateChatOpen={setIsPrivateChatOpen}
+                       setNotifications={setNotifications}/>
+                <Actions/>
+            </>}
         </div>
     );
 }
