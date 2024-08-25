@@ -23,7 +23,13 @@ import java.util.List;
 public class RoomServiceImpl implements RoomService {
 
     @Value("${monopoly.app.room.max-size}")
-    private Integer maxSize;
+    private Integer maxRoomSize;
+
+    @Value("${monopoly.app.room.game.init-gold}")
+    private Integer initGold;
+
+    @Value("${monopoly.app.room.game.init-strength}")
+    private Integer initStrength;
 
     private final RoomRepository roomRepository;
     private final UserService userService;
@@ -37,8 +43,8 @@ public class RoomServiceImpl implements RoomService {
         if (roomRepository.existsByName(roomDto.getName())) {
             throw new RoomAlreadyExistException(roomDto.getName());
         }
-        if (roomDto.getSize() > maxSize || roomDto.getSize() < 2) {
-            throw new IllegalRoomSizeException(roomDto.getSize(), maxSize);
+        if (roomDto.getSize() > maxRoomSize || roomDto.getSize() < 2) {
+            throw new IllegalRoomSizeException(roomDto.getSize(), maxRoomSize);
         }
         User user = userService.findByUsername(username);
         if (user.getMember() != null) {
@@ -204,11 +210,15 @@ public class RoomServiceImpl implements RoomService {
                 .filter(civ -> !chosenCivilizations.contains(civ))
                 .toList());
         for (Member member : room.getMembers()) {
+            member.setGold(initGold);
+            member.setStrength(initStrength);
+            member.setTourism(0);
+            member.setScore(0);
             if (member.getCivilization() == Civilization.Random) {
                 Civilization randomCivilization = availableCivilizations.remove((int) (Math.random() * availableCivilizations.size()));
                 member.setCivilization(randomCivilization);
-                memberService.save(member);
             }
+            memberService.save(member);
         }
         return roomRepository.save(room);
     }
