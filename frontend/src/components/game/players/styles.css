@@ -177,7 +177,7 @@
     padding: 5px 15px;
 }
 .player-stat-gold,
-.player-stat-army,
+.player-stat-strength,
 .player-stat-tourism,
 .player-stat-score {
     width: 100%;
@@ -185,7 +185,7 @@
     background-color: #56aa59;
     font-size: 16px;
 }
-.resurse-img {
+.recourse-img {
     width: 20px;
     height: 20px;
     border-radius: 50%;

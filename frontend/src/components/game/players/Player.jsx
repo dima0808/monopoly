@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Cookies from "js-cookie";
+
 import randomImg from "../../../images/unknown.png";
 import colombiaImg from "../../../images/colombia-leader.png";
 import egyptImg from "../../../images/egypt-leader.png";
@@ -8,6 +9,11 @@ import japanImg from "../../../images/japan-leader.png";
 import koreaImg from "../../../images/korea-leader.png";
 import romeImg from "../../../images/rome-leader.png";
 import swedenImg from "../../../images/sweden-leader.png";
+
+import goldImg from "../../../images/icon-gold.png";
+import tourismImg from "../../../images/icon-tourism.png";
+// import strengthImg from "../../../images/icon-strength.png";
+// import scoreImg from "../../../images/icon-score.png";
 
 const civs = ["Random", "Colombia", "Egypt", "Germany", "Japan", "Korea", "Rome", "Sweden"];
 
@@ -91,12 +97,21 @@ export default function Player({ player, onCivChange, availableCivs, onColorChan
 
                 {isStarted && <div className="player-stats-grid">
                     <div className="player-stat-gold">
-                        <img src={randomImg} className="resurse-img" alt="avatar"/>
-                        1234
+                        <img src={goldImg} className="recourse-img" alt="gold"/>
+                        {player.gold}
                     </div>
-                    <div className="player-stat-army">1234</div>
-                    <div className="player-stat-tourism">1234</div>
-                    <div className="player-stat-score">1234</div>
+                    <div className="player-stat-strength">
+                        <img src={randomImg} className="recourse-img" alt="strength"/>
+                        {player.strength}
+                    </div>
+                    <div className="player-stat-tourism">
+                        <img src={tourismImg} className="recourse-img" alt="tourism"/>
+                        {player.tourism}
+                    </div>
+                    <div className="player-stat-score">
+                        <img src={randomImg} className="recourse-img" alt="score"/>
+                        {player.score}
+                    </div>
                 </div>}
 
                 {!isStarted && <div className="player-stats-grid">

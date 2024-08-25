@@ -218,7 +218,7 @@ export default function Chat({selectedUser, selectedContact, client, isConnected
     }
 
     return (
-        <div className="choosen-user">
+        <div className="chosen-user">
             <div className="user-and-close">
                 {selectedUser && <Link to={"/profile/" + selectedUser.nickname}
                                        className="user-and-close-a">{selectedUser.nickname}</Link>}
