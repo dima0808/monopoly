@@ -1,5 +1,6 @@
 .grid-3 {
   justify-content: center;
+  align-items: center;
   display: grid;
   grid-template-columns: 250px 820px 300px;
   gap: 40px;

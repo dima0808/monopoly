@@ -9,9 +9,10 @@
 }
 
 .board {
+  position: relative;
   /* макет 1700 на 1500 */
   margin: 0 auto;
-  background-color: #a699af;
+
   /* поділити на 2 і -6px з кожної сторони, щоб вмістилася сама гра хоч якось,
     можливо ще обрізання треба */
   height: 720px;
@@ -21,8 +22,23 @@
   grid-template-columns: 110px 600px 110px;
   grid-template-rows: 110px 500px 110px;
 }
-
-.board__element-edge {
+.game-chip {
+  position: absolute;
+  top: 50px;
+  left: 160px;
+  content: " ";
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  transition: all 0.3s ease-in-out;
+  transform: translate(100%, 55%);
+  border: 2px solid #3c3c3c;
+  box-shadow: 0 0.5px 2px 2px #332f375a;
+}
+.help-game-chip {
+  transform: translate(0, -105%);
+}
+.pl .board__element-edge {
   background-color: #222222;
 }
 .board__element-center {
