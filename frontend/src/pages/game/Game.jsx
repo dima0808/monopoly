@@ -20,9 +20,10 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
 
     const [room, setRoom] = useState({});
     const [players, setPlayers] = useState([]);
+    const [dice, setDice] = useState({ firstRoll : null, secondRoll : null });
 
     const onGameMessageReceived = (message) => {
-        const {type, content, room} = JSON.parse(message.body);
+        const {type, content, room, member, firstRoll, secondRoll} = JSON.parse(message.body);
         console.log(content);
         switch (type) {
             case 'START':
@@ -38,6 +39,14 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                             room.members.find(member => member.id === player.id) : player;
                     });
                 });
+                return;
+            case 'ROLL_DICE':
+                setPlayers((prevPlayers) => {
+                    return prevPlayers.map(player => {
+                        return player.id === member.id ? member : player;
+                    });
+                });
+                setDice({firstRoll: firstRoll, secondRoll: secondRoll});
                 return;
             default:
                 return;
@@ -122,10 +131,12 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                             room={room} onStartGame={handleStartGame}
                             players={players} setPlayers={setPlayers}
                             setNotifications={setNotifications}/>
-                <Board room={room} client={client} isConnected={isConnected}
+                <Board room={room} players={players} client={client} isConnected={isConnected}
                        setSelectedUser={setSelectedUser} setIsPrivateChatOpen={setIsPrivateChatOpen}
                        setNotifications={setNotifications}/>
-                <Actions/>
+                <Actions client={client} isConnected={isConnected}
+                         room={room} players={players} dice={dice}
+                         setNotifications={setNotifications}/>
             </>}
         </div>
     );

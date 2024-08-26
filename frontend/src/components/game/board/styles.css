@@ -24,20 +24,20 @@
 }
 .game-chip {
   position: absolute;
-  top: 50px;
-  left: 160px;
+  /*top: 42px;*/
+  /*left: 42px;*/
   content: " ";
-  height: 25px;
-  width: 25px;
+  height: 26px;
+  width: 26px;
   border-radius: 50%;
   transition: all 0.3s ease-in-out;
-  transform: translate(100%, 55%);
+  /*transform: translate(100%, 55%);*/
   border: 2px solid #3c3c3c;
   box-shadow: 0 0.5px 2px 2px #332f375a;
 }
-.help-game-chip {
-  transform: translate(0, -105%);
-}
+/*.help-game-chip {*/
+/*  transform: translate(0, -105%);*/
+/*}*/
 .pl .board__element-edge {
   background-color: #222222;
 }

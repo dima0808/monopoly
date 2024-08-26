@@ -33,4 +33,6 @@ public class Member {
     private Integer strength;
     private Integer tourism;
     private Integer score;
+
+    private Integer position;
 }

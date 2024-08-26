@@ -122,6 +122,7 @@ public class RoomServiceImpl implements RoomService {
                 .isLeader(members.isEmpty())
                 .civilization(Civilization.Random)
                 .color(availableColor)
+                .position(0)
                 .build();
         member = memberService.save(member);
         members.add(member);

@@ -29,6 +29,8 @@ public class ChatMessage {
     @Column(nullable = false)
     private LocalDateTime timestamp;
 
+    private MessageType type;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     private Chat chat;
@@ -43,5 +45,9 @@ public class ChatMessage {
                 .timestamp(timestamp)
                 .receiver(receiver.getUsername())
                 .build();
+    }
+
+    public enum MessageType {
+        SYSTEM_ROLL_DICE,
     }
 }

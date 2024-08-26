@@ -28,7 +28,9 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     @Override
     public ChatMessage save(Chat chat, ChatMessageDto chatMessageDto) {
         ChatMessage chatMessage = ChatMessage.builder()
-                .sender(userService.findByUsername(chatMessageDto.getSender()))
+                .type(chatMessageDto.getType())
+                .sender(chatMessageDto.getSender() != null ?
+                        userService.findByUsername(chatMessageDto.getSender()) : null)
                 .content(chatMessageDto.getContent())
                 .timestamp(LocalDateTime.now())
                 .receiver(chatMessageDto.getReceiver() != null ?

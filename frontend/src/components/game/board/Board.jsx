@@ -49,348 +49,374 @@ import wonderTerracottaArmyImg from "../../../images/wonder_terracotta_army.png"
 
 import Chat from "./chat/Chat";
 
-function EdgeCell({ src, alt, position }) {
-  const positionClass = `edge__img-${position}`;
-  return (
-    <div className="board__element board__element-edge">
-      <img
-        src={src}
-        alt={alt}
-        className={`edge__img ${positionClass} border`}
-      />
-    </div>
-  );
+function EdgeCell({src, alt, position}) {
+    const positionClass = `edge__img-${position}`;
+    return (
+        <div className="board__element board__element-edge">
+            <img
+                src={src}
+                alt={alt}
+                className={`edge__img ${positionClass} border`}
+            />
+        </div>
+    );
 }
 
 function Cell({
-  src,
-  alt,
-  position,
-  mirror = false,
-  noneUpgrades = false,
-  specialType,
-}) {
-  const baseClass = `object-${position}`;
-  const priceClass = specialType
-    ? `${baseClass}__price ${baseClass}__price-${specialType}`
-    : `${baseClass}__price`;
-  const cellClass = noneUpgrades
-    ? `${baseClass}__cell ${baseClass}__cell-none-upgrades`
-    : `${baseClass}__cell`;
-  return (
-    <div className={` ${baseClass} ${mirror && "mirror"} border`}>
-      <div className={priceClass}></div>
-      <div className={cellClass}>
-        <img src={src} alt={alt} className="cell-img" />
-      </div>
-      {noneUpgrades ? null : <div className={`${baseClass}__upgrades`}></div>}
-    </div>
-  );
+                  src,
+                  alt,
+                  position,
+                  mirror = false,
+                  noneUpgrades = false,
+                  specialType,
+              }) {
+    const baseClass = `object-${position}`;
+    const priceClass = specialType
+        ? `${baseClass}__price ${baseClass}__price-${specialType}`
+        : `${baseClass}__price`;
+    const cellClass = noneUpgrades
+        ? `${baseClass}__cell ${baseClass}__cell-none-upgrades`
+        : `${baseClass}__cell`;
+    return (
+        <div className={` ${baseClass} ${mirror && "mirror"} border`}>
+            <div className={priceClass}></div>
+            <div className={cellClass}>
+                <img src={src} alt={alt} className="cell-img"/>
+            </div>
+            {noneUpgrades ? null : <div className={`${baseClass}__upgrades`}></div>}
+        </div>
+    );
 }
 
 function BarbCell() {
-  return (
-    <div className="object-vertical mirror border">
-      <div className="object-vertical__barbarians-color"></div>
-      <div className="object-vertical__cell">
-        <img src={barbariansImg} alt="barbarians" className="cell-img-unique" />
-      </div>
-      <div className="object-vertical__barbarians-color"></div>
-    </div>
-  );
+    return (
+        <div className="object-vertical mirror border">
+            <div className="object-vertical__barbarians-color"></div>
+            <div className="object-vertical__cell">
+                <img src={barbariansImg} alt="barbarians" className="cell-img-unique"/>
+            </div>
+            <div className="object-vertical__barbarians-color"></div>
+        </div>
+    );
 }
 
 function GoodyHutCell() {
-  return (
-    <div className="object-vertical border">
-      <div className="object-vertical__village-color"></div>
-      <div className="object-vertical__cell">
-        <img src={goodyHutImg} alt="goody hut" className="cell-img-unique" />
-      </div>
-      <div className="object-vertical__village-color"></div>
-    </div>
-  );
+    return (
+        <div className="object-vertical border">
+            <div className="object-vertical__village-color"></div>
+            <div className="object-vertical__cell">
+                <img src={goodyHutImg} alt="goody hut" className="cell-img-unique"/>
+            </div>
+            <div className="object-vertical__village-color"></div>
+        </div>
+    );
 }
 
 export default function Board({
-  room,
-  client,
-  isConnected,
-  setNotifications,
-  setSelectedUser,
-  setIsPrivateChatOpen,
-}) {
-  return (
-    <section className="board">
-      <EdgeCell src={startImg} alt="start" position="left-up" />
+                                  room,
+                                  players,
+                                  client,
+                                  isConnected,
+                                  setNotifications,
+                                  setSelectedUser,
+                                  setIsPrivateChatOpen,
+                              }) {
 
-      <div className="board__element board__element-side board__element-side-vertical up">
-        <Cell src={resourceHorsesImg} alt="horses" position="vertical" />
-        <Cell src={resourceBananasImg} alt="bananas" position="vertical" />
-        <Cell src={resourceDeerImg} alt="deer" position="vertical" />
-        <Cell
-          src={wonderTempleOfArtemisImg}
-          alt="temple of artemis"
-          position="vertical"
-          noneUpgrades={true}
-          specialType="wonder"
-        />
-        <Cell src={resourceFursImg} alt="furs" position="vertical" />
-        <GoodyHutCell />
-        <Cell
-          src={districtEncampmentImg}
-          alt="encampment"
-          position="vertical"
-          specialType="encampment"
-        />
-        <Cell
-          src={wonderTerracottaArmyImg}
-          alt="terrakota army"
-          position="vertical"
-          noneUpgrades={true}
-          specialType="wonder"
-        />
-        <Cell
-          src={districtGovernmentPlazaImg}
-          alt="government plaza"
-          position="vertical"
-          specialType="government"
-        />
-        <Cell
-          src={districtIndustrialZoneImg}
-          alt="industrial zone"
-          position="vertical"
-        />
-        <Cell src={resourceIronImg} alt="iron" position="vertical" />
-        <Cell src={resourceCrabsImg} alt="crabs" position="vertical" />
-      </div>
+    function calculatePosition(position) {
+        if (position === 0) {
+            return { topValue: 42, leftValue: 42 };
+        } else if (position < 13) {
+            return { topValue: 42, leftValue: 122 + 50 * (position - 1) };
+        } else if (position === 13) {
+            return { topValue: 42, leftValue: 752 };
+        } else if (position < 24) {
+            return { topValue: 122 + 50 * (position - 14), leftValue: 752 };
+        } else if (position === 24) {
+            return { topValue: 652, leftValue: 752 };
+        } else if (position < 37) {
+            return { topValue: 652, leftValue: 672 - 50 * (position - 25) };
+        } else if (position === 37) {
+            return { topValue: 652, leftValue: 42 };
+        } else {
+            return { topValue: 572 - 50 * (position - 38), leftValue: 42 };
+        }
+    }
 
-      <EdgeCell src={projectsImg} alt="projects" position="right-up" />
+    return (
+        <section className="board">
+            <EdgeCell src={startImg} alt="start" position="left-up"/>
 
-      <div className="board__element board__element-side board__element-side-horizontal left">
-        <Cell
-          src={districtSpaceportImg}
-          alt="spaceport"
-          position="horizontal"
-          noneUpgrades={true}
-        />
-        <Cell
-          src={wonderOxfordUniversityImg}
-          alt="oxford university"
-          position="horizontal"
-          noneUpgrades={true}
-          specialType="wonder"
-        />
-        <Cell src={districtCampusImg} alt="campus" position="horizontal" />
-        <Cell
-          src={districtGovernmentPlazaImg}
-          alt="government plaza"
-          position="horizontal"
-          specialType="government"
-        />
-        <Cell
-          src={districtCommercialHubImg}
-          alt="commercial hub"
-          position="horizontal"
-        />
-        <Cell
-          src={wonderBigBenImg}
-          alt="big ben"
-          position="horizontal"
-          noneUpgrades={true}
-          specialType="wonder"
-        />
-        <Cell
-          src={districtNeighborhoodImg}
-          alt="neighborhood"
-          position="horizontal"
-        />
-        <Cell
-          src={wonderEstadioDoMaracanaImg}
-          alt="estadio do maracana"
-          position="horizontal"
-          noneUpgrades={true}
-          specialType="wonder"
-        />
-        <Cell
-          src={districtTheatreSquareImg}
-          alt="theatre square"
-          position="horizontal"
-        />
-        <Cell
-          src={districtEntertainmentComplexImg}
-          alt="entertainment complex"
-          position="horizontal"
-        />
-      </div>
+            <div className="board__element board__element-side board__element-side-vertical up">
+                <Cell src={resourceHorsesImg} alt="horses" position="vertical"/>
+                <Cell src={resourceBananasImg} alt="bananas" position="vertical"/>
+                <Cell src={resourceDeerImg} alt="deer" position="vertical"/>
+                <Cell
+                    src={wonderTempleOfArtemisImg}
+                    alt="temple of artemis"
+                    position="vertical"
+                    noneUpgrades={true}
+                    specialType="wonder"
+                />
+                <Cell src={resourceFursImg} alt="furs" position="vertical"/>
+                <GoodyHutCell/>
+                <Cell
+                    src={districtEncampmentImg}
+                    alt="encampment"
+                    position="vertical"
+                    specialType="encampment"
+                />
+                <Cell
+                    src={wonderTerracottaArmyImg}
+                    alt="terrakota army"
+                    position="vertical"
+                    noneUpgrades={true}
+                    specialType="wonder"
+                />
+                <Cell
+                    src={districtGovernmentPlazaImg}
+                    alt="government plaza"
+                    position="vertical"
+                    specialType="government"
+                />
+                <Cell
+                    src={districtIndustrialZoneImg}
+                    alt="industrial zone"
+                    position="vertical"
+                />
+                <Cell src={resourceIronImg} alt="iron" position="vertical"/>
+                <Cell src={resourceCrabsImg} alt="crabs" position="vertical"/>
+            </div>
 
-      <Chat
-        roomName={room.name}
-        client={client}
-        isConnected={isConnected}
-        setNotifications={setNotifications}
-        setSelectedUser={setSelectedUser}
-        setIsPrivateChatOpen={setIsPrivateChatOpen}
-      />
+            <EdgeCell src={projectsImg} alt="projects" position="right-up"/>
 
-      <div className="board__element board__element-side board__element-side-horizontal right">
-        <Cell
-          src={featureReefImg}
-          alt="reef"
-          position="horizontal"
-          mirror={true}
-          noneUpgrades={true}
-        />
-        <Cell
-          src={districtCampusImg}
-          alt="campus"
-          position="horizontal"
-          mirror={true}
-        />
-        <Cell
-          src={wonderGreatLibraryImg}
-          alt="great library"
-          position="horizontal"
-          mirror={true}
-          noneUpgrades={true}
-          specialType="wonder"
-        />
-        <Cell
-          src={districtHarborImg}
-          alt="harbor"
-          position="horizontal"
-          mirror={true}
-        />
-        <Cell
-          src={districtGovernmentPlazaImg}
-          alt="government plaza"
-          position="horizontal"
-          mirror={true}
-          specialType="government"
-        />
-        <Cell
-          src={districtCommercialHubImg}
-          alt="commercial hub"
-          position="horizontal"
-          mirror={true}
-        />
-        <Cell
-          src={wonderCasaDeContratacionImg}
-          alt="cas de contratacion"
-          position="horizontal"
-          mirror={true}
-          noneUpgrades={true}
-          specialType="wonder"
-        />
-        <Cell
-          src={districtTheatreSquareImg}
-          alt="theatre square"
-          position="horizontal"
-          mirror={true}
-        />
-        <Cell
-          src={districtEntertainmentComplexImg}
-          alt="entertainment complex"
-          position="horizontal"
-          mirror={true}
-        />
-        <Cell
-          src={wonderColosseumImg}
-          alt="colosseum"
-          position="horizontal"
-          mirror={true}
-          noneUpgrades={true}
-          specialType="wonder"
-        />
-      </div>
+            <div className="board__element board__element-side board__element-side-horizontal left">
+                <Cell
+                    src={districtSpaceportImg}
+                    alt="spaceport"
+                    position="horizontal"
+                    noneUpgrades={true}
+                />
+                <Cell
+                    src={wonderOxfordUniversityImg}
+                    alt="oxford university"
+                    position="horizontal"
+                    noneUpgrades={true}
+                    specialType="wonder"
+                />
+                <Cell src={districtCampusImg} alt="campus" position="horizontal"/>
+                <Cell
+                    src={districtGovernmentPlazaImg}
+                    alt="government plaza"
+                    position="horizontal"
+                    specialType="government"
+                />
+                <Cell
+                    src={districtCommercialHubImg}
+                    alt="commercial hub"
+                    position="horizontal"
+                />
+                <Cell
+                    src={wonderBigBenImg}
+                    alt="big ben"
+                    position="horizontal"
+                    noneUpgrades={true}
+                    specialType="wonder"
+                />
+                <Cell
+                    src={districtNeighborhoodImg}
+                    alt="neighborhood"
+                    position="horizontal"
+                />
+                <Cell
+                    src={wonderEstadioDoMaracanaImg}
+                    alt="estadio do maracana"
+                    position="horizontal"
+                    noneUpgrades={true}
+                    specialType="wonder"
+                />
+                <Cell
+                    src={districtTheatreSquareImg}
+                    alt="theatre square"
+                    position="horizontal"
+                />
+                <Cell
+                    src={districtEntertainmentComplexImg}
+                    alt="entertainment complex"
+                    position="horizontal"
+                />
+            </div>
 
-      <EdgeCell src={projectsImg} alt="projects" position="left-down" />
+            <Chat
+                roomName={room.name}
+                client={client}
+                isConnected={isConnected}
+                setNotifications={setNotifications}
+                setSelectedUser={setSelectedUser}
+                setIsPrivateChatOpen={setIsPrivateChatOpen}
+            />
 
-      <div className="board__element board__element-side board__element-side-vertical down">
-        <Cell
-          src={wonderRuhrValleyImg}
-          alt="ruhr valley"
-          position="vertical"
-          mirror={true}
-          noneUpgrades={true}
-          specialType="wonder"
-        />
-        <Cell
-          src={districtDamImg}
-          alt="dam"
-          position="vertical"
-          mirror={true}
-        />
-        <Cell
-          src={districtIndustrialZoneImg}
-          alt="industrial zone"
-          position="vertical"
-          mirror={true}
-        />
-        <Cell
-          src={districtAqueductImg}
-          alt="aqueduct"
-          position="vertical"
-          mirror={true}
-          noneUpgrades={true}
-        />
-        <Cell
-          src={wonderMausoleumAtHalicarnassusImg}
-          alt="mausoleum at halicarnassus"
-          position="vertical"
-          mirror={true}
-          noneUpgrades={true}
-          specialType="wonder"
-        />
-        <Cell
-          src={districtHarborImg}
-          alt="harbor"
-          position="vertical"
-          mirror={true}
-        />
-        <Cell
-          src={districtEncampmentImg}
-          alt="encampment"
-          position="vertical"
-          mirror={true}
-          specialType="encampment"
-        />
-        <BarbCell />
-        <Cell
-          src={resourceRiceImg}
-          alt="rice"
-          position="vertical"
-          mirror={true}
-        />
-        <Cell
-          src={wonderEtemenankiImg}
-          alt="etemenanki"
-          position="vertical"
-          mirror={true}
-          noneUpgrades={true}
-          specialType="wonder"
-        />
-        <Cell
-          src={resourceWheatImg}
-          alt="wheat"
-          position="vertical"
-          mirror={true}
-        />
-        <Cell
-          src={resourceMaizeImg}
-          alt="maize"
-          position="vertical"
-          mirror={true}
-        />
-      </div>
+            <div className="board__element board__element-side board__element-side-horizontal right">
+                <Cell
+                    src={featureReefImg}
+                    alt="reef"
+                    position="horizontal"
+                    mirror={true}
+                    noneUpgrades={true}
+                />
+                <Cell
+                    src={districtCampusImg}
+                    alt="campus"
+                    position="horizontal"
+                    mirror={true}
+                />
+                <Cell
+                    src={wonderGreatLibraryImg}
+                    alt="great library"
+                    position="horizontal"
+                    mirror={true}
+                    noneUpgrades={true}
+                    specialType="wonder"
+                />
+                <Cell
+                    src={districtHarborImg}
+                    alt="harbor"
+                    position="horizontal"
+                    mirror={true}
+                />
+                <Cell
+                    src={districtGovernmentPlazaImg}
+                    alt="government plaza"
+                    position="horizontal"
+                    mirror={true}
+                    specialType="government"
+                />
+                <Cell
+                    src={districtCommercialHubImg}
+                    alt="commercial hub"
+                    position="horizontal"
+                    mirror={true}
+                />
+                <Cell
+                    src={wonderCasaDeContratacionImg}
+                    alt="cas de contratacion"
+                    position="horizontal"
+                    mirror={true}
+                    noneUpgrades={true}
+                    specialType="wonder"
+                />
+                <Cell
+                    src={districtTheatreSquareImg}
+                    alt="theatre square"
+                    position="horizontal"
+                    mirror={true}
+                />
+                <Cell
+                    src={districtEntertainmentComplexImg}
+                    alt="entertainment complex"
+                    position="horizontal"
+                    mirror={true}
+                />
+                <Cell
+                    src={wonderColosseumImg}
+                    alt="colosseum"
+                    position="horizontal"
+                    mirror={true}
+                    noneUpgrades={true}
+                    specialType="wonder"
+                />
+            </div>
 
-      <EdgeCell
-        src={bermudaTriangleImg}
-        alt="bermuda triangle"
-        position="right-down"
-      />
-      <div className="game-chip color-red"></div>
-      <div className="game-chip help-game-chip color-green"></div>
-    </section>
-  );
+            <EdgeCell src={projectsImg} alt="projects" position="left-down"/>
+
+            <div className="board__element board__element-side board__element-side-vertical down">
+                <Cell
+                    src={wonderRuhrValleyImg}
+                    alt="ruhr valley"
+                    position="vertical"
+                    mirror={true}
+                    noneUpgrades={true}
+                    specialType="wonder"
+                />
+                <Cell
+                    src={districtDamImg}
+                    alt="dam"
+                    position="vertical"
+                    mirror={true}
+                />
+                <Cell
+                    src={districtIndustrialZoneImg}
+                    alt="industrial zone"
+                    position="vertical"
+                    mirror={true}
+                />
+                <Cell
+                    src={districtAqueductImg}
+                    alt="aqueduct"
+                    position="vertical"
+                    mirror={true}
+                    noneUpgrades={true}
+                />
+                <Cell
+                    src={wonderMausoleumAtHalicarnassusImg}
+                    alt="mausoleum at halicarnassus"
+                    position="vertical"
+                    mirror={true}
+                    noneUpgrades={true}
+                    specialType="wonder"
+                />
+                <Cell
+                    src={districtHarborImg}
+                    alt="harbor"
+                    position="vertical"
+                    mirror={true}
+                />
+                <Cell
+                    src={districtEncampmentImg}
+                    alt="encampment"
+                    position="vertical"
+                    mirror={true}
+                    specialType="encampment"
+                />
+                <BarbCell/>
+                <Cell
+                    src={resourceRiceImg}
+                    alt="rice"
+                    position="vertical"
+                    mirror={true}
+                />
+                <Cell
+                    src={wonderEtemenankiImg}
+                    alt="etemenanki"
+                    position="vertical"
+                    mirror={true}
+                    noneUpgrades={true}
+                    specialType="wonder"
+                />
+                <Cell
+                    src={resourceWheatImg}
+                    alt="wheat"
+                    position="vertical"
+                    mirror={true}
+                />
+                <Cell
+                    src={resourceMaizeImg}
+                    alt="maize"
+                    position="vertical"
+                    mirror={true}
+                />
+            </div>
+
+            <EdgeCell
+                src={bermudaTriangleImg}
+                alt="bermuda triangle"
+                position="right-down"
+            />
+            {players.map((player, index) => {
+                const { topValue, leftValue } = calculatePosition(player.position);
+                return (
+                    <div key={index} style={{ top: `${topValue}px`, left: `${leftValue}px` }} className={"game-chip color-" + player.color}></div>
+                );
+            })}
+        </section>
+    );
 }

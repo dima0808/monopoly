@@ -3,13 +3,16 @@ package com.civka.monopoly.api.controller;
 import com.civka.monopoly.api.dto.ChatMessageDto;
 import com.civka.monopoly.api.entity.ChatMessage;
 import com.civka.monopoly.api.service.ChatService;
+import com.civka.monopoly.api.service.UserNotAllowedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -49,6 +52,10 @@ public class ChatController {
 
     @GetMapping("/api/chat/private/{chatName}")
     public ResponseEntity<List<ChatMessage>> getAllPrivateChatMessages(@PathVariable String chatName) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!Arrays.stream(chatName.split(" ")).toList().contains(username)) {
+            throw new UserNotAllowedException();
+        }
         return ResponseEntity.ok(chatService.findPrivateChatByName(chatName).getMessages());
     }
 }
