@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
 import './styles.css';
 import Cookies from "js-cookie";
 
-export default function Actions({ room, dice, client, setNotifications }) {
-    const [diceTimestamp, setDiceTimestamp] = useState(null);
+export default function Actions({ room, client, setNotifications }) {
 
     const handleRollDice = () => {
         const token = Cookies.get('token');
@@ -40,29 +38,9 @@ export default function Actions({ room, dice, client, setNotifications }) {
         }
     };
 
-    useEffect(() => {
-        if (dice.firstRoll !== null && dice.secondRoll !== null) {
-            setDiceTimestamp(Date.now());
-        }
-    }, [dice]);
-
-    useEffect(() => {
-        if (diceTimestamp) {
-            const timer = setTimeout(() => {
-                setDiceTimestamp(null);
-            }, 4000);
-            return () => clearTimeout(timer);
-        }
-    }, [diceTimestamp]);
-
     return (
         <section className="actions">
             {(room.isStarted && room.currentTurn === Cookies.get("username")) && <button onClick={handleRollDice}>roll</button>}
-            {diceTimestamp && (
-                <div>
-                    Dice: {dice.firstRoll} {dice.secondRoll}
-                </div>
-            )}
         </section>
     );
 }

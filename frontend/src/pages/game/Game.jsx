@@ -133,11 +133,12 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                             room={room} onStartGame={handleStartGame}
                             players={players} setPlayers={setPlayers}
                             setNotifications={setNotifications}/>
-                <Board room={room} players={players} client={client} isConnected={isConnected}
+                <Board room={room} players={players} dice={dice}
+                       client={client} isConnected={isConnected}
                        setSelectedUser={setSelectedUser} setIsPrivateChatOpen={setIsPrivateChatOpen}
                        setNotifications={setNotifications}/>
                 <Actions client={client}
-                         room={room} dice={dice}
+                         room={room}
                          setNotifications={setNotifications}/>
             </>}
         </div>

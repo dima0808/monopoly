@@ -48,6 +48,7 @@ import wonderTempleOfArtemisImg from "../../../images/wonder_temple_of_artemis.p
 import wonderTerracottaArmyImg from "../../../images/wonder_terracotta_army.png";
 
 import Chat from "./chat/Chat";
+import Dice from "./dice/Dice";
 
 function EdgeCell({src, alt, position}) {
     const positionClass = `edge__img-${position}`;
@@ -115,6 +116,7 @@ function GoodyHutCell() {
 export default function Board({
                                   room,
                                   players,
+                                  dice,
                                   client,
                                   isConnected,
                                   setNotifications,
@@ -433,6 +435,7 @@ export default function Board({
                     <div key={index} style={{ top: `${topValue}px`, left: `${leftValue}px`, transform }} className={"game-chip color-" + player.color}></div>
                 );
             })}
+            <Dice dice={dice}/>
         </section>
     );
 }
