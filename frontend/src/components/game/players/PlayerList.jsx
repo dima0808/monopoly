@@ -3,33 +3,10 @@ import Player from "./Player";
 import "./styles.css";
 import Cookies from "js-cookie";
 import {useNavigate} from "react-router-dom";
-import {
-    handleDeleteRoom,
-    handleKickMember,
-    handleLeaveRoom,
-    isUserLeaderCookies,
-} from "../../../utils/lobby";
+import {handleDeleteRoom, handleKickMember, handleLeaveRoom, isUserLeaderCookies} from "../../../utils/lobby";
 
-const colors = [
-    "red",
-    "blue",
-    "green",
-    "yellow",
-    "turquoise",
-    "orange",
-    "pink",
-    "violet",
-];
-const civs = [
-    "Random",
-    "Colombia",
-    "Egypt",
-    "Germany",
-    "Japan",
-    "Korea",
-    "Rome",
-    "Sweden",
-];
+const colors = ["red", "blue", "green", "yellow", "turquoise", "orange", "pink", "violet",];
+const civs = ["Random", "Colombia", "Egypt", "Germany", "Japan", "Korea", "Rome", "Sweden",];
 
 export default function PlayerList({
                                        client,

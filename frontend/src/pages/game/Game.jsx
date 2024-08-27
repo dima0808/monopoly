@@ -30,7 +30,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 setRoom((prevRoom) => {
                     return {
                         ...prevRoom,
-                        isStarted: room.isStarted,
+                        isStarted: true,
                         currentTurn: room.currentTurn
                     };
                 });
@@ -48,6 +48,19 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                     });
                 });
                 setDice({firstRoll: firstRoll, secondRoll: secondRoll});
+                return;
+            case 'END_TURN':
+                setRoom((prevRoom) => {
+                    return {
+                        ...prevRoom,
+                        currentTurn: room.currentTurn
+                    };
+                });
+                setPlayers((prevPlayers) => {
+                    return prevPlayers.map(player => {
+                        return player.user.username === room.currentTurn ? {...player, rolledDice: false} : player;
+                    });
+                });
                 return;
             default:
                 return;
@@ -138,7 +151,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                        setSelectedUser={setSelectedUser} setIsPrivateChatOpen={setIsPrivateChatOpen}
                        setNotifications={setNotifications}/>
                 <Actions client={client}
-                         room={room}
+                         room={room} players={players}
                          setNotifications={setNotifications}/>
             </>}
         </div>

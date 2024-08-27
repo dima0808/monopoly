@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import './styles.css';
 
 export default function Dice({ dice }) {
+    const [showDice, setShowDice] = useState(false);
 
     function toggleClasses(die) {
         die.classList.toggle("odd-roll");
@@ -11,16 +12,29 @@ export default function Dice({ dice }) {
     useEffect(() => {
         if (dice.firstRoll !== null && dice.secondRoll !== null) {
             const diceElements = [...document.querySelectorAll(".die-list")];
-            diceElements.forEach((dieElement) => {
-                toggleClasses(dieElement);
-            });
-            diceElements[0].dataset.roll = dice.firstRoll;
-            diceElements[1].dataset.roll = dice.secondRoll;
+            const diceContainer = document.querySelector(".dice-container");
+            setShowDice(true);
+
+            setTimeout(() => {
+                diceElements.forEach((dieElement) => {
+                    toggleClasses(dieElement);
+                });
+                diceElements[0].dataset.roll = dice.firstRoll;
+                diceElements[1].dataset.roll = dice.secondRoll;
+                diceContainer.classList.add("dice-roll");
+            }, 100);
+
+            const timer = setTimeout(() => {
+                setShowDice(false);
+                diceContainer.classList.remove("dice-roll");
+            }, 3000);
+
+            return () => clearTimeout(timer);
         }
     }, [dice]);
 
     return (
-        <div className="dice-container">
+        <div className={`dice-container${showDice ? '' : ' none'}`}>
             <div className="dice">
                 <ol className="die-list even-roll" data-roll="1" id="die-1">
                     <li className="die-item" data-side="1">

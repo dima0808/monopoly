@@ -6,9 +6,15 @@
 
 .dice-container {
     position: absolute;
+    top: 0;
+    left: 0;
+    transition: all 1.2s ease-in-out;
+    transform: translate(-50%, -50%);
+}
+
+.dice-roll {
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
 }
 
 .dice {
