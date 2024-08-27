@@ -30,7 +30,8 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 setRoom((prevRoom) => {
                     return {
                         ...prevRoom,
-                        isStarted: room.isStarted
+                        isStarted: room.isStarted,
+                        currentTurn: room.currentTurn
                     };
                 });
                 setPlayers((prevPlayers) => {
@@ -117,7 +118,8 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                     id: roomData.id,
                     name: roomData.name,
                     size: roomData.size,
-                    isStarted: roomData.isStarted
+                    isStarted: roomData.isStarted,
+                    currentTurn: roomData.currentTurn,
                 });
                 setPlayers(roomData.members);
             })

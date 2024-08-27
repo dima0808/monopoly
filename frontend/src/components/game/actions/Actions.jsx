@@ -57,7 +57,7 @@ export default function Actions({ room, dice, client, setNotifications }) {
 
     return (
         <section className="actions">
-            {room.isStarted && <button onClick={handleRollDice}>roll</button>}
+            {(room.isStarted && room.currentTurn === Cookies.get("username")) && <button onClick={handleRollDice}>roll</button>}
             {diceTimestamp && (
                 <div>
                     Dice: {dice.firstRoll} {dice.secondRoll}

@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -202,15 +203,21 @@ public class RoomServiceImpl implements RoomService {
         }
         Room room = findByName(roomName);
         room.setIsStarted(true);
+
+        List<Member> members = room.getMembers();
+        Random random = new Random();
+        Member randomMember = members.get(random.nextInt(members.size()));
+        room.setCurrentTurn(randomMember.getUser().getUsername());
+
         List<Civilization> allCivilizations = Arrays.asList(Civilization.values());
-        List<Civilization> chosenCivilizations = room.getMembers().stream()
+        List<Civilization> chosenCivilizations = members.stream()
                 .map(Member::getCivilization)
                 .filter(civ -> civ != Civilization.Random)
                 .toList();
         List<Civilization> availableCivilizations = new ArrayList<>(allCivilizations.stream()
                 .filter(civ -> !chosenCivilizations.contains(civ))
                 .toList());
-        for (Member member : room.getMembers()) {
+        for (Member member : members) {
             member.setGold(initGold);
             member.setStrength(initStrength);
             member.setTourism(0);
