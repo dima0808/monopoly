@@ -1,4 +1,123 @@
 .actions {
   height: 720px;
-  background-color: orange;
+  /* background-color: #dac7a3; */
+  background-color: #d6bd9d;
+  border-radius: 9px;
+  overflow: hidden;
+}
+.static-choises {
+  border-radius: 8px;
+  height: 150px;
+  margin: 10px;
+  background-color: #f8f4e2;
+  padding: 4px;
+}
+.value {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  color: #271d37;
+}
+.value h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+.actions .player-stat-gold,
+.actions .player-stat-strength {
+  width: 73px;
+  height: 20px;
+  margin-left: 2px;
+}
+/* .top-flex{
+
+} */
+.satings-btn {
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  background-color: #dac7a3;
+  border: none;
+  border-radius: 4px;
+  color: #ede1c9;
+}
+.military-economic {
+  margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+  list-style-type: none;
+}
+.military-economic .player-stat-gold,
+.military-economic .player-stat-strength {
+  width: 63px;
+  height: 20px;
+  margin-left: 0;
+  border-radius: 0;
+}
+/* .military-economic .player-stat-gold {
+  border-radius: 0 0 4px 4px;
+}
+.military-economic .player-stat-strength {
+  border-radius: 4px 4px 0 0;
+} */
+.li-army-gold {
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  /*transition: all 0.3s ease-in-out;*/
+}
+
+.selected-military {
+  outline: 3px solid #db4b0d;
+}
+.military-economic-h2 {
+  margin-top: 6px;
+  color: #271d37;
+  font-size: 18px;
+  font-weight: 600;
+}
+.management-btns {
+  margin-top: 10px;
+}
+.management-btn {
+  cursor: pointer;
+  background-color: #3c220a;
+  color: #ede1c9;
+  font-size: 18px;
+  border: none;
+  border-radius: 6px;
+  min-width: 120px;
+  padding: 2px;
+  transition: all 0.3s ease-in-out;
+}
+.management-btn:hover {
+  background-color: #5e3815;
+}
+.management-btn:active {
+  background-color: #7d4f24;
+}
+.not-static-choises-checkbox {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.not-static-btn {
+  cursor: pointer;
+  background-color: #bca68a;
+  height: 30px;
+  font-size: 18px;
+  border: none;
+  border-radius: 6px 6px 0 0;
+}
+.selected-static-btn {
+  background-color: #dac6ac;
+}
+.chousen-div {
+  height: 520px;
+  background-color: #dac6ac;
+  padding: 10px;
+}
+.chousen-div-white {
+  background-color: #f8f4e2;
+  height: 500px;
+  width: 100%;
+  border-radius: 8px;
 }

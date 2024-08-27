@@ -27,7 +27,7 @@ export default function Dice({ dice }) {
             const timer = setTimeout(() => {
                 setShowDice(false);
                 diceContainer.classList.remove("dice-roll");
-            }, 3000);
+            }, 3500);
 
             return () => clearTimeout(timer);
         }

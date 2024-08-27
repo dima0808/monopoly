@@ -175,6 +175,7 @@
   left: -8%;
   width: 60px;
   height: 60px;
+  z-index: 100;
 }
 .btns-player {
   display: flex;
@@ -274,7 +275,6 @@
   margin-top: 1px;
   top: 100%;
   left: 3px;
-  display: flex;
   flex-wrap: wrap;
   background: white;
   z-index: 1;
@@ -384,4 +384,33 @@
   height: 100px;
   width: 100%;
   margin-bottom: 2px;
+}
+
+.timer-roll-dice {
+  position: absolute;
+  top: 9px;
+  left: 5px;
+  width: 70px;
+  height: 70px;
+}
+
+.timer-roll-dice circle {
+  fill: none;
+  stroke-width: 3;
+  stroke-dasharray: 189; /* Довжина кола */
+  stroke-dashoffset: 0;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  animation: timer-roll-dice 5s linear forwards;
+}
+
+@keyframes timer-roll-dice {
+  from {
+    stroke: rgb(47, 255, 0);
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke: rgb(179, 144, 0);
+    stroke-dashoffset: -189;
+  }
 }

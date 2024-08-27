@@ -129,17 +129,14 @@ export default function PlayerList({
                         onCivChange={handleChangeCivilization}
                         onColorChange={handleChangeColor}
                         onKick={() =>
-                            handleKickMember(
-                                room.name,
-                                player.user.username,
-                                client,
-                                setNotifications
-                            )
+                            handleKickMember(room.name, player.user.username, client, setNotifications)
                         }
                         showKickButton={isUserLeaderCookies(players) && !player.isLeader}
                         isStarted={room.isStarted}
                         availableColors={getAvailableColors()}
                         availableCivs={getAvailableCivs()}
+                        isCurrentUserTurn={room.currentTurn === player.user.username}
+                        hasRolledDice={player.rolledDice}
                     />
                 ))}
 

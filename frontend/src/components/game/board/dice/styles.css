@@ -21,11 +21,14 @@
     align-items: center;
     display: grid;
     grid-gap: 1px;
-    grid-template-columns: repeat(2, minmax(8rem, 1fr));
-    grid-template-rows: auto;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     justify-items: center;
     padding: 2rem;
     perspective: 600px;
+    width: 100%;
+    height: 100%;
+    position: relative;
 }
 .die-list {
     display: grid;
@@ -35,20 +38,6 @@
     list-style-type: none;
     transform-style: preserve-3d;
     width: 6rem;
-}
-
-.dice {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-.die-list {
-    width: 6rem;
-    height: 6rem;
 }
 
 #die-1 {
@@ -215,9 +204,3 @@
 [data-side="6"] .dot:nth-of-type(6) {
     grid-area: nine;
 }
-
-/* @media (min-width: 900px) {
-  .dice {
-    perspective: 1300px;
-  }
-} */
