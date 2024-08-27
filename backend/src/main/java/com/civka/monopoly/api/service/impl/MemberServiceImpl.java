@@ -4,7 +4,6 @@ import com.civka.monopoly.api.dto.ChatMessageDto;
 import com.civka.monopoly.api.entity.Chat;
 import com.civka.monopoly.api.entity.ChatMessage;
 import com.civka.monopoly.api.entity.Member;
-import com.civka.monopoly.api.entity.Room;
 import com.civka.monopoly.api.payload.DiceMessage;
 import com.civka.monopoly.api.payload.PlayerMessage;
 import com.civka.monopoly.api.repository.MemberRepository;
@@ -18,7 +17,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +45,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public DiceMessage rollDice(Member member) {
-        if (!member.getRoom().getCurrentTurn().equals(member.getUser().getUsername())) {
+        if (!member.getRoom().getCurrentTurn().equals(member.getUser().getUsername()) || member.getRolledDice()) {
             throw new UserNotAllowedException();
         }
         int firstRoll = (int) (Math.random() * 6) + 1;
@@ -57,9 +55,9 @@ public class MemberServiceImpl implements MemberService {
             newPosition -= 48;
         }
         member.setPosition(newPosition);
+        member.setRolledDice(true);
         Member updatedMember = memberRepository.save(member);
 
-        Room room = updatedMember.getRoom();
         Chat roomChat = chatService.findByName(updatedMember.getRoom().getName());
         ChatMessageDto systemMessage = ChatMessageDto.builder()
                 .type(ChatMessage.MessageType.SYSTEM_ROLL_DICE)
@@ -68,12 +66,6 @@ public class MemberServiceImpl implements MemberService {
                 .build();
         ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
         messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
-
-        List<Member> members = room.getMembers();
-        int currentIndex = members.indexOf(updatedMember);
-        int nextIndex = (currentIndex + 1) % members.size();
-        room.setCurrentTurn(members.get(nextIndex).getUser().getUsername());
-        roomRepository.save(room);
 
         return DiceMessage.builder()
                 .type(PlayerMessage.MessageType.ROLL_DICE)

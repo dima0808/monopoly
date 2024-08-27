@@ -35,4 +35,5 @@ public class Member {
     private Integer score;
 
     private Integer position;
+    private Boolean rolledDice;
 }

@@ -70,6 +70,17 @@ public class LobbyController {
         return memberService.rollDice(member);
     }
 
+    @MessageMapping("/rooms/{roomName}/endTurn")
+    @SendTo("/topic/public/{roomName}/game")
+    public RoomMessage endTurn(@Header("username") String username) {
+        Member member = userService.findByUsername(username).getMember();
+        return RoomMessage.builder()
+                .type(RoomMessage.MessageType.END_TURN)
+                .content("Game started")
+                .room(roomService.endTurn(member))
+                .build();
+    }
+
     @GetMapping("/api/rooms/{roomName}/members")
     public ResponseEntity<List<Member>> getMembers(@PathVariable String roomName) {
         return ResponseEntity.ok(roomService.findByName(roomName).getMembers());

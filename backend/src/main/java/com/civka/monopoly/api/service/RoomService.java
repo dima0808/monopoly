@@ -1,6 +1,7 @@
 package com.civka.monopoly.api.service;
 
 import com.civka.monopoly.api.dto.RoomDto;
+import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.entity.Room;
 
 import java.util.List;
@@ -28,4 +29,6 @@ public interface RoomService {
     void handlePassword(String roomName, String password);
 
     Room startGame(String roomName, String username);
+
+    Room endTurn(Member member);
 }

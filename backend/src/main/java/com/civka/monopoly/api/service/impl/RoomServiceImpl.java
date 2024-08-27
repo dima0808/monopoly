@@ -205,10 +205,6 @@ public class RoomServiceImpl implements RoomService {
         room.setIsStarted(true);
 
         List<Member> members = room.getMembers();
-        Random random = new Random();
-        Member randomMember = members.get(random.nextInt(members.size()));
-        room.setCurrentTurn(randomMember.getUser().getUsername());
-
         List<Civilization> allCivilizations = Arrays.asList(Civilization.values());
         List<Civilization> chosenCivilizations = members.stream()
                 .map(Member::getCivilization)
@@ -222,12 +218,35 @@ public class RoomServiceImpl implements RoomService {
             member.setStrength(initStrength);
             member.setTourism(0);
             member.setScore(0);
+            member.setRolledDice(true);
             if (member.getCivilization() == Civilization.Random) {
                 Civilization randomCivilization = availableCivilizations.remove((int) (Math.random() * availableCivilizations.size()));
                 member.setCivilization(randomCivilization);
             }
             memberService.save(member);
         }
+
+        Random random = new Random();
+        Member randomMember = members.get(random.nextInt(members.size()));
+        randomMember.setRolledDice(false);
+        room.setCurrentTurn(randomMember.getUser().getUsername());
+        memberService.save(randomMember);
+        return roomRepository.save(room);
+    }
+
+    @Override
+    public Room endTurn(Member member) {
+        if (!member.getRoom().getCurrentTurn().equals(member.getUser().getUsername()) || !member.getRolledDice()) {
+            throw new UserNotAllowedException();
+        }
+        Room room = member.getRoom();
+        List<Member> members = room.getMembers();
+        int currentIndex = members.indexOf(member);
+        int nextIndex = (currentIndex + 1) % members.size();
+        Member nextMember = members.get(nextIndex);
+        nextMember.setRolledDice(false);
+        room.setCurrentTurn(nextMember.getUser().getUsername());
+        memberService.save(nextMember);
         return roomRepository.save(room);
     }
 }
