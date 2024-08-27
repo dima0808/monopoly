@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './styles.css';
 import Cookies from "js-cookie";
 
-export default function Actions({ room, players, dice, client, isConnected, setNotifications }) {
+export default function Actions({ room, dice, client, setNotifications }) {
     const [diceTimestamp, setDiceTimestamp] = useState(null);
 
     const handleRollDice = () => {
@@ -57,7 +57,7 @@ export default function Actions({ room, players, dice, client, isConnected, setN
 
     return (
         <section className="actions">
-            <button onClick={handleRollDice}>roll</button>
+            {room.isStarted && <button onClick={handleRollDice}>roll</button>}
             {diceTimestamp && (
                 <div>
                     Dice: {dice.firstRoll} {dice.secondRoll}

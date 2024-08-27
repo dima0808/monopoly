@@ -124,22 +124,36 @@ export default function Board({
 
     function calculatePosition(position) {
         if (position === 0) {
-            return { topValue: 42, leftValue: 42 };
+            return { topValue: 42, leftValue: 42, position: "vertical" };
         } else if (position < 13) {
-            return { topValue: 42, leftValue: 122 + 50 * (position - 1) };
+            return { topValue: 42, leftValue: 122 + 50 * (position - 1), position: "vertical" };
         } else if (position === 13) {
-            return { topValue: 42, leftValue: 752 };
+            return { topValue: 42, leftValue: 752, position: "horizontal" };
         } else if (position < 24) {
-            return { topValue: 122 + 50 * (position - 14), leftValue: 752 };
+            return { topValue: 122 + 50 * (position - 14), leftValue: 752, position: "horizontal" };
         } else if (position === 24) {
-            return { topValue: 652, leftValue: 752 };
+            return { topValue: 652, leftValue: 752, position: "vertical" };
         } else if (position < 37) {
-            return { topValue: 652, leftValue: 672 - 50 * (position - 25) };
+            return { topValue: 652, leftValue: 672 - 50 * (position - 25), position: "vertical" };
         } else if (position === 37) {
-            return { topValue: 652, leftValue: 42 };
+            return { topValue: 652, leftValue: 42, position: "horizontal" };
         } else {
-            return { topValue: 572 - 50 * (position - 38), leftValue: 42 };
+            return { topValue: 572 - 50 * (position - 38), leftValue: 42, position: "horizontal" };
         }
+    }
+
+    function getTransform(index, total, position) {
+        const transforms = {
+            1: [[-10, -16]],
+            2: [[-12, -22], [12, 20]],
+            3: [[12, -20], [-12, 0], [12, 20]],
+            4: [[-12, -22], [12, -10], [-12, 10], [12, 20]],
+            5: [[-10, -24], [12, -12], [-16, 0], [12, 12], [-12, 24]],
+            6: [[-12, -24], [12, -24], [-16, 0], [16, 0], [-12, 24], [12, 24]]
+        };
+
+        const [x, y] = transforms[total][index];
+        return position === "vertical" ? `translate(${x}px, ${y}px)` : `translate(${y}px, ${x}px)`;
     }
 
     return (
@@ -412,9 +426,11 @@ export default function Board({
                 position="right-down"
             />
             {players.map((player, index) => {
-                const { topValue, leftValue } = calculatePosition(player.position);
+                const { topValue, leftValue, position } = calculatePosition(player.position);
+                const samePositionPlayers = players.filter(p => p.position === player.position);
+                const transform = getTransform(samePositionPlayers.indexOf(player), samePositionPlayers.length, position);
                 return (
-                    <div key={index} style={{ top: `${topValue}px`, left: `${leftValue}px` }} className={"game-chip color-" + player.color}></div>
+                    <div key={index} style={{ top: `${topValue}px`, left: `${leftValue}px`, transform }} className={"game-chip color-" + player.color}></div>
                 );
             })}
         </section>
