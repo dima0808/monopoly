@@ -27,6 +27,13 @@ public class Member {
     private Boolean isLeader;
 
     private Civilization civilization;
-
     private Color color;
+
+    private Integer gold;
+    private Integer strength;
+    private Integer tourism;
+    private Integer score;
+
+    private Integer position;
+    private Boolean rolledDice;
 }

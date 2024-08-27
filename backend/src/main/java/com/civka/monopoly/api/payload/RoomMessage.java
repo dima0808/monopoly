@@ -22,6 +22,8 @@ public class RoomMessage {
         LEAVE,
         KICK,
         DELETE,
-        START
+        START,
+        END_TURN,
+
     }
 }

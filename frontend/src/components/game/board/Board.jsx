@@ -48,6 +48,7 @@ import wonderTempleOfArtemisImg from "../../../images/wonder_temple_of_artemis.p
 import wonderTerracottaArmyImg from "../../../images/wonder_terracotta_army.png";
 
 import Chat from "./chat/Chat";
+import Dice from "./dice/Dice";
 
 function EdgeCell({src, alt, position}) {
     const positionClass = `edge__img-${position}`;
@@ -62,7 +63,14 @@ function EdgeCell({src, alt, position}) {
     );
 }
 
-function Cell({src, alt, position, mirror = false, noneUpgrades = false, specialType}) {
+function Cell({
+                  src,
+                  alt,
+                  position,
+                  mirror = false,
+                  noneUpgrades = false,
+                  specialType,
+              }) {
     const baseClass = `object-${position}`;
     const priceClass = specialType
         ? `${baseClass}__price ${baseClass}__price-${specialType}`
@@ -71,7 +79,7 @@ function Cell({src, alt, position, mirror = false, noneUpgrades = false, special
         ? `${baseClass}__cell ${baseClass}__cell-none-upgrades`
         : `${baseClass}__cell`;
     return (
-        <div className={`${baseClass} ${mirror && "mirror"} border`}>
+        <div className={` ${baseClass} ${mirror && "mirror"} border`}>
             <div className={priceClass}></div>
             <div className={cellClass}>
                 <img src={src} alt={alt} className="cell-img"/>
@@ -105,7 +113,51 @@ function GoodyHutCell() {
     );
 }
 
-export default function Board({room, client, isConnected, setNotifications, setSelectedUser, setIsPrivateChatOpen}) {
+export default function Board({
+                                  room,
+                                  players,
+                                  dice,
+                                  client,
+                                  isConnected,
+                                  setNotifications,
+                                  setSelectedUser,
+                                  setIsPrivateChatOpen,
+                              }) {
+
+    function calculatePosition(position) {
+        if (position === 0) {
+            return { topValue: 42, leftValue: 42, position: "vertical" };
+        } else if (position < 13) {
+            return { topValue: 42, leftValue: 122 + 50 * (position - 1), position: "vertical" };
+        } else if (position === 13) {
+            return { topValue: 42, leftValue: 752, position: "horizontal" };
+        } else if (position < 24) {
+            return { topValue: 122 + 50 * (position - 14), leftValue: 752, position: "horizontal" };
+        } else if (position === 24) {
+            return { topValue: 652, leftValue: 752, position: "vertical" };
+        } else if (position < 37) {
+            return { topValue: 652, leftValue: 672 - 50 * (position - 25), position: "vertical" };
+        } else if (position === 37) {
+            return { topValue: 652, leftValue: 42, position: "horizontal" };
+        } else {
+            return { topValue: 572 - 50 * (position - 38), leftValue: 42, position: "horizontal" };
+        }
+    }
+
+    function getTransform(index, total, position) {
+        const transforms = {
+            1: [[-10, -16]],
+            2: [[-12, -22], [12, 20]],
+            3: [[12, -20], [-12, 0], [12, 20]],
+            4: [[-12, -22], [12, -10], [-12, 10], [12, 20]],
+            5: [[-10, -24], [12, -12], [-16, 0], [12, 12], [-12, 24]],
+            6: [[-12, -24], [12, -24], [-16, 0], [16, 0], [-12, 24], [12, 24]]
+        };
+
+        const [x, y] = transforms[total][index];
+        return position === "vertical" ? `translate(${x}px, ${y}px)` : `translate(${y}px, ${x}px)`;
+    }
+
     return (
         <section className="board">
             <EdgeCell src={startImg} alt="start" position="left-up"/>
@@ -210,8 +262,14 @@ export default function Board({room, client, isConnected, setNotifications, setS
                 />
             </div>
 
-            <Chat roomName={room.name} client={client} isConnected={isConnected} setNotifications={setNotifications}
-                  setSelectedUser={setSelectedUser} setIsPrivateChatOpen={setIsPrivateChatOpen}/>
+            <Chat
+                roomName={room.name}
+                client={client}
+                isConnected={isConnected}
+                setNotifications={setNotifications}
+                setSelectedUser={setSelectedUser}
+                setIsPrivateChatOpen={setIsPrivateChatOpen}
+            />
 
             <div className="board__element board__element-side board__element-side-horizontal right">
                 <Cell
@@ -364,7 +422,20 @@ export default function Board({room, client, isConnected, setNotifications, setS
                 />
             </div>
 
-            <EdgeCell src={bermudaTriangleImg} alt="bermuda triangle" position="right-down"/>
+            <EdgeCell
+                src={bermudaTriangleImg}
+                alt="bermuda triangle"
+                position="right-down"
+            />
+            {players.map((player, index) => {
+                const { topValue, leftValue, position } = calculatePosition(player.position);
+                const samePositionPlayers = players.filter(p => p.position === player.position);
+                const transform = getTransform(samePositionPlayers.indexOf(player), samePositionPlayers.length, position);
+                return (
+                    <div key={index} style={{ top: `${topValue}px`, left: `${leftValue}px`, transform }} className={"game-chip color-" + player.color}></div>
+                );
+            })}
+            <Dice dice={dice}/>
         </section>
     );
 }

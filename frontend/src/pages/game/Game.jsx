@@ -20,22 +20,45 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
 
     const [room, setRoom] = useState({});
     const [players, setPlayers] = useState([]);
+    const [dice, setDice] = useState({ firstRoll : null, secondRoll : null });
 
     const onGameMessageReceived = (message) => {
-        const {type, content, room} = JSON.parse(message.body);
+        const {type, content, room, member, firstRoll, secondRoll} = JSON.parse(message.body);
         console.log(content);
         switch (type) {
             case 'START':
                 setRoom((prevRoom) => {
                     return {
                         ...prevRoom,
-                        isStarted: room.isStarted
+                        isStarted: true,
+                        currentTurn: room.currentTurn
                     };
                 });
                 setPlayers((prevPlayers) => {
                     return prevPlayers.map(player => {
                         return player.civilization = "Random" ?
                             room.members.find(member => member.id === player.id) : player;
+                    });
+                });
+                return;
+            case 'ROLL_DICE':
+                setPlayers((prevPlayers) => {
+                    return prevPlayers.map(player => {
+                        return player.id === member.id ? member : player;
+                    });
+                });
+                setDice({firstRoll: firstRoll, secondRoll: secondRoll});
+                return;
+            case 'END_TURN':
+                setRoom((prevRoom) => {
+                    return {
+                        ...prevRoom,
+                        currentTurn: room.currentTurn
+                    };
+                });
+                setPlayers((prevPlayers) => {
+                    return prevPlayers.map(player => {
+                        return player.user.username === room.currentTurn ? {...player, rolledDice: false} : player;
                     });
                 });
                 return;
@@ -108,7 +131,8 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                     id: roomData.id,
                     name: roomData.name,
                     size: roomData.size,
-                    isStarted: roomData.isStarted
+                    isStarted: roomData.isStarted,
+                    currentTurn: roomData.currentTurn,
                 });
                 setPlayers(roomData.members);
             })
@@ -122,10 +146,13 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                             room={room} onStartGame={handleStartGame}
                             players={players} setPlayers={setPlayers}
                             setNotifications={setNotifications}/>
-                <Board room={room} client={client} isConnected={isConnected}
+                <Board room={room} players={players} dice={dice}
+                       client={client} isConnected={isConnected}
                        setSelectedUser={setSelectedUser} setIsPrivateChatOpen={setIsPrivateChatOpen}
                        setNotifications={setNotifications}/>
-                <Actions/>
+                <Actions client={client}
+                         room={room} players={players}
+                         setNotifications={setNotifications}/>
             </>}
         </div>
     );

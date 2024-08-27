@@ -56,7 +56,7 @@
 .chat-zone-monopoly-div:not(:last-child) {
     margin-bottom: 3px;
 }
-.nikname-span {
+.nickname-span {
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
@@ -69,10 +69,10 @@
     margin-right: 3px;
     transition: 0.3s ease;
 }
-.nikname-span:hover {
+.nickname-span:hover {
     background-color: #9f8bbc;
 }
-.nikname-span:active {
+.nickname-span:active {
     background-color: #bdadd4;
 }
 .chat-zone-monopoly-time {

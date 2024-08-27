@@ -413,7 +413,6 @@ input:checked + .slider:before {
   background-color: #d1b5e8;
   border: none;
   border-radius: 6px;
-  transition: all 0.15s ease-in;
   font-family: "Ubuntu", sans-serif;
   transition: all 0.3s ease;
 }
@@ -464,8 +463,8 @@ input:checked + .slider:before {
   display: block; /* Видалити пробіли навколо зображення */
   object-fit: cover; /* Масштабування зображення, щоб воно повністю покрило кнопку */
   pointer-events: none; /* Вимкнення подій миші для зображення */
-  user-drag: none; /* Заборона перетягування зображення в браузері */
   -webkit-user-drag: none; /* Заборона перетягування для WebKit-браузерів */
+  user-drag: none; /* Firefox */
   transition: all 0.2s ease-in;
 }
 .lobby__header {
@@ -479,7 +478,7 @@ input:checked + .slider:before {
 
 /* Ефект при наведенні */
 .view-img-btn:hover {
-  box-shadow: 0 0 5px 0px rgba(39, 29, 55, 0.5);
+  box-shadow: 0 0 5px 0 rgba(39, 29, 55, 0.5);
 }
 
 /* Ефект при натисканні */
@@ -501,7 +500,6 @@ input:checked + .slider:before {
 .in-game-p {
   margin: 2px 10px 0 0;
   font-size: 22px;
-  color: #271d37;
   color: #77617f;
   font-weight: 500;
 }

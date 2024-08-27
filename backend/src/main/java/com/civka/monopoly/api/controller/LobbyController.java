@@ -3,6 +3,7 @@ package com.civka.monopoly.api.controller;
 import com.civka.monopoly.api.entity.Civilization;
 import com.civka.monopoly.api.entity.Color;
 import com.civka.monopoly.api.entity.Member;
+import com.civka.monopoly.api.payload.DiceMessage;
 import com.civka.monopoly.api.payload.PlayerMessage;
 import com.civka.monopoly.api.payload.RoomMessage;
 import com.civka.monopoly.api.service.MemberService;
@@ -59,6 +60,24 @@ public class LobbyController {
                 .type(RoomMessage.MessageType.START)
                 .content("Game started")
                 .room(roomService.startGame(roomName, username))
+                .build();
+    }
+
+    @MessageMapping("/rooms/{roomName}/rollDice")
+    @SendTo("/topic/public/{roomName}/game")
+    public DiceMessage rollDice(@Header("username") String username) {
+        Member member = userService.findByUsername(username).getMember();
+        return memberService.rollDice(member);
+    }
+
+    @MessageMapping("/rooms/{roomName}/endTurn")
+    @SendTo("/topic/public/{roomName}/game")
+    public RoomMessage endTurn(@Header("username") String username) {
+        Member member = userService.findByUsername(username).getMember();
+        return RoomMessage.builder()
+                .type(RoomMessage.MessageType.END_TURN)
+                .content("Game started")
+                .room(roomService.endTurn(member))
                 .build();
     }
 

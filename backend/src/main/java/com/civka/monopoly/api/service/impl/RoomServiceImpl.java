@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +24,13 @@ import java.util.List;
 public class RoomServiceImpl implements RoomService {
 
     @Value("${monopoly.app.room.max-size}")
-    private Integer maxSize;
+    private Integer maxRoomSize;
+
+    @Value("${monopoly.app.room.game.init-gold}")
+    private Integer initGold;
+
+    @Value("${monopoly.app.room.game.init-strength}")
+    private Integer initStrength;
 
     private final RoomRepository roomRepository;
     private final UserService userService;
@@ -37,8 +44,8 @@ public class RoomServiceImpl implements RoomService {
         if (roomRepository.existsByName(roomDto.getName())) {
             throw new RoomAlreadyExistException(roomDto.getName());
         }
-        if (roomDto.getSize() > maxSize || roomDto.getSize() < 2) {
-            throw new IllegalRoomSizeException(roomDto.getSize(), maxSize);
+        if (roomDto.getSize() > maxRoomSize || roomDto.getSize() < 2) {
+            throw new IllegalRoomSizeException(roomDto.getSize(), maxRoomSize);
         }
         User user = userService.findByUsername(username);
         if (user.getMember() != null) {
@@ -116,6 +123,7 @@ public class RoomServiceImpl implements RoomService {
                 .isLeader(members.isEmpty())
                 .civilization(Civilization.Random)
                 .color(availableColor)
+                .position(0)
                 .build();
         member = memberService.save(member);
         members.add(member);
@@ -195,21 +203,50 @@ public class RoomServiceImpl implements RoomService {
         }
         Room room = findByName(roomName);
         room.setIsStarted(true);
+
+        List<Member> members = room.getMembers();
         List<Civilization> allCivilizations = Arrays.asList(Civilization.values());
-        List<Civilization> chosenCivilizations = room.getMembers().stream()
+        List<Civilization> chosenCivilizations = members.stream()
                 .map(Member::getCivilization)
                 .filter(civ -> civ != Civilization.Random)
                 .toList();
         List<Civilization> availableCivilizations = new ArrayList<>(allCivilizations.stream()
                 .filter(civ -> !chosenCivilizations.contains(civ))
                 .toList());
-        for (Member member : room.getMembers()) {
+        for (Member member : members) {
+            member.setGold(initGold);
+            member.setStrength(initStrength);
+            member.setTourism(0);
+            member.setScore(0);
+            member.setRolledDice(true);
             if (member.getCivilization() == Civilization.Random) {
                 Civilization randomCivilization = availableCivilizations.remove((int) (Math.random() * availableCivilizations.size()));
                 member.setCivilization(randomCivilization);
-                memberService.save(member);
             }
+            memberService.save(member);
         }
+
+        Random random = new Random();
+        Member randomMember = members.get(random.nextInt(members.size()));
+        randomMember.setRolledDice(false);
+        room.setCurrentTurn(randomMember.getUser().getUsername());
+        memberService.save(randomMember);
+        return roomRepository.save(room);
+    }
+
+    @Override
+    public Room endTurn(Member member) {
+        if (!member.getRoom().getCurrentTurn().equals(member.getUser().getUsername()) || !member.getRolledDice()) {
+            throw new UserNotAllowedException();
+        }
+        Room room = member.getRoom();
+        List<Member> members = room.getMembers();
+        int currentIndex = members.indexOf(member);
+        int nextIndex = (currentIndex + 1) % members.size();
+        Member nextMember = members.get(nextIndex);
+        nextMember.setRolledDice(false);
+        room.setCurrentTurn(nextMember.getUser().getUsername());
+        memberService.save(nextMember);
         return roomRepository.save(room);
     }
 }

@@ -31,4 +31,6 @@ public class Room {
     private List<Member> members = new ArrayList<>();
 
     private Boolean isStarted;
+
+    private String currentTurn; // username of the member whose turn it is
 }

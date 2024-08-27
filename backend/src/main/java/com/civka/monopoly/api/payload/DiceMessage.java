@@ -10,15 +10,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class PlayerMessage {
+public class DiceMessage {
 
-    private MessageType type;
+    private PlayerMessage.MessageType type;
     private String content;
     private Member member;
-
-    public enum MessageType {
-        CHANGE_COLOR,
-        CHANGE_CIVILIZATION,
-        ROLL_DICE
-    }
+    private Integer firstRoll;
+    private Integer secondRoll;
 }

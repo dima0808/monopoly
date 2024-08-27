@@ -5,6 +5,7 @@ import React, {useEffect, useRef, useState} from "react";
 import Cookies from "js-cookie";
 import {getAllMessages} from "../../../../utils/http";
 import {handleInputChange, handleKeyDown} from "../../../../utils/chat";
+import SystemMessage from "./SystemMessage";
 
 export default function Chat({roomName, client, isConnected, setNotifications, setSelectedUser, setIsPrivateChatOpen}) {
     const [messages, setMessages] = useState([]);
@@ -15,12 +16,13 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
 
     function onLobbyChatMessageReceived(message) {
         const parsedMessage = JSON.parse(message.body);
-        const {id, sender, content, timestamp, receiver} = parsedMessage;
+        const {id, type, sender, content, timestamp, receiver} = parsedMessage;
         setMessages((prevMessages) => {
             const newMessages = [
                 ...prevMessages,
                 {
                     id: id,
+                    type: type,
                     sender: sender,
                     content: content,
                     timestamp: timestamp,
@@ -140,20 +142,44 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
             <div className="chat-monopoly">
                 <div className="chat-zone-monopoly scroll" ref={chatContainerRef}>
                     {!error &&
-                        messages.map((message, index) => (
-                            <Message key={index} nickname={message.sender.nickname} timestamp={message.timestamp}
-                                     setSelectedUser={() => {
-                                         if (Cookies.get("nickname") === message.sender.nickname) {
-                                             setSelectedUser(null);
-                                             setIsPrivateChatOpen(true);
-                                         } else {
-                                             setSelectedUser(message.sender);
-                                             setIsPrivateChatOpen(true);
-                                         }
-                                     }}>
-                                {message.content}
-                            </Message>
-                        ))}
+                        messages.map((message, index) => {
+                            if (message.type) {
+                                switch (message.type) {
+                                    case 'SYSTEM_ROLL_DICE':
+                                        const data = message.content.split(" ");
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                кинув кубики <span className="system-tile-span">{data[1]}</span>
+                                                та <span className="system-tile-span">{data[2]}</span>
+                                            </SystemMessage>
+                                        );
+                                    default:
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                {message.content}
+                                            </SystemMessage>
+                                        );
+                                }
+                            } else {
+                                return (
+                                    <Message key={index} nickname={message.sender.nickname}
+                                             timestamp={message.timestamp}
+                                             setSelectedUser={() => {
+                                                 if (Cookies.get("nickname") === message.sender.nickname) {
+                                                     setSelectedUser(null);
+                                                     setIsPrivateChatOpen(true);
+                                                 } else {
+                                                     setSelectedUser(message.sender);
+                                                     setIsPrivateChatOpen(true);
+                                                 }
+                                             }}>
+                                        {message.content}
+                                    </Message>
+                                );
+                            }
+                        })
+                    }
                     {error && <p>{error.message}</p>}
                 </div>
                 <div className="monopoly-flex-between">

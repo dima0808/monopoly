@@ -113,8 +113,7 @@
   height: 400px;
   background-color: #271d37;
   border: 1px solid #271d37;
-  border-radius: 10px;
-  border-bottom-right-radius: 0;
+  border-radius: 10px 10px 0 10px;
 
   position: fixed;
   bottom: 0;
@@ -124,13 +123,13 @@
   z-index: 1001; /* Ensure the dialog is above the blurred background */
 }
 .user-contacts,
-.choosen-user {
+.chosen-user {
   background-color: #f1e4fb;
 }
 .user-contacts {
   width: 180px;
 }
-.choosen-user {
+.chosen-user {
   width: 100%;
 }
 .user-and-close .dialog-close {
@@ -188,10 +187,7 @@
   float: left;
   clear: both;
   background-color: #f0deff;
-  border-top-left-radius: 16px;
-  border-bottom-left-radius: 16px;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
+  border-radius: 16px 20px 20px 16px;
 }
 .first .your {
   border-top-right-radius: 25px;
@@ -210,7 +206,7 @@
   height: 20px;
   background-color: #d1b5e8;
 
-  border-radius: 0% 25% 0% 100% / 0% 50% 0% 70%;
+  border-radius: 0 25% 0 100% / 0 50% 0 70%;
   transition: 0.2s easy-out;
   z-index: -1;
 }
@@ -225,7 +221,7 @@
   background-color: #f0deff;
   z-index: -1;
 
-  border-radius: 25% 0% 100% 0% / 50% 0% 70% 0%;
+  border-radius: 25% 0 100% 0 / 50% 0 70% 0;
   transition: 0.2s easy-out;
 }
 
@@ -270,7 +266,6 @@
   /* transform: translateY(100%); */
   position: absolute;
   background-color: #f9f3fd;
-  border: 1px solid #ccc;
   left: 0;
   top: calc(100% + 1px);
   padding: 4px 5px 4px 4px;
@@ -346,7 +341,7 @@
   overflow: hidden; /* Сховає переповнений текст */
   text-overflow: ellipsis; /* Відобразить "..." в кінці */
 }
-.your-contact-neekname {
+.your-contact-nickname {
   width: 100%;
   font-weight: 400;
   font-size: 22px;
