@@ -30,10 +30,41 @@ public class Member {
     private Color color;
 
     private Integer gold;
+    private Integer goldPerTurn;
     private Integer strength;
     private Integer tourism;
     private Integer score;
+    private ArmySpending armySpending;
 
     private Integer position;
-    private Boolean rolledDice;
+    private Boolean hasRolledDice;
+
+    public enum Civilization {
+        Random,
+        Colombia,
+        Egypt,
+        Germany,
+        Japan,
+        Korea,
+        Rome,
+        Sweden,
+    }
+
+    public enum Color {
+        red,
+        blue,
+        green,
+        yellow,
+        turquoise,
+        orange,
+        pink,
+        violet,
+    }
+
+    public enum ArmySpending {
+        Absent,
+        Default,
+        Medium,
+        High,
+    }
 }

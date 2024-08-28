@@ -7,7 +7,6 @@ import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.payload.DiceMessage;
 import com.civka.monopoly.api.payload.PlayerMessage;
 import com.civka.monopoly.api.repository.MemberRepository;
-import com.civka.monopoly.api.repository.RoomRepository;
 import com.civka.monopoly.api.service.ChatMessageService;
 import com.civka.monopoly.api.service.ChatService;
 import com.civka.monopoly.api.service.MemberService;
@@ -26,7 +25,6 @@ public class MemberServiceImpl implements MemberService {
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatService chatService;
     private final ChatMessageService chatMessageService;
-    private final RoomRepository roomRepository;
 
     @Override
     public Member save(Member member) {
@@ -45,7 +43,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public DiceMessage rollDice(Member member) {
-        if (!member.getRoom().getCurrentTurn().equals(member.getUser().getUsername()) || member.getRolledDice()) {
+        if (!member.getRoom().getCurrentTurn().equals(member.getUser().getUsername()) || member.getHasRolledDice()) {
             throw new UserNotAllowedException();
         }
         int firstRoll = (int) (Math.random() * 6) + 1;
@@ -55,7 +53,7 @@ public class MemberServiceImpl implements MemberService {
             newPosition -= 48;
         }
         member.setPosition(newPosition);
-        member.setRolledDice(true);
+        member.setHasRolledDice(true);
         Member updatedMember = memberRepository.save(member);
 
         Chat roomChat = chatService.findByName(updatedMember.getRoom().getName());

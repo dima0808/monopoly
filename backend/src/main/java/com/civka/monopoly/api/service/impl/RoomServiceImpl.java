@@ -109,19 +109,19 @@ public class RoomServiceImpl implements RoomService {
         List<Member> members = room.getMembers();
         if (user.getMember() != null) throw new UserAlreadyJoinedException(username);
         if (members.size() == room.getSize()) throw new RoomFullException(room.getId(), room.getSize());
-        List<Color> allColors = Arrays.asList(Color.values());
-        List<Color> chosenColors = members.stream()
+        List<Member.Color> allColors = Arrays.asList(Member.Color.values());
+        List<Member.Color> chosenColors = members.stream()
                 .map(Member::getColor)
                 .toList();
-        Color availableColor = allColors.stream()
+        Member.Color availableColor = allColors.stream()
                 .filter(civ -> !chosenColors.contains(civ))
                 .findFirst()
-                .orElse(Color.turquoise);
+                .orElse(Member.Color.turquoise);
         Member member = Member.builder()
                 .user(user)
                 .room(room)
                 .isLeader(members.isEmpty())
-                .civilization(Civilization.Random)
+                .civilization(Member.Civilization.Random)
                 .color(availableColor)
                 .position(0)
                 .build();
@@ -205,12 +205,12 @@ public class RoomServiceImpl implements RoomService {
         room.setIsStarted(true);
 
         List<Member> members = room.getMembers();
-        List<Civilization> allCivilizations = Arrays.asList(Civilization.values());
-        List<Civilization> chosenCivilizations = members.stream()
+        List<Member.Civilization> allCivilizations = Arrays.asList(Member.Civilization.values());
+        List<Member.Civilization> chosenCivilizations = members.stream()
                 .map(Member::getCivilization)
-                .filter(civ -> civ != Civilization.Random)
+                .filter(civ -> civ != Member.Civilization.Random)
                 .toList();
-        List<Civilization> availableCivilizations = new ArrayList<>(allCivilizations.stream()
+        List<Member.Civilization> availableCivilizations = new ArrayList<>(allCivilizations.stream()
                 .filter(civ -> !chosenCivilizations.contains(civ))
                 .toList());
         for (Member member : members) {
@@ -218,9 +218,9 @@ public class RoomServiceImpl implements RoomService {
             member.setStrength(initStrength);
             member.setTourism(0);
             member.setScore(0);
-            member.setRolledDice(true);
-            if (member.getCivilization() == Civilization.Random) {
-                Civilization randomCivilization = availableCivilizations.remove((int) (Math.random() * availableCivilizations.size()));
+            member.setHasRolledDice(true);
+            if (member.getCivilization() == Member.Civilization.Random) {
+                Member.Civilization randomCivilization = availableCivilizations.remove((int) (Math.random() * availableCivilizations.size()));
                 member.setCivilization(randomCivilization);
             }
             memberService.save(member);
@@ -228,7 +228,7 @@ public class RoomServiceImpl implements RoomService {
 
         Random random = new Random();
         Member randomMember = members.get(random.nextInt(members.size()));
-        randomMember.setRolledDice(false);
+        randomMember.setHasRolledDice(false);
         room.setCurrentTurn(randomMember.getUser().getUsername());
         memberService.save(randomMember);
         return roomRepository.save(room);
@@ -236,7 +236,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Room endTurn(Member member) {
-        if (!member.getRoom().getCurrentTurn().equals(member.getUser().getUsername()) || !member.getRolledDice()) {
+        if (!member.getRoom().getCurrentTurn().equals(member.getUser().getUsername()) || !member.getHasRolledDice()) {
             throw new UserNotAllowedException();
         }
         Room room = member.getRoom();
@@ -244,7 +244,7 @@ public class RoomServiceImpl implements RoomService {
         int currentIndex = members.indexOf(member);
         int nextIndex = (currentIndex + 1) % members.size();
         Member nextMember = members.get(nextIndex);
-        nextMember.setRolledDice(false);
+        nextMember.setHasRolledDice(false);
         room.setCurrentTurn(nextMember.getUser().getUsername());
         memberService.save(nextMember);
         return roomRepository.save(room);

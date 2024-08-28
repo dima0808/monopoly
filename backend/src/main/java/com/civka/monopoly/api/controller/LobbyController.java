@@ -1,7 +1,5 @@
 package com.civka.monopoly.api.controller;
 
-import com.civka.monopoly.api.entity.Civilization;
-import com.civka.monopoly.api.entity.Color;
 import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.payload.DiceMessage;
 import com.civka.monopoly.api.payload.PlayerMessage;
@@ -28,7 +26,7 @@ public class LobbyController {
 
     @MessageMapping("/rooms/{roomName}/changeCivilization/{civilization}")
     @SendTo("/topic/public/{roomName}/players")
-    public PlayerMessage changeCivilization(@DestinationVariable Civilization civilization,
+    public PlayerMessage changeCivilization(@DestinationVariable Member.Civilization civilization,
                                             @Header("username") String username) {
         Member member = userService.findByUsername(username).getMember();
         member.setCivilization(civilization);
@@ -41,7 +39,7 @@ public class LobbyController {
 
     @MessageMapping("/rooms/{roomName}/changeColor/{color}")
     @SendTo({"/topic/public/{roomName}/players"})
-    public PlayerMessage changeColor(@DestinationVariable Color color,
+    public PlayerMessage changeColor(@DestinationVariable Member.Color color,
                                             @Header("username") String username) {
         Member member = userService.findByUsername(username).getMember();
         member.setColor(color);
