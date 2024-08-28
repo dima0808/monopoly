@@ -58,7 +58,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 });
                 setPlayers((prevPlayers) => {
                     return prevPlayers.map(player => {
-                        return player.user.username === room.currentTurn ? {...player, rolledDice: false} : player;
+                        return player.user.username === room.currentTurn ? {...player, hasRolledDice: false} : player;
                     });
                 });
                 return;

@@ -41,6 +41,7 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
                 .then((messages) => {
                     setMessages(messages);
                     setIsInitialLoad(true);
+                    setError(false);
                 })
                 .catch((error) =>
                     setError({message: error.message || "An error occurred"})

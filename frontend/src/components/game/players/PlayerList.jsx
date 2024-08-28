@@ -136,7 +136,7 @@ export default function PlayerList({
                         availableColors={getAvailableColors()}
                         availableCivs={getAvailableCivs()}
                         isCurrentUserTurn={room.currentTurn === player.user.username}
-                        hasRolledDice={player.rolledDice}
+                        hasRolledDice={player.hasRolledDice}
                     />
                 ))}
 

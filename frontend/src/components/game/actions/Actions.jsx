@@ -13,7 +13,7 @@ export default function Actions({room, players, client, setNotifications}) {
 
     const isCurrentUserTurn = room.isStarted && room.currentTurn === Cookies.get("username");
     const currentUser = players.find((player) => player.user.username === Cookies.get("username"));
-    const hasRolledDice = currentUser && currentUser.rolledDice;
+    const hasRolledDice = currentUser && currentUser.hasRolledDice;
 
     const handleRollDice = useCallback(() => {
         const token = Cookies.get('token');
