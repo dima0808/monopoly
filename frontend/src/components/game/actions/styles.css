@@ -31,15 +31,7 @@
 /* .top-flex{
 
 } */
-.satings-btn {
-  cursor: pointer;
-  width: 30px;
-  height: 30px;
-  background-color: #dac7a3;
-  border: none;
-  border-radius: 4px;
-  color: #ede1c9;
-}
+
 .military-economic {
   margin-top: 4px;
   display: flex;
@@ -63,6 +55,7 @@
   border-radius: 4px;
   overflow: hidden;
   cursor: pointer;
+  transition: all 0.2s ease-in;
   /*transition: all 0.3s ease-in-out;*/
 }
 
@@ -82,21 +75,26 @@
   cursor: pointer;
   background-color: #3c220a;
   color: #ede1c9;
-  font-size: 18px;
+  font-size: 16px;
+  height: 26.4px;
   border: none;
   border-radius: 6px;
-  min-width: 120px;
+  min-width: 84px;
   padding: 2px;
   transition: all 0.3s ease-in-out;
 }
-.management-btn:hover {
+.management-btn:hover,
+.satings-btn:hover {
   background-color: #5e3815;
 }
-.management-btn:active {
+.management-btn:active,
+.satings-btn:active {
   background-color: #7d4f24;
 }
 .not-static-choises-checkbox {
+  height: 34px;
   display: grid;
+  align-items: end;
   grid-template-columns: 1fr 1fr;
 }
 .not-static-btn {
@@ -106,12 +104,14 @@
   font-size: 18px;
   border: none;
   border-radius: 6px 6px 0 0;
+  transition: all 0.3s ease-in-out;
 }
 .selected-static-btn {
   background-color: #dac6ac;
+  height: 34px;
 }
 .chousen-div {
-  height: 520px;
+  height: 516px;
   background-color: #dac6ac;
   padding: 10px;
 }
@@ -120,4 +120,19 @@
   height: 500px;
   width: 100%;
   border-radius: 8px;
+}
+.satings-btn {
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  background-color: #3c220a;
+  border: none;
+  border-radius: 4px;
+  color: #ede1c9;
+  transition: all 0.3s ease-in-out;
+}
+
+.satings-btn-svg {
+  width: 30px;
+  height: 30px;
 }
