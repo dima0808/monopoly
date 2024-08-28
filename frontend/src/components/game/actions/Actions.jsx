@@ -4,8 +4,9 @@ import Cookies from "js-cookie";
 
 import goldImg from "../../../images/icon-gold.png";
 import strengthImg from "../../../images/icon-strength.png";
-import Events from "./Events";
-import Management from "./Management";
+import Events from "./events/Events";
+import Management from "./management/Management";
+import SettingsDialog from "./SettingsDialog";
 
 export default function Actions({room, players, client, setNotifications}) {
     const [activeTab, setActiveTab] = useState('Events');
@@ -119,6 +120,7 @@ export default function Actions({room, players, client, setNotifications}) {
 
     return (
         <section className="actions">
+            {/*<SettingsDialog/>*/}
             <div className="static-choises">
                 <div className="flex-between top-flex">
                     <div className="value">
