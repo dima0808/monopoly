@@ -1,49 +1,49 @@
 .actions {
-  height: 720px;
-  /* background-color: #dac7a3; */
-  background-color: #d6bd9d;
-  border-radius: 9px;
-  overflow: hidden;
+    height: 720px;
+    /* background-color: #dac7a3; */
+    background-color: #d6bd9d;
+    border-radius: 9px;
+    overflow: hidden;
 }
 .static-choises {
-  border-radius: 8px;
-  height: 150px;
-  margin: 10px;
-  background-color: #f8f4e2;
-  padding: 4px;
+    border-radius: 8px;
+    height: 150px;
+    margin: 10px;
+    background-color: #f8f4e2;
+    padding: 4px;
 }
 .value {
-  margin-top: 6px;
-  display: flex;
-  align-items: center;
-  color: #271d37;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    color: #271d37;
 }
 .value h2 {
-  font-size: 18px;
-  font-weight: 600;
+    font-size: 18px;
+    font-weight: 600;
 }
 .actions .player-stat-gold,
 .actions .player-stat-strength {
-  width: 73px;
-  height: 20px;
-  margin-left: 2px;
+    width: 73px;
+    height: 20px;
+    margin-left: 2px;
 }
 /* .top-flex{
 
 } */
 
 .military-economic {
-  margin-top: 4px;
-  display: flex;
-  justify-content: space-between;
-  list-style-type: none;
+    margin-top: 4px;
+    display: flex;
+    justify-content: space-between;
+    list-style-type: none;
 }
 .military-economic .player-stat-gold,
 .military-economic .player-stat-strength {
-  width: 63px;
-  height: 20px;
-  margin-left: 0;
-  border-radius: 0;
+    width: 63px;
+    height: 20px;
+    margin-left: 0;
+    border-radius: 0;
 }
 /* .military-economic .player-stat-gold {
   border-radius: 0 0 4px 4px;
@@ -52,91 +52,121 @@
   border-radius: 4px 4px 0 0;
 } */
 .li-army-gold {
-  border-radius: 4px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.2s ease-in;
-  /*transition: all 0.3s ease-in-out;*/
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
 }
 
 .selected-military {
-  outline: 3px solid #db4b0d;
+    outline: 3px solid #db4b0d;
 }
 .military-economic-h2 {
-  margin-top: 6px;
-  color: #271d37;
-  font-size: 18px;
-  font-weight: 600;
+    margin-top: 6px;
+    color: #271d37;
+    font-size: 18px;
+    font-weight: 600;
 }
 .management-btns {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 .management-btn {
-  cursor: pointer;
-  background-color: #3c220a;
-  color: #ede1c9;
-  font-size: 16px;
-  height: 26.4px;
-  border: none;
-  border-radius: 6px;
-  min-width: 84px;
-  padding: 2px;
-  transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    background-color: #3c220a;
+    color: #ede1c9;
+    font-size: 16px;
+    height: 26.4px;
+    border: none;
+    border-radius: 6px;
+    min-width: 84px;
+    padding: 2px;
+    transition: all 0.3s ease-in-out;
 }
 .management-btn:hover,
 .satings-btn:hover {
-  background-color: #5e3815;
+    background-color: #5e3815;
 }
 .management-btn:active,
 .satings-btn:active {
-  background-color: #7d4f24;
+    background-color: #7d4f24;
 }
 .not-static-choises-checkbox {
-  height: 34px;
-  display: grid;
-  align-items: end;
-  grid-template-columns: 1fr 1fr;
+    height: 34px;
+    display: grid;
+    align-items: end;
+    grid-template-columns: 1fr 1fr;
 }
 .not-static-btn {
-  cursor: pointer;
-  background-color: #bca68a;
-  height: 30px;
-  font-size: 18px;
-  border: none;
-  border-radius: 6px 6px 0 0;
-  transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    background-color: #bca68a;
+    height: 30px;
+    font-size: 18px;
+    border: none;
+    border-radius: 6px 6px 0 0;
+    transition: all 0.3s ease-in-out;
 }
 .selected-static-btn {
-  background-color: #dac6ac;
-  height: 34px;
+    background-color: #dac6ac;
+    height: 34px;
 }
 .chousen-div {
-  height: 516px;
-  background-color: #dac6ac;
-  padding: 10px;
+    height: 516px;
+    background-color: #dac6ac;
+    padding: 10px;
 }
 .chousen-div-white {
-  background-color: #f8f4e2;
-  height: 500px;
-  width: 100%;
-  border-radius: 8px;
+    padding: 3px 4px;
+    background-color: #f8f4e2;
+    height: 500px;
+    width: 100%;
+    border-radius: 8px;
 }
 .satings-btn {
-  cursor: pointer;
-  width: 30px;
-  height: 30px;
-  background-color: #3c220a;
-  border: none;
-  border-radius: 4px;
-  color: #ede1c9;
-  transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    background-color: #3c220a;
+    border: none;
+    border-radius: 4px;
+    color: #ede1c9;
+    transition: all 0.3s ease-in-out;
 }
 
 .satings-btn-svg {
-  width: 30px;
-  height: 30px;
+    width: 30px;
+    height: 30px;
 }
 
 .settings-dialog {
+}
+.gold-per-turn {
+    padding-right: 4px;
+    background: linear-gradient(60deg, #f6d339, #ebefa5);
+    box-shadow: inset 4px 4px 10px rgba(145, 65, 58, 0.2),
+        inset -4px -4px 10px rgba(212, 226, 173, 0.735);
+}
+.width-full {
+    padding-right: 5px;
+    width: fit-content !important;
+}
 
+/* Загальний стиль для скроллбарів */
+.firefox .chousen-div .scroll {
+    scrollbar-width: thin; /* Тонкий скроллбар */
+    scrollbar-color: #bca68a rgb(247, 242, 225); /* Фіолетовий ползунок і світло-фіолетовий фон треку */
+}
+.chousen-div .scroll::-webkit-scrollbar-track {
+    cursor: pointer;
+    background: rgb(247, 242, 225);
+    border-radius: 10px;
+}
+
+.chousen-div .scroll::-webkit-scrollbar-thumb {
+    cursor: pointer;
+    background-color: #bca68a;
+    border-radius: 10px;
+    border: 3px solid rgb(247, 242, 225);
+}
+
+.chousen-div .scroll::-webkit-scrollbar-thumb:hover {
+    background-color: #bca68a; /* Можна змінити на інший фіолетовий відтінок */
 }

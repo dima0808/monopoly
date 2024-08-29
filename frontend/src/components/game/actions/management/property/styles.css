@@ -1,0 +1,111 @@
+/* .property-div-compleated означає чи умова виконана */
+/* .modifiered означає шо апгрейд найявний в тебе*/
+/* .modifiered-by-wonder обводка для евекту чуда, .property-div-compleated тут означає шо чудо куплене і евект є*/
+.proprty-btns-div {
+    padding: 5px 4px;
+}
+.proprty-btns-div .decision-button {
+    width: 130px;
+    font-size: 16px;
+}
+.property-modifier-div {
+    margin: 5px 4px;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #747677b8;
+}
+.property-modifier-h3 {
+    text-align: center;
+    cursor: pointer;
+
+    padding: 0 15px 2px 10px;
+    overflow-wrap: break-word;
+    color: #eeeeeeee;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+    line-height: 1;
+
+    background-color: #63646694;
+}
+.modifiered-by-wonder .property-modifier-h3 {
+    background-color: #44165a82;
+}
+.property-div-compleated.modifiered-by-wonder .property-modifier-h3 {
+    background-color: #44165ac3;
+}
+.property-div-compleated {
+    background-color: #cfd1d3f7 !important;
+}
+.property-div-compleated .property-modifier-h3 {
+    color: #f0f0f0;
+}
+.property-grid-3 {
+    display: grid;
+    grid-template-columns: 40px 1fr 85px;
+    align-items: center;
+    justify-content: center;
+}
+.property-gridimg-img-div {
+    width: 40px;
+    height: 40px;
+}
+.property-gridimg-img-div .property-img {
+    width: 40px;
+    height: 40px;
+}
+.property-new-stats-p {
+    text-align: center;
+    font-size: 14px;
+    letter-spacing: -1px;
+    word-spacing: 1px;
+    color: #2b2732;
+}
+.property-new-stats {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    background-color: #eeeeeea6;
+    height: 100%;
+    min-height: 44px;
+    padding-bottom: 1px;
+    border-radius: 0 0 0 6px;
+}
+.property-new-stats .player-stat-gold,
+.property-new-stats .player-stat-tourism {
+    margin: 1px 0 0 3px;
+    height: 16px;
+    font-size: 15px;
+    padding-left: 18px;
+}
+.property-new-stats .recourse-img {
+    height: 15px;
+    width: 15px;
+}
+.property-mini-flex {
+    padding-right: 4px;
+    display: flex;
+    justify-content: flex-end;
+}
+.property-grid-3 .condition-p {
+    text-align: center;
+    line-height: 1;
+    padding: 1px 2px;
+    font-size: 16px;
+}
+.modifiered {
+    outline: 3px solid #116908;
+}
+.modifiered-by-wonder {
+    outline: 3px solid #44165a;
+}
+.wonder-efect {
+    text-align: center;
+    color: #38114a;
+    margin-top: -2px;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+}
