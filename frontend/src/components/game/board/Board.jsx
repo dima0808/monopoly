@@ -19,9 +19,6 @@ import resourceWheatImg from "../../../images/icon_resource_wheat.png";
 
 import featureReefImg from "../../../images/icon_feature_reef.png";
 
-import goodyHutImg from "../../../images/goody_hut.png";
-import barbariansImg from "../../../images/barbarians.png";
-
 import districtAqueductImg from "../../../images/icon_district_aqueduct.png";
 import districtCampusImg from "../../../images/icon_district_campus.png";
 import districtCommercialHubImg from "../../../images/icon_district_commercial_hub.png";
@@ -49,74 +46,16 @@ import wonderTerracottaArmyImg from "../../../images/wonder_terracotta_army.png"
 
 import Chat from "./chat/Chat";
 import Dice from "./dice/Dice";
-
-function EdgeCell({src, alt, position}) {
-    const positionClass = `edge__img-${position}`;
-    return (
-        <div className="board__element board__element-edge">
-            <img
-                src={src}
-                alt={alt}
-                className={`edge__img ${positionClass} border`}
-            />
-        </div>
-    );
-}
-
-function Cell({
-                  src,
-                  alt,
-                  position,
-                  mirror = false,
-                  noneUpgrades = false,
-                  specialType,
-              }) {
-    const baseClass = `object-${position}`;
-    const priceClass = specialType
-        ? `${baseClass}__price ${baseClass}__price-${specialType}`
-        : `${baseClass}__price`;
-    const cellClass = noneUpgrades
-        ? `${baseClass}__cell ${baseClass}__cell-none-upgrades`
-        : `${baseClass}__cell`;
-    return (
-        <div className={` ${baseClass} ${mirror && "mirror"} border`}>
-            <div className={priceClass}></div>
-            <div className={cellClass}>
-                <img src={src} alt={alt} className="cell-img"/>
-            </div>
-            {noneUpgrades ? null : <div className={`${baseClass}__upgrades`}></div>}
-        </div>
-    );
-}
-
-function BarbCell() {
-    return (
-        <div className="object-vertical mirror border">
-            <div className="object-vertical__barbarians-color"></div>
-            <div className="object-vertical__cell">
-                <img src={barbariansImg} alt="barbarians" className="cell-img-unique"/>
-            </div>
-            <div className="object-vertical__barbarians-color"></div>
-        </div>
-    );
-}
-
-function GoodyHutCell() {
-    return (
-        <div className="object-vertical border">
-            <div className="object-vertical__village-color"></div>
-            <div className="object-vertical__cell">
-                <img src={goodyHutImg} alt="goody hut" className="cell-img-unique"/>
-            </div>
-            <div className="object-vertical__village-color"></div>
-        </div>
-    );
-}
+import GoodyHutCell from "./cells/GoodyHutCell";
+import Cell from "./cells/Cell";
+import EdgeCell from "./cells/EdgeCell";
+import BarbCell from "./cells/BarbCell";
 
 export default function Board({
                                   room,
                                   players,
                                   dice,
+                                  properties,
                                   client,
                                   isConnected,
                                   setNotifications,
@@ -160,105 +99,174 @@ export default function Board({
 
     return (
         <section className="board">
-            <EdgeCell src={startImg} alt="start" position="left-up"/>
+            <EdgeCell src={startImg} alt="start" direction="left-up"/>
 
             <div className="board__element board__element-side board__element-side-vertical up">
-                <Cell src={resourceHorsesImg} alt="horses" position="vertical"/>
-                <Cell src={resourceBananasImg} alt="bananas" position="vertical"/>
-                <Cell src={resourceDeerImg} alt="deer" position="vertical"/>
+                <Cell
+                    src={resourceHorsesImg}
+                    alt="horses"
+                    direction="vertical"
+                    position={1}
+                    owner={properties[1]?.member}
+                />
+                <Cell
+                    src={resourceBananasImg}
+                    alt="bananas"
+                    direction="vertical"
+                    position={2}
+                    owner={properties[2]?.member}
+                />
+                <Cell
+                    src={resourceDeerImg}
+                    alt="deer"
+                    direction="vertical"
+                    position={3}
+                    owner={properties[3]?.member}
+                />
                 <Cell
                     src={wonderTempleOfArtemisImg}
                     alt="temple of artemis"
-                    position="vertical"
+                    direction="vertical"
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={4}
+                    owner={properties[4]?.member}
                 />
-                <Cell src={resourceFursImg} alt="furs" position="vertical"/>
+                <Cell
+                    src={resourceFursImg}
+                    alt="furs"
+                    direction="vertical"
+                    position={5}
+                    owner={properties[5]?.member}
+                />
                 <GoodyHutCell/>
                 <Cell
                     src={districtEncampmentImg}
                     alt="encampment"
-                    position="vertical"
+                    direction="vertical"
                     specialType="encampment"
+                    position={7}
+                    owner={properties[7]?.member}
                 />
                 <Cell
                     src={wonderTerracottaArmyImg}
                     alt="terrakota army"
-                    position="vertical"
+                    direction="vertical"
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={8}
+                    owner={properties[8]?.member}
                 />
                 <Cell
                     src={districtGovernmentPlazaImg}
                     alt="government plaza"
-                    position="vertical"
+                    direction="vertical"
                     specialType="government"
+                    position={9}
+                    owner={properties[9]?.member}
                 />
                 <Cell
                     src={districtIndustrialZoneImg}
                     alt="industrial zone"
-                    position="vertical"
+                    direction="vertical"
+                    position={10}
+                    owner={properties[10]?.member}
                 />
-                <Cell src={resourceIronImg} alt="iron" position="vertical"/>
-                <Cell src={resourceCrabsImg} alt="crabs" position="vertical"/>
+                <Cell src={resourceIronImg}
+                      alt="iron"
+                      direction="vertical"
+                      position={11}
+                      owner={properties[11]?.member}
+                />
+                <Cell
+                    src={resourceCrabsImg}
+                    alt="crabs"
+                    direction="vertical"
+                    position={12}
+                    owner={properties[12]?.member}
+                />
             </div>
 
-            <EdgeCell src={projectsImg} alt="projects" position="right-up"/>
+            <EdgeCell src={projectsImg} alt="projects" direction="right-up"/>
 
             <div className="board__element board__element-side board__element-side-horizontal left">
                 <Cell
                     src={districtSpaceportImg}
                     alt="spaceport"
-                    position="horizontal"
+                    direction="horizontal"
                     noneUpgrades={true}
+                    position={47}
+                    owner={properties[47]?.member}
                 />
                 <Cell
                     src={wonderOxfordUniversityImg}
                     alt="oxford university"
-                    position="horizontal"
+                    direction="horizontal"
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={46}
+                    owner={properties[46]?.member}
                 />
-                <Cell src={districtCampusImg} alt="campus" position="horizontal"/>
+                <Cell
+                    src={districtCampusImg}
+                    alt="campus"
+                    direction="horizontal"
+                    position={45}
+                    owner={properties[45]?.member}
+                />
                 <Cell
                     src={districtGovernmentPlazaImg}
                     alt="government plaza"
-                    position="horizontal"
+                    direction="horizontal"
                     specialType="government"
+                    position={44}
+                    owner={properties[44]?.member}
                 />
                 <Cell
                     src={districtCommercialHubImg}
                     alt="commercial hub"
-                    position="horizontal"
+                    direction="horizontal"
+                    position={43}
+                    owner={properties[43]?.member}
                 />
                 <Cell
                     src={wonderBigBenImg}
                     alt="big ben"
-                    position="horizontal"
+                    direction="horizontal"
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={42}
+                    owner={properties[42]?.member}
                 />
                 <Cell
                     src={districtNeighborhoodImg}
                     alt="neighborhood"
-                    position="horizontal"
+                    direction="horizontal"
+                    position={41}
+                    owner={properties[41]?.member}
                 />
                 <Cell
                     src={wonderEstadioDoMaracanaImg}
                     alt="estadio do maracana"
-                    position="horizontal"
+                    direction="horizontal"
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={40}
+                    owner={properties[40]?.member}
                 />
                 <Cell
                     src={districtTheatreSquareImg}
                     alt="theatre square"
-                    position="horizontal"
+                    direction="horizontal"
+                    position={39}
+                    owner={properties[39]?.member}
                 />
                 <Cell
                     src={districtEntertainmentComplexImg}
                     alt="entertainment complex"
-                    position="horizontal"
+                    direction="horizontal"
+                    position={38}
+                    owner={properties[38]?.member}
                 />
             </div>
 
@@ -275,157 +283,199 @@ export default function Board({
                 <Cell
                     src={featureReefImg}
                     alt="reef"
-                    position="horizontal"
+                    direction="horizontal"
                     mirror={true}
                     noneUpgrades={true}
+                    position={14}
+                    owner={properties[14]?.member}
                 />
                 <Cell
                     src={districtCampusImg}
                     alt="campus"
-                    position="horizontal"
+                    direction="horizontal"
                     mirror={true}
+                    position={15}
+                    owner={properties[15]?.member}
                 />
                 <Cell
                     src={wonderGreatLibraryImg}
                     alt="great library"
-                    position="horizontal"
+                    direction="horizontal"
                     mirror={true}
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={16}
+                    owner={properties[16]?.member}
                 />
                 <Cell
                     src={districtHarborImg}
                     alt="harbor"
-                    position="horizontal"
+                    direction="horizontal"
                     mirror={true}
+                    position={17}
+                    owner={properties[17]?.member}
                 />
                 <Cell
                     src={districtGovernmentPlazaImg}
                     alt="government plaza"
-                    position="horizontal"
+                    direction="horizontal"
                     mirror={true}
                     specialType="government"
+                    position={18}
+                    owner={properties[18]?.member}
                 />
                 <Cell
                     src={districtCommercialHubImg}
                     alt="commercial hub"
-                    position="horizontal"
+                    direction="horizontal"
                     mirror={true}
+                    position={19}
+                    owner={properties[19]?.member}
                 />
                 <Cell
                     src={wonderCasaDeContratacionImg}
                     alt="cas de contratacion"
-                    position="horizontal"
+                    direction="horizontal"
                     mirror={true}
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={20}
+                    owner={properties[20]?.member}
                 />
                 <Cell
                     src={districtTheatreSquareImg}
                     alt="theatre square"
-                    position="horizontal"
+                    direction="horizontal"
                     mirror={true}
+                    position={21}
+                    owner={properties[21]?.member}
                 />
                 <Cell
                     src={districtEntertainmentComplexImg}
                     alt="entertainment complex"
-                    position="horizontal"
+                    direction="horizontal"
                     mirror={true}
+                    position={22}
+                    owner={properties[22]?.member}
                 />
                 <Cell
                     src={wonderColosseumImg}
                     alt="colosseum"
-                    position="horizontal"
+                    direction="horizontal"
                     mirror={true}
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={23}
+                    owner={properties[23]?.member}
                 />
             </div>
 
-            <EdgeCell src={projectsImg} alt="projects" position="left-down"/>
+            <EdgeCell src={projectsImg} alt="projects" direction="left-down"/>
 
             <div className="board__element board__element-side board__element-side-vertical down">
                 <Cell
                     src={wonderRuhrValleyImg}
                     alt="ruhr valley"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={36}
+                    owner={properties[36]?.member}
                 />
                 <Cell
                     src={districtDamImg}
                     alt="dam"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
+                    position={35}
+                    owner={properties[35]?.member}
                 />
                 <Cell
                     src={districtIndustrialZoneImg}
                     alt="industrial zone"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
+                    position={34}
+                    owner={properties[34]?.member}
                 />
                 <Cell
                     src={districtAqueductImg}
                     alt="aqueduct"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
                     noneUpgrades={true}
+                    position={33}
+                    owner={properties[33]?.member}
                 />
                 <Cell
                     src={wonderMausoleumAtHalicarnassusImg}
                     alt="mausoleum at halicarnassus"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={32}
+                    owner={properties[32]?.member}
                 />
                 <Cell
                     src={districtHarborImg}
                     alt="harbor"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
+                    position={31}
+                    owner={properties[31]?.member}
                 />
                 <Cell
                     src={districtEncampmentImg}
                     alt="encampment"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
                     specialType="encampment"
+                    position={30}
+                    owner={properties[30]?.member}
                 />
                 <BarbCell/>
                 <Cell
                     src={resourceRiceImg}
                     alt="rice"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
+                    position={28}
+                    owner={properties[28]?.member}
                 />
                 <Cell
                     src={wonderEtemenankiImg}
                     alt="etemenanki"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={27}
+                    owner={properties[27]?.member}
                 />
                 <Cell
                     src={resourceWheatImg}
                     alt="wheat"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
+                    position={26}
+                    owner={properties[26]?.member}
                 />
                 <Cell
                     src={resourceMaizeImg}
                     alt="maize"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
+                    position={25}
+                    owner={properties[25]?.member}
                 />
             </div>
 
             <EdgeCell
                 src={bermudaTriangleImg}
                 alt="bermuda triangle"
-                position="right-down"
+                direction="right-down"
             />
             {players.map((player, index) => {
                 const { topValue, leftValue, position } = calculatePosition(player.position);

@@ -199,3 +199,14 @@ export async function getRoomByName(roomName) {
 
     return resData;
 }
+
+export async function getPlayerProperties(roomName) {
+    const response = await fetch('http://localhost:8080/api/rooms/' + roomName + '/properties');
+    const resData = await response.json();
+
+    if (!response.ok) {
+        throw new Error(resData.message);
+    }
+
+    return resData;
+}

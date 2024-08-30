@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useCallback, useEffect} from "react";
 import Player from "./Player";
 import "./styles.css";
 import Cookies from "js-cookie";
@@ -19,7 +19,7 @@ export default function PlayerList({
                                    }) {
     const navigate = useNavigate();
 
-    function onPlayerMessageReceived(message) {
+    const onPlayerMessageReceived = useCallback((message) => {
         const {type, content, room, member} = JSON.parse(message.body);
         console.log(content);
         setPlayers((prevPlayers) => {
@@ -39,7 +39,7 @@ export default function PlayerList({
                     return prevPlayers;
             }
         });
-    }
+    }, [setPlayers]);
 
     useEffect(() => {
         if (client && isConnected) {
@@ -51,7 +51,7 @@ export default function PlayerList({
                 subscription.unsubscribe();
             };
         }
-    }, [client, isConnected, room]);
+    }, [client, isConnected, onPlayerMessageReceived, room]);
 
     function handleChangeCivilization(civilization) {
         const token = Cookies.get("token");
@@ -131,7 +131,7 @@ export default function PlayerList({
                         onKick={() =>
                             handleKickMember(room.name, player.user.username, client, setNotifications)
                         }
-                        showKickButton={isUserLeaderCookies(players) && !player.isLeader}
+                        showKickButton={!room.isStarted && isUserLeaderCookies(players) && !player.isLeader}
                         isStarted={room.isStarted}
                         availableColors={getAvailableColors()}
                         availableCivs={getAvailableCivs()}

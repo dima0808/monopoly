@@ -28,12 +28,10 @@ export default function Lobby({onJoin, onLeave, onKick, onDelete, room}) {
                         nickname={member.user.nickname}
                         isLeader={member.isLeader}
                         onKick={onKick}
-                        showKickButton={
-                            isUserLeaderCookies(room.members) && !member.isLeader
-                        }
+                        showKickButton={!room.isStarted && isUserLeaderCookies(room.members) && !member.isLeader}
                     />
                 ))}
-                {Array.from({length: remainingSlots}).map((_, index) => (
+                {!room.isStarted && Array.from({length: remainingSlots}).map((_, index) => (
                     <div className="lobby__member" key={index}>
                         <button
                             onClick={onJoin}
@@ -51,7 +49,7 @@ export default function Lobby({onJoin, onLeave, onKick, onDelete, room}) {
             </div>
             {isUserInRoomCookies(room.members) && (
                 <div className="in-room-btns">
-                    <div>
+                    {<div> {/* !room.isStarted && */}
                         <button onClick={onLeave} className="leave-btn btn-in">
                             leave
                         </button>
@@ -60,7 +58,8 @@ export default function Lobby({onJoin, onLeave, onKick, onDelete, room}) {
                                 delete room
                             </button>
                         )}
-                    </div>
+                    </div>}
+                    <div></div>
                     <Link
                         to={"/game/" + room.name}
                         className="move-to-lobby-btn btn-in no-select"

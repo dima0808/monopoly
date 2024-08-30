@@ -8,7 +8,7 @@ import Events from "./events/Events";
 import Management from "./management/Management";
 import SettingsDialog from "./SettingsDialog";
 
-export default function Actions({ room, players, client, setNotifications }) {
+export default function Actions({ room, players, events, setEvents, client, isConnected, setNotifications }) {
     const [activeTab, setActiveTab] = useState("Events");
     const [armySpending, setArmySpending] = useState("Default");
 
@@ -55,6 +55,43 @@ export default function Actions({ room, players, client, setNotifications }) {
         }
     }, [client, room.name, setNotifications]);
 
+    const handleBuyProperty = (position) => {
+        const token = Cookies.get("token");
+        const username = Cookies.get("username");
+        if (!client || !client.publish) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message:
+                        "Client is not initialized or publish method is not available",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+            return;
+        }
+        try {
+            client.publish({
+                destination: `/app/rooms/${room.name}/buyProperty/${position}`,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    username: username,
+                },
+            });
+            setEvents((prev) => prev.filter((event) => event.type !== "BUY_PROPERTY"));
+            console.log("Rolling dice...");
+        } catch (error) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message: "Error rolling dice (no connection)",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+        }
+    };
+
     const handleEndTurn = useCallback(() => {
         const token = Cookies.get("token");
         const username = Cookies.get("username");
@@ -93,21 +130,39 @@ export default function Actions({ room, players, client, setNotifications }) {
 
     useEffect(() => {
         if (isCurrentUserTurn && !hasRolledDice) {
-            const timer = setTimeout(() => {
+            const timerId = setTimeout(() => {
                 handleRollDice();
+                localStorage.removeItem('diceRollTimer');
             }, 5000);
 
-            return () => clearTimeout(timer);
+            localStorage.setItem('diceRollTimer', timerId);
+
+            return () => {
+                clearTimeout(timerId);
+                localStorage.removeItem('diceRollTimer');
+            };
         }
     }, [isCurrentUserTurn, hasRolledDice, handleRollDice]);
+
+    useEffect(() => {
+        const timerId = localStorage.getItem('diceRollTimer');
+        if (timerId && client && isConnected) {
+
+            handleRollDice();
+            localStorage.removeItem('diceRollTimer');
+        }
+    }, [client, isConnected, handleRollDice]);
 
     const renderContent = () => {
         switch (activeTab) {
             case "Events":
                 return (
                     <Events
+                        events={events}
                         handleRollDice={handleRollDice}
+                        handleBuyProperty={handleBuyProperty}
                         handleEndTurn={handleEndTurn}
+                        onSkip={(eventType) => setEvents((prev) => prev.filter((event) => event.type !== eventType))}
                         isCurrentUserTurn={isCurrentUserTurn}
                         hasRolledDice={hasRolledDice}
                     />

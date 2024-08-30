@@ -35,7 +35,7 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
 
 
     useEffect(() => {
-        if (client && isConnected) {
+        if (roomName && client && isConnected) {
             const token = Cookies.get("token");
             getAllMessages(roomName, token)
                 .then((messages) => {

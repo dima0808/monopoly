@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -38,6 +41,10 @@ public class Member {
 
     private Integer position;
     private Boolean hasRolledDice;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Property> properties = new ArrayList<>();
 
     public enum Civilization {
         Random,

@@ -1,6 +1,8 @@
 package com.civka.monopoly.api.controller;
 
 import com.civka.monopoly.api.entity.Member;
+import com.civka.monopoly.api.entity.Property;
+import com.civka.monopoly.api.entity.Room;
 import com.civka.monopoly.api.payload.DiceMessage;
 import com.civka.monopoly.api.payload.PlayerMessage;
 import com.civka.monopoly.api.payload.RoomMessage;
@@ -74,13 +76,30 @@ public class LobbyController {
         Member member = userService.findByUsername(username).getMember();
         return RoomMessage.builder()
                 .type(RoomMessage.MessageType.END_TURN)
-                .content("Game started")
+                .content(username + "'s turn ended")
                 .room(roomService.endTurn(member))
+                .build();
+    }
+
+    @MessageMapping("/rooms/{roomName}/buyProperty/{position}")
+    @SendTo("/topic/public/{roomName}/game")
+    public RoomMessage buyProperty(@DestinationVariable Integer position,
+                                   @Header("username") String username) {
+        Member member = userService.findByUsername(username).getMember();
+        return RoomMessage.builder()
+                .type(RoomMessage.MessageType.BUY_PROPERTY)
+                .content("Member " + username + " bought property on position " + position)
+                .property(roomService.buyProperty(member, position))
                 .build();
     }
 
     @GetMapping("/api/rooms/{roomName}/members")
     public ResponseEntity<List<Member>> getMembers(@PathVariable String roomName) {
         return ResponseEntity.ok(roomService.findByName(roomName).getMembers());
+    }
+
+    @GetMapping("/api/rooms/{roomName}/properties")
+    public ResponseEntity<List<Property>> getProperties(@PathVariable String roomName) {
+        return ResponseEntity.ok(roomService.findByName(roomName).getProperties());
     }
 }

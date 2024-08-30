@@ -1,5 +1,6 @@
 package com.civka.monopoly.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,4 +34,8 @@ public class Room {
     private Boolean isStarted;
 
     private String currentTurn; // username of the member whose turn it is
+
+    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Property> properties = new ArrayList<>();
 }

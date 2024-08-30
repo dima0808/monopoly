@@ -1,15 +1,15 @@
 import "./styles.css";
-import resourceHorsesImg from "../../../../../images/icon_resource_horses.png";
 import goldImg from "../../../../../images/icon-gold.png";
 import tourismImg from "../../../../../images/icon-tourism.png";
-export default function BuyProperty() {
+export default function BuyProperty({property, handleBuyProperty, onSkip}) {
+
     return (
         <div className="property-color">
-            <h2 className="property-cell-name">Horses</h2>
+            <h2 className="property-cell-name">{property.name}</h2>
             <div className="property-grid">
                 <div className="property-img-div">
                     <img
-                        src={resourceHorsesImg}
+                        src={property.src}
                         className="property-img"
                         alt="gold"
                     />
@@ -23,7 +23,7 @@ export default function BuyProperty() {
                                 className="recourse-img"
                                 alt="gold"
                             />
-                            1000
+                            {property.totalCost}
                         </div>
                     </div>
                     <div className="gold-on-step stats-div">
@@ -34,7 +34,7 @@ export default function BuyProperty() {
                                 className="recourse-img"
                                 alt="gold"
                             />
-                            340
+                            {property.goldOnStep}
                         </div>
                     </div>
                     <div className="gold-on-step stats-div">
@@ -45,7 +45,7 @@ export default function BuyProperty() {
                                 className="recourse-img"
                                 alt="gold"
                             />
-                            +34
+                            {property.goldPerTurn}
                         </div>
                     </div>
                     {/* <div className="gold-on-step stats-div">
@@ -72,60 +72,60 @@ export default function BuyProperty() {
                     If u have an <span>Arena</span> and the mather
                 </p>
             </div>
-            <h2 className="wonder-efect">Wonder efect:</h2>
-            <div className="property-modifier-div property-div-compleated modifiered-by-wonder">
-                <h3 className="property-modifier-h3">Temple of Artemis</h3>
-                <div className="property-grid-3">
-                    <div className="property-gridimg-img-div">
-                        <img
-                            src={resourceHorsesImg}
-                            className="property-img"
-                            alt="gold"
-                        />
-                    </div>
-                    <p className="condition-p">
-                        improves <span>horses,</span> <span>dears,</span>
-                        <span> banana</span>
-                    </p>
-                    <div className="property-new-stats">
-                        <div className="property-mini-flex">
-                            <p className="property-new-stats-p">g.o.s</p>
-                            <div className="player-stat-gold width-full pointer no-select">
-                                <img
-                                    src={goldImg}
-                                    className="recourse-img"
-                                    alt="gold"
-                                />
-                                100
-                            </div>
-                        </div>
-                        {/* <div className="property-mini-flex">
-                            <p className="property-new-stats-p">tour.</p>
-                            <div className="player-stat-tourism width-full no-select">
-                                <img
-                                    src={tourismImg}
-                                    className="recourse-img"
-                                    alt="tourism"
-                                />
-                                400
-                            </div>
-                        </div> */}
-                        <div className="property-mini-flex">
-                            <p className="property-new-stats-p">g.o.t</p>
-                            <div className="player-stat-gold gold-per-turn width-full pointer no-select">
-                                <img
-                                    src={goldImg}
-                                    className="recourse-img"
-                                    alt="gold"
-                                />
-                                1
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {/*<h2 className="wonder-efect">Wonder effect:</h2>*/}
+            {/*<div className="property-modifier-div property-div-compleated modifiered-by-wonder">*/}
+            {/*    <h3 className="property-modifier-h3">Temple of Artemis</h3>*/}
+            {/*    <div className="property-grid-3">*/}
+            {/*        <div className="property-gridimg-img-div">*/}
+            {/*            <img*/}
+            {/*                src={resourceHorsesImg}*/}
+            {/*                className="property-img"*/}
+            {/*                alt="gold"*/}
+            {/*            />*/}
+            {/*        </div>*/}
+            {/*        <p className="condition-p">*/}
+            {/*            improves <span>horses,</span> <span>dears,</span>*/}
+            {/*            <span> banana</span>*/}
+            {/*        </p>*/}
+            {/*        <div className="property-new-stats">*/}
+            {/*            <div className="property-mini-flex">*/}
+            {/*                <p className="property-new-stats-p">g.o.s</p>*/}
+            {/*                <div className="player-stat-gold width-full pointer no-select">*/}
+            {/*                    <img*/}
+            {/*                        src={goldImg}*/}
+            {/*                        className="recourse-img"*/}
+            {/*                        alt="gold"*/}
+            {/*                    />*/}
+            {/*                    100*/}
+            {/*                </div>*/}
+            {/*            </div>*/}
+            {/*            /!* <div className="property-mini-flex">*/}
+            {/*                <p className="property-new-stats-p">tour.</p>*/}
+            {/*                <div className="player-stat-tourism width-full no-select">*/}
+            {/*                    <img*/}
+            {/*                        src={tourismImg}*/}
+            {/*                        className="recourse-img"*/}
+            {/*                        alt="tourism"*/}
+            {/*                    />*/}
+            {/*                    400*/}
+            {/*                </div>*/}
+            {/*            </div> *!/*/}
+            {/*            <div className="property-mini-flex">*/}
+            {/*                <p className="property-new-stats-p">g.o.t</p>*/}
+            {/*                <div className="player-stat-gold gold-per-turn width-full pointer no-select">*/}
+            {/*                    <img*/}
+            {/*                        src={goldImg}*/}
+            {/*                        className="recourse-img"*/}
+            {/*                        alt="gold"*/}
+            {/*                    />*/}
+            {/*                    1*/}
+            {/*                </div>*/}
+            {/*            </div>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
             <div className="decision-buttons flex-between">
-                <button className="pay-btn decision-button decision-button-green">
+                <button onClick={() => handleBuyProperty(property.position)} className="pay-btn decision-button decision-button-green">
                     buy:
                     <div className="player-stat-gold width-full pointer no-select">
                         <img
@@ -133,10 +133,10 @@ export default function BuyProperty() {
                             className="recourse-img"
                             alt="gold"
                         />
-                        <p>1000</p>
+                        <p>{property.totalCost}</p>
                     </div>
                 </button>
-                <button className="decision-button decision-button-red">
+                <button onClick={onSkip} className="decision-button decision-button-red">
                     skip
                 </button>
             </div>

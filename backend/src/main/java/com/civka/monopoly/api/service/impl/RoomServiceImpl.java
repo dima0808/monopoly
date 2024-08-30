@@ -36,6 +36,7 @@ public class RoomServiceImpl implements RoomService {
     private final UserService userService;
     private final MemberService memberService;
     private final ChatService chatService;
+    private final PropertyService propertyService;
     private final SimpMessagingTemplate messagingTemplate;
     private final PasswordEncoder passwordEncoder;
 
@@ -248,5 +249,21 @@ public class RoomServiceImpl implements RoomService {
         room.setCurrentTurn(nextMember.getUser().getUsername());
         memberService.save(nextMember);
         return roomRepository.save(room);
+    }
+
+    @Override
+    public Property buyProperty(Member member, Integer position) {
+        if (!member.getPosition().equals(position) ||
+                propertyService.existsByRoomAndPosition(member.getRoom(), position)) {
+            throw new UserNotAllowedException();
+        }
+        Room room = member.getRoom();
+        Property property = Property.builder()
+                .member(member)
+                .room(room)
+                .upgradeLevel(List.of(Property.Upgrade.LEVEL_1))
+                .position(position)
+                .build();
+        return propertyService.save(property);
     }
 }
