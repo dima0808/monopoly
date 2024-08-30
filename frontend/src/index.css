@@ -126,3 +126,11 @@ input:-webkit-autofill:active {
 .pointer {
     cursor: pointer;
 }
+.scrollable-div {
+    overflow: auto; /* Дозволяємо прокручування */
+    scrollbar-width: none; /* Приховуємо скролбар у Firefox */
+}
+
+.scrollable-div::-webkit-scrollbar {
+    display: none; /* Приховуємо скролбар у Chrome, Safari та Opera */
+}

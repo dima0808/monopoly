@@ -15,7 +15,7 @@ export default function Events({
 }) {
     return (
         <div>
-            <div className="events-hole scroll">
+            <div className="events-hole scrollable-div">
                 {/*<Barbarians />*/}
                 {/*<GoodyHut />*/}
                 {/* + */}

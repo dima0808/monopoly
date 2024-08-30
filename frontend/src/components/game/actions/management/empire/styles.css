@@ -1,0 +1,16 @@
+.empire-component .proprty-btns-div {
+    padding: 1px 4px 5px 4px;
+}
+.empire-component:not(:first-child) {
+    margin-top: 4px;
+}
+.p-discount {
+    padding: 0px 4px 2px 4px;
+}
+.p-discount .your-chance {
+    width: 130px;
+}
+.decision-button:disabled .player-stat-gold {
+    filter: grayscale(80%);
+    -webkit-filter: grayscale(80%);
+}

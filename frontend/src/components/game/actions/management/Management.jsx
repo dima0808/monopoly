@@ -10,11 +10,11 @@ import Victories from "./victories/Victories";
 
 export default function Management() {
     return (
-        <div className="management-hole scroll">
+        <div className="management-hole scrollable-div">
             {/* + */}
             {/* <Cashflow /> */}
-            {/*<Empire />*/}
-            {/*<LeaderAbilities />*/}
+            {/* <Empire /> */}
+            <LeaderAbilities />
             {/*<PlayerInfo />*/}
             {/* + */}
             <Property />
