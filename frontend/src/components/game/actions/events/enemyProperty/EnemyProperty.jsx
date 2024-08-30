@@ -76,14 +76,33 @@ export default function EnemyProperty() {
                             1000
                         </div>
                     </div>
+
                     <ul className="ul-war-modeficators">
                         <li className="war-modeficator">
-                            <span className="color-red-war">1000</span>army
-                            strength front
+                            army d strength front
+                            <div className="inline-block">
+                                <div className="player-stat-strength width-full no-select">
+                                    <img
+                                        src={strengthImg}
+                                        className="recourse-img strength-recourse-img"
+                                        alt="strength"
+                                    />
+                                    1000
+                                </div>
+                            </div>
                         </li>
                         <li className="war-modeficator">
-                            <span className="color-red-war">200</span>distict
-                            upgrades
+                            distict upgrades{" "}
+                            <div className="inline-block">
+                                <div className="player-stat-strength width-full no-select">
+                                    <img
+                                        src={strengthImg}
+                                        className="recourse-img strength-recourse-img"
+                                        alt="strength"
+                                    />
+                                    1000
+                                </div>
+                            </div>
                         </li>
                     </ul>
                 </div>

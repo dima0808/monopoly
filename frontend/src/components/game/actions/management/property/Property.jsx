@@ -298,6 +298,224 @@ export default function Property() {
                     </div>
                 </div>
             </div>
+            <div className="property-modifier-div property-div-compleated unic">
+                <h3 className="property-modifier-h3">Ganza</h3>
+                <div className="property-grid-3">
+                    <div className="property-gridimg-img-div">
+                        <img
+                            src={resourceHorsesImg}
+                            className="property-img"
+                            alt="gold"
+                        />
+                    </div>
+                    <p className="condition-p">
+                        Can bye if you are on the cell
+                    </p>
+                    <div className="property-new-stats">
+                        <div className="property-mini-flex">
+                            <p className="property-new-stats-p">t.c</p>
+                            <div className="player-stat-gold width-full pointer no-select">
+                                <img
+                                    src={goldImg}
+                                    className="recourse-img"
+                                    alt="gold"
+                                />
+                                1000
+                            </div>
+                        </div>
+                        <div className="property-mini-flex">
+                            <p className="property-new-stats-p">g.o.s</p>
+                            <div className="player-stat-gold width-full pointer no-select">
+                                <img
+                                    src={goldImg}
+                                    className="recourse-img"
+                                    alt="gold"
+                                />
+                                100
+                            </div>
+                        </div>
+
+                        <div className="property-mini-flex">
+                            <p className="property-new-stats-p">tour.</p>
+                            <div className="player-stat-tourism width-full no-select">
+                                <img
+                                    src={tourismImg}
+                                    className="recourse-img"
+                                    alt="tourism"
+                                />
+                                400
+                            </div>
+                        </div>
+                        {/* <div className="property-mini-flex">
+                            <p className="property-new-stats-p">g.o.t</p>
+                            <div className="player-stat-gold gold-per-turn width-full pointer no-select">
+                                <img
+                                    src={goldImg}
+                                    className="recourse-img"
+                                    alt="gold"
+                                />
+                                1
+                            </div>
+                        </div> */}
+                    </div>
+                </div>
+            </div>
+            <h2 className="unic-efect-h2">Unic efect:</h2>
+            <div className="property-modifier-div property-div-compleated unic-efect modifiered">
+                <h3 className="property-modifier-h3">Ganza</h3>
+                <div className="property-grid-3">
+                    <div className="property-gridimg-img-div">
+                        <img
+                            src={resourceHorsesImg}
+                            className="property-img"
+                            alt="gold"
+                        />
+                    </div>
+                    <p className="condition-p">
+                        Can bye if you are on the cell
+                    </p>
+                    <div className="property-new-stats">
+                        <div className="property-mini-flex">
+                            <p className="property-new-stats-p">g.o.s</p>
+                            <div className="player-stat-gold width-full pointer no-select">
+                                <img
+                                    src={goldImg}
+                                    className="recourse-img"
+                                    alt="gold"
+                                />
+                                100
+                            </div>
+                        </div>
+
+                        <div className="property-mini-flex">
+                            <p className="property-new-stats-p">tour.</p>
+                            <div className="player-stat-tourism width-full no-select">
+                                <img
+                                    src={tourismImg}
+                                    className="recourse-img"
+                                    alt="tourism"
+                                />
+                                400
+                            </div>
+                        </div>
+                        {/* <div className="property-mini-flex">
+                            <p className="property-new-stats-p">g.o.t</p>
+                            <div className="player-stat-gold gold-per-turn width-full pointer no-select">
+                                <img
+                                    src={goldImg}
+                                    className="recourse-img"
+                                    alt="gold"
+                                />
+                                1
+                            </div>
+                        </div> */}
+                    </div>
+                </div>
+            </div>
+            <h2 className="modifier-efect-h2">Modifier efect:</h2>
+            <div className="property-modifier-div property-div-compleated modifier-efect modifiered">
+                <h3 className="property-modifier-h3">iron</h3>
+                <div className="property-grid-3">
+                    <div className="property-gridimg-img-div">
+                        <img
+                            src={resourceHorsesImg}
+                            className="property-img"
+                            alt="gold"
+                        />
+                    </div>
+                    <p className="condition-p">
+                        buff <span>промишлєну зону</span>
+                    </p>
+                    <div className="property-new-stats">
+                        <div className="property-mini-flex">
+                            <p className="property-new-stats-p">g.o.s</p>
+                            <div className="player-stat-gold width-full pointer no-select">
+                                <img
+                                    src={goldImg}
+                                    className="recourse-img"
+                                    alt="gold"
+                                />
+                                100
+                            </div>
+                        </div>
+
+                        <div className="property-mini-flex">
+                            <p className="property-new-stats-p">tour.</p>
+                            <div className="player-stat-tourism width-full no-select">
+                                <img
+                                    src={tourismImg}
+                                    className="recourse-img"
+                                    alt="tourism"
+                                />
+                                400
+                            </div>
+                        </div>
+                        {/* <div className="property-mini-flex">
+                            <p className="property-new-stats-p">g.o.t</p>
+                            <div className="player-stat-gold gold-per-turn width-full pointer no-select">
+                                <img
+                                    src={goldImg}
+                                    className="recourse-img"
+                                    alt="gold"
+                                />
+                                1
+                            </div>
+                        </div> */}
+                    </div>
+                </div>
+            </div>
+            <h2 className="neighborhood-bonus-h2">Neighborhood bonus:</h2>
+            <div className="property-modifier-div property-div-compleated neighborhood-bonus modifiered">
+                <h3 className="property-modifier-h3">iron</h3>
+                <div className="property-grid-3">
+                    <div className="property-gridimg-img-div">
+                        <img
+                            src={resourceHorsesImg}
+                            className="property-img"
+                            alt="gold"
+                        />
+                    </div>
+                    <p className="condition-p">
+                        buff <span>промишлєну зону</span>
+                    </p>
+                    <div className="property-new-stats">
+                        <div className="property-mini-flex">
+                            <p className="property-new-stats-p">g.o.s</p>
+                            <div className="player-stat-gold width-full pointer no-select">
+                                <img
+                                    src={goldImg}
+                                    className="recourse-img"
+                                    alt="gold"
+                                />
+                                100
+                            </div>
+                        </div>
+
+                        <div className="property-mini-flex">
+                            <p className="property-new-stats-p">tour.</p>
+                            <div className="player-stat-tourism width-full no-select">
+                                <img
+                                    src={tourismImg}
+                                    className="recourse-img"
+                                    alt="tourism"
+                                />
+                                400
+                            </div>
+                        </div>
+                        {/* <div className="property-mini-flex">
+                            <p className="property-new-stats-p">g.o.t</p>
+                            <div className="player-stat-gold gold-per-turn width-full pointer no-select">
+                                <img
+                                    src={goldImg}
+                                    className="recourse-img"
+                                    alt="gold"
+                                />
+                                1
+                            </div>
+                        </div> */}
+                    </div>
+                </div>
+            </div>
             <div className=" proprty-btns-div flex-between">
                 <button className="pay-btn decision-button decision-button-green">
                     upgrade:

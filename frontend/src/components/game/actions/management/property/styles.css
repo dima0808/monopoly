@@ -73,13 +73,15 @@
     border-radius: 0 0 0 6px;
 }
 .property-new-stats .player-stat-gold,
-.property-new-stats .player-stat-tourism {
+.property-new-stats .player-stat-tourism,
+.war-modeficator .player-stat-strength {
     margin: 1px 0 0 3px;
     height: 16px;
     font-size: 15px;
     padding-left: 18px;
 }
-.property-new-stats .recourse-img {
+.property-new-stats .recourse-img,
+.war-modeficator .recourse-img {
     height: 15px;
     width: 15px;
 }
@@ -108,4 +110,40 @@
     font-weight: 500;
     letter-spacing: -0.5px;
     word-spacing: 1px;
+}
+.modifier-efect-h2 {
+    text-align: center;
+    color: #0a4104;
+    margin-top: -2px;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+}
+.modifier-efect .property-modifier-h3 {
+    background-color: #0a41047d;
+}
+.property-div-compleated.modifier-efect .property-modifier-h3 {
+    background-color: #0a4104de;
+}
+.modifier-efect.modifiered {
+    outline: 3px solid #0a4104;
+}
+.neighborhood-bonus-h2 {
+    text-align: center;
+    color: #041241;
+    margin-top: -2px;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+}
+.neighborhood-bonus .property-modifier-h3 {
+    background-color: #0412418a;
+}
+.property-div-compleated.neighborhood-bonus .property-modifier-h3 {
+    background-color: #041241c9;
+}
+.neighborhood-bonus.modifiered {
+    outline: 3px solid #041241;
 }

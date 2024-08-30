@@ -1,13 +1,23 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../styles.css";
-import {createPortal} from "react-dom";
+import { createPortal } from "react-dom";
 import Contact from "./Contact";
 import Chat from "./Chat";
-import {getUser, getUserContacts, getAllSuggestedContacts} from "../../../utils/http";
+import {
+    getUser,
+    getUserContacts,
+    getAllSuggestedContacts,
+} from "../../../utils/http";
 import Cookies from "js-cookie";
-import {Client} from "@stomp/stompjs";
+import { Client } from "@stomp/stompjs";
 
-export default function PrivateChatDialog({setNotifications, isOpen, onClose, selectedUser, setSelectedUser}) {
+export default function PrivateChatDialog({
+    setNotifications,
+    isOpen,
+    onClose,
+    selectedUser,
+    setSelectedUser,
+}) {
     const [error, setError] = useState(null);
     const [contacts, setContacts] = useState([]);
     const [client, setClient] = useState(null);
@@ -18,10 +28,14 @@ export default function PrivateChatDialog({setNotifications, isOpen, onClose, se
     function onNewMessageReceived(message) {
         const parsedMessage = JSON.parse(message.body);
         setContacts((prevContacts) => {
-            const contactExists = prevContacts.some(contact => contact.nickname === parsedMessage.nickname);
+            const contactExists = prevContacts.some(
+                (contact) => contact.nickname === parsedMessage.nickname
+            );
             if (contactExists) {
-                return prevContacts.map(contact =>
-                    contact.nickname === parsedMessage.nickname ? parsedMessage : contact
+                return prevContacts.map((contact) =>
+                    contact.nickname === parsedMessage.nickname
+                        ? parsedMessage
+                        : contact
                 );
             } else {
                 return [...prevContacts, parsedMessage];
@@ -31,20 +45,23 @@ export default function PrivateChatDialog({setNotifications, isOpen, onClose, se
 
     useEffect(() => {
         if (isOpen) {
-            const token = Cookies.get('token');
-            const username = Cookies.get('username');
+            const token = Cookies.get("token");
+            const username = Cookies.get("username");
             const client = new Client({
-                brokerURL: 'ws://localhost:8080/ws',
+                brokerURL: "ws://localhost:8080/ws",
                 connectHeaders: {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
                 },
                 onConnect: () => {
-                    console.log('Private chat connected');
-                    client.subscribe('/user/' + username + '/chat/contacts', onNewMessageReceived);
+                    console.log("Private chat connected");
+                    client.subscribe(
+                        "/user/" + username + "/chat/contacts",
+                        onNewMessageReceived
+                    );
                     setIsConnected(true);
                 },
                 onStompError: () => {
-                    console.log('Failed to connect private chat client');
+                    console.log("Failed to connect private chat client");
                     setIsConnected(false);
                 },
             });
@@ -52,37 +69,51 @@ export default function PrivateChatDialog({setNotifications, isOpen, onClose, se
             client.activate();
             setClient(client);
 
-            getUserContacts(username, token).then(setContacts)
-                .catch((error) => setError({message: error.message || "An error occurred"}));
+            getUserContacts(username, token)
+                .then(setContacts)
+                .catch((error) =>
+                    setError({ message: error.message || "An error occurred" })
+                );
 
             return () => {
                 client.deactivate();
                 setClient(null);
                 setIsConnected(false);
-                console.log('Private chat disconnected');
+                console.log("Private chat disconnected");
             };
         }
     }, [isOpen]);
 
     function handleContactClick(nickname) {
-        getUser(nickname).then(setSelectedUser)
+        getUser(nickname)
+            .then(setSelectedUser)
             .catch((error) => {
                 if (error.status === 404) {
-                    setContacts((prevContacts) => prevContacts.filter(contact => contact.nickname !== nickname));
+                    setContacts((prevContacts) =>
+                        prevContacts.filter(
+                            (contact) => contact.nickname !== nickname
+                        )
+                    );
                 }
             });
     }
 
     function performSearch(searchTerm) {
-        const token = Cookies.get('token');
-        const username = Cookies.get('username');
+        const token = Cookies.get("token");
+        const username = Cookies.get("username");
 
         if (searchTerm.trim() === "") {
-            getUserContacts(username, token).then(setContacts)
-                .catch((error) => setError({message: error.message || "An error occurred"}));
+            getUserContacts(username, token)
+                .then(setContacts)
+                .catch((error) =>
+                    setError({ message: error.message || "An error occurred" })
+                );
         } else {
-            getAllSuggestedContacts(username, token, searchTerm.trim()).then(setContacts)
-                .catch((error) => setError({message: error.message || "An error occurred"}));
+            getAllSuggestedContacts(username, token, searchTerm.trim())
+                .then(setContacts)
+                .catch((error) =>
+                    setError({ message: error.message || "An error occurred" })
+                );
         }
     }
 
@@ -117,34 +148,49 @@ export default function PrivateChatDialog({setNotifications, isOpen, onClose, se
                         onChange={handleSearchChange}
                     ></input>
                 </div>
-                <div className="your-contacts scroll">
-                    {!error && contacts
-                        .sort((a, b) => {
-                            const aTimestamp = a.lastMessage ? Date.parse(a.lastMessage.timestamp) : 0;
-                            const bTimestamp = b.lastMessage ? Date.parse(b.lastMessage.timestamp) : 0;
-                            return bTimestamp - aTimestamp;
-                        })
-                        .map((contact) => (
-                            <Contact key={contact.nickname}
-                                     nickname={contact.nickname}
-                                     lastMessage={contact.lastMessage}
-                                     onClick={() => handleContactClick(contact.nickname)}
-                                     isSelected={contact.nickname === selectedUser?.nickname}
-                                     unreadMessages={contact.unreadMessages}/>
-                        ))
-                    }
+                <div className="your-contacts scrollable-div">
+                    {!error &&
+                        contacts
+                            .sort((a, b) => {
+                                const aTimestamp = a.lastMessage
+                                    ? Date.parse(a.lastMessage.timestamp)
+                                    : 0;
+                                const bTimestamp = b.lastMessage
+                                    ? Date.parse(b.lastMessage.timestamp)
+                                    : 0;
+                                return bTimestamp - aTimestamp;
+                            })
+                            .map((contact) => (
+                                <Contact
+                                    key={contact.nickname}
+                                    nickname={contact.nickname}
+                                    lastMessage={contact.lastMessage}
+                                    onClick={() =>
+                                        handleContactClick(contact.nickname)
+                                    }
+                                    isSelected={
+                                        contact.nickname ===
+                                        selectedUser?.nickname
+                                    }
+                                    unreadMessages={contact.unreadMessages}
+                                />
+                            ))}
                     {error && <p className="error-message">{error.message}</p>}
                 </div>
             </div>
-            <Chat selectedUser={selectedUser}
-                  selectedContact={contacts.find(contact => contact.nickname === selectedUser?.nickname)}
-                  client={client}
-                  isConnected={isConnected}
-                  setNotifications={setNotifications}
-                  onClose={() => {
-                      onClose();
-                      setSelectedUser(null);
-                  }}/>
+            <Chat
+                selectedUser={selectedUser}
+                selectedContact={contacts.find(
+                    (contact) => contact.nickname === selectedUser?.nickname
+                )}
+                client={client}
+                isConnected={isConnected}
+                setNotifications={setNotifications}
+                onClose={() => {
+                    onClose();
+                    setSelectedUser(null);
+                }}
+            />
         </dialog>,
         document.getElementById("modal")
     );

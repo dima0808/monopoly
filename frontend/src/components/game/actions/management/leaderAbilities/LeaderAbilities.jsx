@@ -42,7 +42,7 @@ export default function LeaderAbilities() {
                 </p>
             </div>
             <div className="property-modifier-div property-div-compleated unic">
-                <h3 className="property-modifier-h3">Pasture</h3>
+                <h3 className="property-modifier-h3">Ganza</h3>
                 <div className="property-grid-3">
                     <div className="property-gridimg-img-div">
                         <img
@@ -66,6 +66,58 @@ export default function LeaderAbilities() {
                                 1000
                             </div>
                         </div>
+                        <div className="property-mini-flex">
+                            <p className="property-new-stats-p">g.o.s</p>
+                            <div className="player-stat-gold width-full pointer no-select">
+                                <img
+                                    src={goldImg}
+                                    className="recourse-img"
+                                    alt="gold"
+                                />
+                                100
+                            </div>
+                        </div>
+
+                        <div className="property-mini-flex">
+                            <p className="property-new-stats-p">tour.</p>
+                            <div className="player-stat-tourism width-full no-select">
+                                <img
+                                    src={tourismImg}
+                                    className="recourse-img"
+                                    alt="tourism"
+                                />
+                                400
+                            </div>
+                        </div>
+                        {/* <div className="property-mini-flex">
+                            <p className="property-new-stats-p">g.o.t</p>
+                            <div className="player-stat-gold gold-per-turn width-full pointer no-select">
+                                <img
+                                    src={goldImg}
+                                    className="recourse-img"
+                                    alt="gold"
+                                />
+                                1
+                            </div>
+                        </div> */}
+                    </div>
+                </div>
+            </div>
+            <h2 className="unic-efect-h2">Unic efect:</h2>
+            <div className="property-modifier-div property-div-compleated unic-efect modifiered">
+                <h3 className="property-modifier-h3">Ganza</h3>
+                <div className="property-grid-3">
+                    <div className="property-gridimg-img-div">
+                        <img
+                            src={resourceHorsesImg}
+                            className="property-img"
+                            alt="gold"
+                        />
+                    </div>
+                    <p className="condition-p">
+                        Can bye if you are on the cell
+                    </p>
+                    <div className="property-new-stats">
                         <div className="property-mini-flex">
                             <p className="property-new-stats-p">g.o.s</p>
                             <div className="player-stat-gold width-full pointer no-select">

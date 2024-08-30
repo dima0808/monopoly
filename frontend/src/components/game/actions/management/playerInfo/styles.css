@@ -1,0 +1,105 @@
+.player-info-managment .property-cell-name {
+    background-color: #4d4450de;
+    color: #eeeeeeb2;
+    font-size: 22px;
+}
+.color-red .property-player-name {
+    color: #db4444;
+    font-size: 26px;
+    font-weight: 600;
+}
+.property-player-name {
+    font-size: 26px;
+    padding-bottom: 0;
+}
+
+.player-abilitys {
+    overflow-wrap: break-word;
+    padding-bottom: 2px;
+    height: fit-content;
+    background-color: #eee;
+}
+.player-info-managment .radiant-white-gradient {
+    background: -moz-radial-gradient(#807285d5, #80728500);
+    border-bottom: 2px solid #6d6670;
+}
+.color-blue .property-player-name {
+    color: #5f65a8 !important;
+    font-size: 26px;
+    font-weight: 600;
+}
+.color-green .property-player-name {
+    color: #56aa59 !important;
+    font-size: 26px;
+    font-weight: 600;
+}
+.color-yellow .property-player-name {
+    color: #ffef62 !important;
+    font-size: 26px;
+    font-weight: 600;
+}
+.color-orange .property-player-name {
+    color: #f79633 !important;
+    font-size: 26px;
+    font-weight: 600;
+}
+.color-turquoise .property-player-name {
+    color: #1e9eae !important;
+    font-size: 26px;
+    font-weight: 600;
+}
+.color-pink .property-player-name {
+    color: #ff87c3 !important;
+    font-size: 26px;
+    font-weight: 600;
+}
+.color-violet .property-player-name {
+    color: #b052c0 !important;
+    font-size: 26px;
+    font-weight: 600;
+}
+.player-relations-div {
+    padding: 2px 5px;
+}
+.player-relations-h3 {
+    color: #041241;
+    margin-left: 5px;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+}
+.player-relations {
+    display: flex;
+    gap: 2px;
+}
+.player-relation-civ-div {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+.player-relation-civ-div .property-img {
+    width: 50px;
+    height: 50px;
+}
+.war-img {
+}
+.relation-status-img {
+}
+.war-img::before {
+    content: "";
+    z-index: 100;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 100%;
+    left: 100%;
+    transform: translate(-100%, -100%);
+    background-image: url("../../../../../images/icon-war.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: all 0.3s ease-in-out;
+    border-radius: 4px;
+}

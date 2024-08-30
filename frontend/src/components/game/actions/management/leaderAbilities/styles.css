@@ -60,3 +60,21 @@
 .unic.modifiered {
     outline: 3px solid #5a2716c3;
 }
+.unic-efect-h2 {
+    text-align: center;
+    color: #6b1c0e;
+    margin-top: -2px;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+}
+.unic-efect .property-modifier-h3 {
+    background-color: #6b1c0e77;
+}
+.property-div-compleated.unic-efect .property-modifier-h3 {
+    background-color: #6b210ec9;
+}
+.unic-efect.modifiered {
+    outline: 3px solid #6b1c0e;
+}
