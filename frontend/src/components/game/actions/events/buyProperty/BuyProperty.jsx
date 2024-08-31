@@ -1,6 +1,7 @@
 import "./styles.css";
 import goldImg from "../../../../../images/icon-gold.png";
-import tourismImg from "../../../../../images/icon-tourism.png";
+// import tourismImg from "../../../../../images/icon-tourism.png";
+
 export default function BuyProperty({property, handleBuyProperty, onSkip}) {
 
     return (
@@ -125,7 +126,7 @@ export default function BuyProperty({property, handleBuyProperty, onSkip}) {
             {/*    </div>*/}
             {/*</div>*/}
             <div className="decision-buttons flex-between">
-                <button onClick={() => handleBuyProperty(property.position)} className="pay-btn decision-button decision-button-green">
+                <button onClick={handleBuyProperty} className="pay-btn decision-button decision-button-green">
                     buy:
                     <div className="player-stat-gold width-full pointer no-select">
                         <img

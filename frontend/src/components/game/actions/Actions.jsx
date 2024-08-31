@@ -6,17 +6,17 @@ import goldImg from "../../../images/icon-gold.png";
 import strengthImg from "../../../images/icon-strength.png";
 import Events from "./events/Events";
 import Management from "./management/Management";
-import SettingsDialog from "./SettingsDialog";
+import {getAllEvents} from "../../../utils/http";
 
-export default function Actions({ room, players, events, setEvents, client, isConnected, setNotifications }) {
+export default function Actions({ room, players, client, isConnected, setNotifications }) {
     const [activeTab, setActiveTab] = useState("Events");
     const [armySpending, setArmySpending] = useState("Default");
+    const [error, setError] = useState(null);
 
-    const isCurrentUserTurn =
-        room.isStarted && room.currentTurn === Cookies.get("username");
-    const currentUser = players.find(
-        (player) => player.user.username === Cookies.get("username")
-    );
+    const [events, setEvents] = useState([]);
+
+    const isCurrentUserTurn = room.isStarted && room.currentTurn === Cookies.get("username");
+    const currentUser = players.find((player) => player.user.username === Cookies.get("username"));
     const hasRolledDice = currentUser && currentUser.hasRolledDice;
 
     const handleRollDice = useCallback(() => {
@@ -79,12 +79,48 @@ export default function Actions({ room, players, events, setEvents, client, isCo
                 },
             });
             setEvents((prev) => prev.filter((event) => event.type !== "BUY_PROPERTY"));
-            console.log("Rolling dice...");
+            console.log("Buying property...");
         } catch (error) {
             setNotifications((prev) => [
                 ...prev,
                 {
-                    message: "Error rolling dice (no connection)",
+                    message: "Error buying property (no connection)",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+        }
+    };
+
+    const handleSkip = (eventType) => {
+        const token = Cookies.get("token");
+        const username = Cookies.get("username");
+        if (!client || !client.publish) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message:
+                        "Client is not initialized or publish method is not available",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+            return;
+        }
+        try {
+            client.publish({
+                destination: `/app/members/${username}/deleteEvent/${eventType}`,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    username: username,
+                },
+            });
+            console.log("Skipping event...");
+        } catch (error) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message: "Error skipping event (no connection)",
                     duration: 3500,
                     isError: true,
                 },
@@ -128,6 +164,33 @@ export default function Actions({ room, players, events, setEvents, client, isCo
         }
     }, [client, room.name, setNotifications]);
 
+    const onEventReceived = (message) => {
+        const {type, content, event} = JSON.parse(message.body);
+        console.log(content);
+        switch (type) {
+            case 'ADD_EVENT':
+                setEvents((prev) => [...prev, event]);
+                return;
+            case 'DELETE_EVENT':
+                setEvents((prev) => prev.filter((e) => e.type !== event.type));
+                return;
+            default:
+                return;
+        }
+    }
+
+    useEffect(() => {
+        if (client && isConnected) {
+            const username = Cookies.get("username");
+            getAllEvents(username).then(setEvents)
+                .catch((error) => setError({message: error.message || "An error occurred"}));
+            const eventsSubscription = client.subscribe("/user/" + username + "/queue/events", onEventReceived);
+            return () => {
+                eventsSubscription.unsubscribe();
+            };
+        }
+    }, [client, isConnected]);
+
     useEffect(() => {
         if (isCurrentUserTurn && !hasRolledDice) {
             const timerId = setTimeout(() => {
@@ -161,8 +224,8 @@ export default function Actions({ room, players, events, setEvents, client, isCo
                         events={events}
                         handleRollDice={handleRollDice}
                         handleBuyProperty={handleBuyProperty}
+                        handleSkip={handleSkip}
                         handleEndTurn={handleEndTurn}
-                        onSkip={(eventType) => setEvents((prev) => prev.filter((event) => event.type !== eventType))}
                         isCurrentUserTurn={isCurrentUserTurn}
                         hasRolledDice={hasRolledDice}
                     />
@@ -341,7 +404,8 @@ export default function Actions({ room, players, events, setEvents, client, isCo
                     </button>
                 </div>
                 <div className="chousen-div">
-                    <div className="chousen-div-white">{renderContent()}</div>
+                    {!error && <div className="chousen-div-white">{renderContent()}</div>}
+                    {error && <p>{error.message}</p>}
                 </div>
             </div>
         </section>

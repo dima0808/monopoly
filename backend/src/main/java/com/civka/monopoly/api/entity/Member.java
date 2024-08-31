@@ -46,6 +46,10 @@ public class Member {
     @JsonIgnore
     private List<Property> properties = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private List<Event> events = new ArrayList<>();
+
     public enum Civilization {
         Random,
         Colombia,

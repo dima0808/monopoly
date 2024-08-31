@@ -1,16 +1,11 @@
 package com.civka.monopoly.api.service.impl;
 
 import com.civka.monopoly.api.dto.ChatMessageDto;
-import com.civka.monopoly.api.entity.Chat;
-import com.civka.monopoly.api.entity.ChatMessage;
-import com.civka.monopoly.api.entity.Member;
+import com.civka.monopoly.api.entity.*;
 import com.civka.monopoly.api.payload.DiceMessage;
 import com.civka.monopoly.api.payload.PlayerMessage;
 import com.civka.monopoly.api.repository.MemberRepository;
-import com.civka.monopoly.api.service.ChatMessageService;
-import com.civka.monopoly.api.service.ChatService;
-import com.civka.monopoly.api.service.MemberService;
-import com.civka.monopoly.api.service.UserNotAllowedException;
+import com.civka.monopoly.api.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -25,6 +20,7 @@ public class MemberServiceImpl implements MemberService {
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatService chatService;
     private final ChatMessageService chatMessageService;
+    private final EventService eventService;
 
     @Override
     public Member save(Member member) {
@@ -56,7 +52,22 @@ public class MemberServiceImpl implements MemberService {
         member.setHasRolledDice(true);
         Member updatedMember = memberRepository.save(member);
 
-        Chat roomChat = chatService.findByName(updatedMember.getRoom().getName());
+        Room room = updatedMember.getRoom();
+        int finalNewPosition = newPosition;
+        if (newPosition == 13 || newPosition == 37) {
+//            eventService.add(updatedMember, Event.EventType.PROJECTS);
+        } else if (newPosition == 24) {
+//            eventService.add(updatedMember, Event.EventType.BERMUDA);
+        } else if (newPosition == 6) {
+//            eventService.add(updatedMember, Event.EventType.GOODY_HUT);
+        } else if (newPosition == 29) {
+//            eventService.add(updatedMember, Event.EventType.BARBARIANS);
+        } else if (room.getProperties().stream()
+                .noneMatch(property -> property.getPosition().equals(finalNewPosition))) {
+            eventService.add(updatedMember, Event.EventType.BUY_PROPERTY);
+        }
+
+        Chat roomChat = chatService.findByName(room.getName());
         ChatMessageDto systemMessage = ChatMessageDto.builder()
                 .type(ChatMessage.MessageType.SYSTEM_ROLL_DICE)
                 .content(updatedMember.getUser().getNickname() + " " + firstRoll + " " + secondRoll)

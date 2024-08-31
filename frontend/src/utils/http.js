@@ -210,3 +210,14 @@ export async function getPlayerProperties(roomName) {
 
     return resData;
 }
+
+export async function getAllEvents(username) {
+    const response = await fetch('http://localhost:8080/api/members/' + username + '/events');
+    const resData = await response.json();
+
+    if (!response.ok) {
+        throw new Error(resData.message);
+    }
+
+    return resData;
+}

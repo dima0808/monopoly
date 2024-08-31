@@ -37,6 +37,7 @@ public class RoomServiceImpl implements RoomService {
     private final MemberService memberService;
     private final ChatService chatService;
     private final PropertyService propertyService;
+    private final EventService eventService;
     private final SimpMessagingTemplate messagingTemplate;
     private final PasswordEncoder passwordEncoder;
 
@@ -258,6 +259,7 @@ public class RoomServiceImpl implements RoomService {
             throw new UserNotAllowedException();
         }
         Room room = member.getRoom();
+        eventService.delete(member, Event.EventType.BUY_PROPERTY);
         Property property = Property.builder()
                 .member(member)
                 .room(room)
