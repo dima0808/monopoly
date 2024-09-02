@@ -32,5 +32,6 @@ public class Event {
         BERMUDA,
         GOODY_HUT,
         BARBARIANS,
+        FOREIGN_PROPERTY,
     }
 }

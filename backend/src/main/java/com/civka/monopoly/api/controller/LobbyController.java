@@ -88,7 +88,33 @@ public class LobbyController {
         return RoomMessage.builder()
                 .type(RoomMessage.MessageType.BUY_PROPERTY)
                 .content("Member " + username + " bought property on position " + position)
-                .property(roomService.buyProperty(member, position))
+                .property(memberService.buyProperty(member, position))
+                .build();
+    }
+
+    @MessageMapping("/rooms/{roomName}/payRent/{position}")
+    @SendTo("/topic/public/{roomName}/game")
+    public RoomMessage payRent(@DestinationVariable Integer position,
+                                   @Header("username") String username) {
+        Member member = userService.findByUsername(username).getMember();
+        return RoomMessage.builder()
+                .type(RoomMessage.MessageType.PAY_RENT)
+                .content("Member " + username + " paid rent on position " + position)
+                .property(memberService.payRent(member, position))
+                .room(roomService.findByName(member.getRoom().getName()))
+                .build();
+    }
+
+    @MessageMapping("/rooms/{roomName}/addGold/{nickname}")
+    @SendTo("/topic/public/{roomName}/game")
+    public RoomMessage addGold(@DestinationVariable String nickname,
+                               @Header("username") String admin,
+                               @Header("gold") Integer gold) {
+        Member member = userService.findByNickname(nickname).getMember();
+        return RoomMessage.builder()
+                .type(RoomMessage.MessageType.ADD_GOLD)
+                .content("Admin added " + gold + "gold for " + nickname)
+                .room(roomService.addGold(member, gold, admin))
                 .build();
     }
 

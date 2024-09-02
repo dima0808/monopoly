@@ -2,7 +2,6 @@ package com.civka.monopoly.api.service;
 
 import com.civka.monopoly.api.dto.RoomDto;
 import com.civka.monopoly.api.entity.Member;
-import com.civka.monopoly.api.entity.Property;
 import com.civka.monopoly.api.entity.Room;
 
 import java.util.List;
@@ -33,5 +32,5 @@ public interface RoomService {
 
     Room endTurn(Member member);
 
-    Property buyProperty(Member member, Integer position);
+    Room addGold(Member member, Integer gold, String admin);
 }

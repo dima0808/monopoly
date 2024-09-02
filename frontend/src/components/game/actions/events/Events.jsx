@@ -50,7 +50,7 @@ const propertiesInfo = {
         totalCost: 1000,
         goldOnStep: 340,
         goldPerTurn: 34,
-        requirements: {},
+        requirements: [<p className="condition-p">If u have an <span>Arena</span> and the mather</p>],
         src: resourceHorsesImg,
         position: 1
     },
@@ -59,7 +59,7 @@ const propertiesInfo = {
         totalCost: 1000,
         goldOnStep: 340,
         goldPerTurn: 34,
-        requirements: {},
+        requirements: [<p className="condition-p">If u have an <span>Arena</span> and the mather</p>],
         src: resourceBananasImg,
         position: 2
     },
@@ -68,7 +68,7 @@ const propertiesInfo = {
         totalCost: 1000,
         goldOnStep: 340,
         goldPerTurn: 34,
-        requirements: {},
+        requirements: [<p className="condition-p">If u have an <span>Arena</span> and the mather</p>],
         src: resourceDeerImg,
         position: 3
     },
@@ -77,7 +77,7 @@ const propertiesInfo = {
         totalCost: 1000,
         goldOnStep: 340,
         goldPerTurn: 34,
-        requirements: {},
+        requirements: [<p className="condition-p">If u have an <span>Arena</span> and the mather</p>],
         src: wonderTempleOfArtemisImg,
         position: 4
     },
@@ -86,7 +86,7 @@ const propertiesInfo = {
         totalCost: 1000,
         goldOnStep: 340,
         goldPerTurn: 34,
-        requirements: {},
+        requirements: [<p className="condition-p">If u have an <span>Arena</span> and the mather</p>],
         src: resourceFursImg,
         position: 5
     },
@@ -427,10 +427,12 @@ const propertiesInfo = {
 
 export default function Events({
                                    events,
+                                   properties,
                                    isCurrentUserTurn,
                                    hasRolledDice,
                                    handleRollDice,
                                    handleBuyProperty,
+                                   handlePayRent,
                                    handleEndTurn,
                                    handleSkip
                                }) {
@@ -458,7 +460,13 @@ export default function Events({
                 case "ENEMY_PROPERTY":
                     return <EnemyProperty key={index} />;
                 case "FOREIGN_PROPERTY":
-                    return <ForeignProperty key={index} />;
+                    return <ForeignProperty
+                        key={index}
+                        property={properties[member.position]}
+                        propertyInfo={propertiesInfo[member.position]}
+                        handlePayRent={() => handlePayRent(member.position)}
+                        // handleDeclareWar
+                    />;
                 case "GOODY_HUT":
                     return <GoodyHut key={index} />;
                 default:

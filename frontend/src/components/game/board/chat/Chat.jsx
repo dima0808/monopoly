@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import {getAllMessages} from "../../../../utils/http";
 import {handleInputChange, handleKeyDown} from "../../../../utils/chat";
 import SystemMessage from "./SystemMessage";
+import goldImg from "../../../../images/icon-gold.png";
 
 export default function Chat({roomName, client, isConnected, setNotifications, setSelectedUser, setIsPrivateChatOpen}) {
     const [messages, setMessages] = useState([]);
@@ -100,15 +101,32 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
             ]);
             return;
         }
+        const [command, param, targetUser] = messageContent.split(" ").filter(Boolean);
         try {
-            client.publish({
-                destination: "/app/chat/sendPublicMessage/" + roomName,
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    username: username,
-                },
-                body: JSON.stringify({content: messageContent}),
-            });
+            switch (command) {
+                case "/addGold":
+                    if (param && targetUser) {
+                        const gold = parseInt(param, 10);
+                        client.publish({
+                            destination: "/app/rooms/" + roomName + "/addGold/" + targetUser,
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                username: username,
+                                gold: gold,
+                            },
+                        });
+                    }
+                    break;
+                default:
+                    client.publish({
+                        destination: "/app/chat/sendPublicMessage/" + roomName,
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            username: username,
+                        },
+                        body: JSON.stringify({content: messageContent}),
+                    });
+            }
             console.log("Sending message: " + messageContent);
             messageInputRef.current.value = "";
             scrollToBottom();
@@ -145,14 +163,32 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
                     {!error &&
                         messages.map((message, index) => {
                             if (message.type) {
+                                const data = message.content.split(" ");
                                 switch (message.type) {
                                     case 'SYSTEM_ROLL_DICE':
-                                        const data = message.content.split(" ");
                                         return (
                                             <SystemMessage key={index} timestamp={message.timestamp}>
                                                 гравець <span className="system-span">{data[0]}</span>
                                                 кинув кубики <span className="system-tile-span">{data[1]}</span>
                                                 та <span className="system-tile-span">{data[2]}</span>
+                                            </SystemMessage>
+                                        );
+                                    case 'SYSTEM_PAY_RENT':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                заплатив
+                                                <div className="inline-block">
+                                                    <div className="player-stat-gold width-full pointer no-select">
+                                                        <img
+                                                            src={goldImg}
+                                                            className="recourse-img"
+                                                            alt="gold"
+                                                        />
+                                                        {data[1]}
+                                                    </div>
+                                                </div>
+                                                гравцю <span className="system-span">{data[2]}</span>
                                             </SystemMessage>
                                         );
                                     default:

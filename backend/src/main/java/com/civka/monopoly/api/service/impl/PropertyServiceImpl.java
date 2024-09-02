@@ -22,4 +22,9 @@ public class PropertyServiceImpl implements PropertyService {
     public Boolean existsByRoomAndPosition(Room room, Integer position) {
         return propertyRepository.existsByRoomAndPosition(room, position);
     }
+
+    @Override
+    public Property findByRoomAndPosition(Room room, Integer position) {
+        return propertyRepository.findByRoomAndPosition(room, position).orElse(null);
+    }
 }

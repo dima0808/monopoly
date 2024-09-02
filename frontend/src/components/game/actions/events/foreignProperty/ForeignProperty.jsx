@@ -1,15 +1,14 @@
 import "./styles.css";
-import resourceHorsesImg from "../../../../../images/icon_resource_horses.png";
 import goldImg from "../../../../../images/icon-gold.png";
 import tourismImg from "../../../../../images/icon-tourism.png";
-export default function ForeignProperty() {
+export default function ForeignProperty({property, propertyInfo, handlePayRent}) {
     return (
-        <div className="property-color color-blue-g">
-            <h2 className="property-cell-name">Horses</h2>
+        <div className={"property-color color-" + property.member.color + "-g"}>
+            <h2 className="property-cell-name">{propertyInfo.name}</h2>
             <div className="property-grid">
                 <div className="property-img-div">
                     <img
-                        src={resourceHorsesImg}
+                        src={propertyInfo.src}
                         className="property-img"
                         alt="gold"
                     />
@@ -23,7 +22,7 @@ export default function ForeignProperty() {
                                 className="recourse-img"
                                 alt="gold"
                             />
-                            1000
+                            {propertyInfo.totalCost}
                         </div>
                     </div>
                     <div className="gold-on-step stats-div">
@@ -34,10 +33,10 @@ export default function ForeignProperty() {
                                 className="recourse-img"
                                 alt="gold"
                             />
-                            340
+                            {propertyInfo.goldOnStep}
                         </div>
                     </div>
-                    {/* <div className="gold-on-step stats-div">
+                    <div className="gold-on-step stats-div">
                         Gold per turn:
                         <div className="player-stat-gold gold-per-turn width-full pointer no-select">
                             <img
@@ -45,25 +44,24 @@ export default function ForeignProperty() {
                                 className="recourse-img"
                                 alt="gold"
                             />
-                            +34
-                        </div>
-                    </div> */}
-                    <div className="gold-on-step stats-div">
-                        Tourism:
-                        <div className="player-stat-tourism width-full no-select">
-                            <img
-                                src={tourismImg}
-                                className="recourse-img"
-                                alt="tourism"
-                            />
-                            40
+                            {propertyInfo.goldPerTurn}
                         </div>
                     </div>
+                    {/*<div className="gold-on-step stats-div">*/}
+                    {/*    Tourism:*/}
+                    {/*    <div className="player-stat-tourism width-full no-select">*/}
+                    {/*        <img*/}
+                    {/*            src={tourismImg}*/}
+                    {/*            className="recourse-img"*/}
+                    {/*            alt="tourism"*/}
+                    {/*        />*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
                 </div>
             </div>
 
             <div className="decision-buttons flex-between">
-                <button className="pay-btn decision-button decision-button-green">
+                <button onClick={handlePayRent} className="pay-btn decision-button decision-button-green">
                     pay:
                     <div className="player-stat-gold width-full pointer no-select">
                         <img
@@ -71,7 +69,7 @@ export default function ForeignProperty() {
                             className="recourse-img"
                             alt="gold"
                         />
-                        <p>340</p>
+                        <p>{propertyInfo.goldOnStep}</p>
                     </div>
                 </button>
                 <button className="decision-button decision-button-reder">

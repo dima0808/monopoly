@@ -253,19 +253,13 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Property buyProperty(Member member, Integer position) {
-        if (!member.getPosition().equals(position) ||
-                propertyService.existsByRoomAndPosition(member.getRoom(), position)) {
+    public Room addGold(Member member, Integer gold, String admin) {
+        User adminUser = userService.findByUsername(admin);
+        if (adminUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))) {
+            member.setGold(member.getGold() + gold);
+            return memberService.save(member).getRoom();
+        } else {
             throw new UserNotAllowedException();
         }
-        Room room = member.getRoom();
-        eventService.delete(member, Event.EventType.BUY_PROPERTY);
-        Property property = Property.builder()
-                .member(member)
-                .room(room)
-                .upgradeLevel(List.of(Property.Upgrade.LEVEL_1))
-                .position(position)
-                .build();
-        return propertyService.save(property);
     }
 }

@@ -8,4 +8,6 @@ public interface PropertyService {
     Property save(Property property);
 
     Boolean existsByRoomAndPosition(Room room, Integer position);
+
+    Property findByRoomAndPosition(Room room, Integer position);
 }

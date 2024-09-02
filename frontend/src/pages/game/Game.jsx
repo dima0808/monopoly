@@ -57,6 +57,14 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                         [property.position]: property
                     };
                 });
+                setPlayers((prevPlayers) => {
+                    return prevPlayers.map(player => {
+                        return player.id === property.member.id ? property.member : player;
+                    });
+                });
+                return;
+            case 'PAY_RENT':
+                setPlayers(room.members);
                 return;
             case 'END_TURN':
                 setRoom((prevRoom) => {
@@ -70,6 +78,9 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                         return player.user.username === room.currentTurn ? { ...player, hasRolledDice: false } : player;
                     });
                 });
+                return;
+            case 'ADD_GOLD':
+                setPlayers(room.members);
                 return;
             default:
                 return;
@@ -168,7 +179,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                        setSelectedUser={setSelectedUser} setIsPrivateChatOpen={setIsPrivateChatOpen}
                        setNotifications={setNotifications}/>
                 <Actions client={client} isConnected={isConnected}
-                         room={room} players={players}
+                         room={room} players={players} properties={properties}
                          setNotifications={setNotifications}/>
             </>}
         </div>

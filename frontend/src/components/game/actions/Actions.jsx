@@ -8,7 +8,7 @@ import Events from "./events/Events";
 import Management from "./management/Management";
 import {getAllEvents} from "../../../utils/http";
 
-export default function Actions({ room, players, client, isConnected, setNotifications }) {
+export default function Actions({ room, players, properties, client, isConnected, setNotifications }) {
     const [activeTab, setActiveTab] = useState("Events");
     const [armySpending, setArmySpending] = useState("Default");
     const [error, setError] = useState(null);
@@ -78,7 +78,6 @@ export default function Actions({ room, players, client, isConnected, setNotific
                     username: username,
                 },
             });
-            setEvents((prev) => prev.filter((event) => event.type !== "BUY_PROPERTY"));
             console.log("Buying property...");
         } catch (error) {
             setNotifications((prev) => [
@@ -91,6 +90,42 @@ export default function Actions({ room, players, client, isConnected, setNotific
             ]);
         }
     };
+
+    const handlePayRent = (position) => {
+        const token = Cookies.get("token");
+        const username = Cookies.get("username");
+        if (!client || !client.publish) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message:
+                        "Client is not initialized or publish method is not available",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+            return;
+        }
+        try {
+            client.publish({
+                destination: `/app/rooms/${room.name}/payRent/${position}`,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    username: username,
+                },
+            });
+            console.log("Paying rent...");
+        } catch (error) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message: "Error paying rent (no connection)",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+        }
+    }
 
     const handleSkip = (eventType) => {
         const token = Cookies.get("token");
@@ -222,8 +257,10 @@ export default function Actions({ room, players, client, isConnected, setNotific
                 return (
                     <Events
                         events={events}
+                        properties={properties}
                         handleRollDice={handleRollDice}
                         handleBuyProperty={handleBuyProperty}
+                        handlePayRent={handlePayRent}
                         handleSkip={handleSkip}
                         handleEndTurn={handleEndTurn}
                         isCurrentUserTurn={isCurrentUserTurn}
