@@ -1,9 +1,10 @@
 import "./styles.css";
-import resourceHorsesImg from "../../../../../images/icon_resource_horses.png";
+import resourceHorsesImg from "../../../../../images/japan-leader.png";
 import goldImg from "../../../../../images/icon-gold.png";
 import tourismImg from "../../../../../images/icon-tourism.png";
 import strengthImg from "../../../../../images/icon-strength.png";
 import warImg from "../../../../../images/icon-war.png";
+import unionImg from "../../../../../images/icon-union.png";
 export default function PlayerInfo() {
     return (
         <div className="property-color color-red hero-info-managment player-info-managment">
@@ -25,7 +26,21 @@ export default function PlayerInfo() {
                 <div className="player-relations-div">
                     <h3 className="player-relations-h3">Player relations:</h3>
                     <div className="player-relations">
-                        <div className="player-relation-civ-div war-img">
+                        <div className="player-relation-civ-div civ-color-red war-img">
+                            <img
+                                src={resourceHorsesImg}
+                                className="property-img"
+                                alt="gold"
+                            />
+                        </div>
+                        <div className="player-relation-civ-div civ-color-blue union-img">
+                            <img
+                                src={resourceHorsesImg}
+                                className="property-img"
+                                alt="gold"
+                            />
+                        </div>
+                        <div className="player-relation-civ-div civ-color-green war-img">
                             <img
                                 src={resourceHorsesImg}
                                 className="property-img"
@@ -39,13 +54,6 @@ export default function PlayerInfo() {
                                 alt="gold"
                             />
                         </div>
-                        <div className="player-relation-civ-div war-img">
-                            <img
-                                src={resourceHorsesImg}
-                                className="property-img"
-                                alt="gold"
-                            />
-                        </div>
                         <div className="player-relation-civ-div">
                             <img
                                 src={resourceHorsesImg}
@@ -53,13 +61,29 @@ export default function PlayerInfo() {
                                 alt="gold"
                             />
                         </div>
-                        <div className="player-relation-civ-div">
-                            <img
-                                src={resourceHorsesImg}
-                                className="property-img"
-                                alt="gold"
-                            />
-                        </div>
+                    </div>
+                    <div className="relation-btns flex-between">
+                        <button className="pay-btn decision-button decision-button-blue">
+                            make union
+                            <div className="inline-block">
+                                <img
+                                    src={unionImg}
+                                    className="get-union-img"
+                                    alt="gold"
+                                />
+                            </div>
+                        </button>
+                        <button className="pay-btn decision-button decision-button-green">
+                            delegation
+                            <div className="player-stat-gold width-full pointer no-select">
+                                <img
+                                    src={goldImg}
+                                    className="recourse-img"
+                                    alt="gold"
+                                />
+                                <p>10</p>
+                            </div>
+                        </button>
                     </div>
                 </div>
                 <div className="hero-abilitys">
