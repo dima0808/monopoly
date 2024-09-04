@@ -1,30 +1,33 @@
 import "./styles.css";
 import goldImg from "../../../../../images/icon-gold.png";
+import {propertiesInfo} from "../../../../../constraints";
 // import tourismImg from "../../../../../images/icon-tourism.png";
 
 export default function BuyProperty({property, handleBuyProperty, onSkip}) {
 
+    const propertyInfo = propertiesInfo[property.position];
+
     return (
         <div className="property-color">
-            <h2 className="property-cell-name">{property.name}</h2>
+            <h2 className="property-cell-name">{propertyInfo.name}</h2>
             <div className="property-grid">
                 <div className="property-img-div">
                     <img
-                        src={property.src}
+                        src={propertyInfo.src}
                         className="property-img"
                         alt="gold"
                     />
                 </div>
                 <div className="property-stats-div">
                     <div className="total-cost stats-div">
-                        Total cost:
+                        Price:
                         <div className="player-stat-gold width-full pointer no-select">
                             <img
                                 src={goldImg}
                                 className="recourse-img"
                                 alt="gold"
                             />
-                            {property.totalCost}
+                            {property.price}
                         </div>
                     </div>
                     <div className="gold-on-step stats-div">
@@ -134,7 +137,7 @@ export default function BuyProperty({property, handleBuyProperty, onSkip}) {
                             className="recourse-img"
                             alt="gold"
                         />
-                        <p>{property.totalCost}</p>
+                        <p>{property.price}</p>
                     </div>
                 </button>
                 <button onClick={onSkip} className="decision-button decision-button-red">

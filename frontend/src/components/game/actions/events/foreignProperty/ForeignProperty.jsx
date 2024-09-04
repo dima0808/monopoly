@@ -1,7 +1,11 @@
 import "./styles.css";
 import goldImg from "../../../../../images/icon-gold.png";
 import tourismImg from "../../../../../images/icon-tourism.png";
-export default function ForeignProperty({property, propertyInfo, handlePayRent}) {
+import {propertiesInfo} from "../../../../../constraints";
+export default function ForeignProperty({property, handlePayRent}) {
+
+    const propertyInfo = propertiesInfo[property.position];
+
     return (
         <div className={"property-color color-" + property.member.color + "-g"}>
             <h2 className="property-cell-name">{propertyInfo.name}</h2>
@@ -69,7 +73,7 @@ export default function ForeignProperty({property, propertyInfo, handlePayRent})
                             className="recourse-img"
                             alt="gold"
                         />
-                        <p>{propertyInfo.goldOnStep}</p>
+                        <p>{property.goldOnStep}</p>
                     </div>
                 </button>
                 <button className="decision-button decision-button-reder">

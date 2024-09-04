@@ -5,10 +5,10 @@ export default function SystemMessage({timestamp, children}) {
 
     return (
         <div className="chat-zone-monopoly-div">
-            <p className="chat-zone-monopoly-message">
+            <div className="chat-zone-monopoly-message">
                 <span className="system-span">System: </span>
                 {children}
-            </p>
+            </div>
             <p className="chat-zone-monopoly-time">{formattedTime}</p>
         </div>
     );

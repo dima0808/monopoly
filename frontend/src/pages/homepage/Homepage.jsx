@@ -4,6 +4,7 @@ import Chat from "../../components/chat/public/Chat";
 import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import {Client} from "@stomp/stompjs";
+import {IP} from "../../constraints";
 
 export default function Homepage({setNotifications}) {
     const [client, setClient] = useState(null);
@@ -12,7 +13,7 @@ export default function Homepage({setNotifications}) {
     useEffect(() => {
         const token = Cookies.get('token');
         const client = new Client({
-            brokerURL: 'ws://localhost:8080/ws',
+            brokerURL: 'ws://' + IP + ':8080/ws',
             connectHeaders: {
                 Authorization: `Bearer ${token}`
             },

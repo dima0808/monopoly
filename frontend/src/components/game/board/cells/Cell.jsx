@@ -1,6 +1,6 @@
 import "./styles.css";
 
-export default function Cell({src, alt, direction, mirror = false, noneUpgrades = false, specialType, owner}) {
+export default function Cell({src, alt, direction, mirror = false, noneUpgrades = false, specialType, property}) {
     const baseClass = `object-${direction}`;
     const priceClass = specialType
         ? `${baseClass}__price ${baseClass}__price-${specialType}`
@@ -10,8 +10,8 @@ export default function Cell({src, alt, direction, mirror = false, noneUpgrades 
         : `${baseClass}__cell`;
     return (
         <div className={` ${baseClass} ${mirror && "mirror"} border`}>
-            <div className={priceClass}></div>
-            <div className={cellClass + (owner ? (" color-" + owner.color + "-g") : "")}>
+            <div className={priceClass}>{property?.price}</div>
+            <div className={cellClass + (property?.member ? (" color-" + property.member.color + "-g") : "")}>
                 <img src={src} alt={alt} className="cell-img"/>
             </div>
             {noneUpgrades ? null : <div className={`${baseClass}__upgrades`}></div>}

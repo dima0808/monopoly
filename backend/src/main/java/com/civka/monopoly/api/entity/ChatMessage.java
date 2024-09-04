@@ -50,5 +50,6 @@ public class ChatMessage {
     public enum MessageType {
         SYSTEM_ROLL_DICE,
         SYSTEM_PAY_RENT,
+        SYSTEM_BUY_PROPERTY,
     }
 }

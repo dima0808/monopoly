@@ -10,6 +10,7 @@ import {
 } from "../../../utils/http";
 import Cookies from "js-cookie";
 import { Client } from "@stomp/stompjs";
+import {IP} from "../../../constraints";
 
 export default function PrivateChatDialog({
     setNotifications,
@@ -48,7 +49,7 @@ export default function PrivateChatDialog({
             const token = Cookies.get("token");
             const username = Cookies.get("username");
             const client = new Client({
-                brokerURL: "ws://localhost:8080/ws",
+                brokerURL: 'ws://' + IP + ':8080/ws',
                 connectHeaders: {
                     Authorization: `Bearer ${token}`,
                 },

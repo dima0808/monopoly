@@ -10,6 +10,7 @@ import {Client} from "@stomp/stompjs";
 import {useParams} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 import {getPlayerProperties, getRoomByName} from "../../utils/http";
+import {IP} from "../../constraints";
 
 export default function Game({setNotifications, setSelectedUser, setIsPrivateChatOpen}) {
     const [client, setClient] = useState(null);
@@ -54,7 +55,12 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 setProperties((prevProperties) => {
                     return {
                         ...prevProperties,
-                        [property.position]: property
+                        [property.position]: {
+                            ...prevProperties[property.position],
+                            member: property.member,
+                            upgradeLevel: property.upgradeLevel,
+                            goldOnStep: property.goldOnStep
+                        }
                     };
                 });
                 setPlayers((prevPlayers) => {
@@ -111,7 +117,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
     useEffect(() => {
         const token = Cookies.get('token');
         const client = new Client({
-            brokerURL: 'ws://localhost:8080/ws',
+            brokerURL: 'ws://' + IP + ':8080/ws',
             connectHeaders: {
                 Authorization: `Bearer ${token}`
             },

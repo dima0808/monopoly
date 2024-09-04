@@ -107,21 +107,21 @@ export default function Board({
                     alt="horses"
                     direction="vertical"
                     position={1}
-                    owner={properties[1]?.member}
+                    property={properties[1]}
                 />
                 <Cell
                     src={resourceBananasImg}
                     alt="bananas"
                     direction="vertical"
                     position={2}
-                    owner={properties[2]?.member}
+                    property={properties[2]}
                 />
                 <Cell
                     src={resourceDeerImg}
                     alt="deer"
                     direction="vertical"
                     position={3}
-                    owner={properties[3]?.member}
+                    property={properties[3]}
                 />
                 <Cell
                     src={wonderTempleOfArtemisImg}
@@ -130,14 +130,14 @@ export default function Board({
                     noneUpgrades={true}
                     specialType="wonder"
                     position={4}
-                    owner={properties[4]?.member}
+                    property={properties[4]}
                 />
                 <Cell
                     src={resourceFursImg}
                     alt="furs"
                     direction="vertical"
                     position={5}
-                    owner={properties[5]?.member}
+                    property={properties[5]}
                 />
                 <GoodyHutCell/>
                 <Cell
@@ -146,7 +146,7 @@ export default function Board({
                     direction="vertical"
                     specialType="encampment"
                     position={7}
-                    owner={properties[7]?.member}
+                    property={properties[7]}
                 />
                 <Cell
                     src={wonderTerracottaArmyImg}
@@ -155,7 +155,7 @@ export default function Board({
                     noneUpgrades={true}
                     specialType="wonder"
                     position={8}
-                    owner={properties[8]?.member}
+                    property={properties[8]}
                 />
                 <Cell
                     src={districtGovernmentPlazaImg}
@@ -163,27 +163,27 @@ export default function Board({
                     direction="vertical"
                     specialType="government"
                     position={9}
-                    owner={properties[9]?.member}
+                    property={properties[9]}
                 />
                 <Cell
                     src={districtIndustrialZoneImg}
                     alt="industrial zone"
                     direction="vertical"
                     position={10}
-                    owner={properties[10]?.member}
+                    property={properties[10]}
                 />
                 <Cell src={resourceIronImg}
                       alt="iron"
                       direction="vertical"
                       position={11}
-                      owner={properties[11]?.member}
+                      property={properties[11]}
                 />
                 <Cell
                     src={resourceCrabsImg}
                     alt="crabs"
                     direction="vertical"
                     position={12}
-                    owner={properties[12]?.member}
+                    property={properties[12]}
                 />
             </div>
 
@@ -196,7 +196,7 @@ export default function Board({
                     direction="horizontal"
                     noneUpgrades={true}
                     position={47}
-                    owner={properties[47]?.member}
+                    property={properties[47]}
                 />
                 <Cell
                     src={wonderOxfordUniversityImg}
@@ -205,14 +205,14 @@ export default function Board({
                     noneUpgrades={true}
                     specialType="wonder"
                     position={46}
-                    owner={properties[46]?.member}
+                    property={properties[46]}
                 />
                 <Cell
                     src={districtCampusImg}
                     alt="campus"
                     direction="horizontal"
                     position={45}
-                    owner={properties[45]?.member}
+                    property={properties[45]}
                 />
                 <Cell
                     src={districtGovernmentPlazaImg}
@@ -220,14 +220,14 @@ export default function Board({
                     direction="horizontal"
                     specialType="government"
                     position={44}
-                    owner={properties[44]?.member}
+                    property={properties[44]}
                 />
                 <Cell
                     src={districtCommercialHubImg}
                     alt="commercial hub"
                     direction="horizontal"
                     position={43}
-                    owner={properties[43]?.member}
+                    property={properties[43]}
                 />
                 <Cell
                     src={wonderBigBenImg}
@@ -236,14 +236,14 @@ export default function Board({
                     noneUpgrades={true}
                     specialType="wonder"
                     position={42}
-                    owner={properties[42]?.member}
+                    property={properties[42]}
                 />
                 <Cell
                     src={districtNeighborhoodImg}
                     alt="neighborhood"
                     direction="horizontal"
                     position={41}
-                    owner={properties[41]?.member}
+                    property={properties[41]}
                 />
                 <Cell
                     src={wonderEstadioDoMaracanaImg}
@@ -252,21 +252,21 @@ export default function Board({
                     noneUpgrades={true}
                     specialType="wonder"
                     position={40}
-                    owner={properties[40]?.member}
+                    property={properties[40]}
                 />
                 <Cell
                     src={districtTheatreSquareImg}
                     alt="theatre square"
                     direction="horizontal"
                     position={39}
-                    owner={properties[39]?.member}
+                    property={properties[39]}
                 />
                 <Cell
                     src={districtEntertainmentComplexImg}
                     alt="entertainment complex"
                     direction="horizontal"
                     position={38}
-                    owner={properties[38]?.member}
+                    property={properties[38]}
                 />
             </div>
 
@@ -287,7 +287,7 @@ export default function Board({
                     mirror={true}
                     noneUpgrades={true}
                     position={14}
-                    owner={properties[14]?.member}
+                    property={properties[14]}
                 />
                 <Cell
                     src={districtCampusImg}
@@ -295,7 +295,7 @@ export default function Board({
                     direction="horizontal"
                     mirror={true}
                     position={15}
-                    owner={properties[15]?.member}
+                    property={properties[15]}
                 />
                 <Cell
                     src={wonderGreatLibraryImg}
@@ -305,7 +305,7 @@ export default function Board({
                     noneUpgrades={true}
                     specialType="wonder"
                     position={16}
-                    owner={properties[16]?.member}
+                    property={properties[16]}
                 />
                 <Cell
                     src={districtHarborImg}
@@ -313,7 +313,7 @@ export default function Board({
                     direction="horizontal"
                     mirror={true}
                     position={17}
-                    owner={properties[17]?.member}
+                    property={properties[17]}
                 />
                 <Cell
                     src={districtGovernmentPlazaImg}
@@ -322,7 +322,7 @@ export default function Board({
                     mirror={true}
                     specialType="government"
                     position={18}
-                    owner={properties[18]?.member}
+                    property={properties[18]}
                 />
                 <Cell
                     src={districtCommercialHubImg}
@@ -330,7 +330,7 @@ export default function Board({
                     direction="horizontal"
                     mirror={true}
                     position={19}
-                    owner={properties[19]?.member}
+                    property={properties[19]}
                 />
                 <Cell
                     src={wonderCasaDeContratacionImg}
@@ -340,7 +340,7 @@ export default function Board({
                     noneUpgrades={true}
                     specialType="wonder"
                     position={20}
-                    owner={properties[20]?.member}
+                    property={properties[20]}
                 />
                 <Cell
                     src={districtTheatreSquareImg}
@@ -348,7 +348,7 @@ export default function Board({
                     direction="horizontal"
                     mirror={true}
                     position={21}
-                    owner={properties[21]?.member}
+                    property={properties[21]}
                 />
                 <Cell
                     src={districtEntertainmentComplexImg}
@@ -356,7 +356,7 @@ export default function Board({
                     direction="horizontal"
                     mirror={true}
                     position={22}
-                    owner={properties[22]?.member}
+                    property={properties[22]}
                 />
                 <Cell
                     src={wonderColosseumImg}
@@ -366,7 +366,7 @@ export default function Board({
                     noneUpgrades={true}
                     specialType="wonder"
                     position={23}
-                    owner={properties[23]?.member}
+                    property={properties[23]}
                 />
             </div>
 
@@ -381,7 +381,7 @@ export default function Board({
                     noneUpgrades={true}
                     specialType="wonder"
                     position={36}
-                    owner={properties[36]?.member}
+                    property={properties[36]}
                 />
                 <Cell
                     src={districtDamImg}
@@ -389,7 +389,7 @@ export default function Board({
                     direction="vertical"
                     mirror={true}
                     position={35}
-                    owner={properties[35]?.member}
+                    property={properties[35]}
                 />
                 <Cell
                     src={districtIndustrialZoneImg}
@@ -397,7 +397,7 @@ export default function Board({
                     direction="vertical"
                     mirror={true}
                     position={34}
-                    owner={properties[34]?.member}
+                    property={properties[34]}
                 />
                 <Cell
                     src={districtAqueductImg}
@@ -406,7 +406,7 @@ export default function Board({
                     mirror={true}
                     noneUpgrades={true}
                     position={33}
-                    owner={properties[33]?.member}
+                    property={properties[33]}
                 />
                 <Cell
                     src={wonderMausoleumAtHalicarnassusImg}
@@ -416,7 +416,7 @@ export default function Board({
                     noneUpgrades={true}
                     specialType="wonder"
                     position={32}
-                    owner={properties[32]?.member}
+                    property={properties[32]}
                 />
                 <Cell
                     src={districtHarborImg}
@@ -424,7 +424,7 @@ export default function Board({
                     direction="vertical"
                     mirror={true}
                     position={31}
-                    owner={properties[31]?.member}
+                    property={properties[31]}
                 />
                 <Cell
                     src={districtEncampmentImg}
@@ -433,7 +433,7 @@ export default function Board({
                     mirror={true}
                     specialType="encampment"
                     position={30}
-                    owner={properties[30]?.member}
+                    property={properties[30]}
                 />
                 <BarbCell/>
                 <Cell
@@ -442,7 +442,7 @@ export default function Board({
                     direction="vertical"
                     mirror={true}
                     position={28}
-                    owner={properties[28]?.member}
+                    property={properties[28]}
                 />
                 <Cell
                     src={wonderEtemenankiImg}
@@ -452,7 +452,7 @@ export default function Board({
                     noneUpgrades={true}
                     specialType="wonder"
                     position={27}
-                    owner={properties[27]?.member}
+                    property={properties[27]}
                 />
                 <Cell
                     src={resourceWheatImg}
@@ -460,7 +460,7 @@ export default function Board({
                     direction="vertical"
                     mirror={true}
                     position={26}
-                    owner={properties[26]?.member}
+                    property={properties[26]}
                 />
                 <Cell
                     src={resourceMaizeImg}
@@ -468,7 +468,7 @@ export default function Board({
                     direction="vertical"
                     mirror={true}
                     position={25}
-                    owner={properties[25]?.member}
+                    property={properties[25]}
                 />
             </div>
 

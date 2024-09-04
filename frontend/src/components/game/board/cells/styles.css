@@ -6,6 +6,16 @@
 .object-horizontal__price {
     background-color: #888;
 }
+.object-horizontal__price {
+    writing-mode: vertical-rl;
+    text-orientation: revert;
+    transform: rotate(180deg)
+}
+.mirror .object-horizontal__price {
+    transform: rotate(0deg);
+    writing-mode: vertical-rl;
+    text-orientation: revert;
+}
 .object-vertical__barbarians-color {
     background-color: #982a29;
 }
@@ -85,7 +95,13 @@
     grid-column: 3;
     grid-row: 1;
 }
+.object-vertical__price, .object-horizontal__price{
 
+    color: rgba(235, 231, 236, 0.77);
+    text-align: center;
+    font-size: 17px;
+    letter-spacing: -0.5px;
+}
 .mirror .object-vertical__price {
     grid-row: 3;
 }

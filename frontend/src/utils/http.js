@@ -1,5 +1,7 @@
+import {IP} from "../constraints";
+
 export async function signUp({username, email, password}) {
-    const response = await fetch('http://localhost:8080/api/auth/signup', {
+    const response = await fetch('http://' + IP + ':8080/api/auth/signup', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -16,7 +18,7 @@ export async function signUp({username, email, password}) {
 }
 
 export async function signIn({login, password}) {
-    const response = await fetch('http://localhost:8080/api/auth/signin', {
+    const response = await fetch('http://' + IP + ':8080/api/auth/signin', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -33,7 +35,7 @@ export async function signIn({login, password}) {
 }
 
 export async function getAllRooms() {
-    const response = await fetch('http://localhost:8080/api/rooms');
+    const response = await fetch('http://' + IP + ':8080/api/rooms');
     const resData = await response.json();
 
     if (!response.ok) {
@@ -44,7 +46,7 @@ export async function getAllRooms() {
 }
 
 export async function getAllMessages(chatName, token, isPrivate = false) {
-    const response = await fetch('http://localhost:8080/api/chat/' + (isPrivate ? 'private/' : '') + chatName, {
+    const response = await fetch('http://' + IP + ':8080/api/chat/' + (isPrivate ? 'private/' : '') + chatName, {
         headers: {
             'Authorization': `Bearer ${token}`,
         }
@@ -60,7 +62,7 @@ export async function getAllMessages(chatName, token, isPrivate = false) {
 }
 
 export async function getAllPlayers(roomName) {
-    const response = await fetch('http://localhost:8080/api/rooms/' + roomName + '/members');
+    const response = await fetch('http://' + IP + ':8080/api/rooms/' + roomName + '/members');
     const resData = await response.json();
 
     if (!response.ok) {
@@ -71,7 +73,7 @@ export async function getAllPlayers(roomName) {
 }
 
 export async function getUser(nickname) {
-    const response = await fetch('http://localhost:8080/api/users/' + nickname);
+    const response = await fetch('http://' + IP + ':8080/api/users/' + nickname);
     const resData = await response.json();
 
     if (!response.ok) {
@@ -84,7 +86,7 @@ export async function getUser(nickname) {
 }
 
 export async function updateProfile({nickname, email, password}, token) {
-    const response = await fetch('http://localhost:8080/api/users', {
+    const response = await fetch('http://' + IP + ':8080/api/users', {
         method: 'PATCH',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -112,7 +114,7 @@ export async function updateUser({
                                      averagePlacement
                                  }, token) {
 
-    const response = await fetch('http://localhost:8080/api/admin/users/' + username, {
+    const response = await fetch('http://' + IP + ':8080/api/admin/users/' + username, {
         method: 'PATCH',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -130,7 +132,7 @@ export async function updateUser({
 }
 
 export async function getUserContacts(username, token) {
-    const response = await fetch('http://localhost:8080/api/users/' + username + '/contacts', {
+    const response = await fetch('http://' + IP + ':8080/api/users/' + username + '/contacts', {
         headers: {
             'Authorization': `Bearer ${token}`,
         }
@@ -145,7 +147,7 @@ export async function getUserContacts(username, token) {
 }
 
 export async function getAllUsers(token) {
-    const response = await fetch('http://localhost:8080/api/admin/users', {
+    const response = await fetch('http://' + IP + ':8080/api/admin/users', {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -160,7 +162,7 @@ export async function getAllUsers(token) {
 }
 
 export async function getAllSuggestedContacts(username, token, suggestedNickname) {
-    const response = await fetch('http://localhost:8080/api/users/' + username + '/contacts/suggested?nickname=' + suggestedNickname, {
+    const response = await fetch('http://' + IP + ':8080/api/users/' + username + '/contacts/suggested?nickname=' + suggestedNickname, {
         headers: {
             'Authorization': `Bearer ${token}`,
         }
@@ -175,7 +177,7 @@ export async function getAllSuggestedContacts(username, token, suggestedNickname
 }
 
 export async function getRoomByUsername(username) {
-    const response = await fetch('http://localhost:8080/api/users/' + username + '/room');
+    const response = await fetch('http://' + IP + ':8080/api/users/' + username + '/room');
 
     const text = await response.text();
     const resData = text ? JSON.parse(text) : null;
@@ -188,7 +190,7 @@ export async function getRoomByUsername(username) {
 }
 
 export async function getRoomByName(roomName) {
-    const response = await fetch('http://localhost:8080/api/rooms/' + roomName);
+    const response = await fetch('http://' + IP + ':8080/api/rooms/' + roomName);
 
     const text = await response.text();
     const resData = text ? JSON.parse(text) : null;
@@ -201,7 +203,7 @@ export async function getRoomByName(roomName) {
 }
 
 export async function getPlayerProperties(roomName) {
-    const response = await fetch('http://localhost:8080/api/rooms/' + roomName + '/properties');
+    const response = await fetch('http://' + IP + ':8080/api/rooms/' + roomName + '/properties');
     const resData = await response.json();
 
     if (!response.ok) {
@@ -212,7 +214,7 @@ export async function getPlayerProperties(roomName) {
 }
 
 export async function getAllEvents(username) {
-    const response = await fetch('http://localhost:8080/api/members/' + username + '/events');
+    const response = await fetch('http://' + IP + ':8080/api/members/' + username + '/events');
     const resData = await response.json();
 
     if (!response.ok) {

@@ -1,11 +1,14 @@
 package com.civka.monopoly.api.controller;
 
+import com.civka.monopoly.api.dto.PropertyDto;
 import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.entity.Property;
+import com.civka.monopoly.api.entity.Room;
 import com.civka.monopoly.api.payload.DiceMessage;
 import com.civka.monopoly.api.payload.PlayerMessage;
 import com.civka.monopoly.api.payload.RoomMessage;
 import com.civka.monopoly.api.service.MemberService;
+import com.civka.monopoly.api.service.PropertyService;
 import com.civka.monopoly.api.service.RoomService;
 import com.civka.monopoly.api.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +27,7 @@ public class LobbyController {
     private final RoomService roomService;
     private final UserService userService;
     private final MemberService memberService;
+    private final PropertyService propertyService;
 
     @MessageMapping("/rooms/{roomName}/changeCivilization/{civilization}")
     @SendTo("/topic/public/{roomName}/players")
@@ -124,7 +128,8 @@ public class LobbyController {
     }
 
     @GetMapping("/api/rooms/{roomName}/properties")
-    public ResponseEntity<List<Property>> getProperties(@PathVariable String roomName) {
-        return ResponseEntity.ok(roomService.findByName(roomName).getProperties());
+    public ResponseEntity<List<PropertyDto>> getProperties(@PathVariable String roomName) {
+        Room room = roomService.findByName(roomName);
+        return ResponseEntity.ok(propertyService.findByRoom(room));
     }
 }

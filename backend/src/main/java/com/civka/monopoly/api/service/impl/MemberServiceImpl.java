@@ -1,7 +1,7 @@
 package com.civka.monopoly.api.service.impl;
 
-import com.civka.monopoly.api.config.GameProperties;
 import com.civka.monopoly.api.dto.ChatMessageDto;
+import com.civka.monopoly.api.dto.PropertyDto;
 import com.civka.monopoly.api.entity.*;
 import com.civka.monopoly.api.payload.DiceMessage;
 import com.civka.monopoly.api.payload.PlayerMessage;
@@ -24,7 +24,7 @@ public class MemberServiceImpl implements MemberService {
     private final ChatMessageService chatMessageService;
     private final EventService eventService;
     private final PropertyService propertyService;
-    private final GameProperties gameProperties;
+    private final GameUtils gameUtils;
 
     @Override
     public Member save(Member member) {
@@ -95,43 +95,55 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Property buyProperty(Member member, Integer position) {
+    public PropertyDto buyProperty(Member member, Integer position) {
         if (!member.getPosition().equals(position) ||
                 propertyService.existsByRoomAndPosition(member.getRoom(), position)) {
             throw new UserNotAllowedException();
         }
-        int price = gameProperties.getPriceByPosition(position);
+        int price = gameUtils.getPriceByPosition(position);
         if (member.getGold() < price) {
             throw new UserNotAllowedException();
         }
         member.setGold(member.getGold() - price);
-        memberRepository.save(member);
+        Member updatedMember = memberRepository.save(member);
 
-        Room room = member.getRoom();
-        eventService.delete(member, Event.EventType.BUY_PROPERTY);
+        Room room = updatedMember.getRoom();
+        eventService.delete(updatedMember, Event.EventType.BUY_PROPERTY);
         Property property = Property.builder()
-                .member(member)
+                .member(updatedMember)
                 .room(room)
                 .upgradeLevel(List.of(Property.Upgrade.LEVEL_1))
                 .position(position)
                 .build();
-        return propertyService.save(property);
+        Property updatedProperty = propertyService.save(property);
+
+        Chat roomChat = chatService.findByName(room.getName());
+        ChatMessageDto systemMessage = ChatMessageDto.builder()
+                .type(ChatMessage.MessageType.SYSTEM_BUY_PROPERTY)
+                .content(updatedMember.getUser().getNickname() + " " + position + " " + price)
+                .timestamp(LocalDateTime.now())
+                .build();
+        ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
+        messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
+
+        return PropertyDto.builder()
+                .id(updatedProperty.getId())
+                .member(updatedProperty.getMember())
+                .upgradeLevel(updatedProperty.getUpgradeLevel())
+                .position(updatedProperty.getPosition())
+                .goldOnStep(gameUtils.calculateGoldOnStep(updatedProperty))
+                .goldPerTurn(gameUtils.calculateGoldPerTurn(property))
+                .build();
     }
 
     @Override
-    public Property payRent(Member member, Integer position) {
+    public PropertyDto payRent(Member member, Integer position) {
         if (!member.getPosition().equals(position) ||
                 !propertyService.existsByRoomAndPosition(member.getRoom(), position)) {
             throw new UserNotAllowedException();
         }
         Property property = propertyService.findByRoomAndPosition(member.getRoom(), position);
-        int onStep = 0;
-        for (Property.Upgrade upgrade : property.getUpgradeLevel()) {
-            Integer upgradeOnStep = gameProperties.getOnStepByPositionAndLevel(property.getPosition(), upgrade);
-            if (upgradeOnStep != null) {
-                onStep += upgradeOnStep;
-            }
-        }
+        int onStep = gameUtils.calculateGoldOnStep(property);
         if (member.getGold() < onStep) {
             throw new UserNotAllowedException();
         }
@@ -151,6 +163,14 @@ public class MemberServiceImpl implements MemberService {
         messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
 
         eventService.delete(member, Event.EventType.FOREIGN_PROPERTY);
-        return property;
+
+        return PropertyDto.builder()
+                .id(property.getId())
+                .member(property.getMember())
+                .upgradeLevel(property.getUpgradeLevel())
+                .position(property.getPosition())
+                .goldOnStep(onStep)
+                .goldPerTurn(gameUtils.calculateGoldPerTurn(property))
+                .build();
     }
 }

@@ -7,6 +7,7 @@ import {getAllMessages} from "../../../../utils/http";
 import {handleInputChange, handleKeyDown} from "../../../../utils/chat";
 import SystemMessage from "./SystemMessage";
 import goldImg from "../../../../images/icon-gold.png";
+import {propertiesInfo} from "../../../../constraints";
 
 export default function Chat({roomName, client, isConnected, setNotifications, setSelectedUser, setIsPrivateChatOpen}) {
     const [messages, setMessages] = useState([]);
@@ -189,6 +190,23 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
                                                     </div>
                                                 </div>
                                                 гравцю <span className="system-span">{data[2]}</span>
+                                            </SystemMessage>
+                                        );
+                                    case 'SYSTEM_BUY_PROPERTY':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                купив <span className="system-span">{propertiesInfo[data[1]].name}</span> за
+                                                <div className="inline-block">
+                                                    <div className="player-stat-gold width-full pointer no-select">
+                                                        <img
+                                                            src={goldImg}
+                                                            className="recourse-img"
+                                                            alt="gold"
+                                                        />
+                                                        {data[2]}
+                                                    </div>
+                                                </div>
                                             </SystemMessage>
                                         );
                                     default:
