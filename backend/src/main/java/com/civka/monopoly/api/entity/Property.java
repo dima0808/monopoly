@@ -33,7 +33,7 @@ public class Property {
     @JsonIgnore
     private Room room;
 
-    private List<Upgrade> upgradeLevel;
+    private List<Upgrade> upgrades;
 
     private Integer position;
 
@@ -41,6 +41,7 @@ public class Property {
         LEVEL_1,
         LEVEL_2,
         LEVEL_3,
+        LEVEL_4,
         ETEMENANKI
     }
 }

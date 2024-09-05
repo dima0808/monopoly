@@ -19,11 +19,13 @@ public class PropertyDto {
 
     private Member member;
 
-    private List<Property.Upgrade> upgradeLevel;
+    private List<Property.Upgrade> upgrades;
 
     private Integer position;
 
     private Integer goldOnStep;
     private Integer goldPerTurn;
     private Integer price;
+
+    private List<RequirementDto> upgradeRequirements;
 }

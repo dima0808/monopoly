@@ -17,6 +17,7 @@ public class GameProperties {
     private Map<String, Integer> price;
     private Map<String, Integer> onStep;
     private Map<String, Integer> perTurn;
+    private Map<String, String> requirement;
 
     public Integer getPriceByPosition(Integer position) {
         return price.get(position.toString());

@@ -112,7 +112,7 @@ public class MemberServiceImpl implements MemberService {
         Property property = Property.builder()
                 .member(updatedMember)
                 .room(room)
-                .upgradeLevel(List.of(Property.Upgrade.LEVEL_1))
+                .upgrades(List.of(Property.Upgrade.LEVEL_1))
                 .position(position)
                 .build();
         Property updatedProperty = propertyService.save(property);
@@ -129,10 +129,11 @@ public class MemberServiceImpl implements MemberService {
         return PropertyDto.builder()
                 .id(updatedProperty.getId())
                 .member(updatedProperty.getMember())
-                .upgradeLevel(updatedProperty.getUpgradeLevel())
+                .upgrades(updatedProperty.getUpgrades())
                 .position(updatedProperty.getPosition())
                 .goldOnStep(gameUtils.calculateGoldOnStep(updatedProperty))
                 .goldPerTurn(gameUtils.calculateGoldPerTurn(property))
+                .upgradeRequirements(gameUtils.getRequirements(updatedProperty.getPosition(), member))
                 .build();
     }
 
@@ -167,7 +168,7 @@ public class MemberServiceImpl implements MemberService {
         return PropertyDto.builder()
                 .id(property.getId())
                 .member(property.getMember())
-                .upgradeLevel(property.getUpgradeLevel())
+                .upgrades(property.getUpgrades())
                 .position(property.getPosition())
                 .goldOnStep(onStep)
                 .goldPerTurn(gameUtils.calculateGoldPerTurn(property))

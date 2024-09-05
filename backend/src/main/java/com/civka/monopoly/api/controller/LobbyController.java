@@ -2,7 +2,6 @@ package com.civka.monopoly.api.controller;
 
 import com.civka.monopoly.api.dto.PropertyDto;
 import com.civka.monopoly.api.entity.Member;
-import com.civka.monopoly.api.entity.Property;
 import com.civka.monopoly.api.entity.Room;
 import com.civka.monopoly.api.payload.DiceMessage;
 import com.civka.monopoly.api.payload.PlayerMessage;

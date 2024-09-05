@@ -202,8 +202,12 @@ export async function getRoomByName(roomName) {
     return resData;
 }
 
-export async function getPlayerProperties(roomName) {
-    const response = await fetch('http://' + IP + ':8080/api/rooms/' + roomName + '/properties');
+export async function getPlayerProperties(roomName, token) {
+    const response = await fetch('http://' + IP + ':8080/api/rooms/' + roomName + '/properties', {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    });
     const resData = await response.json();
 
     if (!response.ok) {

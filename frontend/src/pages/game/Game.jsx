@@ -58,8 +58,9 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                         [property.position]: {
                             ...prevProperties[property.position],
                             member: property.member,
-                            upgradeLevel: property.upgradeLevel,
-                            goldOnStep: property.goldOnStep
+                            upgrades: property.upgrades,
+                            goldOnStep: property.goldOnStep,
+                            upgradeRequirements: property.upgradeRequirements
                         }
                     };
                 });
@@ -150,6 +151,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
     }, []);
 
     useEffect(() => {
+        const token = Cookies.get('token');
         getRoomByName(roomName)
             .then((roomData) => {
                 setRoom({
@@ -162,7 +164,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 setPlayers(roomData.members);
             })
             .catch((error) => setError({message: error.message || "An error occurred"}));
-        getPlayerProperties(roomName)
+        getPlayerProperties(roomName, token)
             .then((propertiesArray) => {
                 const propertiesObject = propertiesArray.reduce((acc, property) => {
                     acc[property.position] = property;

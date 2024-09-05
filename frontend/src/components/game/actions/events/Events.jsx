@@ -25,6 +25,7 @@ export default function Events({
             const { type, member } = event;
             switch (type) {
                 case "BUY_PROPERTY":
+                    if (!properties[member.position]) return null;
                     return (
                         <BuyProperty
                             key={index}
@@ -42,6 +43,7 @@ export default function Events({
                 case "ENEMY_PROPERTY":
                     return <EnemyProperty key={index} />;
                 case "FOREIGN_PROPERTY":
+                    if (!properties[member.position]) return null;
                     return <ForeignProperty
                         key={index}
                         property={properties[member.position]}

@@ -415,3 +415,23 @@ export const propertiesInfo = {
         position: 47
     }
 };
+
+export const requirements = {
+    "OWN_DEER_OR_FURS": <p className="condition-p">You need to own Deer or Furs</p>,
+    "OWN_CAMP": <p className="condition-p">You need to own a Camp</p>,
+    "OWN_ENCAMPMENT_1": <p className="condition-p">You must own an Encampment nearby</p>,
+    "OWN_CAMPUS_1": <p className="condition-p">You should have a Campus nearby</p>,
+    "OWN_LIBRARY_1": <p className="condition-p">You should have a Library on Campus</p>,
+    "OWN_GOVERNMENT_PLAZA": <p className="condition-p">You should have a Government Plaza</p>,
+    "OWN_ENTERTAINMENT_COMPLEX_1": <p className="condition-p">You should have an Entertainment Complex nearby</p>,
+    "OWN_ARENA_1": <p className="condition-p">You should have an Arena in your Entertainment Complex</p>,
+    "OWN_HARBOR_2": <p className="condition-p">You should have a Harbor nearby</p>,
+    "OWN_INDUSTRIAL_ZONE_2": <p className="condition-p">You should have an Industrial Zone nearby</p>,
+    "OWN_FACTORY_2": <p className="condition-p">You should have a Factory in your Industrial Zone</p>,
+    "OWN_ENTERTAINMENT_COMPLEX_2": <p className="condition-p">You should have an Entertainment Complex nearby</p>,
+    "OWN_STADIUM_2": <p className="condition-p">You should have a Stadium in your Entertainment Complex</p>,
+    "OWN_COMMERCIAL_HUB_2": <p className="condition-p">You should have a Commercial Hub nearby</p>,
+    "OWN_STOCK_EXCHANGE_2": <p className="condition-p">You need to own a Stock Exchange in your Commercial Hub</p>,
+    "OWN_CAMPUS_2": <p className="condition-p">You should have a Campus nearby</p>,
+    "OWN_UNIVERSITY_2": <p className="condition-p">You should have a University on Campus</p>
+}
