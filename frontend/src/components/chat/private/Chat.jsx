@@ -220,7 +220,7 @@ export default function Chat({selectedUser, selectedContact, client, isConnected
     return (
         <div className="chosen-user">
             <div className="user-and-close">
-                {selectedUser && <Link to={"/profile/" + selectedUser.nickname}
+                {selectedUser && <Link to={`/profile/${selectedUser.nickname}`}
                                        className="user-and-close-a">{selectedUser.nickname}</Link>}
                 {!selectedUser && <p className="user-and-close-a"></p>}
                 <button type="button" className="dialog-close" onClick={onClose}>

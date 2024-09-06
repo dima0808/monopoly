@@ -97,10 +97,17 @@
 }
 .object-vertical__price, .object-horizontal__price{
 
-    color: rgba(235, 231, 236, 0.77);
+    color: rgba(235, 231, 236, 0.85);
     text-align: center;
     font-size: 17px;
     letter-spacing: -0.5px;
+}
+/* зміна кольору прайса*/
+.object-gold-on-step{
+    color: rgba(245, 240, 200, 0.75);
+}
+.object-tourism{
+    color: rgba(253, 210, 250, 0.80);
 }
 .mirror .object-vertical__price {
     grid-row: 3;

@@ -196,9 +196,11 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
                                         return (
                                             <SystemMessage key={index} timestamp={message.timestamp}>
                                                 гравець <span className="system-span">{data[0]}</span>
-                                                купив <span className="system-span">{propertiesInfo[data[1]].name}</span> за
+                                                купив
+                                                <span className="system-span"> {propertiesInfo[data[1]]['LEVEL_1'].name}
+                                                </span>за
                                                 <div className="inline-block">
-                                                    <div className="player-stat-gold width-full pointer no-select">
+                                                    <div className="player-stat-gold width-full no-select">
                                                         <img
                                                             src={goldImg}
                                                             className="recourse-img"

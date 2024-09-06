@@ -52,15 +52,11 @@ import EdgeCell from "./cells/EdgeCell";
 import BarbCell from "./cells/BarbCell";
 
 export default function Board({
-                                  room,
-                                  players,
-                                  dice,
-                                  properties,
-                                  client,
-                                  isConnected,
+                                  room, players, dice, properties,
+                                  setSelectedUser, setIsPrivateChatOpen,
+                                  setActiveTab,
+                                  client, isConnected,
                                   setNotifications,
-                                  setSelectedUser,
-                                  setIsPrivateChatOpen,
                               }) {
 
     function calculatePosition(position) {

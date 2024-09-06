@@ -9,15 +9,15 @@ export default function Header({ nickname, onLogout, setIsPrivateChatOpen, setSe
     <header className="header">
       <div className="header-flex">
         <ul className="header__ul">
-          <Link to="/" className="header__anchor-img">
+          <Link to={`/`} className="header__anchor-img">
             <img src={civkaLogoImg} alt="civ-logo" className="header-img" />
           </Link>
-          <Link to="/rules" className="header__anchor">
+          <Link to={`/rules`} className="header__anchor">
             {" "}
             Правила{" "}
           </Link>
           {Cookies.get("role") === "ROLE_ADMIN" && (
-            <Link to="/admin" className="header__anchor">
+            <Link to={`/admin`} className="header__anchor">
               Адмін
             </Link>
           )}
@@ -47,7 +47,7 @@ export default function Header({ nickname, onLogout, setIsPrivateChatOpen, setSe
                 </svg>
               </button>
               <Link
-                to={"/profile/" + nickname}
+                to={`/profile/${nickname}`}
                 className="header__anchor header__anchor-username"
               >
                 {nickname}
@@ -81,7 +81,7 @@ export default function Header({ nickname, onLogout, setIsPrivateChatOpen, setSe
               </Link>
             </>
           ) : (
-            <Link to="/signin " className="header__anchor">
+            <Link to={`/signin`} className="header__anchor">
               Логін
             </Link>
           )}

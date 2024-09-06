@@ -37,381 +37,297 @@ export const IP = '26.239.28.186';
 
 export const propertiesInfo = {
     1: {
-        name: 'Horses',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: [<p className="condition-p">If u have an <span>Arena</span> and the mather</p>],
-        src: resourceHorsesImg,
+        LEVEL_1: {
+            name: 'Horses',
+            src: resourceHorsesImg,
+        },
         position: 1
     },
     2: {
-        name: 'Bananas',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: [<p className="condition-p">If u have an <span>Arena</span> and the mather</p>],
-        src: resourceBananasImg,
+        LEVEL_1: {
+            name: 'Bananas',
+            src: resourceBananasImg,
+        },
         position: 2
     },
     3: {
-        name: 'Deer',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: [<p className="condition-p">If u have an <span>Arena</span> and the mather</p>],
-        src: resourceDeerImg,
+        LEVEL_1: {
+            name: 'Deer',
+            src: resourceDeerImg,
+        },
         position: 3
     },
     4: {
-        name: 'Temple of Artemis',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: [<p className="condition-p">If u have an <span>Arena</span> and the mather</p>],
-        src: wonderTempleOfArtemisImg,
+        LEVEL_1: {
+            name: 'Temple of Artemis',
+            src: wonderTempleOfArtemisImg,
+        },
         position: 4
     },
     5: {
-        name: 'Furs',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: [<p className="condition-p">If u have an <span>Arena</span> and the mather</p>],
-        src: resourceFursImg,
+        LEVEL_1: {
+            name: 'Furs',
+            src: resourceFursImg,
+        },
         position: 5
     },
     7: {
-        name: 'Encampment',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtEncampmentImg,
+        LEVEL_1: {
+            name: 'Encampment',
+            src: districtEncampmentImg,
+        },
         position: 7
     },
     8: {
-        name: 'Terracotta Army',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: wonderTerracottaArmyImg,
+        LEVEL_1: {
+            name: 'Terracotta Army',
+            src: wonderTerracottaArmyImg,
+        },
         position: 8
     },
     9: {
-        name: 'Government Plaza',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtGovernmentPlazaImg,
+        LEVEL_1: {
+            name: 'Government Plaza',
+            src: districtGovernmentPlazaImg,
+        },
         position: 9
     },
     10: {
-        name: 'Industrial Zone',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtIndustrialZoneImg,
+        LEVEL_1: {
+            name: 'Industrial Zone',
+            src: districtIndustrialZoneImg,
+        },
         position: 10
     },
     11: {
-        name: 'Iron',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: resourceIronImg,
+        LEVEL_1: {
+            name: 'Iron',
+            src: resourceIronImg,
+        },
         position: 11
     },
     12: {
-        name: 'Crabs',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: resourceCrabsImg,
+        LEVEL_1: {
+            name: 'Crabs',
+            src: resourceCrabsImg,
+        },
         position: 12
     },
     14: {
-        name: 'Reef',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: featureReefImg,
+        LEVEL_1: {
+            name: 'Reef',
+            src: featureReefImg,
+        },
         position: 14
     },
     15: {
-        name: 'Campus',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtCampusImg,
+        LEVEL_1: {
+            name: 'Campus',
+            src: districtCampusImg,
+        },
         position: 15
     },
     16: {
-        name: 'Great Library',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: wonderGreatLibraryImg,
+        LEVEL_1: {
+            name: 'Great Library',
+            src: wonderGreatLibraryImg,
+        },
         position: 16
     },
     17: {
-        name: 'Harbor',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtHarborImg,
+        LEVEL_1: {
+            name: 'Harbor',
+            src: districtHarborImg,
+        },
         position: 17
     },
     18: {
-        name: 'Government Plaza',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtGovernmentPlazaImg,
+        LEVEL_1: {
+            name: 'Government Plaza',
+            src: districtGovernmentPlazaImg,
+        },
         position: 18
     },
     19: {
-        name: 'Commercial Hub',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtCommercialHubImg,
+        LEVEL_1: {
+            name: 'Commercial Hub',
+            src: districtCommercialHubImg,
+        },
         position: 19
     },
     20: {
-        name: 'Casa De Contratacion',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: wonderCasaDeContratacionImg,
+        LEVEL_1: {
+            name: 'Casa De Contratacion',
+            src: wonderCasaDeContratacionImg,
+        },
         position: 20
     },
     21: {
-        name: 'Theatre Square',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtTheatreSquareImg,
+        LEVEL_1: {
+            name: 'Theatre Square',
+            src: districtTheatreSquareImg,
+        },
         position: 21
     },
     22: {
-        name: 'Entertainment Complex',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtEntertainmentComplexImg,
+        LEVEL_1: {
+            name: 'Entertainment Complex',
+            src: districtEntertainmentComplexImg,
+        },
         position: 22
     },
     23: {
-        name: 'Colosseum',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: wonderColosseumImg,
+        LEVEL_1: {
+            name: 'Colosseum',
+            src: wonderColosseumImg,
+        },
         position: 23
     },
     25: {
-        name: 'Maize',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: resourceMaizeImg,
+        LEVEL_1: {
+            name: 'Maize',
+            src: resourceMaizeImg,
+        },
         position: 25
     },
     26: {
-        name: 'Wheat',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: resourceWheatImg,
+        LEVEL_1: {
+            name: 'Wheat',
+            src: resourceWheatImg,
+        },
         position: 26
     },
     27: {
-        name: 'Etemenanki',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: wonderEtemenankiImg,
+        LEVEL_1: {
+            name: 'Etemenanki',
+            src: wonderEtemenankiImg,
+        },
         position: 27
     },
     28: {
-        name: 'Rice',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: resourceRiceImg,
+        LEVEL_1: {
+            name: 'Rice',
+            src: resourceRiceImg,
+        },
         position: 28
     },
     30: {
-        name: 'Encampment',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtEncampmentImg,
+        LEVEL_1: {
+            name: 'Encampment',
+            src: districtEncampmentImg,
+        },
         position: 30
     },
     31: {
-        name: 'Harbor',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtHarborImg,
+        LEVEL_1: {
+            name: 'Harbor',
+            src: districtHarborImg,
+        },
         position: 31
     },
     32: {
-        name: 'Mausoleum at Halicarnassus',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: wonderMausoleumAtHalicarnassusImg,
+        LEVEL_1: {
+            name: 'Mausoleum at Halicarnassus',
+            src: wonderMausoleumAtHalicarnassusImg,
+        },
         position: 32
     },
     33: {
-        name: 'Aqueduct',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtAqueductImg,
+        LEVEL_1: {
+            name: 'Aqueduct',
+            src: districtAqueductImg,
+        },
         position: 33
     },
     34: {
-        name: 'Industrial Zone',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtIndustrialZoneImg,
+        LEVEL_1: {
+            name: 'Industrial Zone',
+            src: districtIndustrialZoneImg,
+        },
         position: 34
     },
     35: {
-        name: 'Dam',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtDamImg,
+        LEVEL_1: {
+            name: 'Dam',
+            src: districtDamImg,
+        },
         position: 35
     },
     36: {
-        name: 'Ruhr Valley',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: wonderRuhrValleyImg,
+        LEVEL_1: {
+            name: 'Ruhr Valley',
+            src: wonderRuhrValleyImg,
+        },
         position: 36
     },
     38: {
-        name: 'Entertainment Complex',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtEntertainmentComplexImg,
+        LEVEL_1: {
+            name: 'Entertainment Complex',
+            src: districtEntertainmentComplexImg,
+        },
         position: 38
     },
     39: {
-        name: 'Theatre Square',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtTheatreSquareImg,
+        LEVEL_1: {
+            name: 'Theatre Square',
+            src: districtTheatreSquareImg,
+        },
         position: 39
     },
     40: {
-        name: 'Estadio Do Maracana',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: wonderEstadioDoMaracanaImg,
+        LEVEL_1: {
+            name: 'Estadio Do Maracana',
+            src: wonderEstadioDoMaracanaImg,
+        },
         position: 40
     },
     41: {
-        name: 'Neighborhood',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtNeighborhoodImg,
+        LEVEL_1: {
+            name: 'Neighborhood',
+            src: districtNeighborhoodImg,
+        },
         position: 41
     },
     42: {
-        name: 'Big Ben',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: wonderBigBenImg,
+        LEVEL_1: {
+            name: 'Big Ben',
+            src: wonderBigBenImg,
+        },
         position: 42
     },
     43: {
-        name: 'Commercial Hub',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtCommercialHubImg,
+        LEVEL_1: {
+            name: 'Commercial Hub',
+            src: districtCommercialHubImg,
+        },
         position: 43
     },
     44: {
-        name: 'Government Plaza',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtGovernmentPlazaImg,
+        LEVEL_1: {
+            name: 'Government Plaza',
+            src: districtGovernmentPlazaImg,
+        },
         position: 44
     },
     45: {
-        name: 'Campus',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtCampusImg,
+        LEVEL_1: {
+            name: 'Campus',
+            src: districtCampusImg,
+        },
         position: 45
     },
     46: {
-        name: 'Oxford University',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: wonderOxfordUniversityImg,
+        LEVEL_1: {
+            name: 'Oxford University',
+            src: wonderOxfordUniversityImg,
+        },
         position: 46
     },
     47: {
-        name: 'Spaceport',
-        totalCost: 1000,
-        goldOnStep: 340,
-        goldPerTurn: 34,
-        requirements: {},
-        src: districtSpaceportImg,
+        LEVEL_1: {
+            name: 'Spaceport',
+            src: districtSpaceportImg,
+        },
         position: 47
     }
 };
@@ -423,6 +339,7 @@ export const requirements = {
     "OWN_CAMPUS_1": <p className="condition-p">You should have a Campus nearby</p>,
     "OWN_LIBRARY_1": <p className="condition-p">You should have a Library on Campus</p>,
     "OWN_GOVERNMENT_PLAZA": <p className="condition-p">You should have a Government Plaza</p>,
+    "NOT_OWN_GOVERNMENT_PLAZA": <p className="condition-p">You shouldn't have a Government Plaza</p>,
     "OWN_ENTERTAINMENT_COMPLEX_1": <p className="condition-p">You should have an Entertainment Complex nearby</p>,
     "OWN_ARENA_1": <p className="condition-p">You should have an Arena in your Entertainment Complex</p>,
     "OWN_HARBOR_2": <p className="condition-p">You should have a Harbor nearby</p>,

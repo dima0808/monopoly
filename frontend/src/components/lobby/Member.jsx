@@ -13,7 +13,7 @@ export default function Member({ username, nickname, isLeader, onKick, showKickB
                     alt="avatar"
                 /> {/*todo: add avatar*/}
             </div>
-            <Link to={"/profile/" + nickname} className="lobby__member-nickname">{nickname}</Link>
+            <Link to={`/profile/${nickname}`} className="lobby__member-nickname">{nickname}</Link>
             {showKickButton && (
                 <button onClick={() => onKick(username)} className="kick-btn">
                     <svg

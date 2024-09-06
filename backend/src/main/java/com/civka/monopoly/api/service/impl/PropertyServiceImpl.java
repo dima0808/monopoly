@@ -44,12 +44,13 @@ public class PropertyServiceImpl implements PropertyService {
         Member member = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
                 .getMember();
         List<Property> properties = propertyRepository.findByRoom(room);
-        Map<String, Integer> priceMap = gameUtils.getPriceProperties();
+        Map<String, String> upgradeMap = gameUtils.getUpgradeProperties();
 
-        return priceMap.keySet().stream()
+        return upgradeMap.keySet().stream()
                 .map(position -> {
+                    Integer positionInt = Integer.parseInt(position);
                     Property property = properties.stream()
-                            .filter(p -> p.getPosition().equals(Integer.parseInt(position)))
+                            .filter(p -> p.getPosition().equals(positionInt))
                             .findFirst()
                             .orElse(null);
 
@@ -57,20 +58,18 @@ public class PropertyServiceImpl implements PropertyService {
                         return PropertyDto.builder()
                                 .id(property.getId())
                                 .member(property.getMember())
-                                .upgrades(property.getUpgrades())
+                                .upgrades(gameUtils.getUpgrades(property.getPosition()))
                                 .position(property.getPosition())
                                 .goldOnStep(gameUtils.calculateGoldOnStep(property))
                                 .goldPerTurn(gameUtils.calculateGoldPerTurn(property))
-                                .price(priceMap.get(position))
                                 .upgradeRequirements(gameUtils.getRequirements(property.getPosition(), member))
                                 .build();
                     } else {
-                        Integer positionInt = Integer.parseInt(position);
                         return PropertyDto.builder()
+                                .upgrades(gameUtils.getUpgrades(positionInt))
                                 .position(positionInt)
                                 .goldOnStep(gameUtils.getGoldOnStepByLevel(positionInt, Property.Upgrade.LEVEL_1))
                                 .goldPerTurn(gameUtils.getGoldPerTurnByLevel(positionInt, Property.Upgrade.LEVEL_1))
-                                .price(priceMap.get(position))
                                 .upgradeRequirements(gameUtils.getRequirements(positionInt, member))
                                 .build();
                     }

@@ -1,6 +1,7 @@
 package com.civka.monopoly.api.service;
 
 import com.civka.monopoly.api.dto.RequirementDto;
+import com.civka.monopoly.api.dto.UpgradeDto;
 import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.entity.Property;
 
@@ -17,9 +18,11 @@ public interface GameUtils {
 
     int getGoldPerTurnByLevel(Integer position, Property.Upgrade level);
 
-    int getPriceByPosition(Integer position);
+    int getPriceByPositionAndLevel(Integer position, Property.Upgrade level);
 
-    Map<String, Integer> getPriceProperties();
+    Map<String, String> getUpgradeProperties();
 
     List<RequirementDto> getRequirements(Integer position, Member member);
+
+    List<UpgradeDto> getUpgrades(Integer position);
 }

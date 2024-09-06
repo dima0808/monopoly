@@ -9,12 +9,9 @@ const colors = ["red", "blue", "green", "yellow", "turquoise", "orange", "pink",
 const civs = ["Random", "Colombia", "Egypt", "Germany", "Japan", "Korea", "Rome", "Sweden",];
 
 export default function PlayerList({
-                                       client,
-                                       isConnected,
-                                       room,
-                                       onStartGame,
-                                       players,
-                                       setPlayers,
+                                       room, onStartGame,
+                                       players, setPlayers,
+                                       client, isConnected,
                                        setNotifications,
                                    }) {
     const navigate = useNavigate();

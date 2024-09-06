@@ -2,6 +2,7 @@ package com.civka.monopoly.api.service.impl;
 
 import com.civka.monopoly.api.config.GameProperties;
 import com.civka.monopoly.api.dto.RequirementDto;
+import com.civka.monopoly.api.dto.UpgradeDto;
 import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.entity.Property;
 import com.civka.monopoly.api.service.GameUtils;
@@ -54,13 +55,13 @@ public class GameUtilsImpl implements GameUtils {
     }
 
     @Override
-    public int getPriceByPosition(Integer position) {
-        return gameProperties.getPriceByPosition(position);
+    public int getPriceByPositionAndLevel(Integer position, Property.Upgrade level) {
+        return gameProperties.getPriceByPositionAndLevel(position, level);
     }
 
     @Override
-    public Map<String, Integer> getPriceProperties() {
-        return gameProperties.getPrice();
+    public Map<String, String> getUpgradeProperties() {
+        return gameProperties.getUpgrade();
     }
 
     @Override
@@ -84,6 +85,22 @@ public class GameUtilsImpl implements GameUtils {
         return allRequirements;
     }
 
+    @Override
+    public List<UpgradeDto> getUpgrades(Integer position) {
+        List<UpgradeDto> upgrades = new ArrayList<>();
+        for (String upgrade : gameProperties.getUpgrade().get(position.toString()).split(",")) {
+            Property.Upgrade level = Property.Upgrade.valueOf(upgrade);
+            UpgradeDto upgradeDto = UpgradeDto.builder()
+                    .level(level)
+                    .goldOnStep(gameProperties.getOnStepByPositionAndLevel(position, level))
+                    .goldPerTurn(gameProperties.getPerTurnByPositionAndLevel(position, level))
+                    .price(gameProperties.getPriceByPositionAndLevel(position, level))
+                    .build();
+            upgrades.add(upgradeDto);
+        }
+        return upgrades;
+    }
+
     private boolean calculateRequirement(RequirementDto.Requirement requirement, Member member) {
         return switch (requirement) {
             case OWN_DEER_OR_FURS -> member.getProperties().stream()
@@ -101,6 +118,10 @@ public class GameUtilsImpl implements GameUtils {
                             p.getUpgrades().contains(Property.Upgrade.LEVEL_2));
             case OWN_GOVERNMENT_PLAZA -> member.getProperties().stream()
                     .anyMatch(p -> p.getPosition().equals(9) ||
+                            p.getPosition().equals(18) ||
+                            p.getPosition().equals(44));
+            case NOT_OWN_GOVERNMENT_PLAZA -> member.getProperties().stream()
+                    .noneMatch(p -> p.getPosition().equals(9) ||
                             p.getPosition().equals(18) ||
                             p.getPosition().equals(44));
             case OWN_ENTERTAINMENT_COMPLEX_1 -> member.getProperties().stream()

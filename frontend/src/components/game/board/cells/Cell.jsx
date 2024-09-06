@@ -10,7 +10,10 @@ export default function Cell({src, alt, direction, mirror = false, noneUpgrades 
         : `${baseClass}__cell`;
     return (
         <div className={` ${baseClass} ${mirror && "mirror"} border`}>
-            <div className={priceClass}>{property?.price}</div>
+            <div className={priceClass + (property?.member ? " object-gold-on-step" : "")}>
+                {!property?.member && property?.upgrades.find(upgrade => upgrade.level === 'LEVEL_1').price}
+                {property?.member && property?.upgrades.find(upgrade => upgrade.level === 'LEVEL_1').goldOnStep}
+            </div>
             <div className={cellClass + (property?.member ? (" color-" + property.member.color + "-g") : "")}>
                 <img src={src} alt={alt} className="cell-img"/>
             </div>

@@ -1,7 +1,6 @@
 package com.civka.monopoly.api.dto;
 
 import com.civka.monopoly.api.entity.Member;
-import com.civka.monopoly.api.entity.Property;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,13 +18,12 @@ public class PropertyDto {
 
     private Member member;
 
-    private List<Property.Upgrade> upgrades;
-
     private Integer position;
+
+    private List<UpgradeDto> upgrades;
 
     private Integer goldOnStep;
     private Integer goldPerTurn;
-    private Integer price;
 
     private List<RequirementDto> upgradeRequirements;
 }

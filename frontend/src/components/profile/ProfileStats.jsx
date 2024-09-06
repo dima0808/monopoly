@@ -28,7 +28,7 @@ export default function ProfileStats({ user, setIsPrivateChatOpen, setSelectedUs
                     <h1 className="profile-right-top-h1">{user.nickname}</h1>
                     {(inGame != null && inGame.isStarted === true && !error) && <div className="in-game-div">
                         <p className="in-game-p">In game</p>
-                        <Link to={"/game/" + inGame.name} className="view-img-btn">
+                        <Link to={`/game/${inGame.name}`} className="view-img-btn">
                             <img src={viewImg} alt="viewImg" className="view-img"/>
                         </Link>
                     </div>}

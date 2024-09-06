@@ -100,7 +100,7 @@ public class MemberServiceImpl implements MemberService {
                 propertyService.existsByRoomAndPosition(member.getRoom(), position)) {
             throw new UserNotAllowedException();
         }
-        int price = gameUtils.getPriceByPosition(position);
+        int price = gameUtils.getPriceByPositionAndLevel(position, Property.Upgrade.LEVEL_1);
         if (member.getGold() < price) {
             throw new UserNotAllowedException();
         }
@@ -129,7 +129,7 @@ public class MemberServiceImpl implements MemberService {
         return PropertyDto.builder()
                 .id(updatedProperty.getId())
                 .member(updatedProperty.getMember())
-                .upgrades(updatedProperty.getUpgrades())
+                .upgrades(gameUtils.getUpgrades(updatedProperty.getPosition()))
                 .position(updatedProperty.getPosition())
                 .goldOnStep(gameUtils.calculateGoldOnStep(updatedProperty))
                 .goldPerTurn(gameUtils.calculateGoldPerTurn(property))
@@ -168,7 +168,7 @@ public class MemberServiceImpl implements MemberService {
         return PropertyDto.builder()
                 .id(property.getId())
                 .member(property.getMember())
-                .upgrades(property.getUpgrades())
+                .upgrades(gameUtils.getUpgrades(property.getPosition()))
                 .position(property.getPosition())
                 .goldOnStep(onStep)
                 .goldPerTurn(gameUtils.calculateGoldPerTurn(property))

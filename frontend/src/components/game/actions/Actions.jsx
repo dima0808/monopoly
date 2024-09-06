@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import {useCallback, useEffect, useState} from "react";
 import "./styles.css";
 import Cookies from "js-cookie";
 
@@ -8,12 +8,20 @@ import Events from "./events/Events";
 import Management from "./management/Management";
 import {getAllEvents} from "../../../utils/http";
 
-export default function Actions({ room, players, properties, client, isConnected, setNotifications }) {
-    const [activeTab, setActiveTab] = useState("Events");
+export default function Actions({
+                                    room, players, properties,
+                                    activeTab, setActiveTab,
+                                    selectedProperty, setSelectedProperty,
+                                    client, isConnected,
+                                    setNotifications
+                                }) {
+
     const [armySpending, setArmySpending] = useState("Default");
     const [error, setError] = useState(null);
 
     const [events, setEvents] = useState([]);
+
+    const [managementActiveTab, setManagementActiveTab] = useState("Empire");
 
     const isCurrentUserTurn = room.isStarted && room.currentTurn === Cookies.get("username");
     const currentUser = players.find((player) => player.user.username === Cookies.get("username"));
@@ -268,7 +276,11 @@ export default function Actions({ room, players, properties, client, isConnected
                     />
                 );
             case "Management":
-                return <Management />;
+                return <Management
+                    properties={properties}
+                    managementActiveTab={managementActiveTab} setManagementActiveTab={setManagementActiveTab}
+                    selectedProperty={selectedProperty} setSelectedProperty={setSelectedProperty}
+                />;
             default:
                 return null;
         }
@@ -285,7 +297,11 @@ export default function Actions({ room, players, properties, client, isConnected
                 <div className="flex-between top-flex">
                     <div className="value">
                         <h2>Value per turn:</h2>
-                        <div className="player-stat-gold gold-per-turn width-full no-select">
+                        <div onClick={() => {
+                            setActiveTab('Management');
+                            setManagementActiveTab('Cashflow');
+                        }}
+                             className="player-stat-gold gold-per-turn width-full pointer no-select">
                             <img
                                 src={goldImg}
                                 className="recourse-img"
@@ -414,9 +430,24 @@ export default function Actions({ room, players, properties, client, isConnected
                     </li>
                 </ul>
                 <div className="flex-between management-btns">
-                    <button className="management-btn">Relations</button>
-                    <button className="management-btn">Empire</button>
-                    <button className="management-btn">Wins</button>
+                    <button onClick={() => {
+                        setActiveTab('Management');
+                        setManagementActiveTab('Relations');
+                    }} className="management-btn">
+                        Relations
+                    </button>
+                    <button onClick={() => {
+                        setActiveTab('Management');
+                        setManagementActiveTab('Empire');
+                    }} className="management-btn">
+                        Empire
+                    </button>
+                    <button onClick={() => {
+                        setActiveTab('Management');
+                        setManagementActiveTab('Wins');
+                    }} className="management-btn">
+                        Wins
+                    </button>
                 </div>
             </div>
             <div className="not-static-choises">

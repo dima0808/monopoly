@@ -38,6 +38,9 @@
     word-spacing: 1px;
     color: #2b2732;
 }
+.stats-div:not(:first-child){
+    margin-top: 2px;
+}
 .property-stats-div {
     margin-top: 4px;
 }

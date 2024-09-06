@@ -1,9 +1,9 @@
 import './styles.css';
 
-export default function Victories() {
+export default function Wins() {
     return (
         <div>
-            <h1>Victories</h1>
+            <h1>Wins</h1>
         </div>
     );
 }

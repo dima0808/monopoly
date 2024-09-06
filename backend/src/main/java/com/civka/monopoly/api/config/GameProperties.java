@@ -18,9 +18,10 @@ public class GameProperties {
     private Map<String, Integer> onStep;
     private Map<String, Integer> perTurn;
     private Map<String, String> requirement;
+    private Map<String, String> upgrade;
 
-    public Integer getPriceByPosition(Integer position) {
-        return price.get(position.toString());
+    public Integer getPriceByPositionAndLevel(Integer position, Property.Upgrade level) {
+        return price.get(position + "." + level);
     }
 
     public Integer getOnStepByPositionAndLevel(Integer position, Property.Upgrade level) {

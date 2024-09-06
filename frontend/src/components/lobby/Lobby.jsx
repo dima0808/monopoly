@@ -15,7 +15,7 @@ export default function Lobby({onJoin, onLeave, onKick, onDelete, room}) {
                 <button className="lobby__name">{room.name}</button>
                 {room.isStarted && <div className="in-game-div">
                     <p className="in-game-p">Game started</p>
-                    <Link to={"/game/" + room.name} className="view-img-btn">
+                    <Link to={`/game/${room.name}`} className="view-img-btn">
                         <img src={viewImg} alt="viewImg" className="view-img"/>
                     </Link>
                 </div>}
@@ -61,7 +61,7 @@ export default function Lobby({onJoin, onLeave, onKick, onDelete, room}) {
                     </div>}
                     <div></div>
                     <Link
-                        to={"/game/" + room.name}
+                        to={`/game/${room.name}`}
                         className="move-to-lobby-btn btn-in no-select"
                     >
                         Move to Lobby

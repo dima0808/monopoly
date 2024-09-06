@@ -24,6 +24,9 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
     const [properties, setProperties] = useState({});
     const [dice, setDice] = useState({ firstRoll : null, secondRoll : null });
 
+    const [activeTab, setActiveTab] = useState("Events");
+    const [selectedProperty, setSelectedProperty] = useState({});
+
     const onGameMessageReceived = (message) => {
         const {type, content, room, member, property, firstRoll, secondRoll} = JSON.parse(message.body);
         console.log(content);
@@ -185,9 +188,12 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 <Board room={room} players={players} dice={dice} properties={properties}
                        client={client} isConnected={isConnected}
                        setSelectedUser={setSelectedUser} setIsPrivateChatOpen={setIsPrivateChatOpen}
+                       setActiveTab={setActiveTab}
                        setNotifications={setNotifications}/>
                 <Actions client={client} isConnected={isConnected}
                          room={room} players={players} properties={properties}
+                         activeTab={activeTab} setActiveTab={setActiveTab}
+                         selectedProperty={selectedProperty} setSelectedProperty={setSelectedProperty}
                          setNotifications={setNotifications}/>
             </>}
         </div>

@@ -1,0 +1,20 @@
+package com.civka.monopoly.api.dto;
+
+import com.civka.monopoly.api.entity.Property;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
+public class UpgradeDto {
+
+    private Property.Upgrade level;
+
+    private Integer goldOnStep;
+    private Integer goldPerTurn;
+    private Integer price;
+}
