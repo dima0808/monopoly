@@ -21,7 +21,8 @@
 .hero-abilitys {
     padding: 2px 8px;
 }
-.hero-abilitys span {
+.hero-abilitys span,
+.project-description-p span {
     color: #1f0847;
     font-weight: 500;
     cursor: pointer;
