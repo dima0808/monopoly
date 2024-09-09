@@ -3,7 +3,7 @@ import goldImg from "../../../../../images/icon-gold.png";
 import {propertiesInfo, requirements} from "../../../../../constraints";
 // import tourismImg from "../../../../../images/icon-tourism.png";
 
-export default function BuyProperty({property, handleBuyProperty, onSkip}) {
+export default function BuyProperty({member, property, handleBuyProperty, onSkip}) {
 
     const propertyInfoFirstLevel = propertiesInfo[property.position]['LEVEL_1'];
     const propertyFirstLevel = property.upgrades.find(upgrade => upgrade.level === 'LEVEL_1');
@@ -68,7 +68,8 @@ export default function BuyProperty({property, handleBuyProperty, onSkip}) {
             </div>
 
             {property.upgradeRequirements.length > 0 &&
-                Object.entries(property.upgradeRequirements[0].requirements).map(([key, value]) => (
+                Object.entries(property.upgradeRequirements
+                    .find(upgrade => upgrade.level === 'LEVEL_1').requirements).map(([key, value]) => (
                     <div key={key} className={`condition-div ${value ? 'condition-div-compleated' : ''}`}>
                         {requirements[key]}
                     </div>
@@ -76,9 +77,9 @@ export default function BuyProperty({property, handleBuyProperty, onSkip}) {
             }
 
             <div className="decision-buttons flex-between">
-                <button disabled={property.upgradeRequirements.length > 0 &&
+                <button disabled={member?.gold < propertyFirstLevel.price || (property.upgradeRequirements.length > 0 &&
                     Object.values(property.upgradeRequirements
-                        .find(upgrade => upgrade.level === 'LEVEL_1').requirements).some(req => req === false)}
+                        .find(upgrade => upgrade.level === 'LEVEL_1').requirements).some(req => req === false))}
                         onClick={handleBuyProperty} className="pay-btn decision-button decision-button-green">
                     buy:
                     <div className="player-stat-gold width-full pointer no-select">

@@ -9,11 +9,12 @@
     font-size: 16px;
 }
 .property-modifier-div {
-    margin: 5px 4px;
+    margin: 9px 4px 5px 4px;
     border-radius: 6px;
     overflow: hidden;
     background-color: #747677b8;
 }
+
 .property-modifier-h3 {
     text-align: center;
     cursor: pointer;

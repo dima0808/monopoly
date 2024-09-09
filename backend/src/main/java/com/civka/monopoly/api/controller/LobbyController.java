@@ -74,12 +74,13 @@ public class LobbyController {
 
     @MessageMapping("/rooms/{roomName}/endTurn")
     @SendTo("/topic/public/{roomName}/game")
-    public RoomMessage endTurn(@Header("username") String username) {
+    public RoomMessage endTurn(@Header("username") String username,
+                               @Header("armySpending") Member.ArmySpending armySpending) {
         Member member = userService.findByUsername(username).getMember();
         return RoomMessage.builder()
                 .type(RoomMessage.MessageType.END_TURN)
                 .content(username + "'s turn ended")
-                .room(roomService.endTurn(member))
+                .room(roomService.endTurn(member, armySpending))
                 .build();
     }
 
@@ -92,6 +93,18 @@ public class LobbyController {
                 .type(RoomMessage.MessageType.BUY_PROPERTY)
                 .content("Member " + username + " bought property on position " + position)
                 .property(memberService.buyProperty(member, position))
+                .build();
+    }
+
+    @MessageMapping("/rooms/{roomName}/upgradeProperty/{position}")
+    @SendTo("/topic/public/{roomName}/game")
+    public RoomMessage upgradeProperty(@DestinationVariable Integer position,
+                                   @Header("username") String username) {
+        Member member = userService.findByUsername(username).getMember();
+        return RoomMessage.builder()
+                .type(RoomMessage.MessageType.UPGRADE_PROPERTY)
+                .content("Member " + username + " upgraded property on position " + position)
+                .property(memberService.upgradeProperty(member, position))
                 .build();
     }
 

@@ -14,6 +14,8 @@ public class UpgradeDto {
 
     private Property.Upgrade level;
 
+    private Boolean isOwned;
+
     private Integer goldOnStep;
     private Integer goldPerTurn;
     private Integer price;

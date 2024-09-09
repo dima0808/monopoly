@@ -8,6 +8,7 @@ import com.civka.monopoly.api.payload.PlayerMessage;
 import com.civka.monopoly.api.repository.MemberRepository;
 import com.civka.monopoly.api.service.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,9 @@ public class MemberServiceImpl implements MemberService {
     private final EventService eventService;
     private final PropertyService propertyService;
     private final GameUtils gameUtils;
+
+    @Value("${monopoly.app.room.game.goldForBypassingStart}")
+    private Integer goldForBypassingStart;
 
     @Override
     public Member save(Member member) {
@@ -46,17 +50,28 @@ public class MemberServiceImpl implements MemberService {
         if (!member.getRoom().getCurrentTurn().equals(member.getUser().getUsername()) || member.getHasRolledDice()) {
             throw new UserNotAllowedException();
         }
+        Room room = member.getRoom();
+        Chat roomChat = chatService.findByName(room.getName());
         int firstRoll = (int) (Math.random() * 6) + 1;
         int secondRoll = (int) (Math.random() * 6) + 1;
         int newPosition = member.getPosition() + firstRoll + secondRoll;
         if (newPosition > 47) {
+            member.setGold(member.getGold() + goldForBypassingStart);
+            ChatMessageDto systemMessage = ChatMessageDto.builder()
+                    .type(ChatMessage.MessageType.SYSTEM_BYPASS_START)
+                    .content(member.getUser().getNickname() + " " + goldForBypassingStart)
+                    .timestamp(LocalDateTime.now())
+                    .build();
+            ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
+            messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
+
             newPosition -= 48;
         }
         member.setPosition(newPosition);
+        member.setGold(member.getGold() + gameUtils.calculateGeneralGoldPerTurn(member));
         member.setHasRolledDice(true);
         Member updatedMember = memberRepository.save(member);
 
-        Room room = updatedMember.getRoom();
         int finalNewPosition = newPosition;
         if (newPosition == 0) {
 //            eventService.add(updatedMember, Event.EventType.START);
@@ -76,7 +91,6 @@ public class MemberServiceImpl implements MemberService {
             eventService.add(updatedMember, Event.EventType.FOREIGN_PROPERTY);
         }
 
-        Chat roomChat = chatService.findByName(room.getName());
         ChatMessageDto systemMessage = ChatMessageDto.builder()
                 .type(ChatMessage.MessageType.SYSTEM_ROLL_DICE)
                 .content(updatedMember.getUser().getNickname() + " " + firstRoll + " " + secondRoll)
@@ -129,10 +143,54 @@ public class MemberServiceImpl implements MemberService {
         return PropertyDto.builder()
                 .id(updatedProperty.getId())
                 .member(updatedProperty.getMember())
-                .upgrades(gameUtils.getUpgrades(updatedProperty.getPosition()))
+                .upgrades(gameUtils.getUpgrades(updatedProperty.getPosition(), updatedProperty))
                 .position(updatedProperty.getPosition())
                 .goldOnStep(gameUtils.calculateGoldOnStep(updatedProperty))
                 .goldPerTurn(gameUtils.calculateGoldPerTurn(property))
+                .upgradeRequirements(gameUtils.getRequirements(updatedProperty.getPosition(), member))
+                .build();
+    }
+
+    @Override
+    public PropertyDto upgradeProperty(Member member, Integer position) {
+        if (!propertyService.existsByRoomAndPosition(member.getRoom(), position) || member.getProperties().stream()
+                .noneMatch(property -> property.getPosition().equals(position))) {
+            throw new UserNotAllowedException();
+        }
+        Property property = propertyService.findByRoomAndPosition(member.getRoom(), position);
+        Property.Upgrade nextLevel = Property.Upgrade.LEVEL_1;
+        for (Property.Upgrade upgrade : List.of(Property.Upgrade.LEVEL_1, Property.Upgrade.LEVEL_2,
+                Property.Upgrade.LEVEL_3, Property.Upgrade.LEVEL_4)) {
+            if (!property.getUpgrades().contains(upgrade)) {
+                nextLevel = upgrade;
+                break;
+            }
+        }
+        int price = gameUtils.getPriceByPositionAndLevel(position, nextLevel);
+        if (member.getGold() < price) {
+            throw new UserNotAllowedException();
+        }
+        member.setGold(member.getGold() - price);
+        memberRepository.save(member);
+        property.getUpgrades().add(nextLevel);
+        Property updatedProperty = propertyService.save(property);
+
+        Chat roomChat = chatService.findByName(member.getRoom().getName());
+        ChatMessageDto systemMessage = ChatMessageDto.builder()
+                .type(ChatMessage.MessageType.SYSTEM_UPGRADE_PROPERTY)
+                .content(member.getUser().getNickname() + " " + position + " " + price)
+                .timestamp(LocalDateTime.now())
+                .build();
+        ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
+        messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
+
+        return PropertyDto.builder()
+                .id(updatedProperty.getId())
+                .member(updatedProperty.getMember())
+                .upgrades(gameUtils.getUpgrades(updatedProperty.getPosition(), updatedProperty))
+                .position(updatedProperty.getPosition())
+                .goldOnStep(gameUtils.calculateGoldOnStep(updatedProperty))
+                .goldPerTurn(gameUtils.calculateGoldPerTurn(updatedProperty))
                 .upgradeRequirements(gameUtils.getRequirements(updatedProperty.getPosition(), member))
                 .build();
     }
@@ -168,7 +226,7 @@ public class MemberServiceImpl implements MemberService {
         return PropertyDto.builder()
                 .id(property.getId())
                 .member(property.getMember())
-                .upgrades(gameUtils.getUpgrades(property.getPosition()))
+                .upgrades(gameUtils.getUpgrades(property.getPosition(), property))
                 .position(property.getPosition())
                 .goldOnStep(onStep)
                 .goldPerTurn(gameUtils.calculateGoldPerTurn(property))

@@ -56,7 +56,11 @@
     overflow: hidden;
     cursor: pointer;
 }
-
+.li-army-gold-disabled{
+    cursor: default;
+    filter: grayscale(80%);
+    -webkit-filter: grayscale(80%);
+}
 .selected-military {
     outline: 3px solid #db4b0d;
 }

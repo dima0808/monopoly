@@ -27,6 +27,7 @@ public class RoomMessage {
         START,
         END_TURN,
         BUY_PROPERTY,
+        UPGRADE_PROPERTY,
         PAY_RENT,
         ADD_GOLD,
     }

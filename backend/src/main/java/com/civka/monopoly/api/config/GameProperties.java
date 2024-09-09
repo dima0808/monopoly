@@ -1,5 +1,6 @@
 package com.civka.monopoly.api.config;
 
+import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.entity.Property;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class GameProperties {
     private Map<String, Integer> perTurn;
     private Map<String, String> requirement;
     private Map<String, String> upgrade;
+    private Map<String, Integer> armySpending;
 
     public Integer getPriceByPositionAndLevel(Integer position, Property.Upgrade level) {
         return price.get(position + "." + level);
@@ -30,5 +32,13 @@ public class GameProperties {
 
     public Integer getPerTurnByPositionAndLevel(Integer position, Property.Upgrade level) {
         return perTurn.get(position + "." + level);
+    }
+
+    public int getStrengthFromArmySpending(Member.ArmySpending armySpendingLevel) {
+        return armySpending.get(armySpendingLevel + ".strength");
+    }
+
+    public int getGoldFromArmySpending(Member.ArmySpending armySpendingLevel) {
+        return armySpending.get(armySpendingLevel + ".gold");
     }
 }

@@ -23,6 +23,7 @@ import java.util.Random;
 @Transactional
 public class RoomServiceImpl implements RoomService {
 
+    private final GameUtils gameUtils;
     @Value("${monopoly.app.room.max-size}")
     private Integer maxRoomSize;
 
@@ -36,8 +37,6 @@ public class RoomServiceImpl implements RoomService {
     private final UserService userService;
     private final MemberService memberService;
     private final ChatService chatService;
-    private final PropertyService propertyService;
-    private final EventService eventService;
     private final SimpMessagingTemplate messagingTemplate;
     private final PasswordEncoder passwordEncoder;
 
@@ -237,10 +236,17 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room endTurn(Member member) {
+    public Room endTurn(Member member, Member.ArmySpending armySpending) {
         if (!member.getRoom().getCurrentTurn().equals(member.getUser().getUsername()) || !member.getHasRolledDice()) {
             throw new UserNotAllowedException();
         }
+        if (gameUtils.getGoldFromArmySpending(armySpending) > member.getGold()) {
+            throw new UserNotAllowedException();
+        }
+        member.setArmySpending(armySpending);
+        member.setStrength(member.getStrength() + gameUtils.getStrengthFromArmySpending(armySpending));
+        member.setGold(member.getGold() - gameUtils.getGoldFromArmySpending(armySpending));
+        memberService.save(member);
         Room room = member.getRoom();
         List<Member> members = room.getMembers();
         int currentIndex = members.indexOf(member);

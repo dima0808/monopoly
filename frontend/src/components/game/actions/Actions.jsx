@@ -23,6 +23,8 @@ export default function Actions({
 
     const [managementActiveTab, setManagementActiveTab] = useState("Empire");
 
+    const [calculatedGoldPerTurn, setCalculatedGoldPerTurn] = useState(0);
+
     const isCurrentUserTurn = room.isStarted && room.currentTurn === Cookies.get("username");
     const currentUser = players.find((player) => player.user.username === Cookies.get("username"));
     const hasRolledDice = currentUser && currentUser.hasRolledDice;
@@ -92,6 +94,42 @@ export default function Actions({
                 ...prev,
                 {
                     message: "Error buying property (no connection)",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+        }
+    };
+
+    const handleUpgradeProperty = (position) => {
+        const token = Cookies.get("token");
+        const username = Cookies.get("username");
+        if (!client || !client.publish) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message:
+                        "Client is not initialized or publish method is not available",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+            return;
+        }
+        try {
+            client.publish({
+                destination: `/app/rooms/${room.name}/upgradeProperty/${position}`,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    username: username,
+                },
+            });
+            console.log("Upgrading property...");
+        } catch (error) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message: "Error upgrading property (no connection)",
                     duration: 3500,
                     isError: true,
                 },
@@ -192,6 +230,7 @@ export default function Actions({
                 headers: {
                     Authorization: `Bearer ${token}`,
                     username: username,
+                    armySpending: armySpending,
                 },
             });
             console.log("Ending turn...");
@@ -205,7 +244,7 @@ export default function Actions({
                 },
             ]);
         }
-    }, [client, room.name, setNotifications]);
+    }, [armySpending, client, room.name, setNotifications]);
 
     const onEventReceived = (message) => {
         const {type, content, event} = JSON.parse(message.body);
@@ -221,6 +260,14 @@ export default function Actions({
                 return;
         }
     }
+    
+    useEffect(() => {
+        if (currentUser?.gold < 700 && armySpending === "High") {
+            setArmySpending("Medium");
+        } else if (currentUser?.gold < 200 && armySpending === "Medium") {
+            setArmySpending("Default");
+        }
+    }, [armySpending, currentUser]);
 
     useEffect(() => {
         if (client && isConnected) {
@@ -264,6 +311,7 @@ export default function Actions({
             case "Events":
                 return (
                     <Events
+                        players={players}
                         events={events}
                         properties={properties}
                         handleRollDice={handleRollDice}
@@ -277,9 +325,11 @@ export default function Actions({
                 );
             case "Management":
                 return <Management
+                    currentUser={currentUser}
                     properties={properties}
                     managementActiveTab={managementActiveTab} setManagementActiveTab={setManagementActiveTab}
                     selectedProperty={selectedProperty} setSelectedProperty={setSelectedProperty}
+                    handleUpgradeProperty={handleUpgradeProperty}
                 />;
             default:
                 return null;
@@ -290,13 +340,27 @@ export default function Actions({
         setArmySpending(type);
     };
 
+    useEffect(() => {
+        if (properties) {
+            const userProperties = Object.values(properties).filter(property =>
+                property.member && property.member.user.username === Cookies.get('username')
+            );
+
+            const totalGoldPerTurn = userProperties.reduce((sum, property) => {
+                return sum + (property.goldPerTurn || 0);
+            }, 0);
+
+            setCalculatedGoldPerTurn(totalGoldPerTurn);
+        }
+    }, [properties]);
+
     return (
         <section className="actions">
             {/*<SettingsDialog/>*/}
             <div className="static-choises">
                 <div className="flex-between top-flex">
                     <div className="value">
-                        <h2>Value per turn:</h2>
+                        <h2>Gold per turn:</h2>
                         <div onClick={() => {
                             setActiveTab('Management');
                             setManagementActiveTab('Cashflow');
@@ -307,7 +371,7 @@ export default function Actions({
                                 className="recourse-img"
                                 alt="gold"
                             />
-                            +34
+                            +{calculatedGoldPerTurn}
                         </div>
                     </div>
                     <button className="satings-btn">
@@ -336,9 +400,9 @@ export default function Actions({
                 <ul className="military-economic">
                     <li
                         onClick={() => checkArmySpending("Absent")}
-                        className={`li-army-gold ${
-                            armySpending === "Absent" ? "selected-military" : ""
-                        }`}
+                        className={`li-army-gold 
+                        ${armySpending === "Absent" ? "selected-military" : ""}
+                        `}
                     >
                         <div className="player-stat-strength no-select">
                             <img
@@ -383,10 +447,15 @@ export default function Actions({
                         </div>
                     </li>
                     <li
-                        onClick={() => checkArmySpending("Medium")}
-                        className={`li-army-gold ${
-                            armySpending === "Medium" ? "selected-military" : ""
-                        }`}
+                        onClick={() => {
+                            if (currentUser?.gold >= 200) {
+                                checkArmySpending("Medium");
+                            }
+                        }}
+                        className={`li-army-gold 
+                        ${armySpending === "Medium" ? "selected-military" : ""}
+                        ${currentUser?.gold < 200 ? "li-army-gold-disabled" : ""}
+                        `}
                     >
                         <div className="player-stat-strength no-select">
                             <img
@@ -406,10 +475,15 @@ export default function Actions({
                         </div>
                     </li>
                     <li
-                        onClick={() => checkArmySpending("High")}
-                        className={`li-army-gold ${
-                            armySpending === "High" ? "selected-military" : ""
-                        }`}
+                        onClick={() => {
+                            if (currentUser?.gold >= 700) {
+                                checkArmySpending("High");
+                            }
+                        }}
+                        className={`li-army-gold 
+                        ${armySpending === "High" ? "selected-military" : ""}
+                        ${currentUser?.gold < 700 ? "li-army-gold-disabled" : ""}
+                        `}
                     >
                         <div className="player-stat-strength no-select">
                             <img

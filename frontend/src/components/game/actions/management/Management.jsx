@@ -9,23 +9,37 @@ import Relations from "./relations/Relations";
 import Wins from "./wins/Wins";
 
 export default function Management({
+                                       currentUser,
                                        properties,
                                        managementActiveTab, setManagementActiveTab,
-                                       selectedProperty, setSelectedProperty
+                                       selectedProperty, setSelectedProperty,
+                                       handleUpgradeProperty
                                    }) {
 
     const renderContent = () => {
         switch (managementActiveTab) {
             case "Cashflow":
-                return <Cashflow />;
+                return <Cashflow properties={properties} />;
             case "Empire":
-                return <Empire properties={properties} />;
+                return <Empire
+                    currentUser={currentUser}
+                    properties={properties}
+                    selectProperty={(position) => {
+                        setSelectedProperty(position);
+                        setManagementActiveTab("Property");
+                    }}
+                    handleUpgradeProperty={(position) => handleUpgradeProperty(position)}
+                />;
             case "Leader Abilities":
                 return <LeaderAbilities />;
             case "Player Info":
                 return <PlayerInfo />;
             case "Property":
-                return <Property />;
+                return <Property
+                    currentUser={currentUser}
+                    property={selectedProperty}
+                    handleUpgradeProperty={(position) => handleUpgradeProperty(position)}
+                />;
             case "Relations":
                 return <Relations />;
             case "Wins":

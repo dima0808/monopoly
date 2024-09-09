@@ -51,5 +51,7 @@ public class ChatMessage {
         SYSTEM_ROLL_DICE,
         SYSTEM_PAY_RENT,
         SYSTEM_BUY_PROPERTY,
+        SYSTEM_UPGRADE_PROPERTY,
+        SYSTEM_BYPASS_START,
     }
 }

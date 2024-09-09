@@ -1,34 +1,27 @@
 import "./styles.css";
 import goldImg from "../../../../../images/icon-gold.png";
-import tourismImg from "../../../../../images/icon-tourism.png";
+// import tourismImg from "../../../../../images/icon-tourism/.png";
 import {propertiesInfo} from "../../../../../constraints";
 export default function ForeignProperty({property, handlePayRent}) {
 
-    const propertyInfo = propertiesInfo[property.position];
+    const propertyName = propertiesInfo[property.position]['LEVEL_1'].name;
+
+    const ownedLevels = property.upgrades.filter(upgrade => upgrade.isOwned && upgrade.level.startsWith("LEVEL"));
+    const highestOwnedLevel = ownedLevels[ownedLevels.length - 1]?.level;
+    const propertyHighestLevelInfo = propertiesInfo[property.position][highestOwnedLevel];
 
     return (
         <div className={"property-color color-" + property.member.color + "-g"}>
-            <h2 className="property-cell-name">{propertyInfo.name}</h2>
+            <h2 className="property-cell-name">{propertyName}</h2>
             <div className="property-grid">
                 <div className="property-img-div">
                     <img
-                        src={propertyInfo.src}
+                        src={propertyHighestLevelInfo.src}
                         className="property-img"
-                        alt="gold"
+                        alt={propertyName}
                     />
                 </div>
                 <div className="property-stats-div">
-                    <div className="total-cost stats-div">
-                        Total cost:
-                        <div className="player-stat-gold width-full pointer no-select">
-                            <img
-                                src={goldImg}
-                                className="recourse-img"
-                                alt="gold"
-                            />
-                            {propertyInfo.totalCost}
-                        </div>
-                    </div>
                     <div className="gold-on-step stats-div">
                         Gold on step:
                         <div className="player-stat-gold  width-full pointer no-select">
@@ -37,7 +30,7 @@ export default function ForeignProperty({property, handlePayRent}) {
                                 className="recourse-img"
                                 alt="gold"
                             />
-                            {propertyInfo.goldOnStep}
+                            {property.goldOnStep}
                         </div>
                     </div>
                     <div className="gold-on-step stats-div">
@@ -48,7 +41,7 @@ export default function ForeignProperty({property, handlePayRent}) {
                                 className="recourse-img"
                                 alt="gold"
                             />
-                            {propertyInfo.goldPerTurn}
+                            {property.goldPerTurn}
                         </div>
                     </div>
                     {/*<div className="gold-on-step stats-div">*/}

@@ -37,7 +37,7 @@ public class Member {
     private Integer strength;
     private Integer tourism;
     private Integer score;
-    private ArmySpending armySpending;
+    private ArmySpending armySpending; // todo: remove it
 
     private Integer position;
     private Boolean hasRolledDice;

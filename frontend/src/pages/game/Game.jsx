@@ -12,6 +12,10 @@ import {useNavigate} from "react-router-dom";
 import {getPlayerProperties, getRoomByName} from "../../utils/http";
 import {IP} from "../../constraints";
 
+import diceRollSound from "../../sounds/dice-rolling.mp3";
+const diceRollAudio = new Audio(diceRollSound);
+diceRollAudio.volume = 0.05;
+
 export default function Game({setNotifications, setSelectedUser, setIsPrivateChatOpen}) {
     const [client, setClient] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
@@ -25,11 +29,13 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
     const [dice, setDice] = useState({ firstRoll : null, secondRoll : null });
 
     const [activeTab, setActiveTab] = useState("Events");
-    const [selectedProperty, setSelectedProperty] = useState({});
+    const [selectedProperty, setSelectedProperty] = useState(null);
+
 
     const onGameMessageReceived = (message) => {
         const {type, content, room, member, property, firstRoll, secondRoll} = JSON.parse(message.body);
         console.log(content);
+        const token = Cookies.get('token');
         switch (type) {
             case 'START':
                 setRoom((prevRoom) => {
@@ -39,12 +45,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                         currentTurn: room.currentTurn
                     };
                 });
-                setPlayers((prevPlayers) => {
-                    return prevPlayers.map(player => {
-                        return player.civilization === "Random" ?
-                            room.members.find(member => member.id === player.id) : player;
-                    });
-                });
+                setPlayers(room.members);
                 return;
             case 'ROLL_DICE':
                 setPlayers((prevPlayers) => {
@@ -53,6 +54,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                     });
                 });
                 setDice({ firstRoll: firstRoll, secondRoll: secondRoll });
+                diceRollAudio.play().then();
                 return;
             case 'BUY_PROPERTY':
                 setProperties((prevProperties) => {
@@ -63,6 +65,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                             member: property.member,
                             upgrades: property.upgrades,
                             goldOnStep: property.goldOnStep,
+                            goldPerTurn: property.goldPerTurn,
                             upgradeRequirements: property.upgradeRequirements
                         }
                     };
@@ -72,6 +75,43 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                         return player.id === property.member.id ? property.member : player;
                     });
                 });
+                getPlayerProperties(roomName, token)
+                    .then((propertiesArray) => {
+                        const propertiesObject = propertiesArray.reduce((acc, property) => {
+                            acc[property.position] = property;
+                            return acc;
+                        }, {});
+                        setProperties(propertiesObject);
+                    })
+                    .catch((error) => setError({message: error.message || "An error occurred"}));
+                return;
+            case 'UPGRADE_PROPERTY':
+                setProperties((prevProperties) => {
+                    return {
+                        ...prevProperties,
+                        [property.position]: {
+                            ...prevProperties[property.position],
+                            upgrades: property.upgrades,
+                            goldOnStep: property.goldOnStep,
+                            goldPerTurn: property.goldPerTurn,
+                            upgradeRequirements: property.upgradeRequirements
+                        }
+                    };
+                });
+                setPlayers((prevPlayers) => {
+                    return prevPlayers.map(player => {
+                        return player.id === property.member.id ? property.member : player;
+                    });
+                });
+                getPlayerProperties(roomName, token)
+                    .then((propertiesArray) => {
+                        const propertiesObject = propertiesArray.reduce((acc, property) => {
+                            acc[property.position] = property;
+                            return acc;
+                        }, {});
+                        setProperties(propertiesObject);
+                    })
+                    .catch((error) => setError({message: error.message || "An error occurred"}));
                 return;
             case 'PAY_RENT':
                 setPlayers(room.members);
@@ -83,11 +123,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                         currentTurn: room.currentTurn
                     };
                 });
-                setPlayers((prevPlayers) => {
-                    return prevPlayers.map(player => {
-                        return player.user.username === room.currentTurn ? { ...player, hasRolledDice: false } : player;
-                    });
-                });
+                setPlayers(room.members);
                 return;
             case 'ADD_GOLD':
                 setPlayers(room.members);
@@ -193,7 +229,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 <Actions client={client} isConnected={isConnected}
                          room={room} players={players} properties={properties}
                          activeTab={activeTab} setActiveTab={setActiveTab}
-                         selectedProperty={selectedProperty} setSelectedProperty={setSelectedProperty}
+                         selectedProperty={properties[selectedProperty]} setSelectedProperty={setSelectedProperty}
                          setNotifications={setNotifications}/>
             </>}
         </div>

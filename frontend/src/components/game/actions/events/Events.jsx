@@ -8,6 +8,7 @@ import GoodyHut from "./goodyHut/GoodyHut";
 import Projects from "./projects/Projects";
 
 export default function Events({
+                                   players,
                                    events,
                                    properties,
                                    isCurrentUserTurn,
@@ -29,6 +30,7 @@ export default function Events({
                     return (
                         <BuyProperty
                             key={index}
+                            member={players.find((player) => player.id === member.id)}
                             property={properties[member.position]}
                             handleBuyProperty={() => handleBuyProperty(member.position)}
                             onSkip={() => handleSkip('BUY_PROPERTY')}

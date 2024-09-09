@@ -211,6 +211,42 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
                                                 </div>
                                             </SystemMessage>
                                         );
+                                    case 'SYSTEM_UPGRADE_PROPERTY':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                вдосконалив
+                                                <span className="system-span"> {propertiesInfo[data[1]]['LEVEL_1'].name}
+                                                </span>за
+                                                <div className="inline-block">
+                                                    <div className="player-stat-gold width-full no-select">
+                                                        <img
+                                                            src={goldImg}
+                                                            className="recourse-img"
+                                                            alt="gold"
+                                                        />
+                                                        {data[2]}
+                                                    </div>
+                                                </div>
+                                            </SystemMessage>
+                                        );
+                                    case 'SYSTEM_BYPASS_START':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                проходить коло та отримує
+                                                <div className="inline-block">
+                                                    <div className="player-stat-gold width-full no-select">
+                                                        <img
+                                                            src={goldImg}
+                                                            className="recourse-img"
+                                                            alt="gold"
+                                                        />
+                                                        {data[1]}
+                                                    </div>
+                                                </div>
+                                            </SystemMessage>
+                                        );
                                     default:
                                         return (
                                             <SystemMessage key={index} timestamp={message.timestamp}>

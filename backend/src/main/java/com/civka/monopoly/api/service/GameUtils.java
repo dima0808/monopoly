@@ -16,13 +16,19 @@ public interface GameUtils {
 
     int calculateGoldPerTurn(Property property);
 
+    int calculateGeneralGoldPerTurn(Member member);
+
     int getGoldPerTurnByLevel(Integer position, Property.Upgrade level);
 
     int getPriceByPositionAndLevel(Integer position, Property.Upgrade level);
+
+    int getStrengthFromArmySpending(Member.ArmySpending armySpending);
+
+    int getGoldFromArmySpending(Member.ArmySpending armySpending);
 
     Map<String, String> getUpgradeProperties();
 
     List<RequirementDto> getRequirements(Integer position, Member member);
 
-    List<UpgradeDto> getUpgrades(Integer position);
+    List<UpgradeDto> getUpgrades(Integer position, Property property);
 }

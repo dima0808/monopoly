@@ -30,7 +30,7 @@ public interface RoomService {
 
     Room startGame(String roomName, String username);
 
-    Room endTurn(Member member);
+    Room endTurn(Member member, Member.ArmySpending armySpending);
 
     Room addGold(Member member, Integer gold, String admin);
 }

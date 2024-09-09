@@ -50,6 +50,13 @@ public class GameUtilsImpl implements GameUtils {
     }
 
     @Override
+    public int calculateGeneralGoldPerTurn(Member member) {
+        return member.getProperties().stream()
+                .map(this::calculateGoldPerTurn)
+                .reduce(0, Integer::sum);
+    }
+
+    @Override
     public int getGoldPerTurnByLevel(Integer position, Property.Upgrade level) {
         return gameProperties.getPerTurnByPositionAndLevel(position, level);
     }
@@ -60,6 +67,16 @@ public class GameUtilsImpl implements GameUtils {
     }
 
     @Override
+    public int getStrengthFromArmySpending(Member.ArmySpending armySpendingLevel) {
+        return gameProperties.getStrengthFromArmySpending(armySpendingLevel);
+    }
+
+    @Override
+    public int getGoldFromArmySpending(Member.ArmySpending armySpendingLevel) {
+        return gameProperties.getGoldFromArmySpending(armySpendingLevel);
+    }
+
+    @Override
     public Map<String, String> getUpgradeProperties() {
         return gameProperties.getUpgrade();
     }
@@ -67,8 +84,8 @@ public class GameUtilsImpl implements GameUtils {
     @Override
     public List<RequirementDto> getRequirements(Integer position, Member member) {
         List<RequirementDto> allRequirements = new ArrayList<>();
-        for (Property.Upgrade upgrade :
-                List.of(Property.Upgrade.LEVEL_1, Property.Upgrade.LEVEL_2, Property.Upgrade.LEVEL_3)) {
+        for (Property.Upgrade upgrade : List.of(Property.Upgrade.LEVEL_1, Property.Upgrade.LEVEL_2,
+                Property.Upgrade.LEVEL_3, Property.Upgrade.LEVEL_4)) {
             String requirements = gameProperties.getRequirement().get(position + "." + upgrade);
             if (requirements != null) {
                 Map<RequirementDto.Requirement, Boolean> requirementMap = new HashMap<>();
@@ -86,12 +103,13 @@ public class GameUtilsImpl implements GameUtils {
     }
 
     @Override
-    public List<UpgradeDto> getUpgrades(Integer position) {
+    public List<UpgradeDto> getUpgrades(Integer position, Property property) {
         List<UpgradeDto> upgrades = new ArrayList<>();
         for (String upgrade : gameProperties.getUpgrade().get(position.toString()).split(",")) {
             Property.Upgrade level = Property.Upgrade.valueOf(upgrade);
             UpgradeDto upgradeDto = UpgradeDto.builder()
                     .level(level)
+                    .isOwned(property != null && property.getUpgrades().contains(level))
                     .goldOnStep(gameProperties.getOnStepByPositionAndLevel(position, level))
                     .goldPerTurn(gameProperties.getPerTurnByPositionAndLevel(position, level))
                     .price(gameProperties.getPriceByPositionAndLevel(position, level))

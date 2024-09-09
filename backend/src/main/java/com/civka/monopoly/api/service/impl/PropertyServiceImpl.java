@@ -58,7 +58,7 @@ public class PropertyServiceImpl implements PropertyService {
                         return PropertyDto.builder()
                                 .id(property.getId())
                                 .member(property.getMember())
-                                .upgrades(gameUtils.getUpgrades(property.getPosition()))
+                                .upgrades(gameUtils.getUpgrades(property.getPosition(), property))
                                 .position(property.getPosition())
                                 .goldOnStep(gameUtils.calculateGoldOnStep(property))
                                 .goldPerTurn(gameUtils.calculateGoldPerTurn(property))
@@ -66,7 +66,7 @@ public class PropertyServiceImpl implements PropertyService {
                                 .build();
                     } else {
                         return PropertyDto.builder()
-                                .upgrades(gameUtils.getUpgrades(positionInt))
+                                .upgrades(gameUtils.getUpgrades(positionInt, null))
                                 .position(positionInt)
                                 .goldOnStep(gameUtils.getGoldOnStepByLevel(positionInt, Property.Upgrade.LEVEL_1))
                                 .goldPerTurn(gameUtils.getGoldPerTurnByLevel(positionInt, Property.Upgrade.LEVEL_1))
