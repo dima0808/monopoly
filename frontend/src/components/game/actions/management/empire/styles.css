@@ -14,3 +14,35 @@
     filter: grayscale(80%);
     -webkit-filter: grayscale(80%);
 }
+.white-blur {
+    background-color: #aba6a671;
+}
+.gray-blur {
+    background-color: rgba(125, 123, 123, 0.687);
+    position: relative;
+}
+.gray-blur::after {
+    position: absolute;
+    content: "1";
+    height: 28px;
+    width: 28px;
+    z-index: 50;
+    top: 0;
+    left: 100%;
+    transform: translate(calc(-100% + 2px), 0);
+    background-image: url("../../../../../images/icon-locked.png"); /* Посилання на зображення */
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding-top: 10px;
+    text-align: center;
+    font-size: 16px; /* Розмір цифри, можна налаштувати */
+    color: #eee; /* Колір цифри */
+}
+.property-color .gray-blur::after {
+    transform: translate(calc(-100% - 190px), 4px);
+}
+.gray-blur .property-img-div,
+.gray-blur .cell-img {
+    filter: grayscale(55%);
+    -webkit-filter: grayscale(55%);
+}
