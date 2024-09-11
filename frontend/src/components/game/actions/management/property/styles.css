@@ -148,3 +148,86 @@
 .neighborhood-bonus.modifiered {
     outline: 3px solid #041241;
 }
+.property-color-government {
+    margin: 9px 0px 4px 0px;
+    background-color: #403646e2;
+    padding: 0 0 2px 0;
+}
+.property-color-government .project-color-h2 {
+    font-size: 22px;
+    color: #e2cae5;
+}
+.property-government-choose {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 58px;
+    margin: 2px 16px;
+    background-color: #b09bb372;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+.property-government-choose .project-div-img {
+    background-color: #58545aca;
+    cursor: pointer;
+    width: 42px;
+    height: 42px;
+}
+.property-government-choose .project-div-img-compleated {
+    background-color: #a299a5e2;
+}
+.property-government-choose .project-div-img .project-img {
+    width: 42px;
+    height: 42px;
+}
+.project-div-img-selected {
+    width: 48px !important;
+    height: 48px !important;
+    outline: 2px solid #e2cae5;
+}
+.project-div-img-selected .project-img {
+    width: 48px !important;
+    height: 48px !important;
+}
+.government,
+.government-efect {
+    background-color: #726e74e6;
+}
+.property-div-compleated.government,
+.property-div-compleated.government-efect {
+    background-color: rgba(190, 176, 194, 0.8) !important;
+}
+.government .property-modifier-h3 {
+    background-color: #bea6c175;
+}
+.government .property-new-stats,
+.government-efect .property-new-stats {
+    background-color: #e2d1e34f;
+}
+.property-div-compleated.government .property-modifier-h3 {
+    background-color: #bea6c1e0;
+}
+.government.modifiered {
+    outline: 3px solid #bea6c1;
+}
+.property-color-government .government-efect-h2 {
+    margin-bottom: -2px;
+}
+.government-efect-h2 {
+    text-align: center;
+    color: #9353a9;
+    margin-top: -2px;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+}
+.government-efect .property-modifier-h3 {
+    background-color: #9453a9b6;
+}
+.property-div-compleated.government-efect .property-modifier-h3 {
+    background-color: #9453a9e2;
+}
+.government-efect.modifiered {
+    outline: 3px solid #9353a9;
+}

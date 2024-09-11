@@ -1,5 +1,6 @@
 import "./styles.css";
 import goldImg from "../../../../../images/icon-gold.png";
+import breadAndCircusesImg from "../../../../../images/icon_project_bread_and_circuses.png";
 // import tourismImg from "../../../../../images/icon-tourism.png";
 import {
     propertiesInfo,
@@ -426,6 +427,163 @@ export default function Property({
                 {/*        </div>*/}
                 {/*    </div>*/}
                 {/*</div>*/}
+                <div className="property-color project-color property-color-government">
+                    <h2 className="project-color-h2">Choose your building</h2>
+                    <div className="property-government-choose">
+                        <div className="project-div-img">
+                            <img
+                                src={breadAndCircusesImg}
+                                className="project-img"
+                                alt="gold"
+                            />
+                        </div>
+                        <div className="project-div-img project-div-img-selected">
+                            <img
+                                src={breadAndCircusesImg}
+                                className="project-img"
+                                alt="gold"
+                            />
+                        </div>
+                        <div className="project-div-img project-div-img-compleated">
+                            <img
+                                src={breadAndCircusesImg}
+                                className="project-img"
+                                alt="gold"
+                            />
+                        </div>
+                    </div>
+                    <div className="property-modifier-div government property-div-compleated">
+                        <h3 className="property-modifier-h3">
+                            breadAndCircusesImg
+                        </h3>
+                        <div className="property-grid-3 ">
+                            <div className="property-gridimg-img-div">
+                                <img
+                                    src={breadAndCircusesImg}
+                                    className="property-img"
+                                    alt="breadAndCircusesImg"
+                                />
+                            </div>
+                            <p className="condition-p"></p>
+                            <div className="property-new-stats">
+                                <div className="property-mini-flex">
+                                    <p className="property-new-stats-p">
+                                        g.o.s
+                                    </p>
+                                    <div className="player-stat-gold width-full pointer no-select">
+                                        <img
+                                            src={goldImg}
+                                            className="recourse-img"
+                                            alt="gold"
+                                        />
+                                        20
+                                    </div>
+                                </div>
+                                <div className="property-mini-flex">
+                                    <p className="property-new-stats-p">
+                                        g.p.t
+                                    </p>
+                                    <div className="player-stat-gold gold-per-turn width-full pointer no-select">
+                                        <img
+                                            src={goldImg}
+                                            className="recourse-img"
+                                            alt="gold"
+                                        />
+                                        40
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/* <div className="property-modifier-div government">
+                        <h3 className="property-modifier-h3">
+                            breadAndCircusesImg
+                        </h3>
+                        <div className="property-grid-3 ">
+                            <div className="property-gridimg-img-div">
+                                <img
+                                    src={breadAndCircusesImg}
+                                    className="property-img"
+                                    alt="breadAndCircusesImg"
+                                />
+                            </div>
+                            <p className="condition-p"></p>
+                            <div className="property-new-stats">
+                                <div className="property-mini-flex">
+                                    <p className="property-new-stats-p">
+                                        g.o.s
+                                    </p>
+                                    <div className="player-stat-gold width-full pointer no-select">
+                                        <img
+                                            src={goldImg}
+                                            className="recourse-img"
+                                            alt="gold"
+                                        />
+                                        20
+                                    </div>
+                                </div>
+                                <div className="property-mini-flex">
+                                    <p className="property-new-stats-p">
+                                        g.p.t
+                                    </p>
+                                    <div className="player-stat-gold gold-per-turn width-full pointer no-select">
+                                        <img
+                                            src={goldImg}
+                                            className="recourse-img"
+                                            alt="gold"
+                                        />
+                                        40
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> */}
+                    <h2 className="government-efect-h2">Government efect:</h2>
+
+                    <div className="property-modifier-div government-efect modifiered">
+                        <h3 className="property-modifier-h3">iron</h3>
+                        <div className="property-grid-3">
+                            <div className="property-gridimg-img-div">
+                                <img
+                                    src={breadAndCircusesImg}
+                                    className="property-img"
+                                    alt="gold"
+                                />
+                            </div>
+                            <p className="condition-p">
+                                buff <span>промишлєну зону</span>
+                            </p>
+                            <div className="property-new-stats">
+                                <div className="property-mini-flex">
+                                    <p className="property-new-stats-p">
+                                        g.o.s
+                                    </p>
+                                    <div className="player-stat-gold width-full pointer no-select">
+                                        <img
+                                            src={goldImg}
+                                            className="recourse-img"
+                                            alt="gold"
+                                        />
+                                        100
+                                    </div>
+                                </div>
+                                <div className="property-mini-flex">
+                                    <p className="property-new-stats-p">
+                                        g.o.t
+                                    </p>
+                                    <div className="player-stat-gold gold-per-turn width-full pointer no-select">
+                                        <img
+                                            src={goldImg}
+                                            className="recourse-img"
+                                            alt="gold"
+                                        />
+                                        1
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div className=" proprty-btns-div flex-between">
                     {lowestNotOwnedLevel ? (
                         <button

@@ -1,9 +1,10 @@
 .project-color {
     background-color: #5a5959;
     padding: 2px 2px 1px 2px;
-    cursor: pointer;
 }
-
+.project-color .project-color-h2 {
+    cursor: default;
+}
 .project-color-h2 {
     text-align: center;
     cursor: pointer;
