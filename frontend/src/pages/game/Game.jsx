@@ -29,6 +29,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
     const [dice, setDice] = useState({ firstRoll : null, secondRoll : null });
 
     const [activeTab, setActiveTab] = useState("Events");
+    const [managementActiveTab, setManagementActiveTab] = useState("Empire");
     const [selectedProperty, setSelectedProperty] = useState(null);
 
 
@@ -57,19 +58,20 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 diceRollAudio.play().then();
                 return;
             case 'BUY_PROPERTY':
-                setProperties((prevProperties) => {
-                    return {
-                        ...prevProperties,
-                        [property.position]: {
-                            ...prevProperties[property.position],
-                            member: property.member,
-                            upgrades: property.upgrades,
-                            goldOnStep: property.goldOnStep,
-                            goldPerTurn: property.goldPerTurn,
-                            upgradeRequirements: property.upgradeRequirements
-                        }
-                    };
-                });
+                // setProperties((prevProperties) => {
+                //     return {
+                //         ...prevProperties,
+                //         [property.position]: {
+                //             ...prevProperties[property.position],
+                //             member: property.member,
+                //             upgrades: property.upgrades,
+                //             mortgage: property.mortgage,
+                //             goldOnStep: property.goldOnStep,
+                //             goldPerTurn: property.goldPerTurn,
+                //             upgradeRequirements: property.upgradeRequirements
+                //         }
+                //     };
+                // });
                 setPlayers((prevPlayers) => {
                     return prevPlayers.map(player => {
                         return player.id === property.member.id ? property.member : player;
@@ -86,18 +88,20 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                     .catch((error) => setError({message: error.message || "An error occurred"}));
                 return;
             case 'UPGRADE_PROPERTY':
-                setProperties((prevProperties) => {
-                    return {
-                        ...prevProperties,
-                        [property.position]: {
-                            ...prevProperties[property.position],
-                            upgrades: property.upgrades,
-                            goldOnStep: property.goldOnStep,
-                            goldPerTurn: property.goldPerTurn,
-                            upgradeRequirements: property.upgradeRequirements
-                        }
-                    };
-                });
+            case 'DOWNGRADE_PROPERTY':
+                // setProperties((prevProperties) => {
+                //     return {
+                //         ...prevProperties,
+                //         [property.position]: {
+                //             ...prevProperties[property.position],
+                //             upgrades: property.upgrades,
+                //             mortgage: property.mortgage,
+                //             goldOnStep: property.goldOnStep,
+                //             goldPerTurn: property.goldPerTurn,
+                //             upgradeRequirements: property.upgradeRequirements
+                //         }
+                //     };
+                // });
                 setPlayers((prevPlayers) => {
                     return prevPlayers.map(player => {
                         return player.id === property.member.id ? property.member : player;
@@ -124,6 +128,15 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                     };
                 });
                 setPlayers(room.members);
+                getPlayerProperties(roomName, token)
+                    .then((propertiesArray) => {
+                        const propertiesObject = propertiesArray.reduce((acc, property) => {
+                            acc[property.position] = property;
+                            return acc;
+                        }, {});
+                        setProperties(propertiesObject);
+                    })
+                    .catch((error) => setError({message: error.message || "An error occurred"}));
                 return;
             case 'ADD_GOLD':
                 setPlayers(room.members);
@@ -224,12 +237,13 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 <Board room={room} players={players} dice={dice} properties={properties}
                        client={client} isConnected={isConnected}
                        setSelectedUser={setSelectedUser} setIsPrivateChatOpen={setIsPrivateChatOpen}
-                       setActiveTab={setActiveTab}
+                       setActiveTab={setActiveTab} setSelectedProperty={setSelectedProperty}
                        setNotifications={setNotifications}/>
                 <Actions client={client} isConnected={isConnected}
                          room={room} players={players} properties={properties}
                          activeTab={activeTab} setActiveTab={setActiveTab}
                          selectedProperty={properties[selectedProperty]} setSelectedProperty={setSelectedProperty}
+                         managementActiveTab={managementActiveTab} setManagementActiveTab={setManagementActiveTab}
                          setNotifications={setNotifications}/>
             </>}
         </div>

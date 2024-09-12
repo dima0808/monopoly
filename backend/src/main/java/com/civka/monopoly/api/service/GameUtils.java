@@ -1,5 +1,6 @@
 package com.civka.monopoly.api.service;
 
+import com.civka.monopoly.api.dto.ArmySpendingDto;
 import com.civka.monopoly.api.dto.RequirementDto;
 import com.civka.monopoly.api.dto.UpgradeDto;
 import com.civka.monopoly.api.entity.Member;
@@ -31,4 +32,6 @@ public interface GameUtils {
     List<RequirementDto> getRequirements(Integer position, Member member);
 
     List<UpgradeDto> getUpgrades(Integer position, Property property);
+
+    List<ArmySpendingDto> getArmySpendings();
 }

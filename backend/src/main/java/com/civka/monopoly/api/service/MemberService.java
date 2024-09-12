@@ -18,5 +18,7 @@ public interface MemberService {
 
     PropertyDto upgradeProperty(Member member, Integer position);
 
+    PropertyDto downgradeProperty(Member member, Integer position);
+
     PropertyDto payRent(Member member, Integer position);
 }

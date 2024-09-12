@@ -14,7 +14,7 @@ import BarbCell from "./cells/BarbCell";
 export default function Board({
                                   room, players, dice, properties,
                                   setSelectedUser, setIsPrivateChatOpen,
-                                  setActiveTab,
+                                  setActiveTab, setSelectedProperty,
                                   client, isConnected,
                                   setNotifications,
                               }) {
@@ -53,6 +53,11 @@ export default function Board({
         return position === "vertical" ? `translate(${x}px, ${y}px)` : `translate(${y}px, ${x}px)`;
     }
 
+    const selectProperty = (position) => {
+        setSelectedProperty(properties[position]);
+        setActiveTab("Property");
+    }
+
     return (
         <section className="board">
             <EdgeCell src={startImg} alt="start" direction="left-up"/>
@@ -62,16 +67,19 @@ export default function Board({
                     direction="vertical"
                     position={1}
                     property={properties[1]}
+                    selectProperty={() => selectProperty(1)}
                 />
                 <Cell
                     direction="vertical"
                     position={2}
                     property={properties[2]}
+                    selectProperty={() => selectProperty(2)}
                 />
                 <Cell
                     direction="vertical"
                     position={3}
                     property={properties[3]}
+                    selectProperty={() => selectProperty(3)}
                 />
                 <Cell
                     direction="vertical"
@@ -79,11 +87,13 @@ export default function Board({
                     specialType="wonder"
                     position={4}
                     property={properties[4]}
+                    selectProperty={() => selectProperty(4)}
                 />
                 <Cell
                     direction="vertical"
                     position={5}
                     property={properties[5]}
+                    selectProperty={() => selectProperty(5)}
                 />
                 <GoodyHutCell/>
                 <Cell
@@ -91,6 +101,7 @@ export default function Board({
                     specialType="encampment"
                     position={7}
                     property={properties[7]}
+                    selectProperty={() => selectProperty(7)}
                 />
                 <Cell
                     direction="vertical"
@@ -98,17 +109,20 @@ export default function Board({
                     specialType="wonder"
                     position={8}
                     property={properties[8]}
+                    selectProperty={() => selectProperty(8)}
                 />
                 <Cell
                     direction="vertical"
                     specialType="government"
                     position={9}
                     property={properties[9]}
+                    selectProperty={() => selectProperty(9)}
                 />
                 <Cell
                     direction="vertical"
                     position={10}
                     property={properties[10]}
+                    selectProperty={() => selectProperty(10)}
                 />
                 <Cell
                     direction="vertical"

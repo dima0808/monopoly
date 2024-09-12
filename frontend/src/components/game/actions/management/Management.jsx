@@ -11,9 +11,10 @@ import Wins from "./wins/Wins";
 export default function Management({
                                        currentUser,
                                        properties,
+                                       gameSettings,
                                        managementActiveTab, setManagementActiveTab,
                                        selectedProperty, setSelectedProperty,
-                                       handleUpgradeProperty
+                                       handleUpgradeProperty, handleDowngradeProperty
                                    }) {
 
     const renderContent = () => {
@@ -24,11 +25,13 @@ export default function Management({
                 return <Empire
                     currentUser={currentUser}
                     properties={properties}
+                    gameSettings={gameSettings}
                     selectProperty={(position) => {
                         setSelectedProperty(position);
                         setManagementActiveTab("Property");
                     }}
                     handleUpgradeProperty={(position) => handleUpgradeProperty(position)}
+                    handleDowngradeProperty={(position) => handleDowngradeProperty(position)}
                 />;
             case "Leader Abilities":
                 return <LeaderAbilities />;
@@ -38,7 +41,9 @@ export default function Management({
                 return <Property
                     currentUser={currentUser}
                     property={selectedProperty}
+                    gameSettings={gameSettings}
                     handleUpgradeProperty={(position) => handleUpgradeProperty(position)}
+                    handleDowngradeProperty={(position) => handleDowngradeProperty(position)}
                 />;
             case "Relations":
                 return <Relations />;

@@ -59,6 +59,7 @@ public class PropertyServiceImpl implements PropertyService {
                                 .id(property.getId())
                                 .member(property.getMember())
                                 .upgrades(gameUtils.getUpgrades(property.getPosition(), property))
+                                .mortgage(property.getMortgage())
                                 .position(property.getPosition())
                                 .goldOnStep(gameUtils.calculateGoldOnStep(property))
                                 .goldPerTurn(gameUtils.calculateGoldPerTurn(property))
@@ -75,5 +76,10 @@ public class PropertyServiceImpl implements PropertyService {
                     }
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        propertyRepository.deleteById(id);
     }
 }

@@ -6,13 +6,14 @@ import goldImg from "../../../images/icon-gold.png";
 import strengthImg from "../../../images/icon-strength.png";
 import Events from "./events/Events";
 import Management from "./management/Management";
-import {getAllEvents} from "../../../utils/http";
+import {getAllEvents, getGameSettings} from "../../../utils/http";
 
 export default function Actions({
                                     room, players, properties,
                                     activeTab, setActiveTab,
                                     selectedProperty, setSelectedProperty,
                                     client, isConnected,
+                                    managementActiveTab, setManagementActiveTab,
                                     setNotifications
                                 }) {
 
@@ -20,8 +21,7 @@ export default function Actions({
     const [error, setError] = useState(null);
 
     const [events, setEvents] = useState([]);
-
-    const [managementActiveTab, setManagementActiveTab] = useState("Empire");
+    const [gameSettings, setGameSettings] = useState({});
 
     const [calculatedGoldPerTurn, setCalculatedGoldPerTurn] = useState(0);
 
@@ -130,6 +130,42 @@ export default function Actions({
                 ...prev,
                 {
                     message: "Error upgrading property (no connection)",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+        }
+    };
+
+    const handleDowngradeProperty = (position) => {
+        const token = Cookies.get("token");
+        const username = Cookies.get("username");
+        if (!client || !client.publish) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message:
+                        "Client is not initialized or publish method is not available",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+            return;
+        }
+        try {
+            client.publish({
+                destination: `/app/rooms/${room.name}/downgradeProperty/${position}`,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    username: username,
+                },
+            });
+            console.log("Downgrading property...");
+        } catch (error) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message: "Error downgrading property (no connection)",
                     duration: 3500,
                     isError: true,
                 },
@@ -306,6 +342,12 @@ export default function Actions({
         }
     }, [client, isConnected, handleRollDice]);
 
+    useEffect(() => {
+        getGameSettings()
+            .then(setGameSettings)
+            .catch((error) => setError({message: error.message || "An error occurred"}));
+    }, []);
+
     const renderContent = () => {
         switch (activeTab) {
             case "Events":
@@ -325,11 +367,12 @@ export default function Actions({
                 );
             case "Management":
                 return <Management
+                    gameSettings={gameSettings}
                     currentUser={currentUser}
                     properties={properties}
                     managementActiveTab={managementActiveTab} setManagementActiveTab={setManagementActiveTab}
                     selectedProperty={selectedProperty} setSelectedProperty={setSelectedProperty}
-                    handleUpgradeProperty={handleUpgradeProperty}
+                    handleUpgradeProperty={handleUpgradeProperty} handleDowngradeProperty={handleDowngradeProperty}
                 />;
             default:
                 return null;
@@ -398,110 +441,33 @@ export default function Actions({
                 </div>
                 <h2 className="military-economic-h2">Army spending:</h2>
                 <ul className="military-economic">
-                    <li
-                        onClick={() => checkArmySpending("Absent")}
-                        className={`li-army-gold 
-                        ${armySpending === "Absent" ? "selected-military" : ""}
+                    {gameSettings.armySpendings && gameSettings.armySpendings.map((spending, key) => (
+                        <li
+                            key={key}
+                            onClick={() => checkArmySpending(spending.armySpending)}
+                            className={`li-army-gold 
+                            ${armySpending === spending.armySpending ? "selected-military" : ""}
+                            ${currentUser?.gold < -spending.gold ? "li-army-gold-disabled" : ""}
                         `}
-                    >
-                        <div className="player-stat-strength no-select">
-                            <img
-                                src={strengthImg}
-                                className="recourse-img strength-recourse-img"
-                                alt="strength"
-                            />
-                            -50
-                        </div>
-                        <div className="player-stat-gold no-select">
-                            <img
-                                src={goldImg}
-                                className="recourse-img"
-                                alt="gold"
-                            />
-                            +30
-                        </div>
-                    </li>
-                    <li
-                        onClick={() => checkArmySpending("Default")}
-                        className={`li-army-gold ${
-                            armySpending === "Default"
-                                ? "selected-military"
-                                : ""
-                        }`}
-                    >
-                        <div className="player-stat-strength no-select ">
-                            <img
-                                src={strengthImg}
-                                className="recourse-img strength-recourse-img"
-                                alt="strength"
-                            />
-                            +10
-                        </div>
-                        <div className="player-stat-gold no-select">
-                            <img
-                                src={goldImg}
-                                className="recourse-img"
-                                alt="gold"
-                            />
-                            0
-                        </div>
-                    </li>
-                    <li
-                        onClick={() => {
-                            if (currentUser?.gold >= 200) {
-                                checkArmySpending("Medium");
-                            }
-                        }}
-                        className={`li-army-gold 
-                        ${armySpending === "Medium" ? "selected-military" : ""}
-                        ${currentUser?.gold < 200 ? "li-army-gold-disabled" : ""}
-                        `}
-                    >
-                        <div className="player-stat-strength no-select">
-                            <img
-                                src={strengthImg}
-                                className="recourse-img strength-recourse-img"
-                                alt="strength"
-                            />
-                            +100
-                        </div>
-                        <div className="player-stat-gold no-select">
-                            <img
-                                src={goldImg}
-                                className="recourse-img"
-                                alt="gold"
-                            />
-                            -200
-                        </div>
-                    </li>
-                    <li
-                        onClick={() => {
-                            if (currentUser?.gold >= 700) {
-                                checkArmySpending("High");
-                            }
-                        }}
-                        className={`li-army-gold 
-                        ${armySpending === "High" ? "selected-military" : ""}
-                        ${currentUser?.gold < 700 ? "li-army-gold-disabled" : ""}
-                        `}
-                    >
-                        <div className="player-stat-strength no-select">
-                            <img
-                                src={strengthImg}
-                                className="recourse-img strength-recourse-img"
-                                alt="strength"
-                            />
-                            +250
-                        </div>
-                        <div className="player-stat-gold no-select">
-                            <img
-                                src={goldImg}
-                                className="recourse-img"
-                                alt="gold"
-                            />
-                            -700
-                        </div>
-                    </li>
+                        >
+                            <div className="player-stat-strength no-select">
+                                <img
+                                    src={strengthImg}
+                                    className="recourse-img strength-recourse-img"
+                                    alt="strength"
+                                />
+                                {(spending.strength > 0 ? "+" : "") + spending.strength}
+                            </div>
+                            <div className="player-stat-gold no-select">
+                                <img
+                                    src={goldImg}
+                                    className="recourse-img"
+                                    alt="gold"
+                                />
+                                {(spending.gold > 0 ? "+" : "") + spending.gold}
+                            </div>
+                        </li>
+                    ))}
                 </ul>
                 <div className="flex-between management-btns">
                     <button onClick={() => {

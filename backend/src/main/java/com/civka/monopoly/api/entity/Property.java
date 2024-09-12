@@ -37,6 +37,8 @@ public class Property {
 
     private Integer position;
 
+    private Integer mortgage;
+
     public enum Upgrade {
         LEVEL_1,
         LEVEL_2,

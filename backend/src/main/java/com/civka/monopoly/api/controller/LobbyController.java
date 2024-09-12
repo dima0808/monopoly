@@ -1,5 +1,6 @@
 package com.civka.monopoly.api.controller;
 
+import com.civka.monopoly.api.dto.GameSettingsDto;
 import com.civka.monopoly.api.dto.PropertyDto;
 import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.entity.Room;
@@ -108,6 +109,18 @@ public class LobbyController {
                 .build();
     }
 
+    @MessageMapping("/rooms/{roomName}/downgradeProperty/{position}")
+    @SendTo("/topic/public/{roomName}/game")
+    public RoomMessage downgradeProperty(@DestinationVariable Integer position,
+                                   @Header("username") String username) {
+        Member member = userService.findByUsername(username).getMember();
+        return RoomMessage.builder()
+                .type(RoomMessage.MessageType.DOWNGRADE_PROPERTY)
+                .content("Member " + username + " downgraded property on position " + position)
+                .property(memberService.downgradeProperty(member, position))
+                .build();
+    }
+
     @MessageMapping("/rooms/{roomName}/payRent/{position}")
     @SendTo("/topic/public/{roomName}/game")
     public RoomMessage payRent(@DestinationVariable Integer position,
@@ -143,5 +156,10 @@ public class LobbyController {
     public ResponseEntity<List<PropertyDto>> getProperties(@PathVariable String roomName) {
         Room room = roomService.findByName(roomName);
         return ResponseEntity.ok(propertyService.findByRoom(room));
+    }
+
+    @GetMapping("/api/rooms/settings")
+    public ResponseEntity<GameSettingsDto> getGameSettings() {
+        return ResponseEntity.ok(roomService.getGameSettings());
     }
 }

@@ -247,6 +247,33 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
                                                 </div>
                                             </SystemMessage>
                                         );
+                                    case 'SYSTEM_MORTGAGE_PROPERTY':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                заклав під заставу
+                                                <span className="system-span"> {propertiesInfo[data[1]]['LEVEL_1'].name}
+                                                </span>
+                                            </SystemMessage>
+                                        );
+                                    case 'SYSTEM_REDEMPTION_PROPERTY':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                вертає з-під застави
+                                                <span className="system-span"> {propertiesInfo[data[1]]['LEVEL_1'].name}
+                                                </span>
+                                            </SystemMessage>
+                                        );
+                                    case 'SYSTEM_DOWNGRADE_PROPERTY':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                продає поліпшення для
+                                                <span className="system-span"> {propertiesInfo[data[1]]['LEVEL_1'].name}
+                                                </span>
+                                            </SystemMessage>
+                                        );
                                     default:
                                         return (
                                             <SystemMessage key={index} timestamp={message.timestamp}>

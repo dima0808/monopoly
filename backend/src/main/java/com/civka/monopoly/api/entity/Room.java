@@ -29,6 +29,7 @@ public class Room {
     private String password;
 
     @OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
+    @OrderBy("id")
     private List<Member> members = new ArrayList<>();
 
     private Boolean isStarted;

@@ -4,13 +4,7 @@ import { propertiesInfo } from "../../../../constraints";
 import blueStarImg from "../../../../images/star-blue.png";
 import yellowStarImg from "../../../../images/star-yellow.png";
 
-export default function Cell({
-    direction,
-    mirror = false,
-    noneUpgrades = false,
-    specialType,
-    property,
-}) {
+export default function Cell({direction, mirror = false, noneUpgrades = false, specialType, property, selectProperty}) {
     const baseClass = `object-${direction}`;
     const priceClass = specialType
         ? `${baseClass}__price ${baseClass}__price-${specialType}`
@@ -53,7 +47,11 @@ export default function Cell({
                             : "")
                     }
                 >
-                    <div className="not-blur">
+                    <div
+                        onClick={selectProperty}
+                        className={`not-blur ${property.mortgage && property.mortgage !== -1 ? "gray-blur" : ""}`}
+                        style={{"--mortgage-value": `"${property.mortgage}"`}}
+                    >
                         <img
                             src={
                                 propertyHighestLevelInfo
@@ -67,7 +65,7 @@ export default function Cell({
                 </div>
                 {noneUpgrades ? null : (
                     <div className={`${baseClass}__upgrades`}>
-                        {property.member &&
+                    {property.member &&
                             (() => {
                                 const ownedLevels = property.upgrades.filter(
                                     (upgrade) =>

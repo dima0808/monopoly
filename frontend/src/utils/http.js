@@ -227,3 +227,16 @@ export async function getAllEvents(username) {
 
     return resData;
 }
+
+export async function getGameSettings() {
+    const response = await fetch('http://' + IP + ':8080/api/rooms/settings');
+    const resData = await response.json();
+
+    if (!response.ok) {
+        throw new Error(resData.message);
+    }
+
+    console.log(resData);
+
+    return resData;
+}

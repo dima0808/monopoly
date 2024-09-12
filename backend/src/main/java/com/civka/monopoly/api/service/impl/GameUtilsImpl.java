@@ -1,6 +1,7 @@
 package com.civka.monopoly.api.service.impl;
 
 import com.civka.monopoly.api.config.GameProperties;
+import com.civka.monopoly.api.dto.ArmySpendingDto;
 import com.civka.monopoly.api.dto.RequirementDto;
 import com.civka.monopoly.api.dto.UpgradeDto;
 import com.civka.monopoly.api.entity.Member;
@@ -23,6 +24,9 @@ public class GameUtilsImpl implements GameUtils {
     @Override
     public int calculateGoldOnStep(Property property) {
         int onStep = 0;
+        if (property.getMortgage() != -1) {
+            return 0;
+        }
         for (Property.Upgrade upgrade : property.getUpgrades()) {
             Integer upgradeOnStep = gameProperties.getOnStepByPositionAndLevel(property.getPosition(), upgrade);
             if (upgradeOnStep != null) {
@@ -40,6 +44,9 @@ public class GameUtilsImpl implements GameUtils {
     @Override
     public int calculateGoldPerTurn(Property property) {
         int perTurn = 0;
+        if (property.getMortgage() != -1) {
+            return 0;
+        }
         for (Property.Upgrade upgrade : property.getUpgrades()) {
             Integer upgradePerTurn = gameProperties.getPerTurnByPositionAndLevel(property.getPosition(), upgrade);
             if (upgradePerTurn != null) {
@@ -117,6 +124,20 @@ public class GameUtilsImpl implements GameUtils {
             upgrades.add(upgradeDto);
         }
         return upgrades;
+    }
+
+    @Override
+    public List<ArmySpendingDto> getArmySpendings() {
+        List<ArmySpendingDto> armySpendings = new ArrayList<>();
+        for (Member.ArmySpending armySpending : Member.ArmySpending.values()) {
+            ArmySpendingDto armySpendingDto = ArmySpendingDto.builder()
+                    .armySpending(armySpending)
+                    .gold(gameProperties.getGoldFromArmySpending(armySpending))
+                    .strength(gameProperties.getStrengthFromArmySpending(armySpending))
+                    .build();
+            armySpendings.add(armySpendingDto);
+        }
+        return armySpendings;
     }
 
     private boolean calculateRequirement(RequirementDto.Requirement requirement, Member member) {

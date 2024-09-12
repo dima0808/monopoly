@@ -2,7 +2,7 @@ import "./styles.css";
 import goldImg from "../../../../../images/icon-gold.png";
 // import tourismImg from "../../../../../images/icon-tourism/.png";
 import { propertiesInfo } from "../../../../../constraints";
-export default function ForeignProperty({ property, handlePayRent }) {
+export default function ForeignProperty({ property, handlePayRent, onSkip }) {
     const propertyName = propertiesInfo[property.position]["LEVEL_1"].name;
 
     const ownedLevels = property.upgrades.filter(
@@ -62,18 +62,23 @@ export default function ForeignProperty({ property, handlePayRent }) {
 
                 <div className="decision-buttons flex-between">
                     <button
-                        onClick={handlePayRent}
+                        onClick={property.mortgage === -1 ? handlePayRent : onSkip}
                         className="pay-btn decision-button decision-button-green"
                     >
-                        pay:
-                        <div className="player-stat-gold width-full pointer no-select">
-                            <img
-                                src={goldImg}
-                                className="recourse-img"
-                                alt="gold"
-                            />
-                            <p>{property.goldOnStep}</p>
-                        </div>
+                        {property.mortgage === -1 ? (
+                            <>
+                                pay:
+                                <div className="player-stat-gold width-full pointer no-select">
+                                    <img
+                                        src={goldImg}
+                                        className="recourse-img"
+                                        alt="gold"
+                                    />
+                                    <p>{property.goldOnStep}</p>
+                                </div>
+                            </>
+                        ) : 'Skip'}
+
                     </button>
                     <button className="decision-button decision-button-reder">
                         declare war

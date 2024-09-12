@@ -1,5 +1,6 @@
 package com.civka.monopoly.api.service.impl;
 
+import com.civka.monopoly.api.dto.GameSettingsDto;
 import com.civka.monopoly.api.dto.RoomDto;
 import com.civka.monopoly.api.entity.*;
 import com.civka.monopoly.api.payload.NotificationResponse;
@@ -13,10 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +22,7 @@ import java.util.Random;
 public class RoomServiceImpl implements RoomService {
 
     private final GameUtils gameUtils;
+    private final PropertyService propertyService;
     @Value("${monopoly.app.room.max-size}")
     private Integer maxRoomSize;
 
@@ -32,6 +31,15 @@ public class RoomServiceImpl implements RoomService {
 
     @Value("${monopoly.app.room.game.init-strength}")
     private Integer initStrength;
+
+    @Value("${monopoly.app.room.game.demoteGoldCoefficient}")
+    private Double demoteGoldCoefficient;
+
+    @Value("${monopoly.app.room.game.mortgageGoldCoefficient}")
+    private Double mortgageGoldCoefficient;
+
+    @Value("${monopoly.app.room.game.redemptionCoefficient}")
+    private Double redemptionCoefficient;
 
     private final RoomRepository roomRepository;
     private final UserService userService;
@@ -245,8 +253,22 @@ public class RoomServiceImpl implements RoomService {
         }
         member.setArmySpending(armySpending);
         member.setStrength(member.getStrength() + gameUtils.getStrengthFromArmySpending(armySpending));
-        member.setGold(member.getGold() - gameUtils.getGoldFromArmySpending(armySpending));
+        member.setGold(member.getGold() + gameUtils.getGoldFromArmySpending(armySpending));
+
+        List<Property> properties = member.getProperties();
+        Iterator<Property> iterator = properties.iterator();
+        while (iterator.hasNext()) {
+            Property property = iterator.next();
+            if (property.getMortgage() > 0) {
+                property.setMortgage(property.getMortgage() - 1);
+                propertyService.save(property);
+                if (property.getMortgage() == 0) {
+                    iterator.remove();
+                }
+            }
+        }
         memberService.save(member);
+
         Room room = member.getRoom();
         List<Member> members = room.getMembers();
         int currentIndex = members.indexOf(member);
@@ -268,4 +290,16 @@ public class RoomServiceImpl implements RoomService {
             throw new UserNotAllowedException();
         }
     }
+
+    @Override
+    public GameSettingsDto getGameSettings() {
+        return GameSettingsDto.builder()
+                .armySpendings(gameUtils.getArmySpendings())
+                .demoteGoldCoefficient(demoteGoldCoefficient)
+                .mortgageGoldCoefficient(mortgageGoldCoefficient)
+                .redemptionCoefficient(redemptionCoefficient)
+                .build();
+    }
+
+
 }

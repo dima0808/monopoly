@@ -50,6 +50,7 @@ export default function Events({
                         key={index}
                         property={properties[member.position]}
                         handlePayRent={() => handlePayRent(member.position)}
+                        onSkip={() => handleSkip('FOREIGN_PROPERTY')}
                         // handleDeclareWar
                     />;
                 case "GOODY_HUT":

@@ -1,5 +1,6 @@
 package com.civka.monopoly.api.service;
 
+import com.civka.monopoly.api.dto.GameSettingsDto;
 import com.civka.monopoly.api.dto.RoomDto;
 import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.entity.Room;
@@ -33,4 +34,6 @@ public interface RoomService {
     Room endTurn(Member member, Member.ArmySpending armySpending);
 
     Room addGold(Member member, Integer gold, String admin);
+
+    GameSettingsDto getGameSettings();
 }

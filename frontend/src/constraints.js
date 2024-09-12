@@ -23,8 +23,8 @@ import districtGovernmentPlazaImg from "./images/icon_district_government.png";
 import districtGovernmentPlaza2Img from "./images/icon_district_government2.png";
 import districtGovernmentPlaza3Img from "./images/icon_district_government3.png";
 import districtGovernmentPlaza41Img from "./images/icon_district_government4-1_sience.png";
-import districtGovernmentPlaza42Img from "./images/icon_district_government4-2_military.png";
-import districtGovernmentPlaza43Img from "./images/icon_district_government4-3_culture.png";
+// import districtGovernmentPlaza42Img from "./images/icon_district_government4-2_military.png";
+// import districtGovernmentPlaza43Img from "./images/icon_district_government4-3_culture.png";
 
 import districtIndustrialZoneImg from "./images/icon_district_industrial_zone.png";
 import districtIndustrialZone2Img from "./images/icon_district_industrial_zone2.png";
@@ -147,8 +147,9 @@ import hydroelectricDamImg from "./images/building_dam_build1_icon_hydroelectric
 import foodMarketImg from "./images/building_neighborhood_build1_icon_food_market.png";
 import shoppingMallImg from "./images/building_neighborhood_build2_icon_shopping_mall.png";
 
-export const IP = '26.239.28.186';
+export const IP = 'localhost';
 // 26.239.28.186
+// 192.168.0.X
 
 export const propertiesInfo = {
     1: {

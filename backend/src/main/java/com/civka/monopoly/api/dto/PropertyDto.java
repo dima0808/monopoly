@@ -22,6 +22,8 @@ public class PropertyDto {
 
     private List<UpgradeDto> upgrades;
 
+    private Integer mortgage;
+
     private Integer goldOnStep;
     private Integer goldPerTurn;
 

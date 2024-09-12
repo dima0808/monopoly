@@ -15,4 +15,6 @@ public interface PropertyService {
     Property findByRoomAndPosition(Room room, Integer position);
 
     List<PropertyDto> findByRoom(Room room);
+
+    void deleteById(Long id);
 }

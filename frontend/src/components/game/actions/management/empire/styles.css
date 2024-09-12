@@ -1,3 +1,7 @@
+:root {
+    --mortgage-value: "5";
+}
+
 .empire-component .proprty-btns-div {
     padding: 1px 4px 5px 4px;
 }
@@ -5,7 +9,7 @@
     margin-top: 4px;
 }
 .p-discount {
-    padding: 0px 4px 2px 4px;
+    padding: 0 4px 2px 4px;
 }
 .p-discount .your-chance {
     width: 130px;
@@ -23,20 +27,20 @@
 }
 .gray-blur::after {
     position: absolute;
-    content: "1";
+    content: var(--mortgage-value);
     height: 28px;
     width: 28px;
     z-index: 50;
     top: 0;
     left: 100%;
     transform: translate(calc(-100% + 2px), 0);
-    background-image: url("../../../../../images/icon-locked.png"); /* Посилання на зображення */
+    background-image: url("../../../../../images/icon-locked.png");
     background-size: contain;
     background-repeat: no-repeat;
     padding-top: 10px;
     text-align: center;
-    font-size: 16px; /* Розмір цифри, можна налаштувати */
-    color: #eee; /* Колір цифри */
+    font-size: 16px;
+    color: #eee;
 }
 .property-color .gray-blur::after {
     transform: translate(calc(-100% - 190px), 4px);

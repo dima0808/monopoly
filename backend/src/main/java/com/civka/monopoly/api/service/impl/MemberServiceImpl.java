@@ -30,6 +30,15 @@ public class MemberServiceImpl implements MemberService {
     @Value("${monopoly.app.room.game.goldForBypassingStart}")
     private Integer goldForBypassingStart;
 
+    @Value("${monopoly.app.room.game.demoteGoldCoefficient}")
+    private Double demoteGoldCoefficient;
+
+    @Value("${monopoly.app.room.game.mortgageGoldCoefficient}")
+    private Double mortgageGoldCoefficient;
+
+    @Value("${monopoly.app.room.game.redemptionCoefficient}")
+    private Double redemptionCoefficient;
+
     @Override
     public Member save(Member member) {
         return memberRepository.save(member);
@@ -51,12 +60,12 @@ public class MemberServiceImpl implements MemberService {
             throw new UserNotAllowedException();
         }
         Room room = member.getRoom();
-        Chat roomChat = chatService.findByName(room.getName());
         int firstRoll = (int) (Math.random() * 6) + 1;
         int secondRoll = (int) (Math.random() * 6) + 1;
         int newPosition = member.getPosition() + firstRoll + secondRoll;
         if (newPosition > 47) {
             member.setGold(member.getGold() + goldForBypassingStart);
+            Chat roomChat = chatService.findByName(room.getName());
             ChatMessageDto systemMessage = ChatMessageDto.builder()
                     .type(ChatMessage.MessageType.SYSTEM_BYPASS_START)
                     .content(member.getUser().getNickname() + " " + goldForBypassingStart)
@@ -91,6 +100,7 @@ public class MemberServiceImpl implements MemberService {
             eventService.add(updatedMember, Event.EventType.FOREIGN_PROPERTY);
         }
 
+        Chat roomChat = chatService.findByName(room.getName());
         ChatMessageDto systemMessage = ChatMessageDto.builder()
                 .type(ChatMessage.MessageType.SYSTEM_ROLL_DICE)
                 .content(updatedMember.getUser().getNickname() + " " + firstRoll + " " + secondRoll)
@@ -128,6 +138,7 @@ public class MemberServiceImpl implements MemberService {
                 .room(room)
                 .upgrades(List.of(Property.Upgrade.LEVEL_1))
                 .position(position)
+                .mortgage(-1)
                 .build();
         Property updatedProperty = propertyService.save(property);
 
@@ -144,6 +155,7 @@ public class MemberServiceImpl implements MemberService {
                 .id(updatedProperty.getId())
                 .member(updatedProperty.getMember())
                 .upgrades(gameUtils.getUpgrades(updatedProperty.getPosition(), updatedProperty))
+                .mortgage(updatedProperty.getMortgage())
                 .position(updatedProperty.getPosition())
                 .goldOnStep(gameUtils.calculateGoldOnStep(updatedProperty))
                 .goldPerTurn(gameUtils.calculateGoldPerTurn(property))
@@ -158,29 +170,43 @@ public class MemberServiceImpl implements MemberService {
             throw new UserNotAllowedException();
         }
         Property property = propertyService.findByRoomAndPosition(member.getRoom(), position);
-        Property.Upgrade nextLevel = Property.Upgrade.LEVEL_1;
-        for (Property.Upgrade upgrade : List.of(Property.Upgrade.LEVEL_1, Property.Upgrade.LEVEL_2,
-                Property.Upgrade.LEVEL_3, Property.Upgrade.LEVEL_4)) {
-            if (!property.getUpgrades().contains(upgrade)) {
-                nextLevel = upgrade;
-                break;
+        Chat roomChat = chatService.findByName(member.getRoom().getName());
+        ChatMessageDto systemMessage;
+        if (property.getMortgage() != -1) {
+            property.setMortgage(-1);
+            int price = gameUtils.getPriceByPositionAndLevel(position, Property.Upgrade.LEVEL_1);
+            member.setGold(member.getGold() - (int) (price * redemptionCoefficient));
+            memberRepository.save(member);
+            systemMessage = ChatMessageDto.builder()
+                    .type(ChatMessage.MessageType.SYSTEM_REDEMPTION_PROPERTY)
+                    .content(member.getUser().getNickname() + " " + position)
+                    .timestamp(LocalDateTime.now())
+                    .build();
+        } else {
+            Property.Upgrade nextLevel = Property.Upgrade.LEVEL_1;
+            for (Property.Upgrade upgrade : List.of(Property.Upgrade.LEVEL_1, Property.Upgrade.LEVEL_2,
+                    Property.Upgrade.LEVEL_3, Property.Upgrade.LEVEL_4)) {
+                if (!property.getUpgrades().contains(upgrade)) {
+                    nextLevel = upgrade;
+                    break;
+                }
             }
+            int price = gameUtils.getPriceByPositionAndLevel(position, nextLevel);
+            if (member.getGold() < price) {
+                throw new UserNotAllowedException();
+            }
+            member.setGold(member.getGold() - price);
+            memberRepository.save(member);
+            property.getUpgrades().add(nextLevel);
+
+            systemMessage = ChatMessageDto.builder()
+                    .type(ChatMessage.MessageType.SYSTEM_UPGRADE_PROPERTY)
+                    .content(member.getUser().getNickname() + " " + position + " " + price)
+                    .timestamp(LocalDateTime.now())
+                    .build();
         }
-        int price = gameUtils.getPriceByPositionAndLevel(position, nextLevel);
-        if (member.getGold() < price) {
-            throw new UserNotAllowedException();
-        }
-        member.setGold(member.getGold() - price);
-        memberRepository.save(member);
-        property.getUpgrades().add(nextLevel);
         Property updatedProperty = propertyService.save(property);
 
-        Chat roomChat = chatService.findByName(member.getRoom().getName());
-        ChatMessageDto systemMessage = ChatMessageDto.builder()
-                .type(ChatMessage.MessageType.SYSTEM_UPGRADE_PROPERTY)
-                .content(member.getUser().getNickname() + " " + position + " " + price)
-                .timestamp(LocalDateTime.now())
-                .build();
         ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
         messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
 
@@ -188,6 +214,64 @@ public class MemberServiceImpl implements MemberService {
                 .id(updatedProperty.getId())
                 .member(updatedProperty.getMember())
                 .upgrades(gameUtils.getUpgrades(updatedProperty.getPosition(), updatedProperty))
+                .mortgage(updatedProperty.getMortgage())
+                .position(updatedProperty.getPosition())
+                .goldOnStep(gameUtils.calculateGoldOnStep(updatedProperty))
+                .goldPerTurn(gameUtils.calculateGoldPerTurn(updatedProperty))
+                .upgradeRequirements(gameUtils.getRequirements(updatedProperty.getPosition(), member))
+                .build();
+    }
+
+    @Override
+    public PropertyDto downgradeProperty(Member member, Integer position) {
+        if (!propertyService.existsByRoomAndPosition(member.getRoom(), position) || member.getProperties().stream()
+                .noneMatch(property -> property.getPosition().equals(position))) {
+            throw new UserNotAllowedException();
+        }
+        Property property = propertyService.findByRoomAndPosition(member.getRoom(), position);
+        List<Property.Upgrade> upgrades = property.getUpgrades();
+
+        List<Property.Upgrade> validUpgrades = upgrades.stream()
+                .filter(upgrade -> List.of(Property.Upgrade.LEVEL_1, Property.Upgrade.LEVEL_2,
+                        Property.Upgrade.LEVEL_3, Property.Upgrade.LEVEL_4).contains(upgrade))
+                .toList();
+
+        Chat roomChat = chatService.findByName(member.getRoom().getName());
+        ChatMessageDto systemMessage = null;
+        if (validUpgrades.size() > 1) {
+            Property.Upgrade levelToDowngrade = validUpgrades.get(validUpgrades.size() - 1);
+            upgrades.remove(levelToDowngrade);
+            int price = gameUtils.getPriceByPositionAndLevel(position, levelToDowngrade);
+            member.setGold(member.getGold() + (int) (price * demoteGoldCoefficient));
+            memberRepository.save(member);
+            systemMessage = ChatMessageDto.builder()
+                    .type(ChatMessage.MessageType.SYSTEM_DOWNGRADE_PROPERTY)
+                    .content(member.getUser().getNickname() + " " + position)
+                    .timestamp(LocalDateTime.now())
+                    .build();
+        } else if (validUpgrades.size() == 1 && validUpgrades.contains(Property.Upgrade.LEVEL_1) &&
+                property.getMortgage() == -1) {
+            property.setMortgage(5);
+            int price = gameUtils.getPriceByPositionAndLevel(position, Property.Upgrade.LEVEL_1);
+            member.setGold(member.getGold() + (int) (price * mortgageGoldCoefficient));
+            memberRepository.save(member);
+            systemMessage = ChatMessageDto.builder()
+                    .type(ChatMessage.MessageType.SYSTEM_MORTGAGE_PROPERTY)
+                    .content(member.getUser().getNickname() + " " + position)
+                    .timestamp(LocalDateTime.now())
+                    .build();
+        }
+
+        Property updatedProperty = propertyService.save(property);
+
+        ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
+        messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
+
+        return PropertyDto.builder()
+                .id(updatedProperty.getId())
+                .member(updatedProperty.getMember())
+                .upgrades(gameUtils.getUpgrades(updatedProperty.getPosition(), updatedProperty))
+                .mortgage(updatedProperty.getMortgage())
                 .position(updatedProperty.getPosition())
                 .goldOnStep(gameUtils.calculateGoldOnStep(updatedProperty))
                 .goldPerTurn(gameUtils.calculateGoldPerTurn(updatedProperty))

@@ -1,17 +1,18 @@
 import "./styles.css";
 
-// import resourceHorsesImg from "../../../../../images/icon_resource_horses.png";
 import goldImg from "../../../../../images/icon-gold.png";
-import { propertiesInfo } from "../../../../../constraints";
+import {propertiesInfo} from "../../../../../constraints";
 import Cookies from "js-cookie";
 // import tourismImg from "../../../../../images/icon-tourism.png";
 
 export default function Empire({
-    currentUser,
-    selectProperty,
-    properties,
-    handleUpgradeProperty,
-}) {
+                                   currentUser,
+                                   selectProperty,
+                                   gameSettings,
+                                   properties,
+                                   handleUpgradeProperty,
+                                   handleDowngradeProperty
+                               }) {
     return (
         <div>
             {properties &&
@@ -20,7 +21,7 @@ export default function Empire({
                     if (
                         property.member &&
                         property.member.user.username ===
-                            Cookies.get("username")
+                        Cookies.get("username")
                     ) {
                         const propertyName =
                             propertiesInfo[property.position]["LEVEL_1"].name;
@@ -30,12 +31,9 @@ export default function Empire({
                                 upgrade.isOwned &&
                                 upgrade.level.startsWith("LEVEL")
                         );
-                        const highestOwnedLevel =
-                            ownedLevels[ownedLevels.length - 1]?.level;
+                        const highestOwnedLevel = ownedLevels[ownedLevels.length - 1];
                         const propertyHighestLevelInfo =
-                            propertiesInfo[property.position][
-                                highestOwnedLevel
-                            ];
+                            propertiesInfo[property.position][highestOwnedLevel.level];
 
                         const lowestNotOwnedLevel = property.upgrades.find(
                             (upgrade) =>
@@ -56,7 +54,11 @@ export default function Empire({
                                 >
                                     {propertyName}
                                 </h2>
-                                <div className="white-blur">
+                                <div
+                                    className={`white-blur ${property.mortgage && property.mortgage !== -1 ? 
+                                        "gray-blur" : ""}`}
+                                    style={{"--mortgage-value": `"${property.mortgage}"`}}
+                                >
                                     <div className="property-grid">
                                         <div
                                             onClick={() =>
@@ -75,23 +77,6 @@ export default function Empire({
                                             />
                                         </div>
                                         <div className="property-stats-div">
-                                            <div className="total-cost stats-div">
-                                                Price:
-                                                <div className="player-stat-gold width-full pointer no-select">
-                                                    <img
-                                                        src={goldImg}
-                                                        className="recourse-img"
-                                                        alt="gold"
-                                                    />
-                                                    {
-                                                        property.upgrades.find(
-                                                            (upgrade) =>
-                                                                upgrade.level ===
-                                                                "LEVEL_1"
-                                                        ).price
-                                                    }
-                                                </div>
-                                            </div>
                                             <div className="gold-on-step stats-div">
                                                 Gold on step:
                                                 <div className="player-stat-gold width-full pointer no-select">
@@ -105,7 +90,8 @@ export default function Empire({
                                             </div>
                                             <div className="gold-on-step stats-div">
                                                 Gold per turn:
-                                                <div className="player-stat-gold gold-per-turn width-full pointer no-select">
+                                                <div
+                                                    className="player-stat-gold gold-per-turn width-full pointer no-select">
                                                     <img
                                                         src={goldImg}
                                                         className="recourse-img"
@@ -121,14 +107,14 @@ export default function Empire({
                                     {/*    <p className="your-chance">(50%) of the cost</p>*/}
                                     {/*</div>*/}
                                     <div className="proprty-btns-div flex-between">
-                                        {lowestNotOwnedLevel ? (
+                                        {(lowestNotOwnedLevel && property.mortgage === -1) &&
                                             <button
                                                 disabled={
                                                     currentUser.gold <
-                                                        lowestNotOwnedLevel.price ||
+                                                    lowestNotOwnedLevel.price ||
                                                     (property
-                                                        .upgradeRequirements
-                                                        .length > 0 &&
+                                                            .upgradeRequirements
+                                                            .length > 0 &&
                                                         property.upgradeRequirements.some(
                                                             (upg) =>
                                                                 upg.level ===
@@ -145,11 +131,7 @@ export default function Empire({
                                                                 req === false
                                                         ))
                                                 }
-                                                onClick={() =>
-                                                    handleUpgradeProperty(
-                                                        property.position
-                                                    )
-                                                }
+                                                onClick={() => handleUpgradeProperty(property.position)}
                                                 className="pay-btn decision-button decision-button-green"
                                             >
                                                 upgrade:
@@ -159,27 +141,48 @@ export default function Empire({
                                                         className="recourse-img"
                                                         alt="gold"
                                                     />
-                                                    <p>
-                                                        {
-                                                            lowestNotOwnedLevel.price
-                                                        }
-                                                    </p>
+                                                    <p>{lowestNotOwnedLevel.price}</p>
                                                 </div>
                                             </button>
-                                        ) : (
-                                            <div></div>
-                                        )}
-                                        <button className="pay-btn decision-button decision-button-red">
-                                            demote:
-                                            <div className="player-stat-gold width-full pointer no-select">
-                                                <img
-                                                    src={goldImg}
-                                                    className="recourse-img"
-                                                    alt="gold"
-                                                />
-                                                <p>1000</p>
-                                            </div>
-                                        </button>
+                                        }
+                                        {property.mortgage !== -1 &&
+                                            <button
+                                                disabled={currentUser.gold <
+                                                    Math.floor(ownedLevels[0].price * gameSettings.redemptionCoefficient)}
+                                                onClick={() => handleUpgradeProperty(property.position)}
+                                                className="pay-btn decision-button decision-button-green"
+                                            >
+                                                redeem:
+                                                <div className="player-stat-gold width-full pointer no-select">
+                                                    <img
+                                                        src={goldImg}
+                                                        className="recourse-img"
+                                                        alt="gold"
+                                                    />
+                                                    <p>{Math.floor(ownedLevels[0].price * gameSettings.redemptionCoefficient)}</p>
+                                                </div>
+                                            </button>
+                                        }
+                                        {property.mortgage === -1 &&
+                                            <button className="pay-btn decision-button decision-button-red"
+                                                    onClick={() => handleDowngradeProperty(property.position)}>
+                                                {highestOwnedLevel.level === 'LEVEL_1' ? 'pledge' : 'demote'}:
+                                                <div className="player-stat-gold width-full pointer no-select">
+                                                    <img
+                                                        src={goldImg}
+                                                        className="recourse-img"
+                                                        alt="gold"
+                                                    />
+                                                    <p>+{Math.floor(highestOwnedLevel.price *
+                                                        (highestOwnedLevel.level === 'LEVEL_1' ?
+                                                                gameSettings.mortgageGoldCoefficient
+                                                                :
+                                                                gameSettings.demoteGoldCoefficient
+                                                        ))
+                                                    }</p>
+                                                </div>
+                                            </button>
+                                        }
                                     </div>
                                 </div>
                             </div>
