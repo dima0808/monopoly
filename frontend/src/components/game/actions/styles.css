@@ -56,7 +56,7 @@
     overflow: hidden;
     cursor: pointer;
 }
-.li-army-gold-disabled{
+.li-army-gold-disabled {
     cursor: default;
     filter: grayscale(80%);
     -webkit-filter: grayscale(80%);
@@ -140,8 +140,6 @@
     height: 30px;
 }
 
-.settings-dialog {
-}
 .gold-per-turn {
     padding-right: 4px;
     background: linear-gradient(60deg, #f6d339, #ebefa5);
@@ -173,4 +171,111 @@
 
 .chousen-div .scroll::-webkit-scrollbar-thumb:hover {
     background-color: #bca68a; /* Можна змінити на інший фіолетовий відтінок */
+}
+.settings-dialog {
+    width: 300px;
+
+    background-color: #f1e4fb;
+    border: 1px solid #271d37;
+    border-radius: 10px;
+    padding: 40px 20px 40px 20px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+}
+.relative-div .header-localization {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: -22px;
+    left: 0;
+}
+.settings-ul {
+    padding-top: 16px;
+}
+.settings-ul li {
+    padding-top: 6px;
+}
+.settings-role-btn {
+    width: 100%;
+    font-family: "Ubuntu", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 6px;
+    background-color: #d1b5e8;
+    font-size: 24px;
+    border: none;
+    height: 30px;
+    padding: 6px 10px;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+    color: #271d37;
+    transition: all 0.3s ease-in-out;
+}
+.settings-role-btn:hover,
+.settings-role-btn:focus {
+    background-color: #d7beeb;
+}
+.settings-role-btn:active {
+    background-color: #ede1f7;
+}
+/* Стилі для контейнера повзунка */
+.volume-slider-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Відступ між повзунком і написом */
+    max-width: 300px; /* Максимальна ширина контейнера */
+}
+
+/* Стилі для повзунка гучності */
+.volume-slider {
+    cursor: pointer;
+    outline: none !important;
+    -webkit-appearance: none; /* Прибирає стандартний стиль браузера */
+    width: 100%; /* Робить повзунок повної ширини контейнера */
+    height: 8px; /* Висота повзунка */
+    background: #f4def6; /* Колір фону повзунка */
+    box-shadow: 0 0 2px rgba(126, 28, 212, 0.5);
+    border-radius: 5px; /* Скруглення країв повзунка */
+    outline: none; /* Прибирає стандартне обрамлення */
+    transition: background 0.3s ease;
+}
+
+/* Стилізація "повзунка" */
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Прибирає стандартний вигляд "повзунка" у Webkit */
+    appearance: none; /* Прибирає стандартний вигляд "повзунка" у всіх браузерах */
+    width: 16px; /* Ширина "повзунка" */
+    height: 16px; /* Висота "повзунка" */
+    border: none;
+    background: #8249b0; /* Колір "повзунка" */
+    border-radius: 50%; /* Скруглення "повзунка" */
+    cursor: pointer; /* Додає курсор у вигляді руки */
+    transition: background 0.3s ease;
+    z-index: 2000;
+}
+
+/* Зміна кольору "повзунка" при наведенні */
+.volume-slider::-webkit-slider-thumb:hover {
+    background: rgb(220, 199, 238);
+}
+
+/* Повзунок для браузера Firefox */
+.volume-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border: none;
+    background: #8249b0;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.volumeSlider-svg {
+    width: 24px;
+    height: 24px;
+    color: #8249b0;
 }

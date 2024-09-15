@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./styles.css";
 import Cookies from "js-cookie";
 
@@ -6,17 +6,22 @@ import goldImg from "../../../images/icon-gold.png";
 import strengthImg from "../../../images/icon-strength.png";
 import Events from "./events/Events";
 import Management from "./management/Management";
-import {getAllEvents, getGameSettings} from "../../../utils/http";
-
+import { getAllEvents, getGameSettings } from "../../../utils/http";
+import SettingsDialog from "../actions/SettingsDialog";
 export default function Actions({
-                                    room, players, properties,
-                                    activeTab, setActiveTab,
-                                    selectedProperty, setSelectedProperty,
-                                    client, isConnected,
-                                    managementActiveTab, setManagementActiveTab,
-                                    setNotifications
-                                }) {
-
+    room,
+    players,
+    properties,
+    activeTab,
+    setActiveTab,
+    selectedProperty,
+    setSelectedProperty,
+    client,
+    isConnected,
+    managementActiveTab,
+    setManagementActiveTab,
+    setNotifications,
+}) {
     const [armySpending, setArmySpending] = useState("Default");
     const [error, setError] = useState(null);
 
@@ -25,8 +30,11 @@ export default function Actions({
 
     const [calculatedGoldPerTurn, setCalculatedGoldPerTurn] = useState(0);
 
-    const isCurrentUserTurn = room.isStarted && room.currentTurn === Cookies.get("username");
-    const currentUser = players.find((player) => player.user.username === Cookies.get("username"));
+    const isCurrentUserTurn =
+        room.isStarted && room.currentTurn === Cookies.get("username");
+    const currentUser = players.find(
+        (player) => player.user.username === Cookies.get("username")
+    );
     const hasRolledDice = currentUser && currentUser.hasRolledDice;
 
     const handleRollDice = useCallback(() => {
@@ -207,7 +215,7 @@ export default function Actions({
                 },
             ]);
         }
-    }
+    };
 
     const handleSkip = (eventType) => {
         const token = Cookies.get("token");
@@ -283,20 +291,20 @@ export default function Actions({
     }, [armySpending, client, room.name, setNotifications]);
 
     const onEventReceived = (message) => {
-        const {type, content, event} = JSON.parse(message.body);
+        const { type, content, event } = JSON.parse(message.body);
         console.log(content);
         switch (type) {
-            case 'ADD_EVENT':
+            case "ADD_EVENT":
                 setEvents((prev) => [...prev, event]);
                 return;
-            case 'DELETE_EVENT':
+            case "DELETE_EVENT":
                 setEvents((prev) => prev.filter((e) => e.type !== event.type));
                 return;
             default:
                 return;
         }
-    }
-    
+    };
+
     useEffect(() => {
         if (currentUser?.gold < 700 && armySpending === "High") {
             setArmySpending("Medium");
@@ -308,9 +316,15 @@ export default function Actions({
     useEffect(() => {
         if (client && isConnected) {
             const username = Cookies.get("username");
-            getAllEvents(username).then(setEvents)
-                .catch((error) => setError({message: error.message || "An error occurred"}));
-            const eventsSubscription = client.subscribe("/user/" + username + "/queue/events", onEventReceived);
+            getAllEvents(username)
+                .then(setEvents)
+                .catch((error) =>
+                    setError({ message: error.message || "An error occurred" })
+                );
+            const eventsSubscription = client.subscribe(
+                "/user/" + username + "/queue/events",
+                onEventReceived
+            );
             return () => {
                 eventsSubscription.unsubscribe();
             };
@@ -321,31 +335,32 @@ export default function Actions({
         if (isCurrentUserTurn && !hasRolledDice) {
             const timerId = setTimeout(() => {
                 handleRollDice();
-                localStorage.removeItem('diceRollTimer');
+                localStorage.removeItem("diceRollTimer");
             }, 5000);
 
-            localStorage.setItem('diceRollTimer', timerId);
+            localStorage.setItem("diceRollTimer", timerId);
 
             return () => {
                 clearTimeout(timerId);
-                localStorage.removeItem('diceRollTimer');
+                localStorage.removeItem("diceRollTimer");
             };
         }
     }, [isCurrentUserTurn, hasRolledDice, handleRollDice]);
 
     useEffect(() => {
-        const timerId = localStorage.getItem('diceRollTimer');
+        const timerId = localStorage.getItem("diceRollTimer");
         if (timerId && client && isConnected) {
-
             handleRollDice();
-            localStorage.removeItem('diceRollTimer');
+            localStorage.removeItem("diceRollTimer");
         }
     }, [client, isConnected, handleRollDice]);
 
     useEffect(() => {
         getGameSettings()
             .then(setGameSettings)
-            .catch((error) => setError({message: error.message || "An error occurred"}));
+            .catch((error) =>
+                setError({ message: error.message || "An error occurred" })
+            );
     }, []);
 
     const renderContent = () => {
@@ -366,14 +381,19 @@ export default function Actions({
                     />
                 );
             case "Management":
-                return <Management
-                    gameSettings={gameSettings}
-                    currentUser={currentUser}
-                    properties={properties}
-                    managementActiveTab={managementActiveTab} setManagementActiveTab={setManagementActiveTab}
-                    selectedProperty={selectedProperty} setSelectedProperty={setSelectedProperty}
-                    handleUpgradeProperty={handleUpgradeProperty} handleDowngradeProperty={handleDowngradeProperty}
-                />;
+                return (
+                    <Management
+                        gameSettings={gameSettings}
+                        currentUser={currentUser}
+                        properties={properties}
+                        managementActiveTab={managementActiveTab}
+                        setManagementActiveTab={setManagementActiveTab}
+                        selectedProperty={selectedProperty}
+                        setSelectedProperty={setSelectedProperty}
+                        handleUpgradeProperty={handleUpgradeProperty}
+                        handleDowngradeProperty={handleDowngradeProperty}
+                    />
+                );
             default:
                 return null;
         }
@@ -385,8 +405,10 @@ export default function Actions({
 
     useEffect(() => {
         if (properties) {
-            const userProperties = Object.values(properties).filter(property =>
-                property.member && property.member.user.username === Cookies.get('username')
+            const userProperties = Object.values(properties).filter(
+                (property) =>
+                    property.member &&
+                    property.member.user.username === Cookies.get("username")
             );
 
             const totalGoldPerTurn = userProperties.reduce((sum, property) => {
@@ -399,16 +421,18 @@ export default function Actions({
 
     return (
         <section className="actions">
-            {/*<SettingsDialog/>*/}
+            <SettingsDialog />
             <div className="static-choises">
                 <div className="flex-between top-flex">
                     <div className="value">
                         <h2>Gold per turn:</h2>
-                        <div onClick={() => {
-                            setActiveTab('Management');
-                            setManagementActiveTab('Cashflow');
-                        }}
-                             className="player-stat-gold gold-per-turn width-full pointer no-select">
+                        <div
+                            onClick={() => {
+                                setActiveTab("Management");
+                                setManagementActiveTab("Cashflow");
+                            }}
+                            className="player-stat-gold gold-per-turn width-full pointer no-select"
+                        >
                             <img
                                 src={goldImg}
                                 className="recourse-img"
@@ -441,51 +465,73 @@ export default function Actions({
                 </div>
                 <h2 className="military-economic-h2">Army spending:</h2>
                 <ul className="military-economic">
-                    {gameSettings.armySpendings && gameSettings.armySpendings.map((spending, key) => (
-                        <li
-                            key={key}
-                            onClick={() => checkArmySpending(spending.armySpending)}
-                            className={`li-army-gold 
-                            ${armySpending === spending.armySpending ? "selected-military" : ""}
-                            ${currentUser?.gold < -spending.gold ? "li-army-gold-disabled" : ""}
+                    {gameSettings.armySpendings &&
+                        gameSettings.armySpendings.map((spending, key) => (
+                            <li
+                                key={key}
+                                onClick={() =>
+                                    checkArmySpending(spending.armySpending)
+                                }
+                                className={`li-army-gold 
+                            ${
+                                armySpending === spending.armySpending
+                                    ? "selected-military"
+                                    : ""
+                            }
+                            ${
+                                currentUser?.gold < -spending.gold
+                                    ? "li-army-gold-disabled"
+                                    : ""
+                            }
                         `}
-                        >
-                            <div className="player-stat-strength no-select">
-                                <img
-                                    src={strengthImg}
-                                    className="recourse-img strength-recourse-img"
-                                    alt="strength"
-                                />
-                                {(spending.strength > 0 ? "+" : "") + spending.strength}
-                            </div>
-                            <div className="player-stat-gold no-select">
-                                <img
-                                    src={goldImg}
-                                    className="recourse-img"
-                                    alt="gold"
-                                />
-                                {(spending.gold > 0 ? "+" : "") + spending.gold}
-                            </div>
-                        </li>
-                    ))}
+                            >
+                                <div className="player-stat-strength no-select">
+                                    <img
+                                        src={strengthImg}
+                                        className="recourse-img strength-recourse-img"
+                                        alt="strength"
+                                    />
+                                    {(spending.strength > 0 ? "+" : "") +
+                                        spending.strength}
+                                </div>
+                                <div className="player-stat-gold no-select">
+                                    <img
+                                        src={goldImg}
+                                        className="recourse-img"
+                                        alt="gold"
+                                    />
+                                    {(spending.gold > 0 ? "+" : "") +
+                                        spending.gold}
+                                </div>
+                            </li>
+                        ))}
                 </ul>
                 <div className="flex-between management-btns">
-                    <button onClick={() => {
-                        setActiveTab('Management');
-                        setManagementActiveTab('Relations');
-                    }} className="management-btn">
+                    <button
+                        onClick={() => {
+                            setActiveTab("Management");
+                            setManagementActiveTab("Relations");
+                        }}
+                        className="management-btn"
+                    >
                         Relations
                     </button>
-                    <button onClick={() => {
-                        setActiveTab('Management');
-                        setManagementActiveTab('Empire');
-                    }} className="management-btn">
+                    <button
+                        onClick={() => {
+                            setActiveTab("Management");
+                            setManagementActiveTab("Empire");
+                        }}
+                        className="management-btn"
+                    >
                         Empire
                     </button>
-                    <button onClick={() => {
-                        setActiveTab('Management');
-                        setManagementActiveTab('Wins');
-                    }} className="management-btn">
+                    <button
+                        onClick={() => {
+                            setActiveTab("Management");
+                            setManagementActiveTab("Wins");
+                        }}
+                        className="management-btn"
+                    >
                         Wins
                     </button>
                 </div>
@@ -512,7 +558,11 @@ export default function Actions({
                     </button>
                 </div>
                 <div className="chousen-div">
-                    {!error && <div className="chousen-div-white">{renderContent()}</div>}
+                    {!error && (
+                        <div className="chousen-div-white">
+                            {renderContent()}
+                        </div>
+                    )}
                     {error && <p>{error.message}</p>}
                 </div>
             </div>
