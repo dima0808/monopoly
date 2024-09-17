@@ -66,6 +66,11 @@ export default function SettingsDialog() {
                         </li>
                         <li>
                             <button className="settings-role-btn">
+                                Your massages
+                            </button>
+                        </li>
+                        <li>
+                            <button className="settings-role-btn">
                                 Game settings
                             </button>
                         </li>

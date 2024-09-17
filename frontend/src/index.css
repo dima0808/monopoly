@@ -122,6 +122,15 @@ dialog {
     -webkit-user-drag: none; /* Safari, Chrome */
     user-drag: none; /* Firefox */
 }
+.no-select-img {
+    -webkit-user-drag: none;
+    user-drag: none;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
 ::selection {
     background-color: #4d3472; /* Колір фону виділення */
     color: #f1e4fb; /* Колір тексту при виділенні */

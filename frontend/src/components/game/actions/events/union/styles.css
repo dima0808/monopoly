@@ -1,0 +1,8 @@
+.event-relations-btns {
+    margin: 0 !important;
+    padding: 8px 4px 4px 4px !important;
+}
+.event__player-info-managment .union-img::before {
+    width: 24px;
+    height: 24px;
+}

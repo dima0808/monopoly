@@ -17,10 +17,10 @@
     text-orientation: revert;
 }
 .object-vertical__barbarians-color {
-    background-color: #982a29;
+    background-color: #982a29 !important;
 }
 .object-vertical__village-color {
-    background-color: #47622d;
+    background-color: #47622d !important;
 }
 .object-vertical__price-encampment {
     background-color: #743027;
@@ -122,7 +122,7 @@
 .cell-img-unique {
     margin: 0 !important;
     width: 50px;
-    height: 70px;
+    height: 100px;
 }
 .up .cell-img {
     margin-top: 10px;
@@ -171,4 +171,7 @@
 .star-yellow {
     width: 19px;
     height: 19px;
+}
+.full-vertical-cell {
+    grid-template-rows: 5px 100px 5px;
 }

@@ -1,11 +1,15 @@
 import "./styles.css";
-import unknownImg from "../../images/unknown.png";
+import rankIron from "../../images/Rank_Iron.png";
 import viewImg from "../../images/view-icon.png";
-import {useEffect, useState} from "react";
-import {getRoomByUsername} from "../../utils/http";
-import {Link} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getRoomByUsername } from "../../utils/http";
+import { Link } from "react-router-dom";
 
-export default function ProfileStats({ user, setIsPrivateChatOpen, setSelectedUser }) {
+export default function ProfileStats({
+    user,
+    setIsPrivateChatOpen,
+    setSelectedUser,
+}) {
     const [inGame, setInGame] = useState(null);
     const [error, setError] = useState(null);
 
@@ -16,8 +20,11 @@ export default function ProfileStats({ user, setIsPrivateChatOpen, setSelectedUs
 
     useEffect(() => {
         if (user && user.username) {
-            getRoomByUsername(user.username).then(setInGame)
-                .catch((error) => setError({message: error.message || "An error occurred"}));
+            getRoomByUsername(user.username)
+                .then(setInGame)
+                .catch((error) =>
+                    setError({ message: error.message || "An error occurred" })
+                );
         }
     }, [user]);
 
@@ -26,15 +33,28 @@ export default function ProfileStats({ user, setIsPrivateChatOpen, setSelectedUs
             <div className="profile-right-top-flex">
                 <div className="profile-statuses">
                     <h1 className="profile-right-top-h1">{user.nickname}</h1>
-                    {(inGame != null && inGame.isStarted === true && !error) && <div className="in-game-div">
-                        <p className="in-game-p">In game</p>
-                        <Link to={`/game/${inGame.name}`} className="view-img-btn">
-                            <img src={viewImg} alt="viewImg" className="view-img"/>
-                        </Link>
-                    </div>}
+                    {inGame != null && inGame.isStarted === true && !error && (
+                        <div className="in-game-div">
+                            <p className="in-game-p">In game</p>
+                            <Link
+                                to={`/game/${inGame.name}`}
+                                className="view-img-btn"
+                            >
+                                <img
+                                    src={viewImg}
+                                    alt="viewImg"
+                                    className="view-img"
+                                />
+                            </Link>
+                        </div>
+                    )}
                     {error && <p className="error-message">{error.message}</p>}
                     <div className="flex-ranked">
-                        <img src={unknownImg} className="ranked-img" alt="unkownImg"/>
+                        <img
+                            src={rankIron}
+                            className="ranked-img"
+                            alt="unkownImg"
+                        />
                         <p className="flex-ranked-p">{user.elo}</p>
                     </div>
                 </div>
@@ -48,15 +68,21 @@ export default function ProfileStats({ user, setIsPrivateChatOpen, setSelectedUs
                     </button>
                     <div className="profile-right-top-btns">
                         <div className="profile-statistic">
-                            <p className="profile-statistic-circle">{user.matchesPlayed}</p>
+                            <p className="profile-statistic-circle">
+                                {user.matchesPlayed}
+                            </p>
                             <p className="profile-statistic-p">Matches</p>
                         </div>
                         <div className="profile-statistic">
-                            <p className="profile-statistic-circle">{user.matchesWon}</p>
+                            <p className="profile-statistic-circle">
+                                {user.matchesWon}
+                            </p>
                             <p className="profile-statistic-p">Wins</p>
                         </div>
                         <div className="profile-statistic">
-                            <p className="profile-statistic-circle">{user.averagePlacement}</p>
+                            <p className="profile-statistic-circle">
+                                {user.averagePlacement}
+                            </p>
                             <p className="profile-statistic-p">Average</p>
                         </div>
                     </div>

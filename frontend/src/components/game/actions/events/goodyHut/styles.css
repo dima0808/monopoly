@@ -1,0 +1,44 @@
+.object-vertical__village-color .property-cell-name,
+.object-vertical__barbarians-color .property-cell-name {
+    cursor: default;
+    background-color: #6364665e;
+}
+.object-vertical__village-color .property-img,
+.object-vertical__barbarians-color .property-img {
+    object-fit: cover; /* Обрізання по центру */
+    object-position: center; /* Центрування */
+    border-radius: 50%;
+    margin: 2px 0 0 2px;
+}
+.object-vertical__village-color .property-img-div,
+.object-vertical__barbarians-color .property-img-div {
+    cursor: default;
+    width: 82px;
+    height: 82px;
+}
+.object-vertical__village-color .property-grid,
+.object-vertical__barbarians-color .property-grid {
+    grid-template-columns: 82px 1fr;
+}
+.object-vertical__village-color .white-blur {
+    background-color: #9fac9982;
+}
+.massage-event-cell {
+    padding: 0 2px;
+    color: #2f4c3a;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+    overflow-wrap: break-word;
+}
+.massage-event-cell span {
+    color: #392954;
+    letter-spacing: -0.5px;
+    font-weight: 500;
+    margin-right: 3px;
+}
+.inline-block .player-stat-gold,
+.inline-block .player-stat-strength,
+.inline-block .player-stat-tourism {
+    margin: 0;
+}

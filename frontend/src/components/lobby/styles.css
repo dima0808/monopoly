@@ -9,11 +9,20 @@
     background-color: #d1b5e8;
     border-radius: 8px;
     font-size: 24px;
+    color: #271d37;
     padding: 2px 6px 3px 6px;
     border: 2px solid #271d37;
     transition: 0.3s ease;
 }
-
+.create-btn:disabled,
+.chat__typing-btn:disabled {
+    background-color: #cab6d9;
+    color: #7a6c91;
+}
+.chat__typing-input:disabled {
+    background-color: #e2d3ef;
+    color: #7c708e;
+}
 .create-btn:hover,
 .create-btn:active {
     cursor: pointer;
@@ -502,4 +511,31 @@ input:checked + .slider:before {
     font-size: 22px;
     color: #77617f;
     font-weight: 500;
+}
+.not-authorized-div__img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+.not-authorized-div {
+    padding-top: 120px;
+    width: 100%;
+}
+.not-authorized-div__p {
+    margin-top: 4px;
+    text-align: center;
+    color: #675576;
+    font-size: 28px;
+    letter-spacing: 0.5px;
+    line-height: 1.25;
+    font-weight: 500;
+}
+.not-authorized-div__a {
+    color: #7a4597;
+    text-decoration: underline 2px;
+    margin-bottom: -3px;
+}
+.not-authorized-div__a:hover {
+    color: #b38fc7;
 }

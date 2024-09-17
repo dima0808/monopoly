@@ -9,42 +9,56 @@ import Relations from "./relations/Relations";
 import Wins from "./wins/Wins";
 
 export default function Management({
-                                       currentUser,
-                                       properties,
-                                       gameSettings,
-                                       managementActiveTab, setManagementActiveTab,
-                                       selectedProperty, setSelectedProperty,
-                                       handleUpgradeProperty, handleDowngradeProperty
-                                   }) {
-
+    currentUser,
+    properties,
+    gameSettings,
+    managementActiveTab,
+    setManagementActiveTab,
+    selectedProperty,
+    setSelectedProperty,
+    handleUpgradeProperty,
+    handleDowngradeProperty,
+}) {
     const renderContent = () => {
         switch (managementActiveTab) {
             case "Cashflow":
                 return <Cashflow properties={properties} />;
             case "Empire":
-                return <Empire
-                    currentUser={currentUser}
-                    properties={properties}
-                    gameSettings={gameSettings}
-                    selectProperty={(position) => {
-                        setSelectedProperty(position);
-                        setManagementActiveTab("Property");
-                    }}
-                    handleUpgradeProperty={(position) => handleUpgradeProperty(position)}
-                    handleDowngradeProperty={(position) => handleDowngradeProperty(position)}
-                />;
+                return (
+                    <Empire
+                        currentUser={currentUser}
+                        properties={properties}
+                        gameSettings={gameSettings}
+                        selectProperty={(position) => {
+                            setSelectedProperty(position);
+                            setManagementActiveTab("Property");
+                        }}
+                        handleUpgradeProperty={(position) =>
+                            handleUpgradeProperty(position)
+                        }
+                        handleDowngradeProperty={(position) =>
+                            handleDowngradeProperty(position)
+                        }
+                    />
+                );
             case "Leader Abilities":
                 return <LeaderAbilities />;
             case "Player Info":
                 return <PlayerInfo />;
             case "Property":
-                return <Property
-                    currentUser={currentUser}
-                    property={selectedProperty}
-                    gameSettings={gameSettings}
-                    handleUpgradeProperty={(position) => handleUpgradeProperty(position)}
-                    handleDowngradeProperty={(position) => handleDowngradeProperty(position)}
-                />;
+                return (
+                    <Property
+                        currentUser={currentUser}
+                        property={selectedProperty}
+                        gameSettings={gameSettings}
+                        handleUpgradeProperty={(position) =>
+                            handleUpgradeProperty(position)
+                        }
+                        handleDowngradeProperty={(position) =>
+                            handleDowngradeProperty(position)
+                        }
+                    />
+                );
             case "Relations":
                 return <Relations />;
             case "Wins":
@@ -52,7 +66,7 @@ export default function Management({
             default:
                 return null;
         }
-    }
+    };
 
     return (
         <div className="management-hole scrollable-div">

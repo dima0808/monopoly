@@ -6,20 +6,21 @@ import EnemyProperty from "./enemyProperty/EnemyProperty";
 import ForeignProperty from "./foreignProperty/ForeignProperty";
 import GoodyHut from "./goodyHut/GoodyHut";
 import Projects from "./projects/Projects";
+import Union from "./union/Union";
+import Peace from "./peace/Peace";
 
 export default function Events({
-                                   players,
-                                   events,
-                                   properties,
-                                   isCurrentUserTurn,
-                                   hasRolledDice,
-                                   handleRollDice,
-                                   handleBuyProperty,
-                                   handlePayRent,
-                                   handleEndTurn,
-                                   handleSkip
-                               }) {
-
+    players,
+    events,
+    properties,
+    isCurrentUserTurn,
+    hasRolledDice,
+    handleRollDice,
+    handleBuyProperty,
+    handlePayRent,
+    handleEndTurn,
+    handleSkip,
+}) {
     const renderContent = () => {
         if (!events) return null;
         return events.map((event, index) => {
@@ -30,10 +31,14 @@ export default function Events({
                     return (
                         <BuyProperty
                             key={index}
-                            member={players.find((player) => player.id === member.id)}
+                            member={players.find(
+                                (player) => player.id === member.id
+                            )}
                             property={properties[member.position]}
-                            handleBuyProperty={() => handleBuyProperty(member.position)}
-                            onSkip={() => handleSkip('BUY_PROPERTY')}
+                            handleBuyProperty={() =>
+                                handleBuyProperty(member.position)
+                            }
+                            onSkip={() => handleSkip("BUY_PROPERTY")}
                         />
                     );
                 case "PROJECTS":
@@ -46,13 +51,15 @@ export default function Events({
                     return <EnemyProperty key={index} />;
                 case "FOREIGN_PROPERTY":
                     if (!properties[member.position]) return null;
-                    return <ForeignProperty
-                        key={index}
-                        property={properties[member.position]}
-                        handlePayRent={() => handlePayRent(member.position)}
-                        onSkip={() => handleSkip('FOREIGN_PROPERTY')}
-                        // handleDeclareWar
-                    />;
+                    return (
+                        <ForeignProperty
+                            key={index}
+                            property={properties[member.position]}
+                            handlePayRent={() => handlePayRent(member.position)}
+                            onSkip={() => handleSkip("FOREIGN_PROPERTY")}
+                            // handleDeclareWar
+                        />
+                    );
                 case "GOODY_HUT":
                     return <GoodyHut key={index} />;
                 default:
@@ -64,6 +71,8 @@ export default function Events({
     return (
         <div>
             <div className="events-hole scrollable-div">
+                <Peace />
+                <Union />
                 {/*<Barbarians />*/}
                 {/*<GoodyHut />*/}
                 {/* + */}

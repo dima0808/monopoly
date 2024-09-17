@@ -421,7 +421,7 @@ export default function Actions({
 
     return (
         <section className="actions">
-            <SettingsDialog />
+            {/* <SettingsDialog /> */}
             <div className="static-choises">
                 <div className="flex-between top-flex">
                     <div className="value">
@@ -521,7 +521,7 @@ export default function Actions({
                             setActiveTab("Management");
                             setManagementActiveTab("Empire");
                         }}
-                        className="management-btn"
+                        className="management-btn available-upgrade"
                     >
                         Empire
                     </button>

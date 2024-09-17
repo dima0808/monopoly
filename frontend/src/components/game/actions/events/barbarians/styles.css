@@ -1,0 +1,14 @@
+.object-vertical__barbarians-color .white-blur {
+    background-color: #ac99a282;
+}
+.object-vertical__barbarians-color .massage-event-cell {
+    padding: 0 2px;
+    color: #4c2f3a;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+    overflow-wrap: break-word;
+}
+.object-vertical__barbarians-color .property-img {
+    object-position: 0% 22% !important;
+}
