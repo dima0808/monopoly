@@ -1,5 +1,6 @@
 import "./styles.css";
 import resourceHorsesImg from "../../../../../images/icon_resource_horses.png";
+import goldPerTurnImg from "../../../../../images/icon-gold-per-turn.png";
 import goldImg from "../../../../../images/icon-gold.png";
 import tourismImg from "../../../../../images/icon-tourism.png";
 import strengthImg from "../../../../../images/icon-strength.png";
@@ -93,7 +94,7 @@ export default function LeaderAbilities() {
                             <p className="property-new-stats-p">g.o.t</p>
                             <div className="player-stat-gold gold-per-turn width-full pointer no-select">
                                 <img
-                                    src={goldImg}
+                                    src={goldPerTurnImg}
                                     className="recourse-img"
                                     alt="gold"
                                 />
@@ -145,7 +146,7 @@ export default function LeaderAbilities() {
                             <p className="property-new-stats-p">g.o.t</p>
                             <div className="player-stat-gold gold-per-turn width-full pointer no-select">
                                 <img
-                                    src={goldImg}
+                                    src={goldPerTurnImg}
                                     className="recourse-img"
                                     alt="gold"
                                 />

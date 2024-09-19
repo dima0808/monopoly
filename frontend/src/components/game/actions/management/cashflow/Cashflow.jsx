@@ -1,17 +1,18 @@
 import "./styles.css";
-import goldImg from "../../../../../images/icon-gold.png";
-import {useEffect, useState} from "react";
+import goldPerTurnImg from "../../../../../images/icon-gold-per-turn.png";
+import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import {propertiesInfo} from "../../../../../constraints";
+import { propertiesInfo } from "../../../../../constraints";
 
-export default function Cashflow({properties}) {
-
+export default function Cashflow({ properties }) {
     const [calculatedGoldPerTurn, setCalculatedGoldPerTurn] = useState(0);
 
     useEffect(() => {
         if (properties) {
-            const userProperties = Object.values(properties).filter(property =>
-                property.member && property.member.user.username === Cookies.get('username')
+            const userProperties = Object.values(properties).filter(
+                (property) =>
+                    property.member &&
+                    property.member.user.username === Cookies.get("username")
             );
 
             const totalGoldPerTurn = userProperties.reduce((sum, property) => {
@@ -29,7 +30,7 @@ export default function Cashflow({properties}) {
                     <h2>Gold per turn:</h2>
                     <div className="player-stat-gold gold-per-turn width-full no-select">
                         <img
-                            src={goldImg}
+                            src={goldPerTurnImg}
                             className="recourse-img"
                             alt="gold"
                         />
@@ -42,7 +43,7 @@ export default function Cashflow({properties}) {
                     <h2>Income:</h2>
                     <div className="player-stat-gold gold-per-turn width-full no-select">
                         <img
-                            src={goldImg}
+                            src={goldPerTurnImg}
                             className="recourse-img"
                             alt="gold"
                         />
@@ -52,13 +53,17 @@ export default function Cashflow({properties}) {
 
                 <ul className="value-ul">
                     {Object.values(properties)
-                        .filter(property => property.member &&
-                            property.member.user.username === Cookies.get('username'))
+                        .filter(
+                            (property) =>
+                                property.member &&
+                                property.member.user.username ===
+                                    Cookies.get("username")
+                        )
                         .map((property, key) => (
                             <li key={key} className="value">
                                 <div className="player-stat-gold gold-per-turn width-full no-select">
                                     <img
-                                        src={goldImg}
+                                        src={goldPerTurnImg}
                                         className="recourse-img"
                                         alt="gold"
                                     />
@@ -69,13 +74,18 @@ export default function Cashflow({properties}) {
                                         from
                                         <span className="cell-span">
                                             {" "}
-                                            "{propertiesInfo[property.position]['LEVEL_1'].name}"
+                                            "
+                                            {
+                                                propertiesInfo[
+                                                    property.position
+                                                ]["LEVEL_1"].name
+                                            }
+                                            "
                                         </span>
                                     </h3>
                                 </div>
                             </li>
-                        ))
-                    }
+                        ))}
                 </ul>
             </div>
             <div className="marg-value marg-value-red">
@@ -83,7 +93,7 @@ export default function Cashflow({properties}) {
                     <h2>Expenses: </h2>
                     <div className="player-stat-gold gold-per-turn width-full no-select">
                         <img
-                            src={goldImg}
+                            src={goldPerTurnImg}
                             className="recourse-img"
                             alt="gold"
                         />
@@ -94,7 +104,7 @@ export default function Cashflow({properties}) {
                     <li className="value">
                         <div className="player-stat-gold gold-per-turn width-full no-select">
                             <img
-                                src={goldImg}
+                                src={goldPerTurnImg}
                                 className="recourse-img"
                                 alt="gold"
                             />

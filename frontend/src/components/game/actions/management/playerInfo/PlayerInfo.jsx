@@ -2,6 +2,7 @@ import "./styles.css";
 import resourceHorsesImg from "../../../../../images/japan-leader.png";
 import goldImg from "../../../../../images/icon-gold.png";
 import tourismImg from "../../../../../images/icon-tourism.png";
+import goldPerTurnImg from "../../../../../images/icon-gold-per-turn.png";
 import strengthImg from "../../../../../images/icon-strength.png";
 import warImg from "../../../../../images/icon-war.png";
 import unionImg from "../../../../../images/icon-union.png";
@@ -165,7 +166,7 @@ export default function PlayerInfo() {
                             <p className="property-new-stats-p">g.o.t</p>
                             <div className="player-stat-gold gold-per-turn width-full pointer no-select">
                                 <img
-                                    src={goldImg}
+                                    src={goldPerTurnImg}
                                     className="recourse-img"
                                     alt="gold"
                                 />
@@ -217,7 +218,7 @@ export default function PlayerInfo() {
                             <p className="property-new-stats-p">g.o.t</p>
                             <div className="player-stat-gold gold-per-turn width-full pointer no-select">
                                 <img
-                                    src={goldImg}
+                                    src={goldPerTurnImg}
                                     className="recourse-img"
                                     alt="gold"
                                 />

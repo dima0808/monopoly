@@ -199,7 +199,9 @@
 .player-stat-gold,
 .player-stat-strength,
 .player-stat-tourism,
-.player-stat-score {
+.player-stat-score,
+.player-stat-house,
+.player-stat-science {
     position: relative;
     width: 100%;
     border-radius: 4px;
@@ -220,6 +222,9 @@
     transform: translate(10%, 5%);
 }
 .strength-recourse-img {
+    border-radius: 5px;
+}
+.player-stat-house .recourse-img {
     border-radius: 5px;
 }
 .player-stat-gold {
@@ -246,11 +251,25 @@
         /* Синьо-фіолетовий */ #9370db /* Середній фіолетовий */
     );
 }
+.player-stat-house {
+    background: linear-gradient(
+        145deg,
+        #7cd14e,
+        /* Томато */ #9dff00 /* Помаранчевий червоний */
+    );
+}
+.player-stat-science {
+    background: linear-gradient(
+        145deg,
+        #6172c8,
+        /* Томато */ #4894c4 /* Помаранчевий червоний */
+    );
+}
 .player-stat-score {
     background: linear-gradient(
         145deg,
-        #87cfeb,
-        /* Небесно-блакитний */ #4683b4 /* Сталевий синій */
+        #6c8cad,
+        /* Небесно-блакитний */ #9ccee2 /* Сталевий синій */
     );
 }
 .color-selector {

@@ -142,9 +142,15 @@
 
 .gold-per-turn {
     padding-right: 4px;
-    background: linear-gradient(60deg, #f6d339, #ebefa5);
+    background: linear-gradient(60deg, #f6aa39, #ebefa5);
     box-shadow: inset 4px 4px 10px rgba(145, 65, 58, 0.2),
         inset -4px -4px 10px rgba(212, 226, 173, 0.735);
+    padding: 0 0 0 23px;
+}
+.gold-per-turn .recourse-img {
+    width: 19px;
+    height: 19px;
+    border-radius: 0;
 }
 .width-full {
     padding-right: 5px;

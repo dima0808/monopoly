@@ -71,10 +71,10 @@ export default function Events({
     return (
         <div>
             <div className="events-hole scrollable-div">
-                <Peace />
-                <Union />
-                {/*<Barbarians />*/}
-                {/*<GoodyHut />*/}
+                {/* <Peace /> */}
+                {/* <Union /> */}
+                {/* <Barbarians /> */}
+                {/* <GoodyHut /> */}
                 {/* + */}
                 {/*<BuyProperty/>*/}
                 {/* + */}

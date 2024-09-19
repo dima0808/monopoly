@@ -1,16 +1,21 @@
 import "./styles.css";
+import goldPerTurnImg from "../../../../../images/icon-gold-per-turn.png";
 import goldImg from "../../../../../images/icon-gold.png";
 import breadAndCircusesImg from "../../../../../images/icon_project_bread_and_circuses.png";
 // import tourismImg from "../../../../../images/icon-tourism.png";
-import {propertiesInfo, requirements, upgradesImages} from "../../../../../constraints";
+import {
+    propertiesInfo,
+    requirements,
+    upgradesImages,
+} from "../../../../../constraints";
 
 export default function Property({
-                                     currentUser,
-                                     property,
-                                     gameSettings,
-                                     handleUpgradeProperty,
-                                     handleDowngradeProperty
-                                 }) {
+    currentUser,
+    property,
+    gameSettings,
+    handleUpgradeProperty,
+    handleDowngradeProperty,
+}) {
     const propertyName = propertiesInfo[property.position]["LEVEL_1"].name;
 
     const ownedLevels = property.upgrades.filter(
@@ -28,8 +33,12 @@ export default function Property({
         <div className={"property-color color-" + property.member.color + "-g"}>
             <h2 className="property-cell-name">{propertyName}</h2>
             <div
-                className={`white-blur ${property.mortgage && property.mortgage !== -1 ? "gray-blur" : ""}`}
-                style={{"--mortgage-value": `"${property.mortgage}"`}}
+                className={`white-blur ${
+                    property.mortgage && property.mortgage !== -1
+                        ? "gray-blur"
+                        : ""
+                }`}
+                style={{ "--mortgage-value": `"${property.mortgage}"` }}
             >
                 <div className="property-grid">
                     <div className="property-img-div">
@@ -55,7 +64,7 @@ export default function Property({
                             Gold per turn:
                             <div className="player-stat-gold gold-per-turn width-full pointer no-select">
                                 <img
-                                    src={goldImg}
+                                    src={goldPerTurnImg}
                                     className="recourse-img"
                                     alt="gold"
                                 />
@@ -82,15 +91,20 @@ export default function Property({
                         property.upgradeRequirements.find(
                             (upg) => upg.level === upgrade.level
                         );
-                    const hasFalseRequirement = upgradeRequirement ?
-                        Object.values(upgradeRequirement.requirements).some((value) => !value) : true;
+                    const hasFalseRequirement = upgradeRequirement
+                        ? Object.values(upgradeRequirement.requirements).some(
+                              (value) => !value
+                          )
+                        : true;
                     return (
                         <div
                             key={index}
                             className={
                                 "property-modifier-div " +
                                 (upgrade.isOwned ? "modifiered" : "") +
-                                (hasFalseRequirement ? " property-div-compleated" : "")
+                                (hasFalseRequirement
+                                    ? " property-div-compleated"
+                                    : "")
                             }
                         >
                             <h3 className="property-modifier-h3">
@@ -99,16 +113,22 @@ export default function Property({
                             <div className="property-grid-3 ">
                                 <div className="property-gridimg-img-div">
                                     <img
-                                        src={upgrade.level === "LEVEL_1" ?
-                                            propertyLevelInfo.src : upgradesImages[propertyLevelInfo.name]}
+                                        src={
+                                            upgrade.level === "LEVEL_1"
+                                                ? propertyLevelInfo.src
+                                                : upgradesImages[
+                                                      propertyLevelInfo.name
+                                                  ]
+                                        }
                                         className="property-img"
                                         alt={propertyLevelInfo.name}
                                     />
                                 </div>
                                 {(() => {
                                     return upgradeRequirement ? (
-                                        Object.entries(upgradeRequirement.requirements)
-                                            .map(([key]) => requirements[key])
+                                        Object.entries(
+                                            upgradeRequirement.requirements
+                                        ).map(([key]) => requirements[key])
                                     ) : (
                                         <p className="condition-p"></p>
                                     );
@@ -133,7 +153,7 @@ export default function Property({
                                         </p>
                                         <div className="player-stat-gold gold-per-turn width-full pointer no-select">
                                             <img
-                                                src={goldImg}
+                                                src={goldPerTurnImg}
                                                 className="recourse-img"
                                                 alt="gold"
                                             />
@@ -188,7 +208,7 @@ export default function Property({
                 {/*                <p className="property-new-stats-p">g.o.t</p>*/}
                 {/*                <div className="player-stat-gold gold-per-turn width-full pointer no-select">*/}
                 {/*                    <img*/}
-                {/*                        src={goldImg}*/}
+                {/*                        src={goldPerTurnImg}*/}
                 {/*                        className="recourse-img"*/}
                 {/*                        alt="gold"*/}
                 {/*                    />*/}
@@ -250,7 +270,7 @@ export default function Property({
                 {/*                <p className="property-new-stats-p">g.o.t</p>*/}
                 {/*                <div className="player-stat-gold gold-per-turn width-full pointer no-select">*/}
                 {/*                    <img*/}
-                {/*                        src={goldImg}*/}
+                {/*                        src={goldPerTurnImg}*/}
                 {/*                        className="recourse-img"*/}
                 {/*                        alt="gold"*/}
                 {/*                    />*/}
@@ -302,7 +322,7 @@ export default function Property({
                 {/*                <p className="property-new-stats-p">g.o.t</p>*/}
                 {/*                <div className="player-stat-gold gold-per-turn width-full pointer no-select">*/}
                 {/*                    <img*/}
-                {/*                        src={goldImg}*/}
+                {/*                        src={goldPerTurnImg}*/}
                 {/*                        className="recourse-img"*/}
                 {/*                        alt="gold"*/}
                 {/*                    />*/}
@@ -354,7 +374,7 @@ export default function Property({
                 {/*                <p className="property-new-stats-p">g.o.t</p>*/}
                 {/*                <div className="player-stat-gold gold-per-turn width-full pointer no-select">*/}
                 {/*                    <img*/}
-                {/*                        src={goldImg}*/}
+                {/*                        src={goldPerTurnImg}*/}
                 {/*                        className="recourse-img"*/}
                 {/*                        alt="gold"*/}
                 {/*                    />*/}
@@ -406,7 +426,7 @@ export default function Property({
                 {/*                <p className="property-new-stats-p">g.o.t</p>*/}
                 {/*                <div className="player-stat-gold gold-per-turn width-full pointer no-select">*/}
                 {/*                    <img*/}
-                {/*                        src={goldImg}*/}
+                {/*                        src={goldPerTurnImg}*/}
                 {/*                        className="recourse-img"*/}
                 {/*                        alt="gold"*/}
                 {/*                    />*/}
@@ -474,7 +494,7 @@ export default function Property({
                                     </p>
                                     <div className="player-stat-gold gold-per-turn width-full pointer no-select">
                                         <img
-                                            src={goldImg}
+                                            src={goldPerTurnImg}
                                             className="recourse-img"
                                             alt="gold"
                                         />
@@ -517,7 +537,7 @@ export default function Property({
                                     </p>
                                     <div className="player-stat-gold gold-per-turn width-full pointer no-select">
                                         <img
-                                            src={goldImg}
+                                            src={goldPerTurnImg}
                                             className="recourse-img"
                                             alt="gold"
                                         />
@@ -562,7 +582,7 @@ export default function Property({
                                     </p>
                                     <div className="player-stat-gold gold-per-turn width-full pointer no-select">
                                         <img
-                                            src={goldImg}
+                                            src={goldPerTurnImg}
                                             className="recourse-img"
                                             alt="gold"
                                         />
@@ -574,14 +594,11 @@ export default function Property({
                     </div>
                 </div>
                 <div className=" proprty-btns-div flex-between">
-                    {(lowestNotOwnedLevel && property.mortgage === -1) &&
+                    {lowestNotOwnedLevel && property.mortgage === -1 && (
                         <button
                             disabled={
-                                currentUser.gold <
-                                lowestNotOwnedLevel.price ||
-                                (property
-                                        .upgradeRequirements
-                                        .length > 0 &&
+                                currentUser.gold < lowestNotOwnedLevel.price ||
+                                (property.upgradeRequirements.length > 0 &&
                                     property.upgradeRequirements.some(
                                         (upg) =>
                                             upg.level ===
@@ -593,12 +610,11 @@ export default function Property({
                                                 upgrade.level ===
                                                 lowestNotOwnedLevel.level
                                         ).requirements
-                                    ).some(
-                                        (req) =>
-                                            req === false
-                                    ))
+                                    ).some((req) => req === false))
                             }
-                            onClick={() => handleUpgradeProperty(property.position)}
+                            onClick={() =>
+                                handleUpgradeProperty(property.position)
+                            }
                             className="pay-btn decision-button decision-button-green"
                         >
                             upgrade:
@@ -611,12 +627,17 @@ export default function Property({
                                 <p>{lowestNotOwnedLevel.price}</p>
                             </div>
                         </button>
-                    }
-                    {property.mortgage !== -1 &&
+                    )}
+                    {property.mortgage !== -1 && (
                         <button
-                            disabled={currentUser.gold <
-                                ownedLevels[0].price * gameSettings.redemptionCoefficient}
-                            onClick={() => handleUpgradeProperty(property.position)}
+                            disabled={
+                                currentUser.gold <
+                                ownedLevels[0].price *
+                                    gameSettings.redemptionCoefficient
+                            }
+                            onClick={() =>
+                                handleUpgradeProperty(property.position)
+                            }
                             className="pay-btn decision-button decision-button-green"
                         >
                             redeem:
@@ -626,30 +647,40 @@ export default function Property({
                                     className="recourse-img"
                                     alt="gold"
                                 />
-                                <p>{ownedLevels[0].price * gameSettings.redemptionCoefficient}</p>
+                                <p>
+                                    {ownedLevels[0].price *
+                                        gameSettings.redemptionCoefficient}
+                                </p>
                             </div>
                         </button>
-                    }
-                    {property.mortgage === -1 &&
-                        <button className="pay-btn decision-button decision-button-red"
-                                onClick={() => handleDowngradeProperty(property.position)}>
-                            {highestOwnedLevel.level === 'LEVEL_1' ? 'pledge' : 'demote'}:
+                    )}
+                    {property.mortgage === -1 && (
+                        <button
+                            className="pay-btn decision-button decision-button-red"
+                            onClick={() =>
+                                handleDowngradeProperty(property.position)
+                            }
+                        >
+                            {highestOwnedLevel.level === "LEVEL_1"
+                                ? "pledge"
+                                : "demote"}
+                            :
                             <div className="player-stat-gold width-full pointer no-select">
                                 <img
                                     src={goldImg}
                                     className="recourse-img"
                                     alt="gold"
                                 />
-                                <p>+{highestOwnedLevel.price *
-                                    (highestOwnedLevel.level === 'LEVEL_1' ?
-                                            gameSettings.mortgageGoldCoefficient
-                                            :
-                                            gameSettings.demoteGoldCoefficient
-                                    )
-                                }</p>
+                                <p>
+                                    +
+                                    {highestOwnedLevel.price *
+                                        (highestOwnedLevel.level === "LEVEL_1"
+                                            ? gameSettings.mortgageGoldCoefficient
+                                            : gameSettings.demoteGoldCoefficient)}
+                                </p>
                             </div>
                         </button>
-                    }
+                    )}
                 </div>
             </div>
         </div>

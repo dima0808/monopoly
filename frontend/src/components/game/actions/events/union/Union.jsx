@@ -8,7 +8,7 @@ export default function Union() {
             <div className="property-color color-yellow hero-info-managment player-info-managment event__player-info-managment">
                 <div className="relation-name-and-civ-fone">
                     <div className="relation-name-and-civ">
-                        <div className="property-img-div property-hero union-img">
+                        <div className="property-img-div property-hero">
                             <img
                                 src={resourceHorsesImg}
                                 className="property-img"
@@ -20,6 +20,14 @@ export default function Union() {
                 </div>
 
                 <div className="player-abilitys">
+                    <p className="event-italic-p">
+                        <p className="event-new-row">Respected Leader,</p>I
+                        suggest you become a part of our alliance. Among the
+                        advantages, we will no longer be required to pay each
+                        other gold when landing on each other's territories.
+                        Additionally, you will receive extra gold during your
+                        turn as a bonus for being in the alliance.
+                    </p>
                     <div className="relation-btns flex-between event-relations-btns">
                         <button className="pay-btn decision-button decision-button-blue">
                             make union

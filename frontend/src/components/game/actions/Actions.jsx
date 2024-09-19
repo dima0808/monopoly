@@ -3,6 +3,7 @@ import "./styles.css";
 import Cookies from "js-cookie";
 
 import goldImg from "../../../images/icon-gold.png";
+import goldPerTurnImg from "../../../images/icon-gold-per-turn.png";
 import strengthImg from "../../../images/icon-strength.png";
 import Events from "./events/Events";
 import Management from "./management/Management";
@@ -434,7 +435,7 @@ export default function Actions({
                             className="player-stat-gold gold-per-turn width-full pointer no-select"
                         >
                             <img
-                                src={goldImg}
+                                src={goldPerTurnImg}
                                 className="recourse-img"
                                 alt="gold"
                             />
