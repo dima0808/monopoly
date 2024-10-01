@@ -30,11 +30,23 @@
 
     margin: 0 43px 0 0px;
 }
+.img21-gpt {
+    margin: 70px 10px 50px 5px;
+    width: 260px;
+    height: 50px;
+    border-radius: 9px;
+}
 .img22 {
     width: 290px;
     height: 74px;
     border-radius: 0 9px 9px 9px;
     margin: -8px 0px 0 5px;
+}
+.img22-war {
+    width: 354px;
+    height: 101px;
+    border-radius: 9px;
+    margin: 30px 0px 0 5px;
 }
 .light-yellow-div {
     background-color: #f8f4e2;
@@ -53,4 +65,26 @@
     width: 451px;
     height: 108px;
     border-radius: 9px;
+}
+.rules-p span {
+    font-weight: 500;
+    font-size: 28px;
+}
+.rules-details {
+    margin: 20px 0 40px 0;
+}
+.img25 {
+    margin-top: 18px;
+    width: 312px;
+    height: 284px;
+    border-radius: 9px;
+}
+.img26 {
+    margin: -6px 40px 0 0;
+    width: 232px;
+    height: 124px;
+    border-radius: 9px;
+}
+.pt-4 {
+    padding-top: 4px;
 }
