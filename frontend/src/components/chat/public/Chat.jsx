@@ -5,6 +5,7 @@ import { getAllMessages } from "../../../utils/http";
 import Message from "./Message";
 import Cookies from "js-cookie";
 import { handleInputChange, handleKeyDown } from "../../../utils/chat";
+import {Link} from "react-router-dom";
 
 export default function Chat({ client, isConnected, setNotifications }) {
     const [messages, setMessages] = useState([]);
@@ -189,22 +190,21 @@ export default function Chat({ client, isConnected, setNotifications }) {
         <section className="chat">
             <div className="chat__title title-box">Public Chat</div>
             <div className="chat__text scroll" id="chat" ref={chatContainerRef}>
-                <div className="not-authorized-div">
-                    <div className="not-authorized-div__img">
-                        <img
-                            src={iconAgentCheckMail}
-                            className="not-authorized-div__img no-select-img"
-                            alt="gold"
-                        />
+                {!Cookies.get("username") && (
+                    <div className="not-authorized-div">
+                        <div className="not-authorized-div__img">
+                            <img
+                                src={iconAgentCheckMail}
+                                className="not-authorized-div__img no-select-img"
+                                alt="gold"
+                            />
+                        </div>
+                        <p className="not-authorized-div__p">
+                            You are not <Link to={`/signin`} className="not-authorized-div__a">logged in</Link>
+                        </p>
                     </div>
-                    <p className="not-authorized-div__p">
-                        You are not{" "}
-                        <a href="#" className="not-authorized-div__a">
-                            logined
-                        </a>
-                    </p>
-                </div>
-                {!error &&
+                )}
+                {(!error && Cookies.get("username")) &&
                     messages.map((message, index) => (
                         <Message key={index} nickname={message.sender.nickname}>
                             {message.content}
@@ -215,6 +215,7 @@ export default function Chat({ client, isConnected, setNotifications }) {
 
             <div className="chat__typing">
                 <textarea
+                    disabled={!Cookies.get("username")}
                     className="chat__typing-input scroll"
                     ref={messageInputRef}
                     onKeyDown={(event) =>
@@ -224,6 +225,7 @@ export default function Chat({ client, isConnected, setNotifications }) {
                     maxLength={250}
                 ></textarea>
                 <button
+                    disabled={!Cookies.get("username")}
                     className="chat__typing-btn"
                     onClick={handleSendMessage}
                 >

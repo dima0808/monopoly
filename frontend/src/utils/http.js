@@ -236,7 +236,5 @@ export async function getGameSettings() {
         throw new Error(resData.message);
     }
 
-    console.log(resData);
-
     return resData;
 }

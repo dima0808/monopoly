@@ -147,7 +147,7 @@ import hydroelectricDamImg from "./images/building_dam_build1_icon_hydroelectric
 import foodMarketImg from "./images/building_neighborhood_build1_icon_food_market.png";
 import shoppingMallImg from "./images/building_neighborhood_build2_icon_shopping_mall.png";
 
-export const IP = 'localhost';
+export const IP = '26.239.28.186';
 // 26.239.28.186
 // 192.168.0.X
 

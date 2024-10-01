@@ -44,6 +44,29 @@ export default function Empire({
                                 upgrade.level.startsWith("LEVEL")
                         );
 
+                        const isUpgradeDisabled = currentUser.gold < lowestNotOwnedLevel?.price ||
+                            (property.upgradeRequirements.length > 0 &&
+                                property.upgradeRequirements.some(
+                                    (upg) =>
+                                        upg.level ===
+                                        lowestNotOwnedLevel.level
+                                ) &&
+                                Object.values(
+                                    property.upgradeRequirements.find(
+                                        (upgrade) =>
+                                            upgrade.level ===
+                                            lowestNotOwnedLevel.level
+                                    ).requirements
+                                ).some(
+                                    (req) => req === false
+                                ));
+
+                        const isRedeemDisabled = currentUser.gold <
+                            Math.floor(
+                                ownedLevels[0].price *
+                                gameSettings.redemptionCoefficient
+                            );
+
                         return (
                             <div
                                 key={key}
@@ -118,29 +141,7 @@ export default function Empire({
                                         {lowestNotOwnedLevel &&
                                             property.mortgage === -1 && (
                                                 <button
-                                                    disabled={
-                                                        currentUser.gold <
-                                                            lowestNotOwnedLevel.price ||
-                                                        (property
-                                                            .upgradeRequirements
-                                                            .length > 0 &&
-                                                            property.upgradeRequirements.some(
-                                                                (upg) =>
-                                                                    upg.level ===
-                                                                    lowestNotOwnedLevel.level
-                                                            ) &&
-                                                            Object.values(
-                                                                property.upgradeRequirements.find(
-                                                                    (upgrade) =>
-                                                                        upgrade.level ===
-                                                                        lowestNotOwnedLevel.level
-                                                                ).requirements
-                                                            ).some(
-                                                                (req) =>
-                                                                    req ===
-                                                                    false
-                                                            ))
-                                                    }
+                                                    disabled={isUpgradeDisabled}
                                                     onClick={() =>
                                                         handleUpgradeProperty(
                                                             property.position
@@ -165,13 +166,7 @@ export default function Empire({
                                             )}
                                         {property.mortgage !== -1 && (
                                             <button
-                                                disabled={
-                                                    currentUser.gold <
-                                                    Math.floor(
-                                                        ownedLevels[0].price *
-                                                            gameSettings.redemptionCoefficient
-                                                    )
-                                                }
+                                                disabled={isRedeemDisabled}
                                                 onClick={() =>
                                                     handleUpgradeProperty(
                                                         property.position

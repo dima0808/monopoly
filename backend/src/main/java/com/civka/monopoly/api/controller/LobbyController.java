@@ -142,8 +142,21 @@ public class LobbyController {
         Member member = userService.findByNickname(nickname).getMember();
         return RoomMessage.builder()
                 .type(RoomMessage.MessageType.ADD_GOLD)
-                .content("Admin added " + gold + "gold for " + nickname)
+                .content("Admin added " + gold + " gold for " + nickname)
                 .room(roomService.addGold(member, gold, admin))
+                .build();
+    }
+
+    @MessageMapping("/rooms/{roomName}/addStrength/{nickname}")
+    @SendTo("/topic/public/{roomName}/game")
+    public RoomMessage addStrength(@DestinationVariable String nickname,
+                               @Header("username") String admin,
+                               @Header("strength") Integer strength) {
+        Member member = userService.findByNickname(nickname).getMember();
+        return RoomMessage.builder()
+                .type(RoomMessage.MessageType.ADD_STRENGTH)
+                .content("Admin added " + strength + " strength for " + nickname)
+                .room(roomService.addStrength(member, strength, admin))
                 .build();
     }
 

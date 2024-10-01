@@ -35,5 +35,7 @@ public interface RoomService {
 
     Room addGold(Member member, Integer gold, String admin);
 
+    Room addStrength(Member member, Integer strength, String admin);
+
     GameSettingsDto getGameSettings();
 }

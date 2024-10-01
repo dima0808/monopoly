@@ -292,6 +292,17 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    public Room addStrength(Member member, Integer strength, String admin) {
+        User adminUser = userService.findByUsername(admin);
+        if (adminUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))) {
+            member.setStrength(member.getStrength() + strength);
+            return memberService.save(member).getRoom();
+        } else {
+            throw new UserNotAllowedException();
+        }
+    }
+
+    @Override
     public GameSettingsDto getGameSettings() {
         return GameSettingsDto.builder()
                 .armySpendings(gameUtils.getArmySpendings())

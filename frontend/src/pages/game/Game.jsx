@@ -139,6 +139,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                     .catch((error) => setError({message: error.message || "An error occurred"}));
                 return;
             case 'ADD_GOLD':
+            case 'ADD_STRENGTH':
                 setPlayers(room.members);
                 return;
             default:

@@ -118,6 +118,19 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
                         });
                     }
                     break;
+                case "/addStrength":
+                    if (param && targetUser) {
+                        const strength = parseInt(param, 10);
+                        client.publish({
+                            destination: "/app/rooms/" + roomName + "/addStrength/" + targetUser,
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                username: username,
+                                strength: strength,
+                            },
+                        });
+                    }
+                    break;
                 default:
                     client.publish({
                         destination: "/app/chat/sendPublicMessage/" + roomName,

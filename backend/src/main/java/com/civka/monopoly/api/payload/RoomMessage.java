@@ -30,6 +30,6 @@ public class RoomMessage {
         UPGRADE_PROPERTY,
         PAY_RENT,
         ADD_GOLD,
-        DOWNGRADE_PROPERTY,
+        DOWNGRADE_PROPERTY, ADD_STRENGTH,
     }
 }

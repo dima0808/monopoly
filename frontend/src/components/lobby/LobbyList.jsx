@@ -13,6 +13,8 @@ import {
     handleLeaveRoom,
     isUserInRoom,
 } from "../../utils/lobby";
+import Cookies from "js-cookie";
+import {Link} from "react-router-dom";
 
 export default function LobbyList({ client, isConnected, setNotifications }) {
     const [rooms, setRooms] = useState([]);
@@ -111,12 +113,13 @@ export default function LobbyList({ client, isConnected, setNotifications }) {
             />
             <div className="lobby__title title-box">
                 <p className="title-box__p">Lobbies</p>
-                <button className="create-btn" onClick={handleCreateClick}>
+                <button disabled={!Cookies.get("username")} className="create-btn" onClick={handleCreateClick}>
                     Create
                 </button>
             </div>
             <div className="lobby__area scroll">
-                <div className="not-authorized-div">
+                {!Cookies.get("username") && (
+                    <div className="not-authorized-div">
                     <div className="not-authorized-div__img">
                         <img
                             src={iconAgentCheckMaterials}
@@ -124,18 +127,16 @@ export default function LobbyList({ client, isConnected, setNotifications }) {
                             alt="gold"
                         />
                     </div>
-                    <p className="not-authorized-div__p">
-                        You are not{" "}
-                        <a href="#" className="not-authorized-div__a">
-                            logined
-                        </a>
-                    </p>
-                </div>
-                {!error &&
+                        <p className="not-authorized-div__p">
+                            You are not <Link to={`/signin`} className="not-authorized-div__a">logged in</Link>
+                        </p>
+                    </div>
+                )}
+                {(!error && Cookies.get("username")) &&
                     rooms
                         .sort(
                             (a, b) =>
-                                isUserInRoom(b.members) -
+                            isUserInRoom(b.members) -
                                 isUserInRoom(a.members)
                         )
                         .map((room) => (

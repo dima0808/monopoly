@@ -307,12 +307,15 @@ export default function Actions({
     };
 
     useEffect(() => {
-        if (currentUser?.gold < 700 && armySpending === "High") {
-            setArmySpending("Medium");
-        } else if (currentUser?.gold < 200 && armySpending === "Medium") {
-            setArmySpending("Default");
+        if (gameSettings.armySpendings) {
+            if (currentUser?.gold < 700 && armySpending === "High") {
+                setArmySpending("Medium");
+            } else if ((currentUser?.gold < 200 && armySpending === "Medium") ||
+                (currentUser?.strength < 50 && armySpending === "Absent")) {
+                setArmySpending("Default");
+            }
         }
-    }, [armySpending, currentUser]);
+    }, [armySpending, currentUser, gameSettings]);
 
     useEffect(() => {
         if (client && isConnected) {
@@ -474,17 +477,18 @@ export default function Actions({
                                     checkArmySpending(spending.armySpending)
                                 }
                                 className={`li-army-gold 
-                            ${
-                                armySpending === spending.armySpending
-                                    ? "selected-military"
-                                    : ""
-                            }
-                            ${
-                                currentUser?.gold < -spending.gold
-                                    ? "li-army-gold-disabled"
-                                    : ""
-                            }
-                        `}
+                                    ${
+                                        armySpending === spending.armySpending
+                                            ? "selected-military"
+                                            : ""
+                                    }
+                                    ${
+                                        (currentUser?.gold < -spending.gold || 
+                                            currentUser?.strength < -spending.strength)
+                                            ? "li-army-gold-disabled"
+                                            : ""
+                                    }
+                                `}
                             >
                                 <div className="player-stat-strength no-select">
                                     <img
@@ -522,7 +526,7 @@ export default function Actions({
                             setActiveTab("Management");
                             setManagementActiveTab("Empire");
                         }}
-                        className="management-btn available-upgrade"
+                        className="management-btn"
                     >
                         Empire
                     </button>
