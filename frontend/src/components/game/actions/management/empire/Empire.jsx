@@ -49,13 +49,13 @@ export default function Empire({
                                 property.upgradeRequirements.some(
                                     (upg) =>
                                         upg.level ===
-                                        lowestNotOwnedLevel.level
+                                        lowestNotOwnedLevel?.level
                                 ) &&
                                 Object.values(
                                     property.upgradeRequirements.find(
                                         (upgrade) =>
                                             upgrade.level ===
-                                            lowestNotOwnedLevel.level
+                                            lowestNotOwnedLevel?.level
                                     ).requirements
                                 ).some(
                                     (req) => req === false

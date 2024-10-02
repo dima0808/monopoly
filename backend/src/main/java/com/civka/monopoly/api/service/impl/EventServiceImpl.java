@@ -4,6 +4,7 @@ import com.civka.monopoly.api.entity.Event;
 import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.payload.EventMessage;
 import com.civka.monopoly.api.repository.EventRepository;
+import com.civka.monopoly.api.repository.MemberRepository;
 import com.civka.monopoly.api.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -19,6 +20,7 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final GameUtilsImpl gameUtils;
+    private final MemberRepository memberRepository;
 
     @Override
     public Event save(Event event) {
@@ -58,14 +60,13 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event makeChoice(Member member, Event.EventType type, Integer choice) {
-        Event event = eventRepository.findByMemberAndType(member, type).orElse(null);
-
         switch (type) {
             case GOODY_HUT_FREE_GOLD:
+            case GOODY_HUT_JACKPOT:
                 member.setGold(member.getGold() + gameUtils.getEventGold(type));
                 break;
             case GOODY_HUT_FREE_STRENGTH:
-                member.setStrength(member.getStrength() + 1); // todo
+                member.setStrength(member.getStrength() + gameUtils.getEventStrength(type));
                 break;
             case GOODY_HUT_FREE_GOLD_OR_STRENGTH:
                 if (choice == 1) {
@@ -84,9 +85,6 @@ public class EventServiceImpl implements EventService {
             case GOODY_HUT_DICE_BUFF:
                 // todo
                 break;
-            case GOODY_HUT_JACKPOT:
-                member.setGold(member.getGold() + gameUtils.getEventGold(type));
-                break;
             case BARBARIANS_PAY_GOLD_OR_STRENGTH:
                 if (choice == 1) {
                     member.setGold(member.getGold() - gameUtils.getEventGold(type));
@@ -98,8 +96,8 @@ public class EventServiceImpl implements EventService {
                 if (choice == 0) {
                     member.setGold(member.getGold() - gameUtils.getEventGold(type));
                 } else {
-                    member.setStrength(member.getStrength() + gameUtils.getEventStrength(type));
-                    member.setGold(member.getGold() - gameUtils.getEventGold(type));
+                    member.setStrength(member.getStrength() + gameUtils.getHireIncome(type));
+                    member.setGold(member.getGold() - gameUtils.getHirePrice(type));
                 }
                 break;
             case BARBARIANS_PAY_STRENGTH:
@@ -114,7 +112,8 @@ public class EventServiceImpl implements EventService {
             default:
                 break;
         }
-        return event;
+        memberRepository.save(member);
+        return delete(member, type);
     }
 
     @Override

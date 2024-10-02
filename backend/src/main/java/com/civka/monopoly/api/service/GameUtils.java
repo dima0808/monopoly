@@ -3,6 +3,7 @@ package com.civka.monopoly.api.service;
 import com.civka.monopoly.api.dto.ArmySpendingDto;
 import com.civka.monopoly.api.dto.RequirementDto;
 import com.civka.monopoly.api.dto.UpgradeDto;
+import com.civka.monopoly.api.entity.Event;
 import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.entity.Property;
 
@@ -34,4 +35,16 @@ public interface GameUtils {
     List<UpgradeDto> getUpgrades(Integer position, Property property);
 
     List<ArmySpendingDto> getArmySpendings();
+
+    int getEventGold(Event.EventType eventType);
+
+    int getEventStrength(Event.EventType eventType);
+
+    float getEventCoefficient(Event.EventType eventType);
+
+    int getEventDice(Event.EventType eventType);
+
+    int getHireIncome(Event.EventType eventType);
+
+    int getHirePrice(Event.EventType eventType);
 }

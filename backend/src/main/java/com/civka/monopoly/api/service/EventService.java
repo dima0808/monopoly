@@ -10,4 +10,10 @@ public interface EventService {
     Event add(Member member, Event.EventType type);
 
     Event delete(Member member, Event.EventType type);
+
+    Event makeChoice(Member member, Event.EventType type, Integer choice);
+
+    Event.EventType randomGoodyHutEvent();
+
+    Event.EventType randomBarbariansEvent();
 }

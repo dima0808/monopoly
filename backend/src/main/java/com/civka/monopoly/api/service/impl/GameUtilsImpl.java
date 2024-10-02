@@ -4,6 +4,7 @@ import com.civka.monopoly.api.config.GameProperties;
 import com.civka.monopoly.api.dto.ArmySpendingDto;
 import com.civka.monopoly.api.dto.RequirementDto;
 import com.civka.monopoly.api.dto.UpgradeDto;
+import com.civka.monopoly.api.entity.Event;
 import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.entity.Property;
 import com.civka.monopoly.api.service.GameUtils;
@@ -138,6 +139,36 @@ public class GameUtilsImpl implements GameUtils {
             armySpendings.add(armySpendingDto);
         }
         return armySpendings;
+    }
+
+    @Override
+    public int getEventGold(Event.EventType eventType) {
+        return gameProperties.getEventGold(eventType);
+    }
+
+    @Override
+    public int getEventStrength(Event.EventType eventType) {
+        return gameProperties.getEventStrength(eventType);
+    }
+
+    @Override
+    public float getEventCoefficient(Event.EventType eventType) {
+        return gameProperties.getEventCoefficient(eventType);
+    }
+
+    @Override
+    public int getEventDice(Event.EventType eventType) {
+        return gameProperties.getEventDice(eventType);
+    }
+
+    @Override
+    public int getHireIncome(Event.EventType eventType) {
+        return gameProperties.getHireIncome(eventType);
+    }
+
+    @Override
+    public int getHirePrice(Event.EventType eventType) {
+        return gameProperties.getHirePrice(eventType);
     }
 
     private boolean calculateRequirement(RequirementDto.Requirement requirement, Member member) {

@@ -89,9 +89,9 @@ public class MemberServiceImpl implements MemberService {
         } else if (newPosition == 24) {
 //            eventService.add(updatedMember, Event.EventType.BERMUDA);
         } else if (newPosition == 6) {
-//            eventService.add(updatedMember, Event.EventType.GOODY_HUT);
+            eventService.add(updatedMember, eventService.randomGoodyHutEvent());
         } else if (newPosition == 29) {
-//            eventService.add(updatedMember, Event.EventType.BARBARIANS);
+            eventService.add(updatedMember, eventService.randomBarbariansEvent());
         } else if (room.getProperties().stream()
                 .noneMatch(property -> property.getPosition().equals(finalNewPosition))) {
             eventService.add(updatedMember, Event.EventType.BUY_PROPERTY);

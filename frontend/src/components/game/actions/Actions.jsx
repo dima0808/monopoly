@@ -12,6 +12,7 @@ import SettingsDialog from "../actions/SettingsDialog";
 export default function Actions({
     room,
     players,
+    setPlayers,
     properties,
     activeTab,
     setActiveTab,
@@ -218,6 +219,42 @@ export default function Actions({
         }
     };
 
+    const handleChoice = (eventType, choice) => {
+        const token = Cookies.get("token");
+        const username = Cookies.get("username");
+        if (!client || !client.publish) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message:
+                        "Client is not initialized or publish method is not available",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+            return;
+        }
+        try {
+            client.publish({
+                destination: `/app/members/${username}/makeChoice/${eventType}/${choice}`,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    username: username,
+                },
+            });
+            console.log("Handling event choice...");
+        } catch (error) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message: "Error handling event choice (no connection)",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+        }
+    }
+
     const handleSkip = (eventType) => {
         const token = Cookies.get("token");
         const username = Cookies.get("username");
@@ -300,6 +337,11 @@ export default function Actions({
                 return;
             case "DELETE_EVENT":
                 setEvents((prev) => prev.filter((e) => e.type !== event.type));
+                setPlayers((prev) =>
+                    prev.map((player) => {
+                        return player.user.username === event.member.user.username ? event.member : player;
+                    })
+                );
                 return;
             default:
                 return;
@@ -378,6 +420,7 @@ export default function Actions({
                         handleRollDice={handleRollDice}
                         handleBuyProperty={handleBuyProperty}
                         handlePayRent={handlePayRent}
+                        handleChoice={handleChoice}
                         handleSkip={handleSkip}
                         handleEndTurn={handleEndTurn}
                         isCurrentUserTurn={isCurrentUserTurn}

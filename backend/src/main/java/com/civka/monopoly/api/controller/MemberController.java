@@ -35,6 +35,14 @@ public class MemberController {
         return eventService.delete(member, type);
     }
 
+    @MessageMapping("/members/{receiver}/makeChoice/{type}/{choice}")
+    public Event makeChoice(@DestinationVariable String receiver,
+                             @DestinationVariable Event.EventType type,
+                            @DestinationVariable Integer choice) {
+        Member member = userService.findByUsername(receiver).getMember();
+        return eventService.makeChoice(member, type, choice);
+    }
+
     @GetMapping("/api/members/{username}/events")
     public ResponseEntity<List<Event>> getEvents(@PathVariable String username) {
         Member member = userService.findByUsername(username).getMember();

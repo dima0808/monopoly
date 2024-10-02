@@ -6,25 +6,31 @@ import EnemyProperty from "./enemyProperty/EnemyProperty";
 import ForeignProperty from "./foreignProperty/ForeignProperty";
 import GoodyHut from "./goodyHut/GoodyHut";
 import Projects from "./projects/Projects";
-import Union from "./union/Union";
-import Peace from "./peace/Peace";
 
 export default function Events({
-    players,
-    events,
-    properties,
-    isCurrentUserTurn,
-    hasRolledDice,
-    handleRollDice,
-    handleBuyProperty,
-    handlePayRent,
-    handleEndTurn,
-    handleSkip,
-}) {
+                                   players,
+                                   events,
+                                   properties,
+                                   isCurrentUserTurn,
+                                   hasRolledDice,
+                                   handleRollDice,
+                                   handleBuyProperty,
+                                   handlePayRent,
+                                   handleEndTurn,
+                                   handleChoice,
+                                   handleSkip,
+                               }) {
+
     const renderContent = () => {
         if (!events) return null;
         return events.map((event, index) => {
-            const { type, member } = event;
+            const {type, member} = event;
+            if (/^GOODY_HUT_/.test(type)) {
+                return <GoodyHut key={index} type={type} handleChoice={(choice) => handleChoice(type, choice)}/>;
+            }
+            if (/^BARBARIANS_/.test(type)) {
+                return <Barbarians key={index} type={type} handleChoice={(choice) => handleChoice(type, choice)}/>;
+            }
             switch (type) {
                 case "BUY_PROPERTY":
                     if (!properties[member.position]) return null;
@@ -42,13 +48,11 @@ export default function Events({
                         />
                     );
                 case "PROJECTS":
-                    return <Projects key={index} />;
-                case "BARBARIANS":
-                    return <Barbarians key={index} />;
+                    return <Projects key={index}/>;
                 case "DIPLOMACY":
-                    return <Diplomacy key={index} />;
+                    return <Diplomacy key={index}/>;
                 case "ENEMY_PROPERTY":
-                    return <EnemyProperty key={index} />;
+                    return <EnemyProperty key={index}/>;
                 case "FOREIGN_PROPERTY":
                     if (!properties[member.position]) return null;
                     return (
@@ -60,8 +64,6 @@ export default function Events({
                             // handleDeclareWar
                         />
                     );
-                case "GOODY_HUT":
-                    return <GoodyHut key={index} />;
                 default:
                     return null;
             }

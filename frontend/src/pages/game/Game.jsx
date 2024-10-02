@@ -241,7 +241,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                        setActiveTab={setActiveTab} setSelectedProperty={setSelectedProperty}
                        setNotifications={setNotifications}/>
                 <Actions client={client} isConnected={isConnected}
-                         room={room} players={players} properties={properties}
+                         room={room} players={players} setPlayers={setPlayers} properties={properties}
                          activeTab={activeTab} setActiveTab={setActiveTab}
                          selectedProperty={properties[selectedProperty]} setSelectedProperty={setSelectedProperty}
                          managementActiveTab={managementActiveTab} setManagementActiveTab={setManagementActiveTab}
