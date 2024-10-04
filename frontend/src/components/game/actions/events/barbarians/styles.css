@@ -12,3 +12,19 @@
 .object-vertical__barbarians-color .property-img {
     object-position: 0% 22% !important;
 }
+.btn-2-items {
+    flex-direction: column;
+    gap: 2px;
+}
+.btn-2-items .decision-button {
+    width: 85% !important;
+    gap: 6px;
+}
+.div-with-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.bigger-width {
+    width: 55% !important;
+}

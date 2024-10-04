@@ -3,8 +3,7 @@ import goldImg from "../../../../../images/icon-gold.png";
 import goodyHut from "../../../../../images/goody_hut.png";
 import iconStrength from "../../../../../images/icon-strength.png";
 
-export default function GoodyHut({type, handleChoice}) {
-
+export default function GoodyHut({ type, handleChoice }) {
     const renderContent = () => {
         switch (type) {
             case "GOODY_HUT_FREE_GOLD":
@@ -12,10 +11,14 @@ export default function GoodyHut({type, handleChoice}) {
                     <div className="white-blur">
                         <div className="property-grid ">
                             <div className="property-img-div">
-                                <img src={goodyHut} className="property-img" alt="gold"/>
+                                <img
+                                    src={goodyHut}
+                                    className="property-img"
+                                    alt="gold"
+                                />
                             </div>
                             <div className="massage-event-cell">
-                                Mи піздим рускій газ
+                                Goody hut has greeted you and gifted{" "}
                                 <div className="inline-block">
                                     <div className="player-stat-gold width-full pointer no-select">
                                         <img
@@ -23,16 +26,16 @@ export default function GoodyHut({type, handleChoice}) {
                                             className="recourse-img"
                                             alt="gold"
                                         />
-                                        <p>56</p>
+                                        <p>400</p>
                                     </div>
                                 </div>
-                                , ми піздим рускій газ не ту країну сука блять назвали{" "}
-                                <span>Гондурас</span>
                             </div>
                         </div>
                         <div className="proprty-btns-div flex-between">
-                            <button onClick={() => handleChoice(1)}
-                                    className="pay-btn decision-button decision-button-green">
+                            <button
+                                onClick={() => handleChoice(1)}
+                                className="pay-btn decision-button decision-button-green"
+                            >
                                 get:
                                 <div className="player-stat-gold width-full pointer no-select">
                                     <img
@@ -40,7 +43,7 @@ export default function GoodyHut({type, handleChoice}) {
                                         className="recourse-img"
                                         alt="gold"
                                     />
-                                    <p>60</p>
+                                    <p>400</p>
                                 </div>
                             </button>
                         </div>
@@ -51,35 +54,30 @@ export default function GoodyHut({type, handleChoice}) {
                     <div className="white-blur">
                         <div className="property-grid ">
                             <div className="property-img-div">
-                                <img src={goodyHut} className="property-img" alt="gold"/>
+                                <img
+                                    src={goodyHut}
+                                    className="property-img"
+                                    alt="gold"
+                                />
                             </div>
                             <div className="massage-event-cell">
-                                Mи піздім рускіх нах
-                                <div className="inline-block">
-                                    <div className="player-stat-strength width-full pointer no-select">
-                                        <img
-                                            src={iconStrength}
-                                            className="recourse-img strength-recourse-img"
-                                            alt="gold"
-                                        />
-                                        <p>56</p>
-                                    </div>
-                                </div>
-                                , ми піздім рускіх нах не ту країну сука блять назвали{" "}
-                                <span>Гондурас</span>
+                                You have found meteorites, now you have a larger
+                                army!
                             </div>
                         </div>
                         <div className="proprty-btns-div flex-between">
-                            <button onClick={() => handleChoice(1)}
-                                    className="pay-btn decision-button decision-button-red">
-                            get:
+                            <button
+                                onClick={() => handleChoice(1)}
+                                className="pay-btn decision-button decision-button-red"
+                            >
+                                get:
                                 <div className="player-stat-strength width-full pointer no-select">
                                     <img
                                         src={iconStrength}
                                         className="recourse-img strength-recourse-img"
                                         alt="gold"
                                     />
-                                    <p>56</p>
+                                    <p>100</p>
                                 </div>
                             </button>
                         </div>
@@ -90,16 +88,22 @@ export default function GoodyHut({type, handleChoice}) {
                     <div className="white-blur">
                         <div className="property-grid ">
                             <div className="property-img-div">
-                                <img src={goodyHut} className="property-img" alt="gold"/>
+                                <img
+                                    src={goodyHut}
+                                    className="property-img"
+                                    alt="gold"
+                                />
                             </div>
                             <div className="massage-event-cell">
-                                Mи піздим рускій газ, ми отпіздім рускіх нах не ту країну сука блять назвали{" "}
-                                <span>Гондурас</span>
+                                We need resources. We can either collect tribute
+                                from the goody hut or recruit people.
                             </div>
                         </div>
                         <div className="proprty-btns-div flex-between">
-                            <button onClick={() => handleChoice(1)}
-                                    className="pay-btn decision-button decision-button-green">
+                            <button
+                                onClick={() => handleChoice(1)}
+                                className="pay-btn decision-button decision-button-green"
+                            >
                                 get:
                                 <div className="player-stat-gold width-full pointer no-select">
                                     <img
@@ -110,8 +114,10 @@ export default function GoodyHut({type, handleChoice}) {
                                     <p>56</p>
                                 </div>
                             </button>
-                            <button onClick={() => handleChoice(2)}
-                                    className="pay-btn decision-button decision-button-red">
+                            <button
+                                onClick={() => handleChoice(2)}
+                                className="pay-btn decision-button decision-button-green"
+                            >
                                 get:
                                 <div className="player-stat-strength width-full pointer no-select">
                                     <img
@@ -130,15 +136,22 @@ export default function GoodyHut({type, handleChoice}) {
                     <div className="white-blur">
                         <div className="property-grid ">
                             <div className="property-img-div">
-                                <img src={goodyHut} className="property-img" alt="gold"/>
+                                <img
+                                    src={goodyHut}
+                                    className="property-img"
+                                    alt="gold"
+                                />
                             </div>
                             <div className="massage-event-cell">
-                                Халява тобі всі бабло баблішечко дають профіт іді сюда хамстер комбат
+                                Халява тобі всі бабло баблішечко дають профіт
+                                іді сюда хамстер комбат
                             </div>
                         </div>
                         <div className="proprty-btns-div flex-between">
-                            <button onClick={() => handleChoice(1)}
-                                    className="pay-btn decision-button decision-button-green">
+                            <button
+                                onClick={() => handleChoice(1)}
+                                className="pay-btn decision-button decision-button-green"
+                            >
                                 УРАААА
                             </button>
                         </div>
@@ -149,15 +162,21 @@ export default function GoodyHut({type, handleChoice}) {
                     <div className="white-blur">
                         <div className="property-grid ">
                             <div className="property-img-div">
-                                <img src={goodyHut} className="property-img" alt="gold"/>
+                                <img
+                                    src={goodyHut}
+                                    className="property-img"
+                                    alt="gold"
+                                />
                             </div>
                             <div className="massage-event-cell">
                                 Халява тобі знижко на чудесоооооо урааааа
                             </div>
                         </div>
                         <div className="proprty-btns-div flex-between">
-                            <button onClick={() => handleChoice(1)}
-                                    className="pay-btn decision-button decision-button-green">
+                            <button
+                                onClick={() => handleChoice(1)}
+                                className="pay-btn decision-button decision-button-green"
+                            >
                                 УРАА БЛЯЯЯТЬ
                             </button>
                         </div>
@@ -168,15 +187,22 @@ export default function GoodyHut({type, handleChoice}) {
                     <div className="white-blur">
                         <div className="property-grid ">
                             <div className="property-img-div">
-                                <img src={goodyHut} className="property-img" alt="gold"/>
+                                <img
+                                    src={goodyHut}
+                                    className="property-img"
+                                    alt="gold"
+                                />
                             </div>
                             <div className="massage-event-cell">
-                                Пробіжиш на 2 кроки більше некст ходом спідозний підарас
+                                Пробіжиш на 2 кроки більше некст ходом спідозний
+                                підарас
                             </div>
                         </div>
                         <div className="proprty-btns-div flex-between">
-                            <button onClick={() => handleChoice(1)}
-                                    className="pay-btn decision-button decision-button-green">
+                            <button
+                                onClick={() => handleChoice(1)}
+                                className="pay-btn decision-button decision-button-green"
+                            >
                                 УРАААА? :((
                             </button>
                         </div>
@@ -187,15 +213,21 @@ export default function GoodyHut({type, handleChoice}) {
                     <div className="white-blur">
                         <div className="property-grid ">
                             <div className="property-img-div">
-                                <img src={goodyHut} className="property-img" alt="gold"/>
+                                <img
+                                    src={goodyHut}
+                                    className="property-img"
+                                    alt="gold"
+                                />
                             </div>
                             <div className="massage-event-cell">
                                 Виграв газіліон бабла
                             </div>
                         </div>
                         <div className="proprty-btns-div flex-between">
-                            <button onClick={() => handleChoice(1)}
-                                    className="pay-btn decision-button decision-button-green">
+                            <button
+                                onClick={() => handleChoice(1)}
+                                className="pay-btn decision-button decision-button-green"
+                            >
                                 на червоне все
                             </button>
                         </div>
@@ -206,16 +238,21 @@ export default function GoodyHut({type, handleChoice}) {
                     <div className="white-blur">
                         <div className="property-grid ">
                             <div className="property-img-div">
-                                <img src={goodyHut} className="property-img" alt="gold"/>
+                                <img
+                                    src={goodyHut}
+                                    className="property-img"
+                                    alt="gold"
+                                />
                             </div>
                             <div className="massage-event-cell">
-                                Ви зламали гру, ви не заслуговуєте на подарунок пашли нахуй
+                                Ви зламали гру, ви не заслуговуєте на подарунок
+                                пашли нахуй
                             </div>
                         </div>
                     </div>
                 );
         }
-    }
+    };
 
     return (
         <div className="property-color object-vertical__village-color">
