@@ -282,6 +282,8 @@ export default function Barbarians({ type, handleChoice }) {
                         </div>
                     </div>
                 );
+            default:
+                return null;
         }
     };
 

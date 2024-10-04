@@ -131,6 +131,19 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
                         });
                     }
                     break;
+                case "/addEvent":
+                    if (param && targetUser) {
+                        const event = parseInt(param, 10);
+                        client.publish({
+                            destination: "/app/rooms/" + roomName + "/addEvent/" + targetUser,
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                username: username,
+                                event: event,
+                            },
+                        });
+                    }
+                    break;
                 default:
                     client.publish({
                         destination: "/app/chat/sendPublicMessage/" + roomName,

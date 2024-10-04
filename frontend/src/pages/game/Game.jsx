@@ -140,6 +140,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 return;
             case 'ADD_GOLD':
             case 'ADD_STRENGTH':
+            case 'ADD_EVENT':
                 setPlayers(room.members);
                 return;
             default:

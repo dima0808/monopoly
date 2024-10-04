@@ -2,6 +2,7 @@ package com.civka.monopoly.api.controller;
 
 import com.civka.monopoly.api.dto.GameSettingsDto;
 import com.civka.monopoly.api.dto.PropertyDto;
+import com.civka.monopoly.api.entity.Event;
 import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.entity.Room;
 import com.civka.monopoly.api.payload.DiceMessage;
@@ -157,6 +158,19 @@ public class LobbyController {
                 .type(RoomMessage.MessageType.ADD_STRENGTH)
                 .content("Admin added " + strength + " strength for " + nickname)
                 .room(roomService.addStrength(member, strength, admin))
+                .build();
+    }
+
+    @MessageMapping("/rooms/{roomName}/addEvent/{nickname}")
+    @SendTo("/topic/public/{roomName}/game")
+    public RoomMessage addEvent(@DestinationVariable String nickname,
+                                   @Header("username") String admin,
+                                   @Header("event") Integer event) {
+        Member member = userService.findByNickname(nickname).getMember();
+        return RoomMessage.builder()
+                .type(RoomMessage.MessageType.ADD_EVENT)
+                .content("Admin added event " + event + " for " + nickname)
+                .room(roomService.addEvent(member, Event.EventType.values()[event - 1], admin))
                 .build();
     }
 

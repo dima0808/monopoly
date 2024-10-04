@@ -143,8 +143,17 @@ export default function GoodyHut({ type, handleChoice }) {
                                 />
                             </div>
                             <div className="massage-event-cell">
-                                Халява тобі всі бабло баблішечко дають профіт
-                                іді сюда хамстер комбат
+                                You are hosting an event where all non-combatants countries must be present, and they each gift you{" "}
+                                <div className="inline-block">
+                                    <div className="player-stat-gold width-full pointer no-select">
+                                        <img
+                                            src={goldImg}
+                                            className="recourse-img"
+                                            alt="gold"
+                                        />
+                                        <p>50</p>
+                                    </div>
+                                </div>.
                             </div>
                         </div>
                         <div className="proprty-btns-div flex-between">
@@ -152,7 +161,7 @@ export default function GoodyHut({ type, handleChoice }) {
                                 onClick={() => handleChoice(1)}
                                 className="pay-btn decision-button decision-button-green"
                             >
-                                УРАААА
+                                HOORAY
                             </button>
                         </div>
                     </div>
@@ -169,7 +178,7 @@ export default function GoodyHut({ type, handleChoice }) {
                                 />
                             </div>
                             <div className="massage-event-cell">
-                                Халява тобі знижко на чудесоооооо урааааа
+                                You have found blueprints for a wonder of the world.
                             </div>
                         </div>
                         <div className="proprty-btns-div flex-between">
@@ -177,7 +186,7 @@ export default function GoodyHut({ type, handleChoice }) {
                                 onClick={() => handleChoice(1)}
                                 className="pay-btn decision-button decision-button-green"
                             >
-                                УРАА БЛЯЯЯТЬ
+                                HOORAY
                             </button>
                         </div>
                     </div>
@@ -194,8 +203,7 @@ export default function GoodyHut({ type, handleChoice }) {
                                 />
                             </div>
                             <div className="massage-event-cell">
-                                Пробіжиш на 2 кроки більше некст ходом спідозний
-                                підарас
+                                You have received a scout who will increase the distance you can travel by 4 on the next turn.
                             </div>
                         </div>
                         <div className="proprty-btns-div flex-between">
@@ -203,7 +211,7 @@ export default function GoodyHut({ type, handleChoice }) {
                                 onClick={() => handleChoice(1)}
                                 className="pay-btn decision-button decision-button-green"
                             >
-                                УРАААА? :((
+                                HOORAY?
                             </button>
                         </div>
                     </div>
@@ -220,7 +228,7 @@ export default function GoodyHut({ type, handleChoice }) {
                                 />
                             </div>
                             <div className="massage-event-cell">
-                                Виграв газіліон бабла
+                                Your workers have unearthed the largest diamond in the world.
                             </div>
                         </div>
                         <div className="proprty-btns-div flex-between">
@@ -228,7 +236,15 @@ export default function GoodyHut({ type, handleChoice }) {
                                 onClick={() => handleChoice(1)}
                                 className="pay-btn decision-button decision-button-green"
                             >
-                                на червоне все
+                                get:
+                                <div className="player-stat-gold width-full pointer no-select">
+                                    <img
+                                        src={goldImg}
+                                        className="recourse-img"
+                                        alt="gold"
+                                    />
+                                    <p>4000</p>
+                                </div>
                             </button>
                         </div>
                     </div>

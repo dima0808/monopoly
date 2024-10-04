@@ -23,11 +23,15 @@ public class RoomServiceImpl implements RoomService {
 
     private final GameUtils gameUtils;
     private final PropertyService propertyService;
+    private final EventServiceImpl eventService;
     @Value("${monopoly.app.room.max-size}")
     private Integer maxRoomSize;
 
     @Value("${monopoly.app.room.game.init-gold}")
     private Integer initGold;
+
+    @Value("${monopoly.app.room.game.init-additional-gold}")
+    private Integer initAdditionalGold;
 
     @Value("${monopoly.app.room.game.init-strength}")
     private Integer initStrength;
@@ -220,7 +224,7 @@ public class RoomServiceImpl implements RoomService {
                 .filter(civ -> civ != Member.Civilization.Random)
                 .toList();
         List<Member.Civilization> availableCivilizations = new ArrayList<>(allCivilizations.stream()
-                .filter(civ -> !chosenCivilizations.contains(civ))
+                .filter(civ -> !chosenCivilizations.contains(civ) && civ != Member.Civilization.Random)
                 .toList());
         for (Member member : members) {
             member.setGold(initGold);
@@ -236,7 +240,14 @@ public class RoomServiceImpl implements RoomService {
         }
 
         Random random = new Random();
-        Member randomMember = members.get(random.nextInt(members.size()));
+        int randomIndex = random.nextInt(members.size());
+        int additionalMembers = members.size() - 3;
+        for (int i = 1; i <= additionalMembers; i++) {
+            Member additionalGoldMember = members.get((randomIndex - i) % members.size());
+            additionalGoldMember.setGold(additionalGoldMember.getGold() + initAdditionalGold);
+            memberService.save(additionalGoldMember);
+        }
+        Member randomMember = members.get(randomIndex);
         randomMember.setHasRolledDice(false);
         room.setCurrentTurn(randomMember.getUser().getUsername());
         memberService.save(randomMember);
@@ -296,6 +307,17 @@ public class RoomServiceImpl implements RoomService {
         User adminUser = userService.findByUsername(admin);
         if (adminUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))) {
             member.setStrength(member.getStrength() + strength);
+            return memberService.save(member).getRoom();
+        } else {
+            throw new UserNotAllowedException();
+        }
+    }
+
+    @Override
+    public Room addEvent(Member member, Event.EventType eventType, String admin) {
+        User adminUser = userService.findByUsername(admin);
+        if (adminUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))) {
+            eventService.add(member, eventType);
             return memberService.save(member).getRoom();
         } else {
             throw new UserNotAllowedException();
