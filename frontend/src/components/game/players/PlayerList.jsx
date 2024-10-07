@@ -161,6 +161,115 @@ export default function PlayerList({
     const availableSlots =
         room && room.size ? Array(room.size - players.length).fill(null) : [];
 
+    const renderEraContent = () => {
+        const turn = room.turn;
+        if (turn <= 10) {
+            return (
+                <div className="turn">
+                    <img
+                        src={ancientEraImg}
+                        className="age-img"
+                        alt="Ancient era"
+                    />
+                    <div className="turn-div epoch-div">
+                        <p>Ancient era:1-10</p>
+                    </div>
+                </div>
+            );
+        } else if (turn <= 20) {
+            return (
+                <div className="turn">
+                    <img
+                        src={classicalEraImg}
+                        className="age-img"
+                        alt="Classical era"
+                    />
+                    <div className="turn-div epoch-div">
+                        <p>Classical era:11-20</p>
+                    </div>
+                </div>
+            );
+        } else if (turn <= 30) {
+            return (
+                <div className="turn">
+                    <img
+                        src={medievalEraImg}
+                        className="age-img"
+                        alt="Medieval era"
+                    />
+                    <div className="turn-div epoch-div">
+                        <p>Medieval era:21-30</p>
+                    </div>
+                </div>
+            );
+        } else if (turn <= 40) {
+            return (
+                <div className="turn">
+                    <img
+                        src={renaissanceEraImg}
+                        className="age-img"
+                        alt="Renaissance era"
+                    />
+                    <div className="turn-div epoch-div">
+                        <p>Renaissance era:31-40</p>
+                    </div>
+                </div>
+            );
+        } else if (turn <= 50) {
+            return (
+                <div className="turn">
+                    <img
+                        src={industrialEraImg}
+                        className="age-img"
+                        alt="Industrial era"
+                    />
+                    <div className="turn-div epoch-div">
+                        <p>Industrial era:41-50</p>
+                    </div>
+                </div>
+            );
+        } else if (turn <= 60) {
+            return (
+                <div className="turn">
+                    <img
+                        src={modernEraImg}
+                        className="age-img"
+                        alt="Modern era"
+                    />
+                    <div className="turn-div epoch-div">
+                        <p>Modern era:51-60</p>
+                    </div>
+                </div>
+            );
+        } else if (turn <= 70) {
+            return (
+                <div className="turn">
+                    <img
+                        src={atomicEraImg}
+                        className="age-img"
+                        alt="Atomic era"
+                    />
+                    <div className="turn-div epoch-div">
+                        <p>Atomic era:61-70</p>
+                    </div>
+                </div>
+            );
+        } else if (turn <= 80) {
+            return (
+                <div className="turn">
+                    <img
+                        src={informationEraImg}
+                        className="age-img"
+                        alt="Information era"
+                    />
+                    <div className="turn-div epoch-div">
+                        <p>Information era:71-80</p>
+                    </div>
+                </div>
+            );
+        }
+    }
+
     return (
         <section className="players">
             <div className="player-game">
@@ -249,97 +358,10 @@ export default function PlayerList({
                         )}
                     </div>
                 )}
-                <div className="turn-and-era">
-                    {/* ancient */}
-                    <div className="turn">
-                        <img
-                            src={ancientEraImg}
-                            className="age-img"
-                            alt="stones"
-                        />
-                        <div className="turn-div epoch-div">
-                            <p>Ancient era:0-10</p>
-                        </div>
-                    </div>
-                    {/* classical */}
-                    <div className="turn">
-                        <img
-                            src={classicalEraImg}
-                            className="age-img"
-                            alt="stones"
-                        />
-                        <div className="turn-div epoch-div">
-                            <p>Classical era:10-20</p>
-                        </div>
-                    </div>
-                    {/* medieval */}
-                    <div className="turn">
-                        <img
-                            src={medievalEraImg}
-                            className="age-img"
-                            alt="stones"
-                        />
-                        <div className="turn-div epoch-div">
-                            <p>Medieval era:20-30</p>
-                        </div>
-                    </div>
-                    {/* renaissance */}
-                    <div className="turn">
-                        <img
-                            src={renaissanceEraImg}
-                            className="age-img"
-                            alt="stones"
-                        />
-                        <div className="turn-div epoch-div">
-                            <p>Renaissance era:30-40</p>
-                        </div>
-                    </div>
-                    {/* industrial */}
-                    <div className="turn">
-                        <img
-                            src={industrialEraImg}
-                            className="age-img"
-                            alt="stones"
-                        />
-                        <div className="turn-div epoch-div">
-                            <p>Industrial era:40-50</p>
-                        </div>
-                    </div>
-                    {/* modern */}
-                    <div className="turn">
-                        <img
-                            src={modernEraImg}
-                            className="age-img"
-                            alt="stones"
-                        />
-                        <div className="turn-div epoch-div">
-                            <p>Modern era:40-50</p>
-                        </div>
-                    </div>
-                    {/* atomic */}
-                    <div className="turn">
-                        <img
-                            src={atomicEraImg}
-                            className="age-img"
-                            alt="stones"
-                        />
-                        <div className="turn-div epoch-div">
-                            <p>Atomic era:40-50</p>
-                        </div>
-                    </div>
-                    {/* information */}
-                    <div className="turn">
-                        <img
-                            src={informationEraImg}
-                            className="age-img"
-                            alt="stones"
-                        />
-                        <div className="turn-div epoch-div">
-                            <p>Information era:40-50</p>
-                        </div>
-                    </div>
-                    <div className="torn-counter">43</div>
-                </div>
+                {room.isStarted && <div className="turn-and-era">
+                    {renderEraContent()}
+                    <div className="torn-counter">{room.turn}</div>
+                </div>}
             </div>
         </section>
     );

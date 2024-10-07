@@ -14,7 +14,8 @@ import BarbCell from "./cells/BarbCell";
 export default function Board({
                                   room, players, dice, properties,
                                   setSelectedUser, setIsPrivateChatOpen,
-                                  setActiveTab, setSelectedProperty,
+                                  setActiveTab, setManagementActiveTab,
+                                  setSelectedProperty,
                                   client, isConnected,
                                   setNotifications,
                               }) {
@@ -54,8 +55,9 @@ export default function Board({
     }
 
     const selectProperty = (position) => {
-        setSelectedProperty(properties[position]);
-        setActiveTab("Property");
+        setSelectedProperty(position);
+        setActiveTab("Management");
+        setManagementActiveTab("Property");
     }
 
     return (
@@ -128,11 +130,13 @@ export default function Board({
                     direction="vertical"
                     position={11}
                     property={properties[11]}
+                    selectProperty={() => selectProperty(11)}
                 />
                 <Cell
                     direction="vertical"
                     position={12}
                     property={properties[12]}
+                    selectProperty={() => selectProperty(12)}
                 />
             </div>
 
@@ -144,6 +148,7 @@ export default function Board({
                     noneUpgrades={true}
                     position={47}
                     property={properties[47]}
+                    selectProperty={() => selectProperty(47)}
                 />
                 <Cell
                     direction="horizontal"
@@ -151,22 +156,26 @@ export default function Board({
                     specialType="wonder"
                     position={46}
                     property={properties[46]}
+                    selectProperty={() => selectProperty(46)}
                 />
                 <Cell
                     direction="horizontal"
                     position={45}
                     property={properties[45]}
+                    selectProperty={() => selectProperty(45)}
                 />
                 <Cell
                     direction="horizontal"
                     specialType="government"
                     position={44}
                     property={properties[44]}
+                    selectProperty={() => selectProperty(44)}
                 />
                 <Cell
                     direction="horizontal"
                     position={43}
                     property={properties[43]}
+                    selectProperty={() => selectProperty(43)}
                 />
                 <Cell
                     direction="horizontal"
@@ -174,11 +183,13 @@ export default function Board({
                     specialType="wonder"
                     position={42}
                     property={properties[42]}
+                    selectProperty={() => selectProperty(42)}
                 />
                 <Cell
                     direction="horizontal"
                     position={41}
                     property={properties[41]}
+                    selectProperty={() => selectProperty(41)}
                 />
                 <Cell
                     direction="horizontal"
@@ -186,16 +197,19 @@ export default function Board({
                     specialType="wonder"
                     position={40}
                     property={properties[40]}
+                    selectProperty={() => selectProperty(40)}
                 />
                 <Cell
                     direction="horizontal"
                     position={39}
                     property={properties[39]}
+                    selectProperty={() => selectProperty(39)}
                 />
                 <Cell
                     direction="horizontal"
                     position={38}
                     property={properties[38]}
+                    selectProperty={() => selectProperty(38)}
                 />
             </div>
 
@@ -215,12 +229,14 @@ export default function Board({
                     noneUpgrades={true}
                     position={14}
                     property={properties[14]}
+                    selectProperty={() => selectProperty(14)}
                 />
                 <Cell
                     direction="horizontal"
                     mirror={true}
                     position={15}
                     property={properties[15]}
+                    selectProperty={() => selectProperty(15)}
                 />
                 <Cell
                     direction="horizontal"
@@ -229,12 +245,14 @@ export default function Board({
                     specialType="wonder"
                     position={16}
                     property={properties[16]}
+                    selectProperty={() => selectProperty(16)}
                 />
                 <Cell
                     direction="horizontal"
                     mirror={true}
                     position={17}
                     property={properties[17]}
+                    selectProperty={() => selectProperty(17)}
                 />
                 <Cell
                     direction="horizontal"
@@ -242,12 +260,14 @@ export default function Board({
                     specialType="government"
                     position={18}
                     property={properties[18]}
+                    selectProperty={() => selectProperty(18)}
                 />
                 <Cell
                     direction="horizontal"
                     mirror={true}
                     position={19}
                     property={properties[19]}
+                    selectProperty={() => selectProperty(19)}
                 />
                 <Cell
                     direction="horizontal"
@@ -256,18 +276,21 @@ export default function Board({
                     specialType="wonder"
                     position={20}
                     property={properties[20]}
+                    selectProperty={() => selectProperty(20)}
                 />
                 <Cell
                     direction="horizontal"
                     mirror={true}
                     position={21}
                     property={properties[21]}
+                    selectProperty={() => selectProperty(21)}
                 />
                 <Cell
                     direction="horizontal"
                     mirror={true}
                     position={22}
                     property={properties[22]}
+                    selectProperty={() => selectProperty(22)}
                 />
                 <Cell
                     direction="horizontal"
@@ -276,6 +299,7 @@ export default function Board({
                     specialType="wonder"
                     position={23}
                     property={properties[23]}
+                    selectProperty={() => selectProperty(23)}
                 />
             </div>
 
@@ -289,18 +313,21 @@ export default function Board({
                     specialType="wonder"
                     position={36}
                     property={properties[36]}
+                    selectProperty={() => selectProperty(36)}
                 />
                 <Cell
                     direction="vertical"
                     mirror={true}
                     position={35}
                     property={properties[35]}
+                    selectProperty={() => selectProperty(35)}
                 />
                 <Cell
                     direction="vertical"
                     mirror={true}
                     position={34}
                     property={properties[34]}
+                    selectProperty={() => selectProperty(34)}
                 />
                 <Cell
                     direction="vertical"
@@ -308,6 +335,7 @@ export default function Board({
                     noneUpgrades={true}
                     position={33}
                     property={properties[33]}
+                    selectProperty={() => selectProperty(33)}
                 />
                 <Cell
                     direction="vertical"
@@ -316,12 +344,14 @@ export default function Board({
                     specialType="wonder"
                     position={32}
                     property={properties[32]}
+                    selectProperty={() => selectProperty(32)}
                 />
                 <Cell
                     direction="vertical"
                     mirror={true}
                     position={31}
                     property={properties[31]}
+                    selectProperty={() => selectProperty(31)}
                 />
                 <Cell
                     direction="vertical"
@@ -329,6 +359,7 @@ export default function Board({
                     specialType="encampment"
                     position={30}
                     property={properties[30]}
+                    selectProperty={() => selectProperty(30)}
                 />
                 <BarbCell/>
                 <Cell
@@ -336,6 +367,7 @@ export default function Board({
                     mirror={true}
                     position={28}
                     property={properties[28]}
+                    selectProperty={() => selectProperty(28)}
                 />
                 <Cell
                     direction="vertical"
@@ -344,18 +376,21 @@ export default function Board({
                     specialType="wonder"
                     position={27}
                     property={properties[27]}
+                    selectProperty={() => selectProperty(27)}
                 />
                 <Cell
                     direction="vertical"
                     mirror={true}
                     position={26}
                     property={properties[26]}
+                    selectProperty={() => selectProperty(26)}
                 />
                 <Cell
                     direction="vertical"
                     mirror={true}
                     position={25}
                     property={properties[25]}
+                    selectProperty={() => selectProperty(25)}
                 />
             </div>
 

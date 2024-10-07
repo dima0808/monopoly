@@ -216,6 +216,7 @@ public class RoomServiceImpl implements RoomService {
         }
         Room room = findByName(roomName);
         room.setIsStarted(true);
+        room.setTurn(1);
 
         List<Member> members = room.getMembers();
         List<Member.Civilization> allCivilizations = Arrays.asList(Member.Civilization.values());
@@ -241,16 +242,17 @@ public class RoomServiceImpl implements RoomService {
 
         Random random = new Random();
         int randomIndex = random.nextInt(members.size());
+        Member randomMember = members.get(randomIndex);
+        randomMember.setHasRolledDice(false);
+        room.setRandomMemberIndex(randomIndex);
+        room.setCurrentTurn(randomMember.getUser().getUsername());
+        memberService.save(randomMember);
         int additionalMembers = members.size() - 3;
         for (int i = 1; i <= additionalMembers; i++) {
             Member additionalGoldMember = members.get((randomIndex - i) % members.size());
             additionalGoldMember.setGold(additionalGoldMember.getGold() + initAdditionalGold);
             memberService.save(additionalGoldMember);
         }
-        Member randomMember = members.get(randomIndex);
-        randomMember.setHasRolledDice(false);
-        room.setCurrentTurn(randomMember.getUser().getUsername());
-        memberService.save(randomMember);
         return roomRepository.save(room);
     }
 
@@ -287,6 +289,11 @@ public class RoomServiceImpl implements RoomService {
         Member nextMember = members.get(nextIndex);
         nextMember.setHasRolledDice(false);
         room.setCurrentTurn(nextMember.getUser().getUsername());
+
+        if (nextIndex == room.getRandomMemberIndex()) {
+            room.setTurn(room.getTurn() + 1);
+        }
+
         memberService.save(nextMember);
         return roomRepository.save(room);
     }

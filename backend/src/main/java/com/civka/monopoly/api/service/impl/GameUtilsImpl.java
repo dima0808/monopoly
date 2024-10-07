@@ -180,11 +180,11 @@ public class GameUtilsImpl implements GameUtils {
                     .anyMatch(p -> (p.getPosition().equals(3) || p.getPosition().equals(5)) &&
                             p.getUpgrades().contains(Property.Upgrade.LEVEL_2));
             case OWN_ENCAMPMENT -> member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(7));
+                    .anyMatch(p -> p.getPosition().equals(7) || p.getPosition().equals(30));
             case OWN_CAMPUS -> member.getProperties().stream()
                     .anyMatch(p -> p.getPosition().equals(15) || p.getPosition().equals(45));
             case OWN_LIBRARY -> member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(15) &&
+                    .anyMatch(p -> (p.getPosition().equals(15) || p.getPosition().equals(45)) &&
                             p.getUpgrades().contains(Property.Upgrade.LEVEL_2));
             case OWN_GOVERNMENT_PLAZA -> member.getProperties().stream()
                     .anyMatch(p -> p.getPosition().equals(9) ||
@@ -197,25 +197,25 @@ public class GameUtilsImpl implements GameUtils {
             case OWN_ENTERTAINMENT_COMPLEX -> member.getProperties().stream()
                     .anyMatch(p -> p.getPosition().equals(22) || p.getPosition().equals(38));
             case OWN_ARENA -> member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(22) &&
+                    .anyMatch(p -> (p.getPosition().equals(22) || p.getPosition().equals(38)) &&
                             p.getUpgrades().contains(Property.Upgrade.LEVEL_2));
             case OWN_HARBOR -> member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(31));
+                    .anyMatch(p -> p.getPosition().equals(17) || p.getPosition().equals(31));
             case OWN_INDUSTRIAL_ZONE -> member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(34));
+                    .anyMatch(p -> p.getPosition().equals(9) || p.getPosition().equals(34));
             case OWN_FACTORY -> member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(34) &&
+                    .anyMatch(p -> (p.getPosition().equals(9) || p.getPosition().equals(34)) &&
                             p.getUpgrades().contains(Property.Upgrade.LEVEL_4));
             case OWN_STADIUM -> member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(38) &&
+                    .anyMatch(p -> (p.getPosition().equals(22) || p.getPosition().equals(38)) &&
                             p.getUpgrades().contains(Property.Upgrade.LEVEL_4));
             case OWN_COMMERCIAL_HUB -> member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(43));
+                    .anyMatch(p -> p.getPosition().equals(19) || p.getPosition().equals(43));
             case OWN_STOCK_EXCHANGE -> member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(43) &&
+                    .anyMatch(p -> (p.getPosition().equals(19) || p.getPosition().equals(43)) &&
                             p.getUpgrades().contains(Property.Upgrade.LEVEL_4));
             case OWN_UNIVERSITY -> member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(45) &&
+                    .anyMatch(p -> (p.getPosition().equals(15) || p.getPosition().equals(45)) &&
                             p.getUpgrades().contains(Property.Upgrade.LEVEL_3));
         };
     }

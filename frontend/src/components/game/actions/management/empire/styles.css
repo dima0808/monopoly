@@ -20,6 +20,7 @@
 }
 .white-blur {
     background-color: #aba6a671;
+    padding-bottom: 4px;
 }
 .gray-blur {
     background-color: rgba(125, 123, 123, 0.687);

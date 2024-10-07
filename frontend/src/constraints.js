@@ -147,7 +147,7 @@ import hydroelectricDamImg from "./images/building_dam_build1_icon_hydroelectric
 import foodMarketImg from "./images/building_neighborhood_build1_icon_food_market.png";
 import shoppingMallImg from "./images/building_neighborhood_build2_icon_shopping_mall.png";
 
-export const IP = "localhost";
+export const IP = "26.239.28.186";
 // 26.239.28.186
 // 192.168.0.X
 
@@ -738,9 +738,15 @@ export const requirements = {
     OWN_DEER_OR_FURS: (
         <p className="condition-p">You need to own Deer or Furs</p>
     ),
-    OWN_CAMP: <p className="condition-p">You need to own a Camp</p>,
-    OWN_ENCAMPMENT: <p className="condition-p">You must own an Encampment</p>,
-    OWN_CAMPUS: <p className="condition-p">You should have a Campus</p>,
+    OWN_CAMP: (
+        <p className="condition-p">You need to own a Camp</p>
+    ),
+    OWN_ENCAMPMENT: (
+        <p className="condition-p">You must own an Encampment</p>
+    ),
+    OWN_CAMPUS: (
+        <p className="condition-p">You should have a Campus</p>
+    ),
     OWN_LIBRARY: (
         <p className="condition-p">You should have a Library on Campus</p>
     ),
@@ -761,7 +767,9 @@ export const requirements = {
             You should have an Arena in your Entertainment Complex
         </p>
     ),
-    OWN_HARBOR: <p className="condition-p">You should have a Harbor</p>,
+    OWN_HARBOR: (
+        <p className="condition-p">You should have a Harbor</p>
+    ),
     OWN_INDUSTRIAL_ZONE: (
         <p className="condition-p">You should have an Industrial Zone</p>
     ),

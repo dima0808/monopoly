@@ -43,7 +43,9 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                     return {
                         ...prevRoom,
                         isStarted: true,
-                        currentTurn: room.currentTurn
+                        currentTurn: room.currentTurn,
+                        turn: room.turn,
+                        randomMemberIndex: room.randomMemberIndex
                     };
                 });
                 setPlayers(room.members);
@@ -124,7 +126,8 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 setRoom((prevRoom) => {
                     return {
                         ...prevRoom,
-                        currentTurn: room.currentTurn
+                        currentTurn: room.currentTurn,
+                        turn: room.turn
                     };
                 });
                 setPlayers(room.members);
@@ -214,6 +217,8 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                     size: roomData.size,
                     isStarted: roomData.isStarted,
                     currentTurn: roomData.currentTurn,
+                    turn: roomData.turn,
+                    randomMemberIndex: roomData.randomMemberIndex
                 });
                 setPlayers(roomData.members);
             })
@@ -239,7 +244,8 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 <Board room={room} players={players} dice={dice} properties={properties}
                        client={client} isConnected={isConnected}
                        setSelectedUser={setSelectedUser} setIsPrivateChatOpen={setIsPrivateChatOpen}
-                       setActiveTab={setActiveTab} setSelectedProperty={setSelectedProperty}
+                       setActiveTab={setActiveTab} setManagementActiveTab={setManagementActiveTab}
+                       setSelectedProperty={setSelectedProperty}
                        setNotifications={setNotifications}/>
                 <Actions client={client} isConnected={isConnected}
                          room={room} players={players} setPlayers={setPlayers} properties={properties}
