@@ -9,6 +9,7 @@ import renaissanceEraImg from "../../../images/back-renaissance-era.png";
 import industrialEraImg from "../../../images/back-industrial-era.png";
 import modernEraImg from "../../../images/back-modern-era.png";
 import atomicEraImg from "../../../images/back-atomic-era.png";
+import informationEraImg from "../../../images/back-information-era.png";
 
 import { useNavigate } from "react-router-dom";
 import {
@@ -324,6 +325,17 @@ export default function PlayerList({
                         />
                         <div className="turn-div epoch-div">
                             <p>Atomic era:40-50</p>
+                        </div>
+                    </div>
+                    {/* information */}
+                    <div className="turn">
+                        <img
+                            src={informationEraImg}
+                            className="age-img"
+                            alt="stones"
+                        />
+                        <div className="turn-div epoch-div">
+                            <p>Information era:40-50</p>
                         </div>
                     </div>
                     <div className="torn-counter">43</div>
