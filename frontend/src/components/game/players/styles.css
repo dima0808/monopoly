@@ -439,3 +439,56 @@
         stroke-dashoffset: -189;
     }
 }
+.turn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    gap: 2px;
+    margin-top: 4px;
+    border-radius: 9px;
+    background-color: #d6bd9d;
+    height: 70px;
+    padding: 4px 6px;
+    color: #29170f;
+    font-size: 19px;
+    word-spacing: 1px;
+    letter-spacing: 0.2px;
+    font-weight: 500;
+}
+.turn-div {
+    z-index: 3;
+    width: fit-content;
+    background-color: #e3dfda7b;
+    margin: 12px auto 0 auto;
+    padding: 3px 6px;
+    border-radius: 6px;
+}
+.turn-and-era {
+    position: relative;
+    width: 100%;
+}
+.torn-counter {
+    position: absolute;
+    top: 100%;
+    left: 100%;
+    transform: translate(-80%, -70%);
+    background-color: #e3dfda;
+    text-align: center;
+    padding-top: 4px;
+    border-radius: 50%;
+    color: #29170f;
+    font-size: 24px;
+    width: 41px;
+    height: 41px;
+    border: solid 2px #222;
+    z-index: 10;
+    transition: 0.3s ease-in-out;
+}
+.age-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+}

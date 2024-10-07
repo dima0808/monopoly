@@ -147,91 +147,91 @@ import hydroelectricDamImg from "./images/building_dam_build1_icon_hydroelectric
 import foodMarketImg from "./images/building_neighborhood_build1_icon_food_market.png";
 import shoppingMallImg from "./images/building_neighborhood_build2_icon_shopping_mall.png";
 
-export const IP = '26.239.28.186';
+export const IP = "localhost";
 // 26.239.28.186
 // 192.168.0.X
 
 export const propertiesInfo = {
     1: {
         LEVEL_1: {
-            name: 'Horses',
+            name: "Horses",
             src: resourceHorsesImg,
         },
         LEVEL_2: {
-            name: 'Pasture',
+            name: "Pasture",
             src: resourceHorses2Img,
         },
-        position: 1
+        position: 1,
     },
     2: {
         LEVEL_1: {
-            name: 'Bananas',
+            name: "Bananas",
             src: resourceBananasImg,
         },
         LEVEL_2: {
-            name: 'Plantation',
+            name: "Plantation",
             src: resourceBananas2Img,
         },
-        position: 2
+        position: 2,
     },
     3: {
         LEVEL_1: {
-            name: 'Deer',
+            name: "Deer",
             src: resourceDeerImg,
         },
         LEVEL_2: {
-            name: 'Camp',
+            name: "Camp",
             src: resourceDeer2Img,
         },
-        position: 3
+        position: 3,
     },
     4: {
         LEVEL_1: {
-            name: 'Temple of Artemis',
+            name: "Temple of Artemis",
             src: wonderTempleOfArtemisImg,
         },
-        position: 4
+        position: 4,
     },
     5: {
         LEVEL_1: {
-            name: 'Furs',
+            name: "Furs",
             src: resourceFursImg,
         },
         LEVEL_2: {
-            name: 'Camp',
+            name: "Camp",
             src: resourceFurs2Img,
         },
-        position: 5
+        position: 5,
     },
     7: {
         LEVEL_1: {
-            name: 'Encampment',
+            name: "Encampment",
             src: districtEncampmentImg,
         },
         LEVEL_2: {
-            name: 'Stable',
+            name: "Stable",
             src: districtEncampment2Img,
         },
         LEVEL_3: {
-            name: 'Armory',
+            name: "Armory",
             src: districtEncampment3Img,
         },
         LEVEL_4: {
-            name: 'Military Academy',
+            name: "Military Academy",
             src: districtEncampment4Img,
         },
-        position: 7
+        position: 7,
     },
     8: {
         LEVEL_1: {
-            name: 'Terracotta Army',
+            name: "Terracotta Army",
             src: wonderTerracottaArmyImg,
         },
-        position: 8
+        position: 8,
     },
     9: {
         LEVEL_1: {
-            name: 'Government Plaza',
+            name: "Government Plaza",
             src: districtGovernmentPlazaImg,
         },
         LEVEL_2: {
@@ -239,111 +239,111 @@ export const propertiesInfo = {
             src: districtGovernmentPlaza2Img,
         },
         LEVEL_3: {
-            name: 'Intelligence Agency',
+            name: "Intelligence Agency",
             src: districtGovernmentPlaza3Img,
         },
         LEVEL_4: {
-            name: 'Science Department',
+            name: "Science Department",
             src: districtGovernmentPlaza41Img,
         },
-        position: 9
+        position: 9,
     },
     10: {
         LEVEL_1: {
-            name: 'Industrial Zone',
+            name: "Industrial Zone",
             src: districtIndustrialZoneImg,
         },
         LEVEL_2: {
-            name: 'Workshop',
+            name: "Workshop",
             src: districtIndustrialZone2Img,
         },
         LEVEL_3: {
-            name: 'Factory',
+            name: "Factory",
             src: districtIndustrialZone3Img,
         },
         LEVEL_4: {
-            name: 'Power Plant',
+            name: "Power Plant",
             src: districtIndustrialZone4Img,
         },
-        position: 10
+        position: 10,
     },
     11: {
         LEVEL_1: {
-            name: 'Iron',
+            name: "Iron",
             src: resourceIronImg,
         },
         LEVEL_2: {
-            name: 'Mine',
+            name: "Mine",
             src: resourceIron2Img,
         },
-        position: 11
+        position: 11,
     },
     12: {
         LEVEL_1: {
-            name: 'Crabs',
+            name: "Crabs",
             src: resourceCrabsImg,
         },
         LEVEL_2: {
-            name: 'Fishing Boats',
+            name: "Fishing Boats",
             src: resourceCrabs2Img,
         },
-        position: 12
+        position: 12,
     },
     14: {
         LEVEL_1: {
-            name: 'Reef',
+            name: "Reef",
             src: featureReefImg,
         },
-        position: 14
+        position: 14,
     },
     15: {
         LEVEL_1: {
-            name: 'Campus',
+            name: "Campus",
             src: districtCampusImg,
         },
         LEVEL_2: {
-            name: 'Library',
+            name: "Library",
             src: districtCampus2Img,
         },
         LEVEL_3: {
-            name: 'University',
+            name: "University",
             src: districtCampus3Img,
         },
         LEVEL_4: {
-            name: 'Research Lab',
+            name: "Research Lab",
             src: districtCampus4Img,
         },
-        position: 15
+        position: 15,
     },
     16: {
         LEVEL_1: {
-            name: 'Great Library',
+            name: "Great Library",
             src: wonderGreatLibraryImg,
         },
-        position: 16
+        position: 16,
     },
     17: {
         LEVEL_1: {
-            name: 'Harbor',
+            name: "Harbor",
             src: districtHarborImg,
         },
         LEVEL_2: {
-            name: 'Lighthouse',
+            name: "Lighthouse",
             src: districtHarbor2Img,
         },
         LEVEL_3: {
-            name: 'Shipyard',
+            name: "Shipyard",
             src: districtHarbor3Img,
         },
         LEVEL_4: {
-            name: 'Seaport',
+            name: "Seaport",
             src: districtHarbor4Img,
         },
-        position: 17
+        position: 17,
     },
     18: {
         LEVEL_1: {
-            name: 'Government Plaza',
+            name: "Government Plaza",
             src: districtGovernmentPlazaImg,
         },
         LEVEL_2: {
@@ -351,300 +351,300 @@ export const propertiesInfo = {
             src: districtGovernmentPlaza2Img,
         },
         LEVEL_3: {
-            name: 'Intelligence Agency',
+            name: "Intelligence Agency",
             src: districtGovernmentPlaza3Img,
         },
         LEVEL_4: {
-            name: 'Science Department',
+            name: "Science Department",
             src: districtGovernmentPlaza41Img,
         },
-        position: 18
+        position: 18,
     },
     19: {
         LEVEL_1: {
-            name: 'Commercial Hub',
+            name: "Commercial Hub",
             src: districtCommercialHubImg,
         },
         LEVEL_2: {
-            name: 'Market',
+            name: "Market",
             src: districtCommercialHub2Img,
         },
         LEVEL_3: {
-            name: 'Bank',
+            name: "Bank",
             src: districtCommercialHub3Img,
         },
         LEVEL_4: {
-            name: 'Stock Exchange',
+            name: "Stock Exchange",
             src: districtCommercialHub4Img,
         },
-        position: 19
+        position: 19,
     },
     20: {
         LEVEL_1: {
-            name: 'Casa De Contratacion',
+            name: "Casa De Contratacion",
             src: wonderCasaDeContratacionImg,
         },
-        position: 20
+        position: 20,
     },
     21: {
         LEVEL_1: {
-            name: 'Theatre Square',
+            name: "Theatre Square",
             src: districtTheatreSquareImg,
         },
         LEVEL_2: {
-            name: 'Amphitheater',
+            name: "Amphitheater",
             src: districtTheatreSquare2Img,
         },
         LEVEL_3: {
-            name: 'Art Museum',
+            name: "Art Museum",
             src: districtTheatreSquare3Img,
         },
         LEVEL_4: {
-            name: 'Broadcast Center',
+            name: "Broadcast Center",
             src: districtTheatreSquare4Img,
         },
-        position: 21
+        position: 21,
     },
     22: {
         LEVEL_1: {
-            name: 'Entertainment Complex',
+            name: "Entertainment Complex",
             src: districtEntertainmentComplexImg,
         },
         LEVEL_2: {
-            name: 'Arena',
+            name: "Arena",
             src: districtEntertainmentComplex2Img,
         },
         LEVEL_3: {
-            name: 'Zoo',
+            name: "Zoo",
             src: districtEntertainmentComplex3Img,
         },
         LEVEL_4: {
-            name: 'Stadium',
+            name: "Stadium",
             src: districtEntertainmentComplex4Img,
         },
-        position: 22
+        position: 22,
     },
     23: {
         LEVEL_1: {
-            name: 'Colosseum',
+            name: "Colosseum",
             src: wonderColosseumImg,
         },
-        position: 23
+        position: 23,
     },
     25: {
         LEVEL_1: {
-            name: 'Maize',
+            name: "Maize",
             src: resourceMaizeImg,
         },
         LEVEL_2: {
-            name: 'Farm',
+            name: "Farm",
             src: resourceMaize2Img,
         },
-        position: 25
+        position: 25,
     },
     26: {
         LEVEL_1: {
-            name: 'Wheat',
+            name: "Wheat",
             src: resourceWheatImg,
         },
         LEVEL_2: {
-            name: 'Farm',
+            name: "Farm",
             src: resourceWheat2Img,
         },
-        position: 26
+        position: 26,
     },
     27: {
         LEVEL_1: {
-            name: 'Etemenanki',
+            name: "Etemenanki",
             src: wonderEtemenankiImg,
         },
-        position: 27
+        position: 27,
     },
     28: {
         LEVEL_1: {
-            name: 'Rice',
+            name: "Rice",
             src: resourceRiceImg,
         },
         LEVEL_2: {
-            name: 'Farm',
+            name: "Farm",
             src: resourceRice2Img,
         },
-        position: 28
+        position: 28,
     },
     30: {
         LEVEL_1: {
-            name: 'Encampment',
+            name: "Encampment",
             src: districtEncampmentImg,
         },
         LEVEL_2: {
-            name: 'Stable',
+            name: "Stable",
             src: districtEncampment2Img,
         },
         LEVEL_3: {
-            name: 'Armory',
+            name: "Armory",
             src: districtEncampment3Img,
         },
         LEVEL_4: {
-            name: 'Military Academy',
+            name: "Military Academy",
             src: districtEncampment4Img,
         },
-        position: 30
+        position: 30,
     },
     31: {
         LEVEL_1: {
-            name: 'Harbor',
+            name: "Harbor",
             src: districtHarborImg,
         },
         LEVEL_2: {
-            name: 'Lighthouse',
+            name: "Lighthouse",
             src: districtHarbor2Img,
         },
         LEVEL_3: {
-            name: 'Shipyard',
+            name: "Shipyard",
             src: districtHarbor3Img,
         },
         LEVEL_4: {
-            name: 'Seaport',
+            name: "Seaport",
             src: districtHarbor4Img,
         },
-        position: 31
+        position: 31,
     },
     32: {
         LEVEL_1: {
-            name: 'Mausoleum at Halicarnassus',
+            name: "Mausoleum at Halicarnassus",
             src: wonderMausoleumAtHalicarnassusImg,
         },
-        position: 32
+        position: 32,
     },
     33: {
         LEVEL_1: {
-            name: 'Aqueduct',
+            name: "Aqueduct",
             src: districtAqueductImg,
         },
-        position: 33
+        position: 33,
     },
     34: {
         LEVEL_1: {
-            name: 'Industrial Zone',
+            name: "Industrial Zone",
             src: districtIndustrialZoneImg,
         },
         LEVEL_2: {
-            name: 'Workshop',
+            name: "Workshop",
             src: districtIndustrialZone2Img,
         },
         LEVEL_3: {
-            name: 'Factory',
+            name: "Factory",
             src: districtIndustrialZone3Img,
         },
         LEVEL_4: {
-            name: 'Power Plant',
+            name: "Power Plant",
             src: districtIndustrialZone4Img,
         },
-        position: 34
+        position: 34,
     },
     35: {
         LEVEL_1: {
-            name: 'Dam',
+            name: "Dam",
             src: districtDamImg,
         },
         LEVEL_2: {
-            name: 'Hydroelectric Dam',
+            name: "Hydroelectric Dam",
             src: districtDam2Img,
         },
-        position: 35
+        position: 35,
     },
     36: {
         LEVEL_1: {
-            name: 'Ruhr Valley',
+            name: "Ruhr Valley",
             src: wonderRuhrValleyImg,
         },
-        position: 36
+        position: 36,
     },
     38: {
         LEVEL_1: {
-            name: 'Entertainment Complex',
+            name: "Entertainment Complex",
             src: districtEntertainmentComplexImg,
         },
         LEVEL_2: {
-            name: 'Arena',
+            name: "Arena",
             src: districtEntertainmentComplex2Img,
         },
         LEVEL_3: {
-            name: 'Zoo',
+            name: "Zoo",
             src: districtEntertainmentComplex3Img,
         },
         LEVEL_4: {
-            name: 'Stadium',
+            name: "Stadium",
             src: districtEntertainmentComplex4Img,
         },
-        position: 38
+        position: 38,
     },
     39: {
         LEVEL_1: {
-            name: 'Theatre Square',
+            name: "Theatre Square",
             src: districtTheatreSquareImg,
         },
         LEVEL_2: {
-            name: 'Amphitheater',
+            name: "Amphitheater",
             src: districtTheatreSquare2Img,
         },
         LEVEL_3: {
-            name: 'Art Museum',
+            name: "Art Museum",
             src: districtTheatreSquare3Img,
         },
         LEVEL_4: {
-            name: 'Broadcast Center',
+            name: "Broadcast Center",
             src: districtTheatreSquare4Img,
         },
-        position: 39
+        position: 39,
     },
     40: {
         LEVEL_1: {
-            name: 'Estadio Do Maracana',
+            name: "Estadio Do Maracana",
             src: wonderEstadioDoMaracanaImg,
         },
-        position: 40
+        position: 40,
     },
     41: {
         LEVEL_1: {
-            name: 'Neighborhood',
+            name: "Neighborhood",
             src: districtNeighborhoodImg,
         },
         LEVEL_2: {
-            name: 'Food Market',
+            name: "Food Market",
             src: districtNeighborhood2Img,
         },
-        position: 41
+        position: 41,
     },
     42: {
         LEVEL_1: {
-            name: 'Big Ben',
+            name: "Big Ben",
             src: wonderBigBenImg,
         },
-        position: 42
+        position: 42,
     },
     43: {
         LEVEL_1: {
-            name: 'Commercial Hub',
+            name: "Commercial Hub",
             src: districtCommercialHubImg,
         },
         LEVEL_2: {
-            name: 'Market',
+            name: "Market",
             src: districtCommercialHub2Img,
         },
         LEVEL_3: {
-            name: 'Bank',
+            name: "Bank",
             src: districtCommercialHub3Img,
         },
         LEVEL_4: {
-            name: 'Stock Exchange',
+            name: "Stock Exchange",
             src: districtCommercialHub4Img,
         },
-        position: 43
+        position: 43,
     },
     44: {
         LEVEL_1: {
-            name: 'Government Plaza',
+            name: "Government Plaza",
             src: districtGovernmentPlazaImg,
         },
         LEVEL_2: {
@@ -652,103 +652,135 @@ export const propertiesInfo = {
             src: districtGovernmentPlaza2Img,
         },
         LEVEL_3: {
-            name: 'Intelligence Agency',
+            name: "Intelligence Agency",
             src: districtGovernmentPlaza3Img,
         },
         LEVEL_4: {
-            name: 'Science Department',
+            name: "Science Department",
             src: districtGovernmentPlaza41Img,
         },
-        position: 44
+        position: 44,
     },
     45: {
         LEVEL_1: {
-            name: 'Campus',
+            name: "Campus",
             src: districtCampusImg,
         },
         LEVEL_2: {
-            name: 'Library',
+            name: "Library",
             src: districtCampus2Img,
         },
         LEVEL_3: {
-            name: 'University',
+            name: "University",
             src: districtCampus3Img,
         },
         LEVEL_4: {
-            name: 'Research Lab',
+            name: "Research Lab",
             src: districtCampus4Img,
         },
-        position: 45
+        position: 45,
     },
     46: {
         LEVEL_1: {
-            name: 'Oxford University',
+            name: "Oxford University",
             src: wonderOxfordUniversityImg,
         },
-        position: 46
+        position: 46,
     },
     47: {
         LEVEL_1: {
-            name: 'Spaceport',
+            name: "Spaceport",
             src: districtSpaceportImg,
         },
-        position: 47
-    }
+        position: 47,
+    },
 };
 
 export const upgradesImages = {
-    "Pasture": pastureImg,
-    "Plantation": plantationImg,
-    "Camp": campImg,
-    "Mine": mineImg,
+    Pasture: pastureImg,
+    Plantation: plantationImg,
+    Camp: campImg,
+    Mine: mineImg,
     "Fishing Boats": fishingBoatsImg,
-    "Farm": farmImg,
-    "Stable": stableImg,
-    "Armory": armoryImg,
+    Farm: farmImg,
+    Stable: stableImg,
+    Armory: armoryImg,
     "Military Academy": militaryAcademyImg,
     "Warlord's Throne": warlordsThroneImg,
     "Intelligence Agency": intelligenceAgencyImg,
     "War Department": warDepartmentImg,
     "Science Department": scienceDepartmentImg,
     "Culture Department": cultureDepartmentImg,
-    "Workshop": workshopImg,
-    "Factory": factoryImg,
+    Workshop: workshopImg,
+    Factory: factoryImg,
     "Power Plant": powerPlantImg,
-    "Library": libraryImg,
-    "University": universityImg,
+    Library: libraryImg,
+    University: universityImg,
     "Research Lab": researchLabImg,
-    "Lighthouse": lighthouseImg,
-    "Shipyard": shipyardImg,
-    "Seaport": seaportImg,
-    "Market": marketImg,
-    "Bank": bankImg,
+    Lighthouse: lighthouseImg,
+    Shipyard: shipyardImg,
+    Seaport: seaportImg,
+    Market: marketImg,
+    Bank: bankImg,
     "Stock Exchange": stockExchangeImg,
-    "Amphitheater": amphitheaterImg,
+    Amphitheater: amphitheaterImg,
     "Art Museum": artMuseumImg,
     "Broadcast Center": broadcastCenterImg,
-    "Arena": arenaImg,
-    "Zoo": zooImg,
-    "Stadium": stadiumImg,
+    Arena: arenaImg,
+    Zoo: zooImg,
+    Stadium: stadiumImg,
     "Hydroelectric Dam": hydroelectricDamImg,
     "Food Market": foodMarketImg,
     "Shopping Mall": shoppingMallImg,
-}
+};
 
 export const requirements = {
-    "OWN_DEER_OR_FURS": <p className="condition-p">You need to own Deer or Furs</p>,
-    "OWN_CAMP": <p className="condition-p">You need to own a Camp</p>,
-    "OWN_ENCAMPMENT": <p className="condition-p">You must own an Encampment</p>,
-    "OWN_CAMPUS": <p className="condition-p">You should have a Campus</p>,
-    "OWN_LIBRARY": <p className="condition-p">You should have a Library on Campus</p>,
-    "OWN_UNIVERSITY": <p className="condition-p">You should have a University on Campus</p>,
-    "OWN_GOVERNMENT_PLAZA": <p className="condition-p">You should have a Government Plaza</p>,
-    "NOT_OWN_GOVERNMENT_PLAZA": <p className="condition-p">You shouldn't have a Government Plaza</p>,
-    "OWN_ENTERTAINMENT_COMPLEX": <p className="condition-p">You should have an Entertainment Complex</p>,
-    "OWN_ARENA": <p className="condition-p">You should have an Arena in your Entertainment Complex</p>,
-    "OWN_HARBOR": <p className="condition-p">You should have a Harbor</p>,
-    "OWN_INDUSTRIAL_ZONE": <p className="condition-p">You should have an Industrial Zone</p>,
-    "OWN_FACTORY": <p className="condition-p">You should have a Factory in your Industrial Zone</p>,
-    "OWN_STADIUM": <p className="condition-p">You should have a Stadium in your Entertainment Complex</p>,
-    "OWN_COMMERCIAL_HUB": <p className="condition-p">You should have a Commercial Hub</p>,
-    "OWN_STOCK_EXCHANGE": <p className="condition-p">You need to own a Stock Exchange in your Commercial Hub</p>
-}
+    OWN_DEER_OR_FURS: (
+        <p className="condition-p">You need to own Deer or Furs</p>
+    ),
+    OWN_CAMP: <p className="condition-p">You need to own a Camp</p>,
+    OWN_ENCAMPMENT: <p className="condition-p">You must own an Encampment</p>,
+    OWN_CAMPUS: <p className="condition-p">You should have a Campus</p>,
+    OWN_LIBRARY: (
+        <p className="condition-p">You should have a Library on Campus</p>
+    ),
+    OWN_UNIVERSITY: (
+        <p className="condition-p">You should have a University on Campus</p>
+    ),
+    OWN_GOVERNMENT_PLAZA: (
+        <p className="condition-p">You should have a Government Plaza</p>
+    ),
+    NOT_OWN_GOVERNMENT_PLAZA: (
+        <p className="condition-p">You shouldn't have a Government Plaza</p>
+    ),
+    OWN_ENTERTAINMENT_COMPLEX: (
+        <p className="condition-p">You should have an Entertainment Complex</p>
+    ),
+    OWN_ARENA: (
+        <p className="condition-p">
+            You should have an Arena in your Entertainment Complex
+        </p>
+    ),
+    OWN_HARBOR: <p className="condition-p">You should have a Harbor</p>,
+    OWN_INDUSTRIAL_ZONE: (
+        <p className="condition-p">You should have an Industrial Zone</p>
+    ),
+    OWN_FACTORY: (
+        <p className="condition-p">
+            You should have a Factory in your Industrial Zone
+        </p>
+    ),
+    OWN_STADIUM: (
+        <p className="condition-p">
+            You should have a Stadium in your Entertainment Complex
+        </p>
+    ),
+    OWN_COMMERCIAL_HUB: (
+        <p className="condition-p">You should have a Commercial Hub</p>
+    ),
+    OWN_STOCK_EXCHANGE: (
+        <p className="condition-p">
+            You need to own a Stock Exchange in your Commercial Hub
+        </p>
+    ),
+};
