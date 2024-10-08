@@ -24,7 +24,7 @@ export default function Events({
     const renderContent = () => {
         if (!events) return null;
         return events.map((event, index) => {
-            const {type, member} = event;
+            const {type, member, roll} = event;
             if (/^GOODY_HUT_/.test(type)) {
                 return <GoodyHut key={index} type={type} handleChoice={(choice) => handleChoice(type, choice)}/>;
             }
@@ -59,6 +59,10 @@ export default function Events({
                         <ForeignProperty
                             key={index}
                             property={properties[member.position]}
+                            member={players.find(
+                                (player) => player.id === member.id
+                            )}
+                            roll={roll}
                             handlePayRent={() => handlePayRent(member.position)}
                             onSkip={() => handleSkip("FOREIGN_PROPERTY")}
                             // handleDeclareWar

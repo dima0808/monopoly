@@ -3,7 +3,7 @@ import goldImg from "../../../../../images/icon-gold.png";
 import goldPerTurnImg from "../../../../../images/icon-gold-per-turn.png";
 // import tourismImg from "../../../../../images/icon-tourism/.png";
 import { propertiesInfo } from "../../../../../constraints";
-export default function ForeignProperty({ property, handlePayRent, onSkip }) {
+export default function ForeignProperty({ property, roll, member, handlePayRent, onSkip }) {
     const propertyName = propertiesInfo[property.position]["LEVEL_1"].name;
 
     const ownedLevels = property.upgrades.filter(
@@ -34,7 +34,8 @@ export default function ForeignProperty({ property, handlePayRent, onSkip }) {
                                     className="recourse-img"
                                     alt="gold"
                                 />
-                                {property.goldOnStep}
+                                {property.goldOnStep +
+                                    ((property.position === 7 || property.position === 30) ? "x" : "")}
                             </div>
                         </div>
                         <div className="gold-on-step stats-div">
@@ -63,6 +64,7 @@ export default function ForeignProperty({ property, handlePayRent, onSkip }) {
 
                 <div className="decision-buttons flex-between">
                     <button
+                        disabled={member?.gold < property.goldOnStep * (roll || 1)}
                         onClick={
                             property.mortgage === -1 ? handlePayRent : onSkip
                         }
@@ -77,7 +79,7 @@ export default function ForeignProperty({ property, handlePayRent, onSkip }) {
                                         className="recourse-img"
                                         alt="gold"
                                     />
-                                    <p>{property.goldOnStep}</p>
+                                    <p>{property.goldOnStep * (roll || 1)}</p>
                                 </div>
                             </>
                         ) : (

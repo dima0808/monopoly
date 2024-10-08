@@ -28,10 +28,16 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event add(Member member, Event.EventType type) {
+    public Event findByMemberAndType(Member member, Event.EventType type) {
+        return eventRepository.findByMemberAndType(member, type).orElse(null);
+    }
+
+    @Override
+    public Event add(Member member, Event.EventType type, Integer roll) {
         Event event = Event.builder()
                 .member(member)
                 .type(type)
+                .roll(roll)
                 .build();
         EventMessage eventMessage = EventMessage.builder()
                 .type(EventMessage.MessageType.ADD_EVENT)
@@ -43,8 +49,13 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public Event add(Member member, Event.EventType type) {
+        return add(member, type, null);
+    }
+
+    @Override
     public Event delete(Member member, Event.EventType type) {
-        Event event = eventRepository.findByMemberAndType(member, type).orElse(null);
+        Event event = findByMemberAndType(member, type);
 
         if (event != null) {
             eventRepository.delete(event);

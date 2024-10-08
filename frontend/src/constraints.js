@@ -17,7 +17,7 @@ import districtEncampment2Img from "./images/icon_district_encampment2.png";
 import districtEncampment3Img from "./images/icon_district_encampment3.png";
 import districtEncampment4Img from "./images/icon_district_encampment4.png";
 
-import wonderTerracottaArmyImg from "./images/wonder_terracotta_army.png";
+import wonderAlhambraImg from "./images/wonder_alhambra.png";
 
 import districtGovernmentPlazaImg from "./images/icon_district_government.png";
 import districtGovernmentPlaza2Img from "./images/icon_district_government2.png";
@@ -72,14 +72,17 @@ import wonderColosseumImg from "./images/wonder_colosseum.png";
 
 import resourceMaizeImg from "./images/icon_resource_maize.png";
 import resourceMaize2Img from "./images/icon_resource_maize2.png";
+import resourceMaize3Img from "./images/icon_resource_maize3.png";
 
 import resourceWheatImg from "./images/icon_resource_wheat.png";
 import resourceWheat2Img from "./images/icon_resource_wheat2.png";
+import resourceWheat3Img from "./images/icon_resource_wheat3.png";
 
 import wonderEtemenankiImg from "./images/wonder_etemenanki.png";
 
 import resourceRiceImg from "./images/icon_resource_rice.png";
 import resourceRice2Img from "./images/icon_resource_rice2.png";
+import resourceRice3Img from "./images/icon_resource_rice3.png";
 
 import wonderMausoleumAtHalicarnassusImg from "./images/wonder_mausoleum_at_halicarnassus.png";
 
@@ -107,6 +110,7 @@ import campImg from "./images/icon_improvement_camp.png";
 import mineImg from "./images/icon_improvement_mine.png";
 import fishingBoatsImg from "./images/icon_improvement_fishing_boats.png";
 import farmImg from "./images/icon_improvement_farm.png";
+import waterMillImg from "./images/icon_improvement_water_mill.png";
 
 import stableImg from "./images/building_encampment_build1_icon_stable.png";
 import armoryImg from "./images/building_encampment_build2_icon_armory.png";
@@ -224,8 +228,8 @@ export const propertiesInfo = {
     },
     8: {
         LEVEL_1: {
-            name: "Terracotta Army",
-            src: wonderTerracottaArmyImg,
+            name: "Alhambra",
+            src: wonderAlhambraImg,
         },
         position: 8,
     },
@@ -440,6 +444,10 @@ export const propertiesInfo = {
             name: "Farm",
             src: resourceMaize2Img,
         },
+        LEVEL_3: {
+            name: "Water Mill",
+            src: resourceMaize3Img,
+        },
         position: 25,
     },
     26: {
@@ -450,6 +458,10 @@ export const propertiesInfo = {
         LEVEL_2: {
             name: "Farm",
             src: resourceWheat2Img,
+        },
+        LEVEL_3: {
+            name: "Water Mill",
+            src: resourceWheat3Img,
         },
         position: 26,
     },
@@ -468,6 +480,10 @@ export const propertiesInfo = {
         LEVEL_2: {
             name: "Farm",
             src: resourceRice2Img,
+        },
+        LEVEL_3: {
+            name: "Water Mill",
+            src: resourceRice3Img,
         },
         position: 28,
     },
@@ -697,38 +713,39 @@ export const propertiesInfo = {
 };
 
 export const upgradesImages = {
-    Pasture: pastureImg,
-    Plantation: plantationImg,
-    Camp: campImg,
-    Mine: mineImg,
+    "Pasture": pastureImg,
+    "Plantation": plantationImg,
+    "Camp": campImg,
+    "Mine": mineImg,
     "Fishing Boats": fishingBoatsImg,
-    Farm: farmImg,
-    Stable: stableImg,
-    Armory: armoryImg,
+    "Farm": farmImg,
+    "Water Mill": waterMillImg,
+    "Stable": stableImg,
+    "Armory": armoryImg,
     "Military Academy": militaryAcademyImg,
     "Warlord's Throne": warlordsThroneImg,
     "Intelligence Agency": intelligenceAgencyImg,
     "War Department": warDepartmentImg,
     "Science Department": scienceDepartmentImg,
     "Culture Department": cultureDepartmentImg,
-    Workshop: workshopImg,
-    Factory: factoryImg,
+    "Workshop": workshopImg,
+    "Factory": factoryImg,
     "Power Plant": powerPlantImg,
-    Library: libraryImg,
-    University: universityImg,
+    "Library": libraryImg,
+    "University": universityImg,
     "Research Lab": researchLabImg,
-    Lighthouse: lighthouseImg,
-    Shipyard: shipyardImg,
-    Seaport: seaportImg,
-    Market: marketImg,
-    Bank: bankImg,
+    "Lighthouse": lighthouseImg,
+    "Shipyard": shipyardImg,
+    "Seaport": seaportImg,
+    "Market": marketImg,
+    "Bank": bankImg,
     "Stock Exchange": stockExchangeImg,
-    Amphitheater: amphitheaterImg,
+    "Amphitheater": amphitheaterImg,
     "Art Museum": artMuseumImg,
     "Broadcast Center": broadcastCenterImg,
-    Arena: arenaImg,
-    Zoo: zooImg,
-    Stadium: stadiumImg,
+    "Arena": arenaImg,
+    "Zoo": zooImg,
+    "Stadium": stadiumImg,
     "Hydroelectric Dam": hydroelectricDamImg,
     "Food Market": foodMarketImg,
     "Shopping Mall": shoppingMallImg,
@@ -736,7 +753,7 @@ export const upgradesImages = {
 
 export const requirements = {
     OWN_DEER_OR_FURS: (
-        <p className="condition-p">You need to own Deer or Furs</p>
+        <p priority={1} className="condition-p">You need to own Deer or Furs</p>
     ),
     OWN_CAMP: (
         <p className="condition-p">You need to own a Camp</p>
@@ -745,7 +762,7 @@ export const requirements = {
         <p className="condition-p">You must own an Encampment</p>
     ),
     OWN_CAMPUS: (
-        <p className="condition-p">You should have a Campus</p>
+        <p priority={1} className="condition-p">You should have a Campus</p>
     ),
     OWN_LIBRARY: (
         <p className="condition-p">You should have a Library on Campus</p>
@@ -760,35 +777,27 @@ export const requirements = {
         <p className="condition-p">You shouldn't have a Government Plaza</p>
     ),
     OWN_ENTERTAINMENT_COMPLEX: (
-        <p className="condition-p">You should have an Entertainment Complex</p>
+        <p priority={1} className="condition-p">You should have an Entertainment Complex</p>
     ),
     OWN_ARENA: (
-        <p className="condition-p">
-            You should have an Arena in your Entertainment Complex
-        </p>
+        <p className="condition-p">You should have an Arena in your Entertainment Complex</p>
     ),
     OWN_HARBOR: (
         <p className="condition-p">You should have a Harbor</p>
     ),
     OWN_INDUSTRIAL_ZONE: (
-        <p className="condition-p">You should have an Industrial Zone</p>
+        <p priority={1} className="condition-p">You should have an Industrial Zone</p>
     ),
     OWN_FACTORY: (
-        <p className="condition-p">
-            You should have a Factory in your Industrial Zone
-        </p>
+        <p className="condition-p">You should have a Factory in your Industrial Zone</p>
     ),
     OWN_STADIUM: (
-        <p className="condition-p">
-            You should have a Stadium in your Entertainment Complex
-        </p>
+        <p className="condition-p">You should have a Stadium in your Entertainment Complex</p>
     ),
     OWN_COMMERCIAL_HUB: (
-        <p className="condition-p">You should have a Commercial Hub</p>
+        <p priority={1} className="condition-p">You should have a Commercial Hub</p>
     ),
     OWN_STOCK_EXCHANGE: (
-        <p className="condition-p">
-            You need to own a Stock Exchange in your Commercial Hub
-        </p>
+        <p className="condition-p">You need to own a Stock Exchange in your Commercial Hub</p>
     ),
 };

@@ -97,7 +97,11 @@ public class MemberServiceImpl implements MemberService {
             eventService.add(updatedMember, Event.EventType.BUY_PROPERTY);
         } else if (updatedMember.getProperties().stream()
                 .noneMatch(property -> property.getPosition().equals(finalNewPosition))) {
-            eventService.add(updatedMember, Event.EventType.FOREIGN_PROPERTY);
+            if (newPosition == 7 || newPosition == 30) {
+                eventService.add(updatedMember, Event.EventType.FOREIGN_PROPERTY, firstRoll + secondRoll);
+            } else {
+                eventService.add(updatedMember, Event.EventType.FOREIGN_PROPERTY);
+            }
         }
 
         Chat roomChat = chatService.findByName(room.getName());
@@ -289,6 +293,10 @@ public class MemberServiceImpl implements MemberService {
         int onStep = gameUtils.calculateGoldOnStep(property);
         if (member.getGold() < onStep) {
             throw new UserNotAllowedException();
+        }
+        if (position == 7 || position == 30) {
+            Event event = eventService.findByMemberAndType(member, Event.EventType.FOREIGN_PROPERTY);
+            onStep = onStep * event.getRoll();
         }
         member.setGold(member.getGold() - onStep);
         memberRepository.save(member);

@@ -1,7 +1,11 @@
 import "./styles.css";
 import goldPerTurnImg from "../../../../../images/icon-gold-per-turn.png";
 import goldImg from "../../../../../images/icon-gold.png";
-import breadAndCircusesImg from "../../../../../images/icon_project_bread_and_circuses.png";
+
+import warDepartmentImg from "../../../../../images/building_government_build3-3_icon_gov_military.png";
+import scienceDepartmentImg from "../../../../../images/building_government_build3-1_icon_gov_science.png";
+import cultureDepartmentImg from "../../../../../images/building_government_build3-2_icon_gov_culture.png";
+
 // import tourismImg from "../../../../../images/icon-tourism.png";
 import {
     propertiesInfo,
@@ -9,6 +13,7 @@ import {
     upgradesImages,
 } from "../../../../../constraints";
 import Cookies from "js-cookie";
+import {useState} from "react";
 
 export default function Property({
     currentUser,
@@ -19,7 +24,297 @@ export default function Property({
 }) {
     const propertyName = propertiesInfo[property.position]["LEVEL_1"].name;
 
-    console.log(property);
+    const [selectedDepartment, setSelectedDepartment] = useState("War");
+
+    const renderDepartmentContent = (department) => {
+        switch (department) {
+            case "War":
+                return (
+                    <div className="property-modifier-div government property-div-compleated">
+                        <h3 className="property-modifier-h3">
+                            War Department
+                        </h3>
+                        <div className="property-grid-3 ">
+                            <div className="property-gridimg-img-div">
+                                <img
+                                    src={warDepartmentImg}
+                                    className="property-img"
+                                    alt="government"
+                                />
+                            </div>
+                            <p className="condition-p"></p>
+                            <div className="property-new-stats">
+                                <div className="property-mini-flex">
+                                    <p className="property-new-stats-p">
+                                        g.o.s
+                                    </p>
+                                    <div className="player-stat-gold width-full pointer no-select">
+                                        <img
+                                            src={goldImg}
+                                            className="recourse-img"
+                                            alt="government"
+                                        />
+                                        20
+                                    </div>
+                                </div>
+                                <div className="property-mini-flex">
+                                    <p className="property-new-stats-p">
+                                        g.p.t
+                                    </p>
+                                    <div className="player-stat-gold gold-per-turn width-full pointer no-select">
+                                        <img
+                                            src={goldPerTurnImg}
+                                            className="recourse-img"
+                                            alt="government"
+                                        />
+                                        40
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            case "Science":
+                return (
+                    <div className="property-modifier-div government">
+                        <h3 className="property-modifier-h3">
+                            Science Department
+                        </h3>
+                        <div className="property-grid-3 ">
+                            <div className="property-gridimg-img-div">
+                                <img
+                                    src={scienceDepartmentImg}
+                                    className="property-img"
+                                    alt="government"
+                                />
+                            </div>
+                            <p className="condition-p"></p>
+                            <div className="property-new-stats">
+                                <div className="property-mini-flex">
+                                    <p className="property-new-stats-p">
+                                        g.o.s
+                                    </p>
+                                    <div className="player-stat-gold width-full pointer no-select">
+                                        <img
+                                            src={goldImg}
+                                            className="recourse-img"
+                                            alt="gold"
+                                        />
+                                        20
+                                    </div>
+                                </div>
+                                <div className="property-mini-flex">
+                                    <p className="property-new-stats-p">
+                                        g.p.t
+                                    </p>
+                                    <div className="player-stat-gold gold-per-turn width-full pointer no-select">
+                                        <img
+                                            src={goldPerTurnImg}
+                                            className="recourse-img"
+                                            alt="gold"
+                                        />
+                                        40
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            case "Culture":
+                return (
+                    <div className="property-modifier-div government">
+                        <h3 className="property-modifier-h3">
+                            Culture Department
+                        </h3>
+                        <div className="property-grid-3 ">
+                            <div className="property-gridimg-img-div">
+                                <img
+                                    src={cultureDepartmentImg}
+                                    className="property-img"
+                                    alt="government"
+                                />
+                            </div>
+                            <p className="condition-p"></p>
+                            <div className="property-new-stats">
+                                <div className="property-mini-flex">
+                                    <p className="property-new-stats-p">
+                                        g.o.s
+                                    </p>
+                                    <div className="player-stat-gold width-full pointer no-select">
+                                        <img
+                                            src={goldImg}
+                                            className="recourse-img"
+                                            alt="gold"
+                                        />
+                                        20
+                                    </div>
+                                </div>
+                                <div className="property-mini-flex">
+                                    <p className="property-new-stats-p">
+                                        g.p.t
+                                    </p>
+                                    <div className="player-stat-gold gold-per-turn width-full pointer no-select">
+                                        <img
+                                            src={goldPerTurnImg}
+                                            className="recourse-img"
+                                            alt="gold"
+                                        />
+                                        40
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            default:
+                return null;
+        }
+    }
+
+    const renderDepartmentBuff = (department) => {
+        switch (department) {
+            case "War":
+                return (
+                    <div className="property-modifier-div government-efect modifiered">
+                        <h3 className="property-modifier-h3">War</h3>
+                        <div className="property-grid-3">
+                            <div className="property-gridimg-img-div">
+                                <img
+                                    src={goldImg}
+                                    className="property-img"
+                                    alt="government"
+                                />
+                            </div>
+                            <p className="condition-p">
+                                Вайна вайна убивать резать
+                            </p>
+                            <div className="property-new-stats">
+                                <div className="property-mini-flex">
+                                    <p className="property-new-stats-p">
+                                        g.o.s
+                                    </p>
+                                    <div className="player-stat-gold width-full pointer no-select">
+                                        <img
+                                            src={goldImg}
+                                            className="recourse-img"
+                                            alt="gold"
+                                        />
+                                        100
+                                    </div>
+                                </div>
+                                <div className="property-mini-flex">
+                                    <p className="property-new-stats-p">
+                                        g.o.t
+                                    </p>
+                                    <div className="player-stat-gold gold-per-turn width-full pointer no-select">
+                                        <img
+                                            src={goldPerTurnImg}
+                                            className="recourse-img"
+                                            alt="gold"
+                                        />
+                                        1
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            case "Science":
+                return (
+                    <div className="property-modifier-div government-efect modifiered">
+                        <h3 className="property-modifier-h3">Science</h3>
+                        <div className="property-grid-3">
+                            <div className="property-gridimg-img-div">
+                                <img
+                                    src={goldImg}
+                                    className="property-img"
+                                    alt="government"
+                                />
+                            </div>
+                            <p className="condition-p">
+                                фрі сім
+                            </p>
+                            <div className="property-new-stats">
+                                <div className="property-mini-flex">
+                                    <p className="property-new-stats-p">
+                                        g.o.s
+                                    </p>
+                                    <div className="player-stat-gold width-full pointer no-select">
+                                        <img
+                                            src={goldImg}
+                                            className="recourse-img"
+                                            alt="gold"
+                                        />
+                                        100
+                                    </div>
+                                </div>
+                                <div className="property-mini-flex">
+                                    <p className="property-new-stats-p">
+                                        g.o.t
+                                    </p>
+                                    <div className="player-stat-gold gold-per-turn width-full pointer no-select">
+                                        <img
+                                            src={goldPerTurnImg}
+                                            className="recourse-img"
+                                            alt="gold"
+                                        />
+                                        1
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            case "Culture":
+                return (
+                    <div className="property-modifier-div government-efect modifiered">
+                        <h3 className="property-modifier-h3">Culture</h3>
+                        <div className="property-grid-3">
+                            <div className="property-gridimg-img-div">
+                                <img
+                                    src={goldImg}
+                                    className="property-img"
+                                    alt="government"
+                                />
+                            </div>
+                            <p className="condition-p">
+                                культура культура культура
+                            </p>
+                            <div className="property-new-stats">
+                                <div className="property-mini-flex">
+                                    <p className="property-new-stats-p">
+                                        g.o.s
+                                    </p>
+                                    <div className="player-stat-gold width-full pointer no-select">
+                                        <img
+                                            src={goldImg}
+                                            className="recourse-img"
+                                            alt="gold"
+                                        />
+                                        100
+                                    </div>
+                                </div>
+                                <div className="property-mini-flex">
+                                    <p className="property-new-stats-p">
+                                        g.o.t
+                                    </p>
+                                    <div className="player-stat-gold gold-per-turn width-full pointer no-select">
+                                        <img
+                                            src={goldPerTurnImg}
+                                            className="recourse-img"
+                                            alt="gold"
+                                        />
+                                        1
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            default:
+                return null;
+        }
+    }
 
     if (!property.member) {
         const propertyFirstLevel = property.upgrades.find(
@@ -116,13 +411,16 @@ export default function Property({
                                     </div>
                                     <div>
                                         {(() => {
-                                            return upgradeRequirement ? (
-                                                Object.entries(
-                                                    upgradeRequirement.requirements
-                                                ).map(([key]) => requirements[key])
-                                            ) : (
-                                                <p className="condition-p"></p>
-                                            );
+                                            if (!upgradeRequirement) {
+                                                return <p className="condition-p"></p>;
+                                            }
+                                            const sortedRequirements = Object.entries(upgradeRequirement.requirements)
+                                                .sort(([keyA], [keyB]) => {
+                                                    const priorityA = requirements[keyA].props.priority || 0;
+                                                    const priorityB = requirements[keyB].props.priority || 0;
+                                                    return priorityB - priorityA;
+                                                });
+                                            return sortedRequirements.map(([key]) => requirements[key]);
                                         })()}
                                     </div>
                                     <div className="property-new-stats">
@@ -158,15 +456,58 @@ export default function Property({
                             </div>
                         );
                     })}
+                    {(property.position === 9 ||
+                            property.position === 18 ||
+                            property.position === 44) &&
+                        <div className="property-color project-color property-color-government">
+                            <h2 className="project-color-h2"></h2>
+                            <div className="property-government-choose">
+                                <div
+                                    onClick={() => setSelectedDepartment("War")}
+                                    className={"project-div-img project-div-img-compleated" +
+                                        (selectedDepartment === "War" ? " project-div-img-selected" : "")}>
+                                    <img
+                                        src={warDepartmentImg}
+                                        className="project-img"
+                                        alt="government"
+                                    />
+                                </div>
+                                <div
+                                    onClick={() => setSelectedDepartment("Science")}
+                                    className={"project-div-img" +
+                                        (selectedDepartment === "Science" ? " project-div-img-selected" : "")}>
+                                    <img
+                                        src={scienceDepartmentImg}
+                                        className="project-img"
+                                        alt="government"
+                                    />
+                                </div>
+                                <div
+                                    onClick={() => setSelectedDepartment("Culture")}
+                                    className={"project-div-img" +
+                                        (selectedDepartment === "Culture" ? " project-div-img-selected" : "")}>
+                                    <img
+                                        src={cultureDepartmentImg}
+                                        className="project-img"
+                                        alt="governmentd"
+                                    />
+                                </div>
+                            </div>
+                            {renderDepartmentContent(selectedDepartment)}
+
+                            <h2 className="government-efect-h2">Government effect:</h2>
+
+                            {renderDepartmentBuff(selectedDepartment)}
+                        </div>}
                 </div>
             </div>
         );
     }
-
     const ownedLevels = property.upgrades.filter(
         (upgrade) => upgrade.isOwned && upgrade.level.startsWith("LEVEL")
     );
     const highestOwnedLevel = ownedLevels[ownedLevels.length - 1];
+
     const propertyHighestLevelInfo =
         propertiesInfo[property.position][highestOwnedLevel.level];
 
@@ -271,13 +612,16 @@ export default function Property({
                                 </div>
                                 <div>
                                     {(() => {
-                                        return upgradeRequirement ? (
-                                            Object.entries(
-                                                upgradeRequirement.requirements
-                                            ).map(([key]) => requirements[key])
-                                        ) : (
-                                            <p className="condition-p"></p>
-                                        );
+                                        if (!upgradeRequirement) {
+                                            return <p className="condition-p"></p>;
+                                        }
+                                        const sortedRequirements = Object.entries(upgradeRequirement.requirements)
+                                            .sort(([keyA], [keyB]) => {
+                                                const priorityA = requirements[keyA].props.priority || 0;
+                                                const priorityB = requirements[keyB].props.priority || 0;
+                                                return priorityB - priorityA;
+                                            });
+                                        return sortedRequirements.map(([key]) => requirements[key]);
                                     })()}
                                 </div>
                                 <div className="property-new-stats">
@@ -583,163 +927,49 @@ export default function Property({
                 {/*        </div>*/}
                 {/*    </div>*/}
                 {/*</div>*/}
-                <div className="property-color project-color property-color-government">
-                    <h2 className="project-color-h2">Choose your building</h2>
-                    <div className="property-government-choose">
-                        <div className="project-div-img">
-                            <img
-                                src={breadAndCircusesImg}
-                                className="project-img"
-                                alt="gold"
-                            />
-                        </div>
-                        <div className="project-div-img project-div-img-selected">
-                            <img
-                                src={breadAndCircusesImg}
-                                className="project-img"
-                                alt="gold"
-                            />
-                        </div>
-                        <div className="project-div-img project-div-img-compleated">
-                            <img
-                                src={breadAndCircusesImg}
-                                className="project-img"
-                                alt="gold"
-                            />
-                        </div>
-                    </div>
-                    <div className="property-modifier-div government property-div-compleated">
-                        <h3 className="property-modifier-h3">
-                            breadAndCircusesImg
-                        </h3>
-                        <div className="property-grid-3 ">
-                            <div className="property-gridimg-img-div">
+                {(property.position === 9 ||
+                    property.position === 18 ||
+                    property.position === 44) &&
+                    <div className="property-color project-color property-color-government">
+                        <h2 className="project-color-h2">Choose your building</h2>
+                        <div className="property-government-choose">
+                            <div
+                                onClick={() => setSelectedDepartment("War")}
+                                className={"project-div-img project-div-img-compleated" +
+                                    (selectedDepartment === "War" ? " project-div-img-selected" : "")}>
                                 <img
-                                    src={breadAndCircusesImg}
-                                    className="property-img"
-                                    alt="breadAndCircusesImg"
+                                    src={warDepartmentImg}
+                                    className="project-img"
+                                    alt="government"
                                 />
                             </div>
-                            <p className="condition-p"></p>
-                            <div className="property-new-stats">
-                                <div className="property-mini-flex">
-                                    <p className="property-new-stats-p">
-                                        g.o.s
-                                    </p>
-                                    <div className="player-stat-gold width-full pointer no-select">
-                                        <img
-                                            src={goldImg}
-                                            className="recourse-img"
-                                            alt="gold"
-                                        />
-                                        20
-                                    </div>
-                                </div>
-                                <div className="property-mini-flex">
-                                    <p className="property-new-stats-p">
-                                        g.p.t
-                                    </p>
-                                    <div className="player-stat-gold gold-per-turn width-full pointer no-select">
-                                        <img
-                                            src={goldPerTurnImg}
-                                            className="recourse-img"
-                                            alt="gold"
-                                        />
-                                        40
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {/* <div className="property-modifier-div government">
-                        <h3 className="property-modifier-h3">
-                            breadAndCircusesImg
-                        </h3>
-                        <div className="property-grid-3 ">
-                            <div className="property-gridimg-img-div">
+                            <div
+                                onClick={() => setSelectedDepartment("Science")}
+                                className={"project-div-img" +
+                                    (selectedDepartment === "Science" ? " project-div-img-selected" : "")}>
                                 <img
-                                    src={breadAndCircusesImg}
-                                    className="property-img"
-                                    alt="breadAndCircusesImg"
+                                    src={scienceDepartmentImg}
+                                    className="project-img"
+                                    alt="government"
                                 />
                             </div>
-                            <p className="condition-p"></p>
-                            <div className="property-new-stats">
-                                <div className="property-mini-flex">
-                                    <p className="property-new-stats-p">
-                                        g.o.s
-                                    </p>
-                                    <div className="player-stat-gold width-full pointer no-select">
-                                        <img
-                                            src={goldImg}
-                                            className="recourse-img"
-                                            alt="gold"
-                                        />
-                                        20
-                                    </div>
-                                </div>
-                                <div className="property-mini-flex">
-                                    <p className="property-new-stats-p">
-                                        g.p.t
-                                    </p>
-                                    <div className="player-stat-gold gold-per-turn width-full pointer no-select">
-                                        <img
-                                            src={goldPerTurnImg}
-                                            className="recourse-img"
-                                            alt="gold"
-                                        />
-                                        40
-                                    </div>
-                                </div>
+                            <div
+                                onClick={() => setSelectedDepartment("Culture")}
+                                className={"project-div-img" +
+                                    (selectedDepartment === "Culture" ? " project-div-img-selected" : "")}>
+                                <img
+                                    src={cultureDepartmentImg}
+                                    className="project-img"
+                                    alt="governmentd"
+                                />
                             </div>
                         </div>
-                    </div> */}
-                    <h2 className="government-efect-h2">Government effect:</h2>
+                        {renderDepartmentContent(selectedDepartment)}
 
-                    <div className="property-modifier-div government-efect modifiered">
-                        <h3 className="property-modifier-h3">iron</h3>
-                        <div className="property-grid-3">
-                            <div className="property-gridimg-img-div">
-                                <img
-                                    src={breadAndCircusesImg}
-                                    className="property-img"
-                                    alt="gold"
-                                />
-                            </div>
-                            <p className="condition-p">
-                                buff <span>промишлєну зону</span>
-                            </p>
-                            <div className="property-new-stats">
-                                <div className="property-mini-flex">
-                                    <p className="property-new-stats-p">
-                                        g.o.s
-                                    </p>
-                                    <div className="player-stat-gold width-full pointer no-select">
-                                        <img
-                                            src={goldImg}
-                                            className="recourse-img"
-                                            alt="gold"
-                                        />
-                                        100
-                                    </div>
-                                </div>
-                                <div className="property-mini-flex">
-                                    <p className="property-new-stats-p">
-                                        g.o.t
-                                    </p>
-                                    <div className="player-stat-gold gold-per-turn width-full pointer no-select">
-                                        <img
-                                            src={goldPerTurnImg}
-                                            className="recourse-img"
-                                            alt="gold"
-                                        />
-                                        1
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        <h2 className="government-efect-h2">Government effect:</h2>
+
+                        {renderDepartmentBuff(selectedDepartment)}
+                    </div>}
                 {Cookies.get("username") === property.member.user.username &&
                     <div className="proprty-btns-div flex-between">
                         {lowestNotOwnedLevel && property.mortgage === -1 && (

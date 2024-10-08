@@ -6,6 +6,7 @@
     cursor: pointer;
     width: 80px;
     height: 80px;
+    border-radius: 50%;
 }
 .property-color {
     border-radius: 6px;
@@ -15,7 +16,7 @@
 }
 .property-grid {
     display: grid;
-
+    padding-bottom: 2px;
     grid-template-columns: 80px 1fr;
 }
 .property-cell-name {

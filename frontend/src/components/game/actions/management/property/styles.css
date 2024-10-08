@@ -68,11 +68,11 @@
 .property-new-stats {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    gap:3px;
     background-color: #eeeeee53;
     height: 100%;
     min-height: 44px;
-    padding-bottom: 1px;
+    padding: 1px 0;
     border-radius: 0 0 0 6px;
 }
 .property-new-stats .player-stat-gold,
@@ -94,10 +94,13 @@
     justify-content: flex-end;
 }
 .property-grid-3 .condition-p {
-    text-align: center;
+    text-indent: 6px;
     line-height: 1;
     padding: 1px 2px;
-    font-size: 16px;
+    font-size: 14px;
+}
+.property-grid-3 .condition-p:not(:first-child){
+    margin: 2px 0;
 }
 .modifiered {
     outline: 3px solid #116908;
@@ -151,7 +154,7 @@
     outline: 3px solid #041241;
 }
 .property-color-government {
-    margin: 9px 0px 4px 0px;
+    margin: 9px 0 4px 0;
     background-color: #403646e2;
     padding: 0 0 2px 0;
 }

@@ -7,6 +7,10 @@ public interface EventService {
 
     Event save(Event event);
 
+    Event findByMemberAndType(Member member, Event.EventType type);
+
+    Event add(Member member, Event.EventType type, Integer roll);
+
     Event add(Member member, Event.EventType type);
 
     Event delete(Member member, Event.EventType type);

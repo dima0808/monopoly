@@ -37,7 +37,8 @@ export default function Cell({direction, mirror = false, noneUpgrades = false, s
                         property.upgrades.find(
                             (upgrade) => upgrade.level === "LEVEL_1"
                         ).price}
-                    {property.member && property.goldOnStep}
+                    {property.member && (property.goldOnStep +
+                        ((property.position === 7 || property.position === 30) ? "x" : ""))}
                 </div>
                 <div
                     className={

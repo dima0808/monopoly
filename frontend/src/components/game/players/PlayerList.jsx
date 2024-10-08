@@ -254,7 +254,7 @@ export default function PlayerList({
                     </div>
                 </div>
             );
-        } else if (turn <= 80) {
+        } else if (turn >= 71) {
             return (
                 <div className="turn">
                     <img
@@ -263,7 +263,7 @@ export default function PlayerList({
                         alt="Information era"
                     />
                     <div className="turn-div epoch-div">
-                        <p>Information era:71-80</p>
+                        <p>Information era:{" "}71+</p>
                     </div>
                 </div>
             );

@@ -20,6 +20,8 @@ public class Event {
 
     private EventType type;
 
+    private Integer roll;
+
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
