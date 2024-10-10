@@ -81,28 +81,7 @@ public class MemberServiceImpl implements MemberService {
         member.setHasRolledDice(true);
         Member updatedMember = memberRepository.save(member);
 
-        int finalNewPosition = newPosition;
-        if (newPosition == 0) {
-//            eventService.add(updatedMember, Event.EventType.START);
-        } else if (newPosition == 13 || newPosition == 37) {
-//            eventService.add(updatedMember, Event.EventType.PROJECTS);
-        } else if (newPosition == 24) {
-//            eventService.add(updatedMember, Event.EventType.BERMUDA);
-        } else if (newPosition == 6) {
-            eventService.add(updatedMember, eventService.randomGoodyHutEvent());
-        } else if (newPosition == 29) {
-            eventService.add(updatedMember, eventService.randomBarbariansEvent());
-        } else if (room.getProperties().stream()
-                .noneMatch(property -> property.getPosition().equals(finalNewPosition))) {
-            eventService.add(updatedMember, Event.EventType.BUY_PROPERTY);
-        } else if (updatedMember.getProperties().stream()
-                .noneMatch(property -> property.getPosition().equals(finalNewPosition))) {
-            if (newPosition == 7 || newPosition == 30) {
-                eventService.add(updatedMember, Event.EventType.FOREIGN_PROPERTY, firstRoll + secondRoll);
-            } else {
-                eventService.add(updatedMember, Event.EventType.FOREIGN_PROPERTY);
-            }
-        }
+        eventService.handleNewPosition(newPosition, updatedMember, firstRoll, secondRoll);
 
         Chat roomChat = chatService.findByName(room.getName());
         ChatMessageDto systemMessage = ChatMessageDto.builder()

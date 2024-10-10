@@ -337,11 +337,13 @@ export default function Actions({
                 return;
             case "DELETE_EVENT":
                 setEvents((prev) => prev.filter((e) => e.type !== event.type));
-                setPlayers((prev) =>
-                    prev.map((player) => {
-                        return player.user.username === event.member.user.username ? event.member : player;
-                    })
-                );
+                if (event.type !== "BERMUDA") {
+                    setPlayers((prev) =>
+                        prev.map((player) => {
+                            return player.user.username === event.member.user.username ? event.member : player;
+                        })
+                    );
+                }
                 return;
             default:
                 return;

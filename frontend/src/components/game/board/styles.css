@@ -71,3 +71,6 @@
 .scroll::-webkit-scrollbar-thumb:hover {
   background-color: #9f8bbc; /* Можна змінити на інший фіолетовий відтінок */
 }
+.hole-animation{
+  filter: contrast(180%);
+}

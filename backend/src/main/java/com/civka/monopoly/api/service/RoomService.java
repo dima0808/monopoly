@@ -40,5 +40,7 @@ public interface RoomService {
 
     Room addEvent(Member member, Event.EventType eventType, String admin);
 
+    Room goToPosition(Member member, Integer position, String admin);
+
     GameSettingsDto getGameSettings();
 }

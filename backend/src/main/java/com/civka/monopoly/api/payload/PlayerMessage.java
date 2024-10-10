@@ -19,6 +19,7 @@ public class PlayerMessage {
     public enum MessageType {
         CHANGE_COLOR,
         CHANGE_CIVILIZATION,
-        ROLL_DICE
+        ROLL_DICE,
+        BERMUDA
     }
 }

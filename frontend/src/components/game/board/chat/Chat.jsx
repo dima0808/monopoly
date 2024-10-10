@@ -144,6 +144,19 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
                         });
                     }
                     break;
+                case "/move":
+                    if (param && targetUser) {
+                        const position = parseInt(param, 10);
+                        client.publish({
+                            destination: "/app/rooms/" + roomName + "/goToPosition/" + targetUser,
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                username: username,
+                                position: position,
+                            },
+                        });
+                    }
+                    break;
                 default:
                     client.publish({
                         destination: "/app/chat/sendPublicMessage/" + roomName,
@@ -200,6 +213,16 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
                                                 та <span className="system-tile-span">{data[2]}</span>
                                             </SystemMessage>
                                         );
+                                    case 'SYSTEM_BERMUDA':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                телепортувався на
+                                                <span className="system-tile-span"> {propertiesInfo[data[1]] ?
+                                                    propertiesInfo[data[1]]['LEVEL_1'].name : 'Адмін даун'}
+                                                </span>
+                                            </SystemMessage>
+                                        );
                                     case 'SYSTEM_PAY_RENT':
                                         return (
                                             <SystemMessage key={index} timestamp={message.timestamp}>
@@ -223,7 +246,7 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
                                             <SystemMessage key={index} timestamp={message.timestamp}>
                                                 гравець <span className="system-span">{data[0]}</span>
                                                 купив
-                                                <span className="system-span"> {propertiesInfo[data[1]]['LEVEL_1'].name}
+                                                <span className="system-tile-span"> {propertiesInfo[data[1]]['LEVEL_1'].name}
                                                 </span>за
                                                 <div className="inline-block">
                                                     <div className="player-stat-gold width-full no-select">

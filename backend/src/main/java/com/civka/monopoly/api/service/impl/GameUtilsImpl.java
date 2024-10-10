@@ -202,9 +202,9 @@ public class GameUtilsImpl implements GameUtils {
             case OWN_HARBOR -> member.getProperties().stream()
                     .anyMatch(p -> p.getPosition().equals(17) || p.getPosition().equals(31));
             case OWN_INDUSTRIAL_ZONE -> member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(9) || p.getPosition().equals(34));
+                    .anyMatch(p -> p.getPosition().equals(10) || p.getPosition().equals(34));
             case OWN_FACTORY -> member.getProperties().stream()
-                    .anyMatch(p -> (p.getPosition().equals(9) || p.getPosition().equals(34)) &&
+                    .anyMatch(p -> (p.getPosition().equals(10) || p.getPosition().equals(34)) &&
                             p.getUpgrades().contains(Property.Upgrade.LEVEL_4));
             case OWN_STADIUM -> member.getProperties().stream()
                     .anyMatch(p -> (p.getPosition().equals(22) || p.getPosition().equals(38)) &&

@@ -2,6 +2,7 @@ package com.civka.monopoly.api.service;
 
 import com.civka.monopoly.api.entity.Event;
 import com.civka.monopoly.api.entity.Member;
+import com.civka.monopoly.api.entity.Room;
 
 public interface EventService {
 
@@ -20,4 +21,8 @@ public interface EventService {
     Event.EventType randomGoodyHutEvent();
 
     Event.EventType randomBarbariansEvent();
+
+    void handleNewPosition(int newPosition, Member member, int firstRoll, int secondRoll);
+
+    Room handleBermudaTriangle(Member member, int requiredPosition);
 }

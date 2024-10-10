@@ -59,6 +59,13 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 setDice({ firstRoll: firstRoll, secondRoll: secondRoll });
                 diceRollAudio.play().then();
                 return;
+            case 'BERMUDA':
+                setPlayers((prevPlayers) => {
+                    return prevPlayers.map(player => {
+                        return player.id === member.id ? member : player;
+                    });
+                });
+                return;
             case 'BUY_PROPERTY':
                 // setProperties((prevProperties) => {
                 //     return {

@@ -156,6 +156,11 @@ export const IP = "26.239.28.186";
 // 192.168.0.X
 
 export const propertiesInfo = {
+    0: {
+        LEVEL_1: {
+            name: "Start",
+        },
+    },
     1: {
         LEVEL_1: {
             name: "Horses",
@@ -206,6 +211,11 @@ export const propertiesInfo = {
             src: resourceFurs2Img,
         },
         position: 5,
+    },
+    6: {
+        LEVEL_1: {
+            name: "Goody Hut",
+        },
     },
     7: {
         LEVEL_1: {
@@ -292,6 +302,11 @@ export const propertiesInfo = {
             src: resourceCrabs2Img,
         },
         position: 12,
+    },
+    13: {
+        LEVEL_1: {
+            name: "Projects",
+        },
     },
     14: {
         LEVEL_1: {
@@ -435,6 +450,11 @@ export const propertiesInfo = {
         },
         position: 23,
     },
+    24: {
+        LEVEL_1: {
+            name: "Bermuda Triangle",
+        },
+    },
     25: {
         LEVEL_1: {
             name: "Maize",
@@ -486,6 +506,11 @@ export const propertiesInfo = {
             src: resourceRice3Img,
         },
         position: 28,
+    },
+    29: {
+        LEVEL_1: {
+            name: "Barbarians",
+        },
     },
     30: {
         LEVEL_1: {
@@ -575,6 +600,11 @@ export const propertiesInfo = {
             src: wonderRuhrValleyImg,
         },
         position: 36,
+    },
+    37: {
+        LEVEL_1: {
+            name: "Projects",
+        },
     },
     38: {
         LEVEL_1: {

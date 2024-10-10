@@ -1,15 +1,19 @@
 package com.civka.monopoly.api.service.impl;
 
-import com.civka.monopoly.api.entity.Event;
-import com.civka.monopoly.api.entity.Member;
+import com.civka.monopoly.api.dto.ChatMessageDto;
+import com.civka.monopoly.api.entity.*;
 import com.civka.monopoly.api.payload.EventMessage;
+import com.civka.monopoly.api.payload.PlayerMessage;
 import com.civka.monopoly.api.repository.EventRepository;
 import com.civka.monopoly.api.repository.MemberRepository;
+import com.civka.monopoly.api.service.ChatMessageService;
+import com.civka.monopoly.api.service.ChatService;
 import com.civka.monopoly.api.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +25,8 @@ public class EventServiceImpl implements EventService {
     private final SimpMessagingTemplate messagingTemplate;
     private final GameUtilsImpl gameUtils;
     private final MemberRepository memberRepository;
+    private final ChatService chatService;
+    private final ChatMessageService chatMessageService;
 
     @Override
     public Event save(Event event) {
@@ -58,6 +64,9 @@ public class EventServiceImpl implements EventService {
         Event event = findByMemberAndType(member, type);
 
         if (event != null) {
+            if (type == Event.EventType.BERMUDA) {
+                handleBermudaTriangle(member, -1);
+            }
             eventRepository.delete(event);
             EventMessage eventMessage = EventMessage.builder()
                     .type(EventMessage.MessageType.DELETE_EVENT)
@@ -153,5 +162,60 @@ public class EventServiceImpl implements EventService {
                 Event.EventType.BARBARIANS_RAGNAROK
         );
         return barbariansEvents.get((int) (Math.random() * barbariansEvents.size()));
+    }
+
+    @Override
+    public void handleNewPosition(int newPosition, Member member, int firstRoll, int secondRoll) {
+        if (newPosition == 0) {
+            // nothing happens
+        } else if (newPosition == 13 || newPosition == 37) {
+//            add(member, Event.EventType.PROJECTS);
+        } else if (newPosition == 24) {
+            add(member, Event.EventType.BERMUDA);
+        } else if (newPosition == 6) {
+            add(member, randomGoodyHutEvent());
+        } else if (newPosition == 29) {
+            add(member, randomBarbariansEvent());
+        } else if (member.getRoom().getProperties().stream()
+                .noneMatch(property -> property.getPosition().equals(newPosition))) {
+            add(member, Event.EventType.BUY_PROPERTY);
+        } else if (member.getProperties().stream()
+                .noneMatch(property -> property.getPosition().equals(newPosition))) {
+            if (newPosition == 7 || newPosition == 30) {
+                add(member, Event.EventType.FOREIGN_PROPERTY, firstRoll + secondRoll);
+            } else {
+                add(member, Event.EventType.FOREIGN_PROPERTY);
+            }
+        }
+    }
+
+    @Override
+    public Room handleBermudaTriangle(Member member, int requiredPosition) {
+        int newPosition = requiredPosition == -1 ? (int) (Math.random() * 48) : requiredPosition;
+        if (newPosition == 24 && requiredPosition == -1) {
+            newPosition = 29; // Easter Egg with barbs
+        }
+        int oldPosition = member.getPosition();
+        member.setPosition(newPosition);
+        Member updatedMember = memberRepository.save(member);
+        handleNewPosition(newPosition, updatedMember, 0, requiredPosition == -1 ? 1 : newPosition - oldPosition);
+
+        String roomName = updatedMember.getRoom().getName();
+        Chat roomChat = chatService.findByName(roomName);
+        ChatMessageDto systemMessage = ChatMessageDto.builder()
+                .type(ChatMessage.MessageType.SYSTEM_BERMUDA)
+                .content(updatedMember.getUser().getNickname() + " " + newPosition)
+                .timestamp(LocalDateTime.now())
+                .build();
+        ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
+        messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
+
+        PlayerMessage playerMessage = PlayerMessage.builder()
+                .type(PlayerMessage.MessageType.BERMUDA)
+                .content("Member " + updatedMember.getUser().getUsername() + " teleported to " + newPosition)
+                .member(updatedMember)
+                .build();
+        messagingTemplate.convertAndSend("/topic/public/" + roomName + "/game", playerMessage);
+        return member.getRoom();
     }
 }

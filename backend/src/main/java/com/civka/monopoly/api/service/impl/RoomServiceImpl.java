@@ -332,6 +332,16 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    public Room goToPosition(Member member, Integer position, String admin) {
+        User adminUser = userService.findByUsername(admin);
+        if (adminUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))) {
+            return eventService.handleBermudaTriangle(member, position);
+        } else {
+            throw new UserNotAllowedException();
+        }
+    }
+
+    @Override
     public GameSettingsDto getGameSettings() {
         return GameSettingsDto.builder()
                 .armySpendings(gameUtils.getArmySpendings())

@@ -174,6 +174,19 @@ public class LobbyController {
                 .build();
     }
 
+    @MessageMapping("/rooms/{roomName}/goToPosition/{nickname}")
+    @SendTo("/topic/public/{roomName}/game")
+    public RoomMessage goToPosition(@DestinationVariable String nickname,
+                                @Header("username") String admin,
+                                @Header("position") Integer position) {
+        Member member = userService.findByNickname(nickname).getMember();
+        return RoomMessage.builder()
+                .type(RoomMessage.MessageType.ADD_EVENT)
+                .content("Admin moved " + nickname + " to position " + position)
+                .room(roomService.goToPosition(member, position, admin))
+                .build();
+    }
+
     @GetMapping("/api/rooms/{roomName}/members")
     public ResponseEntity<List<Member>> getMembers(@PathVariable String roomName) {
         return ResponseEntity.ok(roomService.findByName(roomName).getMembers());

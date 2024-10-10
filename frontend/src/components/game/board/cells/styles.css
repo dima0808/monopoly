@@ -175,3 +175,6 @@
 .full-vertical-cell {
     grid-template-rows: 5px 100px 5px;
 }
+#bermudaTriangle {
+    transition: 2s ease-in-out;
+}

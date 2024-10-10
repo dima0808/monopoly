@@ -6,6 +6,7 @@ import EnemyProperty from "./enemyProperty/EnemyProperty";
 import ForeignProperty from "./foreignProperty/ForeignProperty";
 import GoodyHut from "./goodyHut/GoodyHut";
 import Projects from "./projects/Projects";
+import {useEffect} from "react";
 
 export default function Events({
                                    players,
@@ -20,6 +21,31 @@ export default function Events({
                                    handleChoice,
                                    handleSkip,
                                }) {
+
+    useEffect(() => {
+        if (events.some(event => event.type === "BERMUDA")) {
+            const element = document.getElementById("bermudaTriangle");
+            if (element) {
+                element.classList.add("hole-animation");
+            }
+
+            const timerId = setTimeout(() => {
+
+                handleSkip("BERMUDA");
+                localStorage.removeItem("bermudaTimer");
+            }, 2000);
+
+            localStorage.setItem("bermudaTimer", timerId);
+
+            return () => {
+                clearTimeout(timerId);
+                localStorage.removeItem("bermudaTimer");
+                if (element) {
+                    element.classList.remove("hole-animation");
+                }
+            };
+        }
+    }, [events, handleSkip]);
 
     const renderContent = () => {
         if (!events) return null;
@@ -49,6 +75,8 @@ export default function Events({
                     );
                 case "PROJECTS":
                     return <Projects key={index}/>;
+                case "BERMUDA":
+                    return null; // moved to useEffect
                 case "DIPLOMACY":
                     return <Diplomacy key={index}/>;
                 case "ENEMY_PROPERTY":
