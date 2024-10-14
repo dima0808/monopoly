@@ -788,6 +788,87 @@ export const requirements = {
     OWN_CAMP: (
         <p className="condition-p">You need to own a Camp</p>
     ),
+    MAKE_ONE_ROUND: (
+        <p priority={1} className="condition-p">You need to make 1 round</p>
+    ),
+    MAKE_TWO_ROUNDS: (
+        <p priority={1} className="condition-p">You need to make 2 rounds</p>
+    ),
+    MAKE_THREE_ROUNDS: (
+        <p priority={1} className="condition-p">You need to make 3 rounds</p>
+    ),
+    MAKE_FOUR_ROUNDS: (
+        <p priority={1} className="condition-p">You need to make 4 rounds</p>
+    ),
+    MAKE_FIVE_ROUNDS: (
+        <p priority={1} className="condition-p">You need to make 5 rounds</p>
+    ),
+    MAKE_ONE_TURN: (
+        <p priority={1} className="condition-p">You need to make 1 turn</p>
+    ),
+    MAKE_TWO_TURNS: (
+        <p priority={1} className="condition-p">You need to make 2 turns</p>
+    ),
+    MAKE_THREE_TURNS: (
+        <p priority={1} className="condition-p">You need to make 3 turns</p>
+    ),
+    MAKE_FOUR_TURNS: (
+        <p priority={1} className="condition-p">You need to make 4 turns</p>
+    ),
+    MAKE_FIVE_TURNS: (
+        <p priority={1} className="condition-p">You need to make 5 turns</p>
+    ),
+    HAVE_LOW_GOLD_PER_TURN: (
+        <p className="condition-p">You need to have 40 g.p.t.</p>
+    ),
+    HAVE_MEDIUM_GOLD_PER_TURN: (
+        <p className="condition-p">You need to have 80 g.p.t.</p>
+    ),
+    HAVE_HIGH_GOLD_PER_TURN: (
+        <p className="condition-p">You need to have 120 g.p.t.</p>
+    ),
+    HAVE_LOW_GOLD_CAP: (
+        <p className="condition-p">You need to have 1500 gold</p>
+    ),
+    HAVE_MEDIUM_GOLD_CAP: (
+        <p className="condition-p">You need to have 2000 gold</p>
+    ),
+    HAVE_HIGH_GOLD_CAP: (
+        <p className="condition-p">You need to have 2500 gold</p>
+    ),
+    HAVE_LOW_STRENGTH: (
+        <p className="condition-p">You need to have 300 strength</p>
+    ),
+    HAVE_MEDIUM_STRENGTH: (
+        <p className="condition-p">You need to have 400 strength</p>
+    ),
+    HAVE_HIGH_STRENGTH: (
+        <p className="condition-p">You need to have 500 strength</p>
+    ),
+    ON_CLASSICAL_ERA: (
+        <p className="condition-p">You need to be at least in Classical Era</p>
+    ),
+    ON_MEDIEVAL_ERA: (
+        <p className="condition-p">You need to be at least in Medieval Era</p>
+    ),
+    ON_RENAISSANCE_ERA: (
+        <p className="condition-p">You need to be at least in Renaissance Era</p>
+    ),
+    ON_INDUSTRIAL_ERA: (
+        <p className="condition-p">You need to be at least in Industrial Era</p>
+    ),
+    ON_MODERN_ERA: (
+        <p className="condition-p">You need to be at least in Modern Era</p>
+    ),
+    ON_ATOMIC_ERA: (
+        <p className="condition-p">You need to be at least in Atomic Era</p>
+    ),
+    ON_INFORMATION_ERA: (
+        <p className="condition-p">You need to be at least in Information Era</p>
+    ),
+    HAVE_TWO_RESOURCES: (
+        <p className="condition-p">You need to have at least 2 upgraded resources</p>
+    ),
     OWN_ENCAMPMENT: (
         <p className="condition-p">You must own an Encampment</p>
     ),

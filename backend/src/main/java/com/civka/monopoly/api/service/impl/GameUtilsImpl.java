@@ -99,7 +99,7 @@ public class GameUtilsImpl implements GameUtils {
                 Map<RequirementDto.Requirement, Boolean> requirementMap = new HashMap<>();
                 for (String req : requirements.split(",")) {
                     RequirementDto.Requirement requirement = RequirementDto.Requirement.valueOf(req);
-                    requirementMap.put(requirement, calculateRequirement(requirement, member));
+                    requirementMap.put(requirement, calculateRequirement(requirement, position, member));
                 }
                 allRequirements.add(RequirementDto.builder()
                         .level(upgrade)
@@ -171,7 +171,7 @@ public class GameUtilsImpl implements GameUtils {
         return gameProperties.getHirePrice(eventType);
     }
 
-    private boolean calculateRequirement(RequirementDto.Requirement requirement, Member member) {
+    private boolean calculateRequirement(RequirementDto.Requirement requirement, Integer position, Member member) {
         return switch (requirement) {
             case OWN_DEER_OR_FURS -> member.getProperties().stream()
                     .anyMatch(p -> p.getPosition().equals(3) ||
@@ -179,6 +179,63 @@ public class GameUtilsImpl implements GameUtils {
             case OWN_CAMP -> member.getProperties().stream()
                     .anyMatch(p -> (p.getPosition().equals(3) || p.getPosition().equals(5)) &&
                             p.getUpgrades().contains(Property.Upgrade.LEVEL_2));
+            case MAKE_ONE_ROUND -> member.getProperties().stream()
+                    .anyMatch(p -> p.getPosition().equals(position) &&
+                            p.getRoundOfLastChange() + 1 <= member.getFinishedRounds());
+            case MAKE_TWO_ROUNDS -> member.getProperties().stream()
+                    .anyMatch(p -> p.getPosition().equals(position) &&
+                            p.getRoundOfLastChange() + 2 <= member.getFinishedRounds());
+            case MAKE_THREE_ROUNDS -> member.getProperties().stream()
+                    .anyMatch(p -> p.getPosition().equals(position) &&
+                            p.getRoundOfLastChange() + 3 <= member.getFinishedRounds());
+            case MAKE_FOUR_ROUNDS -> member.getProperties().stream()
+                    .anyMatch(p -> p.getPosition().equals(position) &&
+                            p.getRoundOfLastChange() + 4 <= member.getFinishedRounds());
+            case MAKE_FIVE_ROUNDS -> member.getProperties().stream()
+                    .anyMatch(p -> p.getPosition().equals(position) &&
+                            p.getRoundOfLastChange() + 5 <= member.getFinishedRounds());
+            case MAKE_ONE_TURN -> member.getProperties().stream()
+                    .anyMatch(p -> p.getPosition().equals(position) &&
+                            p.getTurnOfLastChange() + 1 <= member.getRoom().getTurn());
+            case MAKE_TWO_TURNS -> member.getProperties().stream()
+                    .anyMatch(p -> p.getPosition().equals(position) &&
+                            p.getTurnOfLastChange() + 2 <= member.getRoom().getTurn());
+            case MAKE_THREE_TURNS -> member.getProperties().stream()
+                    .anyMatch(p -> p.getPosition().equals(position) &&
+                            p.getTurnOfLastChange() + 3 <= member.getRoom().getTurn());
+            case MAKE_FOUR_TURNS -> member.getProperties().stream()
+                    .anyMatch(p -> p.getPosition().equals(position) &&
+                            p.getTurnOfLastChange() + 4 <= member.getRoom().getTurn());
+            case MAKE_FIVE_TURNS -> member.getProperties().stream()
+                    .anyMatch(p -> p.getPosition().equals(position) &&
+                            p.getTurnOfLastChange() + 5 <= member.getRoom().getTurn());
+            case HAVE_LOW_GOLD_PER_TURN -> calculateGeneralGoldPerTurn(member) >= 40; // TODO: flexible
+            case HAVE_MEDIUM_GOLD_PER_TURN -> calculateGeneralGoldPerTurn(member) >= 80; // TODO: flexible
+            case HAVE_HIGH_GOLD_PER_TURN -> calculateGeneralGoldPerTurn(member) >= 120; // TODO: flexible
+            case HAVE_LOW_GOLD_CAP -> member.getGold() >= 1500; // TODO: flexible
+            case HAVE_MEDIUM_GOLD_CAP -> member.getGold() >= 2000; // TODO: flexible
+            case HAVE_HIGH_GOLD_CAP -> member.getGold() >= 2500; // TODO: flexible
+            case HAVE_LOW_STRENGTH -> member.getStrength() >= 300; // TODO: flexible
+            case HAVE_MEDIUM_STRENGTH -> member.getStrength() >= 400; // TODO: flexible
+            case HAVE_HIGH_STRENGTH -> member.getStrength() >= 500; // TODO: flexible
+            case ON_CLASSICAL_ERA -> member.getRoom().getTurn() > 10;
+            case ON_MEDIEVAL_ERA -> member.getRoom().getTurn() > 20;
+            case ON_RENAISSANCE_ERA -> member.getRoom().getTurn() > 30;
+            case ON_INDUSTRIAL_ERA -> member.getRoom().getTurn() > 40;
+            case ON_MODERN_ERA -> member.getRoom().getTurn() > 50;
+            case ON_ATOMIC_ERA -> member.getRoom().getTurn() > 60;
+            case ON_INFORMATION_ERA -> member.getRoom().getTurn() > 70;
+            case HAVE_TWO_RESOURCES -> member.getProperties().stream()
+                    .filter(p -> (p.getPosition().equals(1) ||
+                            p.getPosition().equals(2) ||
+                            p.getPosition().equals(3) ||
+                            p.getPosition().equals(5) ||
+                            p.getPosition().equals(11) ||
+                            p.getPosition().equals(12) ||
+                            p.getPosition().equals(25) ||
+                            p.getPosition().equals(26) ||
+                            p.getPosition().equals(28)) && p.getUpgrades().contains(Property.Upgrade.LEVEL_2))
+                    .count() >= 2;
             case OWN_ENCAMPMENT -> member.getProperties().stream()
                     .anyMatch(p -> p.getPosition().equals(7) || p.getPosition().equals(30));
             case OWN_CAMPUS -> member.getProperties().stream()

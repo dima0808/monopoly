@@ -96,12 +96,15 @@
 }
 .condition-p {
     max-width: 240px;
-    color: #2b2732;
+    color: #641a2b;
     overflow-wrap: break-word;
     font-size: 18px;
     letter-spacing: -0.5px;
     word-spacing: 1px;
     line-height: 1.1;
+}
+.condition-p-compleated .condition-p {
+    color:#2b2732
 }
 .condition-div-compleated {
     background-color: #cfd1d3cd !important;

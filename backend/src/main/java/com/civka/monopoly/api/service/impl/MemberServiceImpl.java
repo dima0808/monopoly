@@ -65,6 +65,7 @@ public class MemberServiceImpl implements MemberService {
         int newPosition = member.getPosition() + firstRoll + secondRoll;
         if (newPosition > 47) {
             member.setGold(member.getGold() + goldForBypassingStart);
+            member.setFinishedRounds(member.getFinishedRounds() + 1);
             Chat roomChat = chatService.findByName(room.getName());
             ChatMessageDto systemMessage = ChatMessageDto.builder()
                     .type(ChatMessage.MessageType.SYSTEM_BYPASS_START)
@@ -73,6 +74,13 @@ public class MemberServiceImpl implements MemberService {
                     .build();
             ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
             messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
+
+            PlayerMessage playerMessage = PlayerMessage.builder()
+                    .type(PlayerMessage.MessageType.BYPASS_START)
+                    .content("Member " + member.getUser().getUsername() + " bypassed start")
+                    .member(member)
+                    .build();
+            messagingTemplate.convertAndSend("/topic/public/" + room.getName() + "/game", playerMessage);
 
             newPosition -= 48;
         }
@@ -121,6 +129,8 @@ public class MemberServiceImpl implements MemberService {
                 .room(room)
                 .upgrades(List.of(Property.Upgrade.LEVEL_1))
                 .position(position)
+                .roundOfLastChange(updatedMember.getFinishedRounds())
+                .turnOfLastChange(room.getTurn())
                 .mortgage(-1)
                 .build();
         Property updatedProperty = propertyService.save(property);
@@ -188,6 +198,8 @@ public class MemberServiceImpl implements MemberService {
                     .timestamp(LocalDateTime.now())
                     .build();
         }
+        property.setRoundOfLastChange(member.getFinishedRounds());
+        property.setTurnOfLastChange(member.getRoom().getTurn());
         Property updatedProperty = propertyService.save(property);
 
         ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
@@ -244,7 +256,8 @@ public class MemberServiceImpl implements MemberService {
                     .timestamp(LocalDateTime.now())
                     .build();
         }
-
+        property.setRoundOfLastChange(member.getFinishedRounds());
+        property.setTurnOfLastChange(member.getRoom().getTurn());
         Property updatedProperty = propertyService.save(property);
 
         ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);

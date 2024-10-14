@@ -70,6 +70,7 @@ public class RoomServiceImpl implements RoomService {
                 .password(roomDto.getPassword() == null ? null : passwordEncoder.encode(roomDto.getPassword()))
                 .members(new ArrayList<>())
                 .isStarted(false)
+                .turn(1)
                 .build();
         roomRepository.save(room);
         chatService.create(room.getName(), true);
@@ -137,6 +138,9 @@ public class RoomServiceImpl implements RoomService {
                 .civilization(Member.Civilization.Random)
                 .color(availableColor)
                 .position(0)
+                .gold(0)
+                .strength(0)
+                .tourism(0)
                 .build();
         member = memberService.save(member);
         members.add(member);
@@ -216,7 +220,6 @@ public class RoomServiceImpl implements RoomService {
         }
         Room room = findByName(roomName);
         room.setIsStarted(true);
-        room.setTurn(1);
 
         List<Member> members = room.getMembers();
         List<Member.Civilization> allCivilizations = Arrays.asList(Member.Civilization.values());
@@ -233,6 +236,7 @@ public class RoomServiceImpl implements RoomService {
             member.setTourism(0);
             member.setScore(0);
             member.setHasRolledDice(true);
+            member.setFinishedRounds(0);
             if (member.getCivilization() == Member.Civilization.Random) {
                 Member.Civilization randomCivilization = availableCivilizations.remove((int) (Math.random() * availableCivilizations.size()));
                 member.setCivilization(randomCivilization);

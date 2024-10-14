@@ -39,6 +39,9 @@ public class Property {
 
     private Integer mortgage;
 
+    private Integer roundOfLastChange;
+    private Integer turnOfLastChange;
+
     public enum Upgrade {
         LEVEL_1,
         LEVEL_2,

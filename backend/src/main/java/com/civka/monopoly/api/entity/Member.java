@@ -42,6 +42,8 @@ public class Member {
     private Integer position;
     private Boolean hasRolledDice;
 
+    private Integer finishedRounds;
+
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Property> properties = new ArrayList<>();

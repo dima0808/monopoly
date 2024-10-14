@@ -352,7 +352,8 @@ export default function Property({
                                         className="recourse-img"
                                         alt="gold"
                                     />
-                                    {propertyFirstLevel.goldOnStep}
+                                    {propertyFirstLevel.goldOnStep +
+                                        ((property.position === 7 || property.position === 30) ? "x" : "")}
                                 </div>
                             </div>
                             <div className="gold-on-step stats-div">
@@ -426,6 +427,19 @@ export default function Property({
                                     <div className="property-new-stats">
                                         <div className="property-mini-flex">
                                             <p className="property-new-stats-p">
+                                                cost
+                                            </p>
+                                            <div className="player-stat-gold width-full pointer no-select">
+                                                <img
+                                                    src={goldImg}
+                                                    className="recourse-img"
+                                                    alt="gold"
+                                                />
+                                                {upgrade.price}
+                                            </div>
+                                        </div>
+                                        <div className="property-mini-flex">
+                                            <p className="property-new-stats-p">
                                                 g.o.s
                                             </p>
                                             <div className="player-stat-gold width-full pointer no-select">
@@ -434,7 +448,8 @@ export default function Property({
                                                     className="recourse-img"
                                                     alt="gold"
                                                 />
-                                                {upgrade.goldOnStep}
+                                                {upgrade.goldOnStep +
+                                                    ((property.position === 7 || property.position === 30) ? "x" : "")}
                                             </div>
                                         </div>
                                         <div className="property-mini-flex">
@@ -503,6 +518,10 @@ export default function Property({
             </div>
         );
     }
+    const propertyFirstLevel = property.upgrades.find(
+        (upgrade) => upgrade.level === "LEVEL_1"
+    );
+
     const ownedLevels = property.upgrades.filter(
         (upgrade) => upgrade.isOwned && upgrade.level.startsWith("LEVEL")
     );
@@ -535,6 +554,17 @@ export default function Property({
                         />
                     </div>
                     <div className="property-stats-div">
+                        <div className="total-cost stats-div">
+                            Price:
+                            <div className="player-stat-gold  width-full pointer no-select">
+                                <img
+                                    src={goldImg}
+                                    className="recourse-img"
+                                    alt="gold"
+                                />
+                                {propertyFirstLevel.price}
+                            </div>
+                        </div>
                         <div className="gold-on-step stats-div">
                             Gold on step:
                             <div className="player-stat-gold  width-full pointer no-select">
@@ -543,7 +573,8 @@ export default function Property({
                                     className="recourse-img"
                                     alt="gold"
                                 />
-                                {property.goldOnStep}
+                                {property.goldOnStep +
+                                    ((property.position === 7 || property.position === 30) ? "x" : "")}
                             </div>
                         </div>
                         <div className="gold-on-step stats-div">
@@ -577,20 +608,17 @@ export default function Property({
                         property.upgradeRequirements.find(
                             (upg) => upg.level === upgrade.level
                         );
+                    console.log(upgradeRequirement);
                     const hasFalseRequirement = upgradeRequirement
-                        ? Object.values(upgradeRequirement.requirements).some(
-                            (value) => !value
-                        )
-                        : true;
+                        ? Object.values(upgradeRequirement.requirements).some((value) => !value) : false;
+                    const isNextLevel = lowestNotOwnedLevel && upgrade.level === lowestNotOwnedLevel.level;
                     return (
                         <div
                             key={index}
                             className={
-                                "property-modifier-div " +
-                                (upgrade.isOwned ? "modifiered" : "") +
-                                (hasFalseRequirement
-                                    ? " property-div-compleated"
-                                    : "")
+                                "property-modifier-div" +
+                                (upgrade.isOwned ? " modifiered" : "") +
+                                (((!hasFalseRequirement && isNextLevel && property.mortgage === -1) || upgrade.isOwned) ? " property-div-compleated" : "")
                             }
                         >
                             <h3 className="property-modifier-h3">
@@ -621,10 +649,28 @@ export default function Property({
                                                 const priorityB = requirements[keyB].props.priority || 0;
                                                 return priorityB - priorityA;
                                             });
-                                        return sortedRequirements.map(([key]) => requirements[key]);
+                                        return sortedRequirements.map(([key, value]) => (
+                                            <div key={key} className={(value || upgrade.isOwned) ?
+                                                "condition-p-compleated" : ""}>
+                                                {requirements[key]}
+                                            </div>
+                                        ));
                                     })()}
                                 </div>
                                 <div className="property-new-stats">
+                                    <div className="property-mini-flex">
+                                        <p className="property-new-stats-p">
+                                            cost
+                                        </p>
+                                        <div className="player-stat-gold width-full pointer no-select">
+                                            <img
+                                                src={goldImg}
+                                                className="recourse-img"
+                                                alt="gold"
+                                            />
+                                            {upgrade.price}
+                                        </div>
+                                    </div>
                                     <div className="property-mini-flex">
                                         <p className="property-new-stats-p">
                                             g.o.s
@@ -635,7 +681,8 @@ export default function Property({
                                                 className="recourse-img"
                                                 alt="gold"
                                             />
-                                            {upgrade.goldOnStep}
+                                            {upgrade.goldOnStep +
+                                                ((property.position === 7 || property.position === 30) ? "x" : "")}
                                         </div>
                                     </div>
                                     <div className="property-mini-flex">
@@ -1026,8 +1073,7 @@ export default function Property({
                                         alt="gold"
                                     />
                                     <p>
-                                        {ownedLevels[0].price *
-                                            gameSettings.redemptionCoefficient}
+                                        {Math.floor(ownedLevels[0].price * gameSettings.redemptionCoefficient)}
                                     </p>
                                 </div>
                             </button>

@@ -20,6 +20,7 @@ public class PlayerMessage {
         CHANGE_COLOR,
         CHANGE_CIVILIZATION,
         ROLL_DICE,
+        BYPASS_START,
         BERMUDA
     }
 }

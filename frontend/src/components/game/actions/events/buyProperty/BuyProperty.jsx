@@ -15,6 +15,7 @@ export default function BuyProperty({
         (upgrade) => upgrade.level === "LEVEL_1"
     );
 
+    console.log(property);
     return (
         <div className="property-color">
             <h2 className="property-cell-name">
@@ -76,7 +77,8 @@ export default function BuyProperty({
                 </div>
             </div>
 
-            {property.upgradeRequirements.length > 0 &&
+            {(property.upgradeRequirements.length > 0 &&
+                    property.upgradeRequirements[0].level === "LEVEL_1") &&
                 Object.entries(
                     property.upgradeRequirements.find(
                         (upgrade) => upgrade.level === "LEVEL_1"
@@ -85,7 +87,7 @@ export default function BuyProperty({
                     <div
                         key={key}
                         className={`condition-div ${
-                            value ? "condition-div-compleated" : ""
+                            value ? "condition-div-compleated condition-p-compleated" : ""
                         }`}
                     >
                         {requirements[key]}
@@ -96,7 +98,8 @@ export default function BuyProperty({
                 <button
                     disabled={
                         member?.gold < propertyFirstLevel.price ||
-                        (property.upgradeRequirements.length > 0 &&
+                        ((property.upgradeRequirements.length > 0 &&
+                                property.upgradeRequirements[0].level === "LEVEL_1") &&
                             Object.values(
                                 property.upgradeRequirements.find(
                                     (upgrade) => upgrade.level === "LEVEL_1"

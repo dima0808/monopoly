@@ -67,35 +67,6 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 });
                 return;
             case 'BUY_PROPERTY':
-                // setProperties((prevProperties) => {
-                //     return {
-                //         ...prevProperties,
-                //         [property.position]: {
-                //             ...prevProperties[property.position],
-                //             member: property.member,
-                //             upgrades: property.upgrades,
-                //             mortgage: property.mortgage,
-                //             goldOnStep: property.goldOnStep,
-                //             goldPerTurn: property.goldPerTurn,
-                //             upgradeRequirements: property.upgradeRequirements
-                //         }
-                //     };
-                // });
-                setPlayers((prevPlayers) => {
-                    return prevPlayers.map(player => {
-                        return player.id === property.member.id ? property.member : player;
-                    });
-                });
-                getPlayerProperties(roomName, token)
-                    .then((propertiesArray) => {
-                        const propertiesObject = propertiesArray.reduce((acc, property) => {
-                            acc[property.position] = property;
-                            return acc;
-                        }, {});
-                        setProperties(propertiesObject);
-                    })
-                    .catch((error) => setError({message: error.message || "An error occurred"}));
-                return;
             case 'UPGRADE_PROPERTY':
             case 'DOWNGRADE_PROPERTY':
                 // setProperties((prevProperties) => {
@@ -103,6 +74,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 //         ...prevProperties,
                 //         [property.position]: {
                 //             ...prevProperties[property.position],
+                //             member: property.member,
                 //             upgrades: property.upgrades,
                 //             mortgage: property.mortgage,
                 //             goldOnStep: property.goldOnStep,
@@ -138,6 +110,20 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                     };
                 });
                 setPlayers(room.members);
+                getPlayerProperties(roomName, token)
+                    .then((propertiesArray) => {
+                        const propertiesObject = propertiesArray.reduce((acc, property) => {
+                            acc[property.position] = property;
+                            return acc;
+                        }, {});
+                        setProperties(propertiesObject);
+                    })
+                    .catch((error) => setError({message: error.message || "An error occurred"}));
+                return;
+            case 'BYPASS_START':
+                if (member.user.username !== Cookies.get('username')) {
+                    return;
+                }
                 getPlayerProperties(roomName, token)
                     .then((propertiesArray) => {
                         const propertiesObject = propertiesArray.reduce((acc, property) => {
