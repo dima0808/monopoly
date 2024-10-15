@@ -39,6 +39,8 @@ export default function Actions({
     );
     const hasRolledDice = currentUser && currentUser.hasRolledDice;
 
+    const [availableUpgrades, setAvailableUpgrades] = useState(false);
+
     const handleRollDice = useCallback(() => {
         const token = Cookies.get("token");
         const username = Cookies.get("username");
@@ -412,6 +414,46 @@ export default function Actions({
             );
     }, []);
 
+    useEffect(() => {
+        if (!currentUser) return;
+        const hasAvailableUpgrades = Object.keys(properties).some((key) => {
+            const property = properties[key];
+            if (!(property.member && property.member.user.username === currentUser.user.username)) {
+                return false;
+            }
+            const lowestNotOwnedLevel = property.upgrades.find(
+                (upgrade) => !upgrade.isOwned && upgrade.level.startsWith("LEVEL")
+            );
+
+            if (!lowestNotOwnedLevel) return false;
+
+            const ownedLevels = property.upgrades.filter(
+                (upgrade) =>
+                    upgrade.isOwned &&
+                    upgrade.level.startsWith("LEVEL")
+            );
+            const isRedeemDisabled = property.mortgage === -1 || currentUser.gold <
+                Math.floor(ownedLevels[0].price * gameSettings.redemptionCoefficient);
+
+            if (!isRedeemDisabled) return true;
+
+            const isUpgradeDisabled = currentUser.gold < lowestNotOwnedLevel?.price ||
+                (property.upgradeRequirements.length > 0 &&
+                    property.upgradeRequirements.some(
+                        (upg) => upg.level === lowestNotOwnedLevel?.level
+                    ) &&
+                    Object.values(
+                        property.upgradeRequirements.find(
+                            (upgrade) => upgrade.level === lowestNotOwnedLevel?.level
+                        ).requirements
+                    ).some((req) => req === false));
+
+            return !isUpgradeDisabled;
+        });
+
+        setAvailableUpgrades(hasAvailableUpgrades);
+    }, [properties, currentUser]);
+
     const renderContent = () => {
         switch (activeTab) {
             case "Events":
@@ -572,7 +614,7 @@ export default function Actions({
                             setActiveTab("Management");
                             setManagementActiveTab("Empire");
                         }}
-                        className="management-btn"
+                        className={"management-btn" + (availableUpgrades ? " available-upgrade" : "")}
                     >
                         Empire
                     </button>
