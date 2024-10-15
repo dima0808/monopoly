@@ -9,6 +9,7 @@ import com.civka.monopoly.api.repository.MemberRepository;
 import com.civka.monopoly.api.service.ChatMessageService;
 import com.civka.monopoly.api.service.ChatService;
 import com.civka.monopoly.api.service.EventService;
+import com.civka.monopoly.api.service.PropertyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class EventServiceImpl implements EventService {
     private final MemberRepository memberRepository;
     private final ChatService chatService;
     private final ChatMessageService chatMessageService;
+    private final PropertyService propertyService;
 
     @Override
     public Event save(Event event) {
@@ -40,6 +42,20 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event add(Member member, Event.EventType type, Integer roll) {
+        if (type == Event.EventType.FOREIGN_PROPERTY) {
+            Property property = propertyService.findByRoomAndPosition(member.getRoom(), member.getPosition());
+            Member owner = property.getMember();
+            owner.setTourism(owner.getTourism() + gameUtils.calculateTourismOnStep(property));
+            memberRepository.save(owner);
+
+            PlayerMessage playerMessage = PlayerMessage.builder()
+                    .type(PlayerMessage.MessageType.TOURIST)
+                    .content("Member " + member.getUser().getUsername() + " visited " +
+                            owner.getUser().getUsername() + "'s property")
+                    .member(owner)
+                    .build();
+            messagingTemplate.convertAndSend("/topic/public/" + member.getRoom().getName() + "/game", playerMessage);
+        }
         Event event = Event.builder()
                 .member(member)
                 .type(type)

@@ -2,6 +2,7 @@ import "./styles.css";
 import goldImg from "../../../../../images/icon-gold.png";
 import goldPerTurnImg from "../../../../../images/icon-gold-per-turn.png";
 import { propertiesInfo, requirements } from "../../../../../constraints";
+import tourismImg from "../../../../../images/icon-tourism.png";
 // import tourismImg from "../../../../../images/icon-tourism.png";
 
 export default function BuyProperty({
@@ -52,7 +53,18 @@ export default function BuyProperty({
                             {propertyFirstLevel.goldOnStep}
                         </div>
                     </div>
-                    <div className="gold-on-step stats-div">
+                    {propertyFirstLevel.tourismOnStep > 0 && <div className="gold-on-step stats-div">
+                        Tourism on step:
+                        <div className="player-stat-tourism width-full no-select">
+                            <img
+                                src={tourismImg}
+                                className="recourse-img"
+                                alt="tourism"
+                            />
+                            {propertyFirstLevel.tourismOnStep}
+                        </div>
+                    </div>}
+                    {propertyFirstLevel.goldPerTurn > 0 && <div className="gold-on-step stats-div">
                         Gold per turn:
                         <div className="player-stat-gold gold-per-turn width-full pointer no-select">
                             <img
@@ -62,18 +74,7 @@ export default function BuyProperty({
                             />
                             {propertyFirstLevel.goldPerTurn}
                         </div>
-                    </div>
-                    {/* <div className="gold-on-step stats-div">
-                        Tourism:
-                        <div className="player-stat-tourism width-full no-select">
-                            <img
-                                src={tourismImg}
-                                className="recourse-img"
-                                alt="tourism"
-                            />
-                            40
-                        </div>
-                    </div> */}
+                    </div>}
                 </div>
             </div>
 

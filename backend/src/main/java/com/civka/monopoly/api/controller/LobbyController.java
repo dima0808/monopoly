@@ -4,6 +4,7 @@ import com.civka.monopoly.api.dto.GameSettingsDto;
 import com.civka.monopoly.api.dto.PropertyDto;
 import com.civka.monopoly.api.entity.Event;
 import com.civka.monopoly.api.entity.Member;
+import com.civka.monopoly.api.entity.Property;
 import com.civka.monopoly.api.entity.Room;
 import com.civka.monopoly.api.payload.DiceMessage;
 import com.civka.monopoly.api.payload.PlayerMessage;
@@ -101,7 +102,7 @@ public class LobbyController {
     @MessageMapping("/rooms/{roomName}/upgradeProperty/{position}")
     @SendTo("/topic/public/{roomName}/game")
     public RoomMessage upgradeProperty(@DestinationVariable Integer position,
-                                   @Header("username") String username) {
+                                       @Header("username") String username) {
         Member member = userService.findByUsername(username).getMember();
         return RoomMessage.builder()
                 .type(RoomMessage.MessageType.UPGRADE_PROPERTY)
@@ -113,12 +114,38 @@ public class LobbyController {
     @MessageMapping("/rooms/{roomName}/downgradeProperty/{position}")
     @SendTo("/topic/public/{roomName}/game")
     public RoomMessage downgradeProperty(@DestinationVariable Integer position,
-                                   @Header("username") String username) {
+                                         @Header("username") String username) {
         Member member = userService.findByUsername(username).getMember();
         return RoomMessage.builder()
                 .type(RoomMessage.MessageType.DOWNGRADE_PROPERTY)
                 .content("Member " + username + " downgraded property on position " + position)
                 .property(memberService.downgradeProperty(member, position))
+                .build();
+    }
+
+    @MessageMapping("/rooms/{roomName}/upgradeGovernmentPlazaChoice/{position}")
+    @SendTo("/topic/public/{roomName}/game")
+    public RoomMessage upgradeGovernmentPlazaChoice(@DestinationVariable Integer position,
+                                                    @Header("username") String username,
+                                                    @Header("choice") Property.Upgrade upgradeChoice) {
+        Member member = userService.findByUsername(username).getMember();
+        return RoomMessage.builder()
+                .type(RoomMessage.MessageType.UPGRADE_PROPERTY)
+                .content("Member " + username + " upgraded Government Plaza with " + upgradeChoice)
+                .property(memberService.upgradeProperty(member, position, upgradeChoice))
+                .build();
+    }
+
+    @MessageMapping("/rooms/{roomName}/downgradeGovernmentPlazaChoice/{position}")
+    @SendTo("/topic/public/{roomName}/game")
+    public RoomMessage downgradeGovernmentPlazaChoice(@DestinationVariable Integer position,
+                                                      @Header("username") String username,
+                                                      @Header("choice") Property.Upgrade upgradeChoice) {
+        Member member = userService.findByUsername(username).getMember();
+        return RoomMessage.builder()
+                .type(RoomMessage.MessageType.DOWNGRADE_PROPERTY)
+                .content("Member " + username + " downgraded property on position " + position)
+                .property(memberService.downgradeProperty(member, position, upgradeChoice))
                 .build();
     }
 
@@ -142,7 +169,7 @@ public class LobbyController {
                                @Header("gold") Integer gold) {
         Member member = userService.findByNickname(nickname).getMember();
         return RoomMessage.builder()
-                .type(RoomMessage.MessageType.ADD_GOLD)
+                .type(RoomMessage.MessageType.CHEAT_ADD_GOLD)
                 .content("Admin added " + gold + " gold for " + nickname)
                 .room(roomService.addGold(member, gold, admin))
                 .build();
@@ -155,7 +182,7 @@ public class LobbyController {
                                @Header("strength") Integer strength) {
         Member member = userService.findByNickname(nickname).getMember();
         return RoomMessage.builder()
-                .type(RoomMessage.MessageType.ADD_STRENGTH)
+                .type(RoomMessage.MessageType.CHEAT_ADD_STRENGTH)
                 .content("Admin added " + strength + " strength for " + nickname)
                 .room(roomService.addStrength(member, strength, admin))
                 .build();
@@ -168,7 +195,7 @@ public class LobbyController {
                                    @Header("event") Integer event) {
         Member member = userService.findByNickname(nickname).getMember();
         return RoomMessage.builder()
-                .type(RoomMessage.MessageType.ADD_EVENT)
+                .type(RoomMessage.MessageType.CHEAT_ADD_EVENT)
                 .content("Admin added event " + event + " for " + nickname)
                 .room(roomService.addEvent(member, Event.EventType.values()[event - 1], admin))
                 .build();
@@ -181,7 +208,7 @@ public class LobbyController {
                                 @Header("position") Integer position) {
         Member member = userService.findByNickname(nickname).getMember();
         return RoomMessage.builder()
-                .type(RoomMessage.MessageType.ADD_EVENT)
+                .type(RoomMessage.MessageType.CHEAT_ADD_EVENT)
                 .content("Admin moved " + nickname + " to position " + position)
                 .room(roomService.goToPosition(member, position, admin))
                 .build();

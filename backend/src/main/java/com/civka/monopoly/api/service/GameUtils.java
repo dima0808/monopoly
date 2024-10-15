@@ -16,6 +16,10 @@ public interface GameUtils {
 
     int getGoldOnStepByLevel(Integer position, Property.Upgrade level);
 
+    int calculateTourismOnStep(Property property);
+
+    int getTourismOnStepByLevel(Integer position, Property.Upgrade upgrade);
+
     int calculateGoldPerTurn(Property property);
 
     int calculateGeneralGoldPerTurn(Member member);

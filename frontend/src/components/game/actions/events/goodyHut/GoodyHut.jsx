@@ -77,7 +77,7 @@ export default function GoodyHut({ type, handleChoice }) {
                                         className="recourse-img strength-recourse-img"
                                         alt="gold"
                                     />
-                                    <p>100</p>
+                                    <p>80</p>
                                 </div>
                             </button>
                         </div>
@@ -111,7 +111,7 @@ export default function GoodyHut({ type, handleChoice }) {
                                         className="recourse-img"
                                         alt="gold"
                                     />
-                                    <p>56</p>
+                                    <p>300</p>
                                 </div>
                             </button>
                             <button
@@ -125,7 +125,7 @@ export default function GoodyHut({ type, handleChoice }) {
                                         className="recourse-img strength-recourse-img"
                                         alt="gold"
                                     />
-                                    <p>56</p>
+                                    <p>90</p>
                                 </div>
                             </button>
                         </div>
@@ -243,7 +243,7 @@ export default function GoodyHut({ type, handleChoice }) {
                                         className="recourse-img"
                                         alt="gold"
                                     />
-                                    <p>4000</p>
+                                    <p>1800</p>
                                 </div>
                             </button>
                         </div>

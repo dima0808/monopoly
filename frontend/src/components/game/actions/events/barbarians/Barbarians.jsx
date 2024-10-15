@@ -33,7 +33,7 @@ export default function Barbarians({ type, handleChoice }) {
                                         className="recourse-img"
                                         alt="gold"
                                     />
-                                    <p>56</p>
+                                    <p>80</p>
                                 </div>
                             </button>
                             <button
@@ -47,7 +47,7 @@ export default function Barbarians({ type, handleChoice }) {
                                         className="recourse-img strength-recourse-img"
                                         alt="gold"
                                     />
-                                    <p>56</p>
+                                    <p>50</p>
                                 </div>
                             </button>
                         </div>
@@ -136,7 +136,7 @@ export default function Barbarians({ type, handleChoice }) {
                                         className="recourse-img strength-recourse-img"
                                         alt="gold"
                                     />
-                                    <p>55</p>
+                                    <p>60</p>
                                 </div>
                             </button>
                         </div>

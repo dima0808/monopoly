@@ -23,8 +23,8 @@ import districtGovernmentPlazaImg from "./images/icon_district_government.png";
 import districtGovernmentPlaza2Img from "./images/icon_district_government2.png";
 import districtGovernmentPlaza3Img from "./images/icon_district_government3.png";
 import districtGovernmentPlaza41Img from "./images/icon_district_government4-1_sience.png";
-// import districtGovernmentPlaza42Img from "./images/icon_district_government4-2_military.png";
-// import districtGovernmentPlaza43Img from "./images/icon_district_government4-3_culture.png";
+import districtGovernmentPlaza42Img from "./images/icon_district_government4-2_military.png";
+import districtGovernmentPlaza43Img from "./images/icon_district_government4-3_culture.png";
 
 import districtIndustrialZoneImg from "./images/icon_district_industrial_zone.png";
 import districtIndustrialZone2Img from "./images/icon_district_industrial_zone2.png";
@@ -97,6 +97,7 @@ import wonderEstadioDoMaracanaImg from "./images/wonder_estadio_do_maracana.png"
 
 import districtNeighborhoodImg from "./images/icon_district_neighborhood.png";
 import districtNeighborhood2Img from "./images/icon_district_neighborhood2.png";
+import districtNeighborhood3Img from "./images/icon_district_neighborhood3.png";
 
 import wonderBigBenImg from "./images/wonder_big_ben.png";
 
@@ -256,9 +257,17 @@ export const propertiesInfo = {
             name: "Intelligence Agency",
             src: districtGovernmentPlaza3Img,
         },
-        LEVEL_4: {
+        LEVEL_4_1: {
             name: "Science Department",
             src: districtGovernmentPlaza41Img,
+        },
+        LEVEL_4_2: {
+            name: "War Department",
+            src: districtGovernmentPlaza42Img,
+        },
+        LEVEL_4_3: {
+            name: "Culture Department",
+            src: districtGovernmentPlaza43Img,
         },
         position: 9,
     },
@@ -373,9 +382,17 @@ export const propertiesInfo = {
             name: "Intelligence Agency",
             src: districtGovernmentPlaza3Img,
         },
-        LEVEL_4: {
+        LEVEL_4_1: {
             name: "Science Department",
             src: districtGovernmentPlaza41Img,
+        },
+        LEVEL_4_2: {
+            name: "War Department",
+            src: districtGovernmentPlaza42Img,
+        },
+        LEVEL_4_3: {
+            name: "Culture Department",
+            src: districtGovernmentPlaza43Img,
         },
         position: 18,
     },
@@ -660,6 +677,10 @@ export const propertiesInfo = {
             name: "Food Market",
             src: districtNeighborhood2Img,
         },
+        LEVEL_3: {
+            name: "Shopping Mall",
+            src: districtNeighborhood3Img,
+        },
         position: 41,
     },
     42: {
@@ -701,9 +722,17 @@ export const propertiesInfo = {
             name: "Intelligence Agency",
             src: districtGovernmentPlaza3Img,
         },
-        LEVEL_4: {
+        LEVEL_4_1: {
             name: "Science Department",
             src: districtGovernmentPlaza41Img,
+        },
+        LEVEL_4_2: {
+            name: "War Department",
+            src: districtGovernmentPlaza42Img,
+        },
+        LEVEL_4_3: {
+            name: "Culture Department",
+            src: districtGovernmentPlaza43Img,
         },
         position: 44,
     },
@@ -804,19 +833,19 @@ export const requirements = {
         <p priority={1} className="condition-p">You need to make 5 rounds</p>
     ),
     MAKE_ONE_TURN: (
-        <p priority={1} className="condition-p">You need to make 1 turn</p>
+        <p priority={3} className="condition-p">Wait for 1 turns</p>
     ),
     MAKE_TWO_TURNS: (
-        <p priority={1} className="condition-p">You need to make 2 turns</p>
+        <p priority={3} className="condition-p">Wait for 2 turns</p>
     ),
     MAKE_THREE_TURNS: (
-        <p priority={1} className="condition-p">You need to make 3 turns</p>
+        <p priority={3} className="condition-p">Wait for 3 turns</p>
     ),
     MAKE_FOUR_TURNS: (
-        <p priority={1} className="condition-p">You need to make 4 turns</p>
+        <p priority={3} className="condition-p">Wait for 4 turns</p>
     ),
     MAKE_FIVE_TURNS: (
-        <p priority={1} className="condition-p">You need to make 5 turns</p>
+        <p priority={3} className="condition-p">Wait for 5 turns</p>
     ),
     HAVE_LOW_GOLD_PER_TURN: (
         <p className="condition-p">You need to have 40 g.p.t.</p>
@@ -828,13 +857,22 @@ export const requirements = {
         <p className="condition-p">You need to have 120 g.p.t.</p>
     ),
     HAVE_LOW_GOLD_CAP: (
-        <p className="condition-p">You need to have 1500 gold</p>
+        <p className="condition-p">You need to have 1600 gold</p>
     ),
     HAVE_MEDIUM_GOLD_CAP: (
         <p className="condition-p">You need to have 2000 gold</p>
     ),
     HAVE_HIGH_GOLD_CAP: (
-        <p className="condition-p">You need to have 2500 gold</p>
+        <p className="condition-p">You need to have 2600 gold</p>
+    ),
+    HAVE_LOW_TOURISM: (
+        <p className="condition-p">You need to have 800 tourism</p>
+    ),
+    HAVE_MEDIUM_TOURISM: (
+        <p className="condition-p">You need to have 1200 tourism</p>
+    ),
+    HAVE_HIGH_TOURISM: (
+        <p className="condition-p">You need to have 2000 tourism</p>
     ),
     HAVE_LOW_STRENGTH: (
         <p className="condition-p">You need to have 300 strength</p>
@@ -846,28 +884,43 @@ export const requirements = {
         <p className="condition-p">You need to have 500 strength</p>
     ),
     ON_CLASSICAL_ERA: (
-        <p className="condition-p">You need to be at least in Classical Era</p>
+        <p priority={1} className="condition-p">You need to be at least in Classical Era</p>
     ),
     ON_MEDIEVAL_ERA: (
-        <p className="condition-p">You need to be at least in Medieval Era</p>
+        <p priority={1} className="condition-p">You need to be at least in Medieval Era</p>
     ),
     ON_RENAISSANCE_ERA: (
-        <p className="condition-p">You need to be at least in Renaissance Era</p>
+        <p priority={1} className="condition-p">You need to be at least in Renaissance Era</p>
     ),
     ON_INDUSTRIAL_ERA: (
-        <p className="condition-p">You need to be at least in Industrial Era</p>
+        <p priority={1} className="condition-p">You need to be at least in Industrial Era</p>
     ),
     ON_MODERN_ERA: (
-        <p className="condition-p">You need to be at least in Modern Era</p>
+        <p priority={1} className="condition-p">You need to be at least in Modern Era</p>
     ),
     ON_ATOMIC_ERA: (
-        <p className="condition-p">You need to be at least in Atomic Era</p>
+        <p priority={1} className="condition-p">You need to be at least in Atomic Era</p>
     ),
     ON_INFORMATION_ERA: (
-        <p className="condition-p">You need to be at least in Information Era</p>
+        <p priority={1} className="condition-p">You need to be at least in Information Era</p>
     ),
     HAVE_TWO_RESOURCES: (
         <p className="condition-p">You need to have at least 2 upgraded resources</p>
+    ),
+    HAVE_TWO_WONDERS: (
+        <p className="condition-p">You need to have at least 2 wonders</p>
+    ),
+    WIDE_EMPIRE: (
+        <p className="condition-p">You need to have 7 tiles</p>
+    ),
+    SUPER_WIDE_EMPIRE: (
+        <p className="condition-p">You need to have 11 tiles</p>
+    ),
+    TALL_EMPIRE: (
+        <p className="condition-p">You need to have 9 upgrades</p>
+    ),
+    SUPER_TALL_EMPIRE: (
+        <p className="condition-p">You need to have 15 upgrades</p>
     ),
     OWN_ENCAMPMENT: (
         <p className="condition-p">You must own an Encampment</p>

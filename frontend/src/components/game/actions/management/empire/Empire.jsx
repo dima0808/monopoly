@@ -3,6 +3,7 @@ import goldPerTurnImg from "../../../../../images/icon-gold-per-turn.png";
 import goldImg from "../../../../../images/icon-gold.png";
 import { propertiesInfo } from "../../../../../constraints";
 import Cookies from "js-cookie";
+import tourismImg from "../../../../../images/icon-tourism.png";
 // import tourismImg from "../../../../../images/icon-tourism.png";
 
 export default function Empire({
@@ -120,9 +121,21 @@ export default function Empire({
                                                     {property.goldOnStep}
                                                 </div>
                                             </div>
-                                            <div className="gold-on-step stats-div">
+                                            {property.tourismOnStep > 0 && <div className="gold-on-step stats-div">
+                                                Tourism on step:
+                                                <div className="player-stat-tourism width-full no-select">
+                                                    <img
+                                                        src={tourismImg}
+                                                        className="recourse-img"
+                                                        alt="tourism"
+                                                    />
+                                                    {property.tourismOnStep}
+                                                </div>
+                                            </div>}
+                                            {property.goldPerTurn > 0 && <div className="gold-on-step stats-div">
                                                 Gold per turn:
-                                                <div className="player-stat-gold gold-per-turn width-full pointer no-select">
+                                                <div
+                                                    className="player-stat-gold gold-per-turn width-full pointer no-select">
                                                     <img
                                                         src={goldPerTurnImg}
                                                         className="recourse-img"
@@ -130,7 +143,7 @@ export default function Empire({
                                                     />
                                                     {property.goldPerTurn}
                                                 </div>
-                                            </div>
+                                            </div>}
                                         </div>
                                     </div>
                                     {/*<div className="p-discount flex-between">*/}
@@ -138,30 +151,40 @@ export default function Empire({
                                     {/*    <p className="your-chance">(50%) of the cost</p>*/}
                                     {/*</div>*/}
                                     <div className="proprty-btns-div flex-between">
-                                        {lowestNotOwnedLevel &&
+                                        {!highestOwnedLevel.level.startsWith("LEVEL_4_") && lowestNotOwnedLevel &&
                                             property.mortgage === -1 && (
                                                 <button
-                                                    disabled={isUpgradeDisabled}
-                                                    onClick={() =>
-                                                        handleUpgradeProperty(
-                                                            property.position
-                                                        )
-                                                    }
+                                                    disabled={!lowestNotOwnedLevel.level.startsWith("LEVEL_4_") &&
+                                                        isUpgradeDisabled}
+                                                    onClick={() => {
+                                                        if (lowestNotOwnedLevel.level.startsWith("LEVEL_4_")) {
+                                                            selectProperty(property.position);
+                                                        } else {
+                                                            handleUpgradeProperty(property.position);
+                                                        }
+                                                    }}
                                                     className="pay-btn decision-button decision-button-green"
                                                 >
-                                                    upgrade:
-                                                    <div className="player-stat-gold width-full pointer no-select">
-                                                        <img
-                                                            src={goldImg}
-                                                            className="recourse-img"
-                                                            alt="gold"
-                                                        />
-                                                        <p>
-                                                            {
-                                                                lowestNotOwnedLevel.price
-                                                            }
-                                                        </p>
-                                                    </div>
+                                                    {lowestNotOwnedLevel.level.startsWith("LEVEL_4_") ? (
+                                                        "choose"
+                                                    ) : (
+                                                        <>
+                                                            upgrade:
+                                                            <div className="player-stat-gold width-full pointer no-select">
+                                                                <img
+                                                                    src={goldImg}
+                                                                    className="recourse-img"
+                                                                    alt="gold"
+                                                                />
+                                                                <p>
+                                                                    {
+                                                                        lowestNotOwnedLevel.price
+                                                                    }
+                                                                </p>
+                                                            </div>
+                                                        </>
+                                                    )}
+
                                                 </button>
                                             )}
                                         {property.mortgage !== -1 && (

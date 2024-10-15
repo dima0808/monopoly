@@ -25,6 +25,8 @@ public class PropertyDto {
     private Integer mortgage;
 
     private Integer goldOnStep;
+    private Integer tourismOnStep;
+
     private Integer goldPerTurn;
 
     private List<RequirementDto> upgradeRequirements;

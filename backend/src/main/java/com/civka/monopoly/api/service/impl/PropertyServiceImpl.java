@@ -62,6 +62,7 @@ public class PropertyServiceImpl implements PropertyService {
                                 .mortgage(property.getMortgage())
                                 .position(property.getPosition())
                                 .goldOnStep(gameUtils.calculateGoldOnStep(property))
+                                .tourismOnStep(gameUtils.calculateTourismOnStep(property))
                                 .goldPerTurn(gameUtils.calculateGoldPerTurn(property))
                                 .upgradeRequirements(gameUtils.getRequirements(property.getPosition(), member))
                                 .build();
@@ -70,6 +71,7 @@ public class PropertyServiceImpl implements PropertyService {
                                 .upgrades(gameUtils.getUpgrades(positionInt, null))
                                 .position(positionInt)
                                 .goldOnStep(gameUtils.getGoldOnStepByLevel(positionInt, Property.Upgrade.LEVEL_1))
+                                .goldOnStep(gameUtils.getTourismOnStepByLevel(positionInt, Property.Upgrade.LEVEL_1))
                                 .goldPerTurn(gameUtils.getGoldPerTurnByLevel(positionInt, Property.Upgrade.LEVEL_1))
                                 .upgradeRequirements(gameUtils.getRequirements(positionInt, member))
                                 .build();

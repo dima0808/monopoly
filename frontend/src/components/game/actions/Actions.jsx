@@ -111,7 +111,7 @@ export default function Actions({
         }
     };
 
-    const handleUpgradeProperty = (position) => {
+    const handleUpgradeProperty = (position, governmentPlazaChoice = -1) => {
         const token = Cookies.get("token");
         const username = Cookies.get("username");
         if (!client || !client.publish) {
@@ -128,10 +128,11 @@ export default function Actions({
         }
         try {
             client.publish({
-                destination: `/app/rooms/${room.name}/upgradeProperty/${position}`,
+                destination: `/app/rooms/${room.name}/upgrade${(governmentPlazaChoice === -1 ? "Property" : "GovernmentPlazaChoice")}/${position}`,
                 headers: {
                     Authorization: `Bearer ${token}`,
                     username: username,
+                    choice: governmentPlazaChoice === -1 ? null : "LEVEL_4_" + governmentPlazaChoice,
                 },
             });
             console.log("Upgrading property...");

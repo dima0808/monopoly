@@ -265,6 +265,9 @@ public class RoomServiceImpl implements RoomService {
         if (!member.getRoom().getCurrentTurn().equals(member.getUser().getUsername()) || !member.getHasRolledDice()) {
             throw new UserNotAllowedException();
         }
+        if (!member.getEvents().isEmpty()) {
+            throw new UserNotAllowedException();
+        }
         if (gameUtils.getGoldFromArmySpending(armySpending) > member.getGold()) {
             throw new UserNotAllowedException();
         }

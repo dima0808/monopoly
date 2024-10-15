@@ -29,9 +29,9 @@ public class RoomMessage {
         BUY_PROPERTY,
         UPGRADE_PROPERTY,
         PAY_RENT,
-        ADD_GOLD,
-        ADD_STRENGTH,
-        ADD_EVENT,
+        CHEAT_ADD_GOLD,
+        CHEAT_ADD_STRENGTH,
+        CHEAT_ADD_EVENT,
         DOWNGRADE_PROPERTY,
     }
 }

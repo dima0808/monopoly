@@ -30,15 +30,16 @@ export default function Cell({direction, mirror = false, noneUpgrades = false, s
                 <div
                     className={
                         priceClass + " no-select" +
-                        (property.member ? " object-gold-on-step" : "")
+                        (property.member ? " object-gold-on-step" : "") +
+                        ((property.member && specialType === "wonder") ? " object-tourism" : "")
                     }
                 >
                     {!property.member &&
                         property.upgrades.find(
                             (upgrade) => upgrade.level === "LEVEL_1"
                         ).price}
-                    {property.member && (property.goldOnStep +
-                        ((property.position === 7 || property.position === 30) ? "x" : ""))}
+                    {property.member && (specialType === "wonder" ? property.tourismOnStep :
+                        (property.goldOnStep + ((property.position === 7 || property.position === 30) ? "x" : "")))}
                 </div>
                 <div
                     className={
@@ -79,7 +80,8 @@ export default function Cell({direction, mirror = false, noneUpgrades = false, s
                                         upgrade.level.startsWith("LEVEL")
                                     ).length;
 
-                                if (allLevels) {
+                                if ((specialType === "government" && highestOwnedLevel.startsWith("LEVEL_4_"))
+                                    || allLevels) {
                                     return (
                                         <img
                                             src={yellowStarImg}

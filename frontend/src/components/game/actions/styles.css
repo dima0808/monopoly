@@ -23,7 +23,8 @@
     font-weight: 600;
 }
 .actions .player-stat-gold,
-.actions .player-stat-strength {
+.actions .player-stat-strength,
+.actions .player-stat-tourism{
     width: 73px;
     height: 20px;
     margin-left: 2px;
@@ -295,7 +296,7 @@
     right: 0;
     border-radius: 50%;
     background-color: #79e469;
-    scale: (0);
+    /*scale: (0);*/
     transform: translate(10%, -10%);
     height: 10px;
     width: 10px;

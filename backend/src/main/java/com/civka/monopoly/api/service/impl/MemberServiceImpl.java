@@ -151,13 +151,14 @@ public class MemberServiceImpl implements MemberService {
                 .mortgage(updatedProperty.getMortgage())
                 .position(updatedProperty.getPosition())
                 .goldOnStep(gameUtils.calculateGoldOnStep(updatedProperty))
+                .tourismOnStep(gameUtils.calculateTourismOnStep(property))
                 .goldPerTurn(gameUtils.calculateGoldPerTurn(property))
                 .upgradeRequirements(gameUtils.getRequirements(updatedProperty.getPosition(), member))
                 .build();
     }
 
     @Override
-    public PropertyDto upgradeProperty(Member member, Integer position) {
+    public PropertyDto upgradeProperty(Member member, Integer position, Property.Upgrade upgradeChoice) {
         if (!propertyService.existsByRoomAndPosition(member.getRoom(), position) || member.getProperties().stream()
                 .noneMatch(property -> property.getPosition().equals(position))) {
             throw new UserNotAllowedException();
@@ -176,12 +177,17 @@ public class MemberServiceImpl implements MemberService {
                     .timestamp(LocalDateTime.now())
                     .build();
         } else {
-            Property.Upgrade nextLevel = Property.Upgrade.LEVEL_1;
-            for (Property.Upgrade upgrade : List.of(Property.Upgrade.LEVEL_1, Property.Upgrade.LEVEL_2,
-                    Property.Upgrade.LEVEL_3, Property.Upgrade.LEVEL_4)) {
-                if (!property.getUpgrades().contains(upgrade)) {
-                    nextLevel = upgrade;
-                    break;
+            Property.Upgrade nextLevel;
+            if (upgradeChoice != null) {
+                nextLevel = upgradeChoice;
+            } else {
+                nextLevel = Property.Upgrade.LEVEL_1;
+                for (Property.Upgrade upgrade : List.of(Property.Upgrade.LEVEL_1, Property.Upgrade.LEVEL_2,
+                        Property.Upgrade.LEVEL_3, Property.Upgrade.LEVEL_4)) {
+                    if (!property.getUpgrades().contains(upgrade)) {
+                        nextLevel = upgrade;
+                        break;
+                    }
                 }
             }
             int price = gameUtils.getPriceByPositionAndLevel(position, nextLevel);
@@ -212,42 +218,61 @@ public class MemberServiceImpl implements MemberService {
                 .mortgage(updatedProperty.getMortgage())
                 .position(updatedProperty.getPosition())
                 .goldOnStep(gameUtils.calculateGoldOnStep(updatedProperty))
+                .tourismOnStep(gameUtils.calculateTourismOnStep(property))
                 .goldPerTurn(gameUtils.calculateGoldPerTurn(updatedProperty))
                 .upgradeRequirements(gameUtils.getRequirements(updatedProperty.getPosition(), member))
                 .build();
     }
 
     @Override
-    public PropertyDto downgradeProperty(Member member, Integer position) {
+    public PropertyDto upgradeProperty(Member member, Integer position) {
+        return upgradeProperty(member, position, null);
+    }
+
+    @Override
+    public PropertyDto downgradeProperty(Member member, Integer position, Property.Upgrade downgradeChoice) {
         if (!propertyService.existsByRoomAndPosition(member.getRoom(), position) || member.getProperties().stream()
                 .noneMatch(property -> property.getPosition().equals(position))) {
             throw new UserNotAllowedException();
         }
         Property property = propertyService.findByRoomAndPosition(member.getRoom(), position);
-        List<Property.Upgrade> upgrades = property.getUpgrades();
-
-        List<Property.Upgrade> validUpgrades = upgrades.stream()
-                .filter(upgrade -> List.of(Property.Upgrade.LEVEL_1, Property.Upgrade.LEVEL_2,
-                        Property.Upgrade.LEVEL_3, Property.Upgrade.LEVEL_4).contains(upgrade))
-                .toList();
-
         Chat roomChat = chatService.findByName(member.getRoom().getName());
         ChatMessageDto systemMessage = null;
-        if (validUpgrades.size() > 1) {
-            Property.Upgrade levelToDowngrade = validUpgrades.get(validUpgrades.size() - 1);
-            upgrades.remove(levelToDowngrade);
-            int price = gameUtils.getPriceByPositionAndLevel(position, levelToDowngrade);
-            member.setGold(member.getGold() + (int) (price * demoteGoldCoefficient));
-            memberRepository.save(member);
-            systemMessage = ChatMessageDto.builder()
-                    .type(ChatMessage.MessageType.SYSTEM_DOWNGRADE_PROPERTY)
-                    .content(member.getUser().getNickname() + " " + position)
-                    .timestamp(LocalDateTime.now())
-                    .build();
-        } else if (validUpgrades.size() == 1 && validUpgrades.contains(Property.Upgrade.LEVEL_1) &&
-                property.getMortgage() == -1) {
-            property.setMortgage(5);
-            int price = gameUtils.getPriceByPositionAndLevel(position, Property.Upgrade.LEVEL_1);
+
+        List<Property.Upgrade> upgrades = property.getUpgrades();
+        if (downgradeChoice == null) {
+            List<Property.Upgrade> validUpgrades = upgrades.stream()
+                    .filter(upgrade -> List.of(Property.Upgrade.LEVEL_1, Property.Upgrade.LEVEL_2,
+                            Property.Upgrade.LEVEL_3, Property.Upgrade.LEVEL_4,
+                            Property.Upgrade.LEVEL_4_1, Property.Upgrade.LEVEL_4_2,
+                            Property.Upgrade.LEVEL_4_3).contains(upgrade))
+                    .toList();
+            if (validUpgrades.size() > 1) {
+                Property.Upgrade levelToDowngrade = validUpgrades.get(validUpgrades.size() - 1);
+                upgrades.remove(levelToDowngrade);
+                int price = gameUtils.getPriceByPositionAndLevel(position, levelToDowngrade);
+                member.setGold(member.getGold() + (int) (price * demoteGoldCoefficient));
+                memberRepository.save(member);
+                systemMessage = ChatMessageDto.builder()
+                        .type(ChatMessage.MessageType.SYSTEM_DOWNGRADE_PROPERTY)
+                        .content(member.getUser().getNickname() + " " + position)
+                        .timestamp(LocalDateTime.now())
+                        .build();
+            } else if (validUpgrades.size() == 1 && validUpgrades.contains(Property.Upgrade.LEVEL_1) &&
+                    property.getMortgage() == -1) {
+                property.setMortgage(5);
+                int price = gameUtils.getPriceByPositionAndLevel(position, Property.Upgrade.LEVEL_1);
+                member.setGold(member.getGold() + (int) (price * mortgageGoldCoefficient));
+                memberRepository.save(member);
+                systemMessage = ChatMessageDto.builder()
+                        .type(ChatMessage.MessageType.SYSTEM_MORTGAGE_PROPERTY)
+                        .content(member.getUser().getNickname() + " " + position)
+                        .timestamp(LocalDateTime.now())
+                        .build();
+            }
+        } else {
+            upgrades.remove(downgradeChoice);
+            int price = gameUtils.getPriceByPositionAndLevel(position, downgradeChoice);
             member.setGold(member.getGold() + (int) (price * mortgageGoldCoefficient));
             memberRepository.save(member);
             systemMessage = ChatMessageDto.builder()
@@ -270,9 +295,15 @@ public class MemberServiceImpl implements MemberService {
                 .mortgage(updatedProperty.getMortgage())
                 .position(updatedProperty.getPosition())
                 .goldOnStep(gameUtils.calculateGoldOnStep(updatedProperty))
+                .tourismOnStep(gameUtils.calculateTourismOnStep(property))
                 .goldPerTurn(gameUtils.calculateGoldPerTurn(updatedProperty))
                 .upgradeRequirements(gameUtils.getRequirements(updatedProperty.getPosition(), member))
                 .build();
+    }
+
+    @Override
+    public PropertyDto downgradeProperty(Member member, Integer position) {
+        return downgradeProperty(member, position, null);
     }
 
     @Override
@@ -313,6 +344,7 @@ public class MemberServiceImpl implements MemberService {
                 .upgrades(gameUtils.getUpgrades(property.getPosition(), property))
                 .position(property.getPosition())
                 .goldOnStep(onStep)
+                .tourismOnStep(gameUtils.calculateTourismOnStep(property))
                 .goldPerTurn(gameUtils.calculateGoldPerTurn(property))
                 .build();
     }

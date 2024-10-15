@@ -60,6 +60,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 diceRollAudio.play().then();
                 return;
             case 'BERMUDA':
+            case 'TOURIST':
                 setPlayers((prevPlayers) => {
                     return prevPlayers.map(player => {
                         return player.id === member.id ? member : player;
@@ -134,9 +135,9 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                     })
                     .catch((error) => setError({message: error.message || "An error occurred"}));
                 return;
-            case 'ADD_GOLD':
-            case 'ADD_STRENGTH':
-            case 'ADD_EVENT':
+            case 'CHEAT_ADD_GOLD':
+            case 'CHEAT_ADD_STRENGTH':
+            case 'CHEAT_ADD_EVENT':
                 setPlayers(room.members);
                 return;
             default:

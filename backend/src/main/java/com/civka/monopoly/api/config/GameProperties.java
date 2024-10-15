@@ -17,7 +17,8 @@ import java.util.Map;
 public class GameProperties {
 
     private Map<String, Integer> price;
-    private Map<String, Integer> onStep;
+    private Map<String, Integer> goldOnStep;
+    private Map<String, Integer> tourismOnStep;
     private Map<String, Integer> perTurn;
     private Map<String, String> requirement;
     private Map<String, String> upgrade;
@@ -28,8 +29,12 @@ public class GameProperties {
         return price.get(position + "." + level);
     }
 
-    public Integer getOnStepByPositionAndLevel(Integer position, Property.Upgrade level) {
-        return onStep.get(position + "." + level);
+    public Integer getGoldOnStepByPositionAndLevel(Integer position, Property.Upgrade level) {
+        return goldOnStep.get(position + "." + level);
+    }
+
+    public Integer getTourismOnStepByPositionAndLevel(Integer position, Property.Upgrade level) {
+        return tourismOnStep.get(position + "." + level);
     }
 
     public Integer getPerTurnByPositionAndLevel(Integer position, Property.Upgrade level) {

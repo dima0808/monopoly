@@ -51,9 +51,7 @@ export default function Management({
                         currentUser={currentUser}
                         property={selectedProperty}
                         gameSettings={gameSettings}
-                        handleUpgradeProperty={(position) =>
-                            handleUpgradeProperty(position)
-                        }
+                        handleUpgradeProperty={handleUpgradeProperty}
                         handleDowngradeProperty={(position) =>
                             handleDowngradeProperty(position)
                         }

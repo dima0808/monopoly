@@ -29,7 +29,7 @@ public class GameUtilsImpl implements GameUtils {
             return 0;
         }
         for (Property.Upgrade upgrade : property.getUpgrades()) {
-            Integer upgradeOnStep = gameProperties.getOnStepByPositionAndLevel(property.getPosition(), upgrade);
+            Integer upgradeOnStep = gameProperties.getGoldOnStepByPositionAndLevel(property.getPosition(), upgrade);
             if (upgradeOnStep != null) {
                 onStep += upgradeOnStep;
             }
@@ -39,7 +39,27 @@ public class GameUtilsImpl implements GameUtils {
 
     @Override
     public int getGoldOnStepByLevel(Integer position, Property.Upgrade level) {
-        return gameProperties.getOnStepByPositionAndLevel(position, level);
+        return gameProperties.getGoldOnStepByPositionAndLevel(position, level);
+    }
+
+    @Override
+    public int calculateTourismOnStep(Property property) {
+        int onStep = 0;
+        if (property.getMortgage() != -1) {
+            return 0;
+        }
+        for (Property.Upgrade upgrade : property.getUpgrades()) {
+            Integer upgradeOnStep = gameProperties.getTourismOnStepByPositionAndLevel(property.getPosition(), upgrade);
+            if (upgradeOnStep != null) {
+                onStep += upgradeOnStep;
+            }
+        }
+        return onStep;
+    }
+
+    @Override
+    public int getTourismOnStepByLevel(Integer position, Property.Upgrade level) {
+        return gameProperties.getTourismOnStepByPositionAndLevel(position, level);
     }
 
     @Override
@@ -93,7 +113,8 @@ public class GameUtilsImpl implements GameUtils {
     public List<RequirementDto> getRequirements(Integer position, Member member) {
         List<RequirementDto> allRequirements = new ArrayList<>();
         for (Property.Upgrade upgrade : List.of(Property.Upgrade.LEVEL_1, Property.Upgrade.LEVEL_2,
-                Property.Upgrade.LEVEL_3, Property.Upgrade.LEVEL_4)) {
+                Property.Upgrade.LEVEL_3, Property.Upgrade.LEVEL_4, Property.Upgrade.LEVEL_4_1,
+                Property.Upgrade.LEVEL_4_2, Property.Upgrade.LEVEL_4_3)) {
             String requirements = gameProperties.getRequirement().get(position + "." + upgrade);
             if (requirements != null) {
                 Map<RequirementDto.Requirement, Boolean> requirementMap = new HashMap<>();
@@ -118,7 +139,8 @@ public class GameUtilsImpl implements GameUtils {
             UpgradeDto upgradeDto = UpgradeDto.builder()
                     .level(level)
                     .isOwned(property != null && property.getUpgrades().contains(level))
-                    .goldOnStep(gameProperties.getOnStepByPositionAndLevel(position, level))
+                    .goldOnStep(gameProperties.getGoldOnStepByPositionAndLevel(position, level))
+                    .tourismOnStep(gameProperties.getTourismOnStepByPositionAndLevel(position, level))
                     .goldPerTurn(gameProperties.getPerTurnByPositionAndLevel(position, level))
                     .price(gameProperties.getPriceByPositionAndLevel(position, level))
                     .build();
@@ -212,9 +234,12 @@ public class GameUtilsImpl implements GameUtils {
             case HAVE_LOW_GOLD_PER_TURN -> calculateGeneralGoldPerTurn(member) >= 40; // TODO: flexible
             case HAVE_MEDIUM_GOLD_PER_TURN -> calculateGeneralGoldPerTurn(member) >= 80; // TODO: flexible
             case HAVE_HIGH_GOLD_PER_TURN -> calculateGeneralGoldPerTurn(member) >= 120; // TODO: flexible
-            case HAVE_LOW_GOLD_CAP -> member.getGold() >= 1500; // TODO: flexible
+            case HAVE_LOW_GOLD_CAP -> member.getGold() >= 1600; // TODO: flexible
             case HAVE_MEDIUM_GOLD_CAP -> member.getGold() >= 2000; // TODO: flexible
-            case HAVE_HIGH_GOLD_CAP -> member.getGold() >= 2500; // TODO: flexible
+            case HAVE_HIGH_GOLD_CAP -> member.getGold() >= 2600; // TODO: flexible
+            case HAVE_LOW_TOURISM -> member.getTourism() >= 800; // TODO: flexible
+            case HAVE_MEDIUM_TOURISM -> member.getTourism() >= 1200; // TODO: flexible
+            case HAVE_HIGH_TOURISM -> member.getTourism() >= 2000; // TODO: flexible
             case HAVE_LOW_STRENGTH -> member.getStrength() >= 300; // TODO: flexible
             case HAVE_MEDIUM_STRENGTH -> member.getStrength() >= 400; // TODO: flexible
             case HAVE_HIGH_STRENGTH -> member.getStrength() >= 500; // TODO: flexible
@@ -236,6 +261,33 @@ public class GameUtilsImpl implements GameUtils {
                             p.getPosition().equals(26) ||
                             p.getPosition().equals(28)) && p.getUpgrades().contains(Property.Upgrade.LEVEL_2))
                     .count() >= 2;
+            case HAVE_TWO_WONDERS -> member.getProperties().stream()
+                    .filter(p -> p.getPosition().equals(4) ||
+                            p.getPosition().equals(8) ||
+                            p.getPosition().equals(16) ||
+                            p.getPosition().equals(20) ||
+                            p.getPosition().equals(23) ||
+                            p.getPosition().equals(27) ||
+                            p.getPosition().equals(32) ||
+                            p.getPosition().equals(36) ||
+                            p.getPosition().equals(40) ||
+                            p.getPosition().equals(42) ||
+                            p.getPosition().equals(46))
+                    .count() >= 2;
+            case WIDE_EMPIRE -> member.getProperties().size() >= 7; // TODO: flexible
+            case SUPER_WIDE_EMPIRE -> member.getProperties().size() >= 11; // TODO: flexible
+            case TALL_EMPIRE -> member.getProperties().stream()
+                    .flatMap(property -> property.getUpgrades().stream())
+                    .filter(upgrade -> upgrade == Property.Upgrade.LEVEL_2 ||
+                            upgrade == Property.Upgrade.LEVEL_3 ||
+                            upgrade == Property.Upgrade.LEVEL_4)
+                    .count() >= 9; // TODO: flexible
+            case SUPER_TALL_EMPIRE -> member.getProperties().stream()
+                    .flatMap(property -> property.getUpgrades().stream())
+                    .filter(upgrade -> upgrade == Property.Upgrade.LEVEL_2 ||
+                            upgrade == Property.Upgrade.LEVEL_3 ||
+                            upgrade == Property.Upgrade.LEVEL_4)
+                    .count() >= 15; // TODO: flexible
             case OWN_ENCAMPMENT -> member.getProperties().stream()
                     .anyMatch(p -> p.getPosition().equals(7) || p.getPosition().equals(30));
             case OWN_CAMPUS -> member.getProperties().stream()
@@ -262,7 +314,7 @@ public class GameUtilsImpl implements GameUtils {
                     .anyMatch(p -> p.getPosition().equals(10) || p.getPosition().equals(34));
             case OWN_FACTORY -> member.getProperties().stream()
                     .anyMatch(p -> (p.getPosition().equals(10) || p.getPosition().equals(34)) &&
-                            p.getUpgrades().contains(Property.Upgrade.LEVEL_4));
+                            p.getUpgrades().contains(Property.Upgrade.LEVEL_3));
             case OWN_STADIUM -> member.getProperties().stream()
                     .anyMatch(p -> (p.getPosition().equals(22) || p.getPosition().equals(38)) &&
                             p.getUpgrades().contains(Property.Upgrade.LEVEL_4));

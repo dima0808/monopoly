@@ -21,6 +21,7 @@ public class PlayerMessage {
         CHANGE_CIVILIZATION,
         ROLL_DICE,
         BYPASS_START,
+        TOURIST,
         BERMUDA
     }
 }

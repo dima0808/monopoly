@@ -17,6 +17,7 @@ public class UpgradeDto {
     private Boolean isOwned;
 
     private Integer goldOnStep;
+    private Integer tourismOnStep;
     private Integer goldPerTurn;
     private Integer price;
 }
