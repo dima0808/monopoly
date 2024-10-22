@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { propertiesInfo } from "../../../../../constraints";
 
-export default function Cashflow({ properties }) {
+export default function Cashflow({ additionalEffects, properties }) {
     const [calculatedGoldPerTurn, setCalculatedGoldPerTurn] = useState(0);
 
     useEffect(() => {
@@ -15,13 +15,19 @@ export default function Cashflow({ properties }) {
                     property.member.user.username === Cookies.get("username")
             );
 
-            const totalGoldPerTurn = userProperties.reduce((sum, property) => {
+            let totalGoldPerTurn = userProperties.reduce((sum, property) => {
                 return sum + (property.goldPerTurn || 0);
             }, 0);
+
+            additionalEffects.forEach((effect) => {
+                totalGoldPerTurn += effect.goldPerTurn;
+            });
 
             setCalculatedGoldPerTurn(totalGoldPerTurn);
         }
     }, [properties]);
+
+    console.log(additionalEffects);
 
     return (
         <div>
@@ -86,6 +92,23 @@ export default function Cashflow({ properties }) {
                                 </div>
                             </li>
                         ))}
+                    {additionalEffects.map((effect, key) => (
+                        <li key={key} className="value">
+                            <div className="player-stat-gold gold-per-turn width-full no-select">
+                                <img
+                                    src={goldPerTurnImg}
+                                    className="recourse-img"
+                                    alt="gold"
+                                />
+                                +{effect.goldPerTurn}
+                            </div>
+                            <div className="div-h3">
+                                <h3>
+                                    from <span className="cell-span"> "{effect.type}" </span> {effect.turnsLeft}х.
+                                </h3>
+                            </div>
+                        </li>
+                    ))}
                 </ul>
             </div>
             <div className="marg-value marg-value-red">

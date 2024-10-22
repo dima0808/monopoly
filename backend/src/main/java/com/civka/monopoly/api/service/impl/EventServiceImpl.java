@@ -1,21 +1,26 @@
 package com.civka.monopoly.api.service.impl;
 
 import com.civka.monopoly.api.dto.ChatMessageDto;
+import com.civka.monopoly.api.dto.ProjectType;
 import com.civka.monopoly.api.entity.*;
 import com.civka.monopoly.api.payload.EventMessage;
 import com.civka.monopoly.api.payload.PlayerMessage;
+import com.civka.monopoly.api.payload.RoomMessage;
 import com.civka.monopoly.api.repository.EventRepository;
 import com.civka.monopoly.api.repository.MemberRepository;
 import com.civka.monopoly.api.service.ChatMessageService;
 import com.civka.monopoly.api.service.ChatService;
 import com.civka.monopoly.api.service.EventService;
 import com.civka.monopoly.api.service.PropertyService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -153,6 +158,96 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
+    public Event makeProjectChoice(Member member, ProjectType choice) {
+        switch (choice) {
+            case BREAD_AND_CIRCUSES -> {
+                Room room = member.getRoom();
+                Property.Upgrade highestEntertainmentLevel = getHighestDistrictLevel(member, "ENTERTAINMENT");
+                List<Member> members = room.getMembers();
+
+                for (Member m : members) {
+                    boolean isCurrentMember = m.equals(member);
+                    List<Property> properties = m.getProperties();
+                    Iterator<Property> iterator = properties.iterator();
+                    while (iterator.hasNext()) {
+                        Property property = iterator.next();
+                        if (property.getMortgage() != -1) {
+                            property.setMortgage(property.getMortgage() +
+                                    gameUtils.getBreadAndCircusesByLevel(highestEntertainmentLevel, isCurrentMember));
+                            propertyService.save(property);
+                            if (!isCurrentMember && property.getMortgage() < 1) {
+                                iterator.remove();
+                            }
+                        }
+                    }
+                    memberRepository.save(m);
+                }
+
+                RoomMessage roomMessage = RoomMessage.builder()
+                        .type(RoomMessage.MessageType.PROJECTS)
+                        .content("Game started")
+                        .room(room)
+                        .build();
+                messagingTemplate.convertAndSend("/topic/public/" + room.getName() + "/game", roomMessage);
+            }
+
+            case CAMPUS_RESEARCH_GRANTS -> {
+
+            }
+
+            case COMMERCIAL_HUB_INVESTMENT -> {
+                Property.Upgrade highestCommercialHubLevel = getHighestDistrictLevel(member, "COMMERCIAL_HUB");
+                AdditionalEffect commercialHubInvestment = AdditionalEffect.builder()
+                        .member(member)
+                        .type(switch (highestCommercialHubLevel) {
+                            case LEVEL_1 -> AdditionalEffect.AdditionalEffectType.COMMERCIAL_HUB_INVESTMENT_1;
+                            case LEVEL_2 -> AdditionalEffect.AdditionalEffectType.COMMERCIAL_HUB_INVESTMENT_2;
+                            case LEVEL_3 -> AdditionalEffect.AdditionalEffectType.COMMERCIAL_HUB_INVESTMENT_3;
+                            case LEVEL_4 -> AdditionalEffect.AdditionalEffectType.COMMERCIAL_HUB_INVESTMENT_4;
+                            default -> null;
+                        })
+                        .turnsLeft(10)
+                        .build();
+                member.getAdditionalEffects().add(commercialHubInvestment);
+                memberRepository.save(member);
+            }
+
+            case ENCAMPMENT_TRAINING -> {
+
+            }
+            case HARBOR_SHIPPING -> {
+
+            }
+            case INDUSTRIAL_ZONE_LOGISTICS -> {
+
+            }
+            case THEATER_SQUARE_PERFORMANCES -> {
+
+            }
+            case LAUNCH_EARTH_SATELLITE -> {
+
+            }
+            case LAUNCH_MOON_LANDING -> {
+
+            }
+            case LAUNCH_MARS_COLONY -> {
+
+            }
+            case EXOPLANET_EXPEDITION -> {
+
+            }
+            case TERRESTRIAL_LASER_STATION -> {
+
+            }
+            default -> {
+
+            }
+        }
+        return delete(member, Event.EventType.PROJECTS);
+    }
+
+    @Override
     public Event.EventType randomGoodyHutEvent() {
         List<Event.EventType> goodyHutEvents = Arrays.asList(
                 Event.EventType.GOODY_HUT_FREE_GOLD,
@@ -185,7 +280,9 @@ public class EventServiceImpl implements EventService {
         if (newPosition == 0) {
             // nothing happens
         } else if (newPosition == 13 || newPosition == 37) {
-//            add(member, Event.EventType.PROJECTS);
+            if (hasDistrictForProjects(member)) {
+                add(member, Event.EventType.PROJECTS);
+            }
         } else if (newPosition == 24) {
             add(member, Event.EventType.BERMUDA);
         } else if (newPosition == 6) {
@@ -233,5 +330,49 @@ public class EventServiceImpl implements EventService {
                 .build();
         messagingTemplate.convertAndSend("/topic/public/" + roomName + "/game", playerMessage);
         return member.getRoom();
+    }
+
+    private boolean hasDistrictForProjects(Member member) {
+        return member.getProperties().stream()
+                .filter(property -> property.getPosition() == 7 ||
+                        property.getPosition() == 10 ||
+                        property.getPosition() == 15 ||
+                        property.getPosition() == 17 ||
+                        property.getPosition() == 19 ||
+                        property.getPosition() == 21 ||
+                        property.getPosition() == 22 ||
+                        property.getPosition() == 30 ||
+                        property.getPosition() == 31 ||
+                        property.getPosition() == 34 ||
+                        property.getPosition() == 38 ||
+                        property.getPosition() == 39 ||
+                        property.getPosition() == 43 ||
+                        property.getPosition() == 45 ||
+                        property.getPosition() == 47
+                )
+                .count() >= 3;
+    }
+
+    private Property.Upgrade getHighestDistrictLevel(Member member, String districtType) {
+        return member.getProperties().stream()
+                .filter(property -> switch (districtType) {
+                    case "ENTERTAINMENT" -> property.getPosition() == 22 || property.getPosition() == 38;
+                    case "CAMPUS" -> property.getPosition() == 15 || property.getPosition() == 45;
+                    case "COMMERCIAL_HUB" -> property.getPosition() == 19 || property.getPosition() == 43;
+                    default -> false;
+                })
+                .flatMap(property -> property.getUpgrades().stream())
+                .filter(upgrade -> upgrade == Property.Upgrade.LEVEL_1 ||
+                        upgrade == Property.Upgrade.LEVEL_2 ||
+                        upgrade == Property.Upgrade.LEVEL_3 ||
+                        upgrade == Property.Upgrade.LEVEL_4)
+                .max(Comparator.comparingInt(upgrade -> switch (upgrade) {
+                    case LEVEL_1 -> 1;
+                    case LEVEL_2 -> 2;
+                    case LEVEL_3 -> 3;
+                    case LEVEL_4 -> 4;
+                    default -> 0;
+                }))
+                .orElse(Property.Upgrade.LEVEL_1);
     }
 }

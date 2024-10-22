@@ -15,55 +15,9 @@ export default function Empire({
                                    handleDowngradeProperty,
                                }) {
 
-    const sortedProperties = Object.keys(properties).sort((a, b) => {
-        const propertyA = properties[a];
-        const propertyB = properties[b];
-        if (!(propertyA.member && propertyA.member.user.username === currentUser.user.username)) {
-            return 0;
-        }
-        if (!(propertyB.member && propertyB.member.user.username === currentUser.user.username)) {
-            return 0;
-        }
-
-        const lowestNotOwnedLevelA = propertyA.upgrades.find(
-            (upgrade) => !upgrade.isOwned && upgrade.level.startsWith("LEVEL")
-        );
-        const lowestNotOwnedLevelB = propertyB.upgrades.find(
-            (upgrade) => !upgrade.isOwned && upgrade.level.startsWith("LEVEL")
-        );
-
-        if (!lowestNotOwnedLevelA && !lowestNotOwnedLevelB) return 0;
-        if (!lowestNotOwnedLevelA) return 1;
-        if (!lowestNotOwnedLevelB) return -1;
-
-        const isUpgradeDisabledA = currentUser.gold < lowestNotOwnedLevelA?.price ||
-            (propertyA.upgradeRequirements.length > 0 &&
-                propertyA.upgradeRequirements.some(
-                    (upg) => upg.level === lowestNotOwnedLevelA?.level
-                ) &&
-                Object.values(
-                    propertyA.upgradeRequirements.find(
-                        (upgrade) => upgrade.level === lowestNotOwnedLevelA?.level
-                    ).requirements
-                ).some((req) => req === false));
-
-        const isUpgradeDisabledB = currentUser.gold < lowestNotOwnedLevelB?.price ||
-            (propertyB.upgradeRequirements.length > 0 &&
-                propertyB.upgradeRequirements.some(
-                    (upg) => upg.level === lowestNotOwnedLevelB?.level
-                ) &&
-                Object.values(
-                    propertyB.upgradeRequirements.find(
-                        (upgrade) => upgrade.level === lowestNotOwnedLevelB?.level
-                    ).requirements
-                ).some((req) => req === false));
-
-        return isUpgradeDisabledA - isUpgradeDisabledB;
-    });
-
     return (
         <div>
-            {sortedProperties.map((key) => {
+            {Object.keys(properties).map((key) => {
                 const property = properties[key];
                 if (
                     property.member &&

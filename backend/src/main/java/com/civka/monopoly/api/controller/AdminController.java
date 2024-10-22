@@ -1,4 +1,4 @@
-package com.civka.monopoly.api.config;
+package com.civka.monopoly.api.controller;
 
 import com.civka.monopoly.api.dto.UserDto;
 import com.civka.monopoly.api.entity.User;

@@ -19,6 +19,7 @@ export default function Events({
                                    handlePayRent,
                                    handleEndTurn,
                                    handleChoice,
+                                   handleProjectChoice,
                                    handleSkip,
                                }) {
 
@@ -74,7 +75,11 @@ export default function Events({
                         />
                     );
                 case "PROJECTS":
-                    return <Projects key={index}/>;
+                    return <Projects
+                        key={index}
+                        properties={properties}
+                        handleProjectChoice={handleProjectChoice}
+                    />;
                 case "BERMUDA":
                     return null; // moved to useEffect
                 case "DIPLOMACY":

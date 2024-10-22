@@ -33,11 +33,9 @@ public class Member {
     private Color color;
 
     private Integer gold;
-    private Integer goldPerTurn;
     private Integer strength;
     private Integer tourism;
     private Integer score;
-    private ArmySpending armySpending; // todo: remove it
 
     private Integer position;
     private Boolean hasRolledDice;
@@ -51,6 +49,10 @@ public class Member {
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Event> events = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<AdditionalEffect> additionalEffects;
 
     public enum Civilization {
         Random,
@@ -72,12 +74,5 @@ public class Member {
         orange,
         pink,
         violet,
-    }
-
-    public enum ArmySpending {
-        Absent,
-        Default,
-        Medium,
-        High,
     }
 }

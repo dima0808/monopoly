@@ -1,7 +1,10 @@
 package com.civka.monopoly.api.controller;
 
+import com.civka.monopoly.api.dto.AdditionalEffectDto;
+import com.civka.monopoly.api.dto.ProjectType;
 import com.civka.monopoly.api.entity.Event;
 import com.civka.monopoly.api.entity.Member;
+import com.civka.monopoly.api.service.AdditionalEffectService;
 import com.civka.monopoly.api.service.EventService;
 import com.civka.monopoly.api.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,7 @@ public class MemberController {
 
     private final UserService userService;
     private final EventService eventService;
+    private final AdditionalEffectService additionalEffectService;
 
     @MessageMapping("/members/{receiver}/addEvent/{type}")
     public Event addEvent(@DestinationVariable String receiver,
@@ -43,9 +47,22 @@ public class MemberController {
         return eventService.makeChoice(member, type, choice);
     }
 
+    @MessageMapping("/members/{receiver}/makeProjectChoice/{choice}")
+    public Event makeProjectChoice(@DestinationVariable String receiver,
+                            @DestinationVariable ProjectType choice) {
+        Member member = userService.findByUsername(receiver).getMember();
+        return eventService.makeProjectChoice(member, choice);
+    }
+
     @GetMapping("/api/members/{username}/events")
     public ResponseEntity<List<Event>> getEvents(@PathVariable String username) {
         Member member = userService.findByUsername(username).getMember();
         return ResponseEntity.ok(member.getEvents());
+    }
+
+    @GetMapping("/api/members/{username}/additionalEffects")
+    public ResponseEntity<List<AdditionalEffectDto>> getAdditionalEffects(@PathVariable String username) {
+        Member member = userService.findByUsername(username).getMember();
+        return ResponseEntity.ok(additionalEffectService.findByMember(member));
     }
 }

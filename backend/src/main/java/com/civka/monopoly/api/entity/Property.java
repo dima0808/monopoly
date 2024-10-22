@@ -1,6 +1,5 @@
 package com.civka.monopoly.api.entity;
 
-import com.civka.monopoly.api.dto.PropertyDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;

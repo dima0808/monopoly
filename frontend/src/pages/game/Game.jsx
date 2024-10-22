@@ -9,7 +9,7 @@ import Cookies from "js-cookie";
 import {Client} from "@stomp/stompjs";
 import {useParams} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
-import {getPlayerProperties, getRoomByName} from "../../utils/http";
+import {getAllAdditionalEffects, getProperties, getRoomByName} from "../../utils/http";
 import {IP} from "../../constraints";
 
 import diceRollSound from "../../sounds/dice-rolling.mp3";
@@ -26,6 +26,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
     const [room, setRoom] = useState({});
     const [players, setPlayers] = useState([]);
     const [properties, setProperties] = useState({});
+    const [additionalEffects, setAdditionalEffects] = useState([]);
     const [dice, setDice] = useState({ firstRoll : null, secondRoll : null });
 
     const [activeTab, setActiveTab] = useState("Events");
@@ -37,6 +38,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
         const {type, content, room, member, property, firstRoll, secondRoll} = JSON.parse(message.body);
         console.log(content);
         const token = Cookies.get('token');
+        const username = Cookies.get('username');
         switch (type) {
             case 'START':
                 setRoom((prevRoom) => {
@@ -89,7 +91,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                         return player.id === property.member.id ? property.member : player;
                     });
                 });
-                getPlayerProperties(roomName, token)
+                getProperties(roomName, token)
                     .then((propertiesArray) => {
                         const propertiesObject = propertiesArray.reduce((acc, property) => {
                             acc[property.position] = property;
@@ -102,16 +104,8 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
             case 'PAY_RENT':
                 setPlayers(room.members);
                 return;
-            case 'END_TURN':
-                setRoom((prevRoom) => {
-                    return {
-                        ...prevRoom,
-                        currentTurn: room.currentTurn,
-                        turn: room.turn
-                    };
-                });
-                setPlayers(room.members);
-                getPlayerProperties(roomName, token)
+            case 'PROJECTS':
+                getProperties(roomName, token)
                     .then((propertiesArray) => {
                         const propertiesObject = propertiesArray.reduce((acc, property) => {
                             acc[property.position] = property;
@@ -121,11 +115,33 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                     })
                     .catch((error) => setError({message: error.message || "An error occurred"}));
                 return;
+            case 'END_TURN':
+                setRoom((prevRoom) => {
+                    return {
+                        ...prevRoom,
+                        currentTurn: room.currentTurn,
+                        turn: room.turn
+                    };
+                });
+                setPlayers(room.members);
+                getProperties(roomName, token)
+                    .then((propertiesArray) => {
+                        const propertiesObject = propertiesArray.reduce((acc, property) => {
+                            acc[property.position] = property;
+                            return acc;
+                        }, {});
+                        setProperties(propertiesObject);
+                    })
+                    .catch((error) => setError({message: error.message || "An error occurred"}));
+                getAllAdditionalEffects(username)
+                    .then(setAdditionalEffects)
+                    .catch((error) => setError({message: error.message || "An error occurred"}));
+                return;
             case 'BYPASS_START':
                 if (member.user.username !== Cookies.get('username')) {
                     return;
                 }
-                getPlayerProperties(roomName, token)
+                getProperties(roomName, token)
                     .then((propertiesArray) => {
                         const propertiesObject = propertiesArray.reduce((acc, property) => {
                             acc[property.position] = property;
@@ -203,6 +219,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
 
     useEffect(() => {
         const token = Cookies.get('token');
+        const username = Cookies.get('username');
         getRoomByName(roomName)
             .then((roomData) => {
                 setRoom({
@@ -217,7 +234,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 setPlayers(roomData.members);
             })
             .catch((error) => setError({message: error.message || "An error occurred"}));
-        getPlayerProperties(roomName, token)
+        getProperties(roomName, token)
             .then((propertiesArray) => {
                 const propertiesObject = propertiesArray.reduce((acc, property) => {
                     acc[property.position] = property;
@@ -225,6 +242,9 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 }, {});
                 setProperties(propertiesObject);
             })
+            .catch((error) => setError({message: error.message || "An error occurred"}));
+        getAllAdditionalEffects(username)
+            .then(setAdditionalEffects)
             .catch((error) => setError({message: error.message || "An error occurred"}));
     }, [roomName]);
 
@@ -242,7 +262,8 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                        setSelectedProperty={setSelectedProperty}
                        setNotifications={setNotifications}/>
                 <Actions client={client} isConnected={isConnected}
-                         room={room} players={players} setPlayers={setPlayers} properties={properties}
+                         room={room} players={players} setPlayers={setPlayers}
+                         properties={properties} additionalEffects={additionalEffects}
                          activeTab={activeTab} setActiveTab={setActiveTab}
                          selectedProperty={properties[selectedProperty]} setSelectedProperty={setSelectedProperty}
                          managementActiveTab={managementActiveTab} setManagementActiveTab={setManagementActiveTab}

@@ -26,6 +26,7 @@
     grid-template-columns: 45px 1fr;
 }
 .project-div {
+    cursor: pointer;
     margin: 6px 2px;
     border-radius: 6px;
     overflow: hidden;
@@ -67,4 +68,20 @@
     word-spacing: 1px;
     line-height: 1.1;
     overflow-wrap: break-word;
+}
+.chose-project-btn{
+    margin: 5px auto 4px auto;
+    width: 80%;
+    background-color: #34803f;
+}
+.chose-project-btn:hover{
+    background-color: #45884c;
+}
+.project-div-unable{
+    cursor: auto;
+    background-color: rgba(122, 108, 113, 0.72);
+}
+.project-div-unable .project-h3{
+    cursor: auto;
+    background-color: rgba(110, 104, 107, 0.8);
 }

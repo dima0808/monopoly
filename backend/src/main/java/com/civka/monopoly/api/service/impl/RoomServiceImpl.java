@@ -24,6 +24,7 @@ public class RoomServiceImpl implements RoomService {
     private final GameUtils gameUtils;
     private final PropertyService propertyService;
     private final EventServiceImpl eventService;
+    private final AdditionalEffectService additionalEffectService;
     @Value("${monopoly.app.room.max-size}")
     private Integer maxRoomSize;
 
@@ -261,7 +262,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room endTurn(Member member, Member.ArmySpending armySpending) {
+    public Room endTurn(Member member, ArmySpending armySpending) {
         if (!member.getRoom().getCurrentTurn().equals(member.getUser().getUsername()) || !member.getHasRolledDice()) {
             throw new UserNotAllowedException();
         }
@@ -271,19 +272,31 @@ public class RoomServiceImpl implements RoomService {
         if (gameUtils.getGoldFromArmySpending(armySpending) > member.getGold()) {
             throw new UserNotAllowedException();
         }
-        member.setArmySpending(armySpending);
         member.setStrength(member.getStrength() + gameUtils.getStrengthFromArmySpending(armySpending));
         member.setGold(member.getGold() + gameUtils.getGoldFromArmySpending(armySpending));
 
         List<Property> properties = member.getProperties();
-        Iterator<Property> iterator = properties.iterator();
-        while (iterator.hasNext()) {
-            Property property = iterator.next();
+        Iterator<Property> propertiesIterator = properties.iterator();
+        while (propertiesIterator.hasNext()) {
+            Property property = propertiesIterator.next();
             if (property.getMortgage() > 0) {
                 property.setMortgage(property.getMortgage() - 1);
                 propertyService.save(property);
                 if (property.getMortgage() == 0) {
-                    iterator.remove();
+                    propertiesIterator.remove();
+                }
+            }
+        }
+
+        List<AdditionalEffect> additionalEffects = member.getAdditionalEffects();
+        Iterator<AdditionalEffect> additionalEffectsIterator = additionalEffects.iterator();
+        while (additionalEffectsIterator.hasNext()) {
+            AdditionalEffect additionalEffect = additionalEffectsIterator.next();
+            if (additionalEffect.getTurnsLeft() > 0) {
+                additionalEffect.setTurnsLeft(additionalEffect.getTurnsLeft() - 1);
+                additionalEffectService.save(additionalEffect);
+                if (additionalEffect.getTurnsLeft() == 0) {
+                    additionalEffectsIterator.remove();
                 }
             }
         }

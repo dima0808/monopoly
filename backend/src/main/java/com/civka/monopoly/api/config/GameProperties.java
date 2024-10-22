@@ -1,8 +1,6 @@
 package com.civka.monopoly.api.config;
 
-import com.civka.monopoly.api.entity.Event;
-import com.civka.monopoly.api.entity.Member;
-import com.civka.monopoly.api.entity.Property;
+import com.civka.monopoly.api.entity.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -24,6 +22,8 @@ public class GameProperties {
     private Map<String, String> upgrade;
     private Map<String, Integer> armySpending;
     private Map<String, Integer> event;
+    private Map<String, Integer> project;
+    private Map<String, Integer> additionalGoldPerTurn;
 
     public Integer getPriceByPositionAndLevel(Integer position, Property.Upgrade level) {
         return price.get(position + "." + level);
@@ -41,11 +41,11 @@ public class GameProperties {
         return perTurn.get(position + "." + level);
     }
 
-    public int getStrengthFromArmySpending(Member.ArmySpending armySpendingLevel) {
+    public int getStrengthFromArmySpending(ArmySpending armySpendingLevel) {
         return armySpending.get(armySpendingLevel + ".strength");
     }
 
-    public int getGoldFromArmySpending(Member.ArmySpending armySpendingLevel) {
+    public int getGoldFromArmySpending(ArmySpending armySpendingLevel) {
         return armySpending.get(armySpendingLevel + ".gold");
     }
 
@@ -71,5 +71,17 @@ public class GameProperties {
 
     public int getHirePrice(Event.EventType eventType) {
         return event.get(eventType + ".hirePrice");
+    }
+
+    public int getBreadAndCircusesByLevelPlus(Property.Upgrade level) {
+        return project.get("BREAD_AND_CIRCUSES." + level + ".plus");
+    }
+
+    public int getBreadAndCircusesByLevelMinus(Property.Upgrade level) {
+        return project.get("BREAD_AND_CIRCUSES." + level + ".minus");
+    }
+
+    public int getGoldPerTurnByAdditionalEffect(AdditionalEffect.AdditionalEffectType type) {
+        return additionalGoldPerTurn.get(type.toString());
     }
 }

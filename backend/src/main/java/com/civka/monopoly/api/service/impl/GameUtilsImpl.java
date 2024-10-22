@@ -4,9 +4,7 @@ import com.civka.monopoly.api.config.GameProperties;
 import com.civka.monopoly.api.dto.ArmySpendingDto;
 import com.civka.monopoly.api.dto.RequirementDto;
 import com.civka.monopoly.api.dto.UpgradeDto;
-import com.civka.monopoly.api.entity.Event;
-import com.civka.monopoly.api.entity.Member;
-import com.civka.monopoly.api.entity.Property;
+import com.civka.monopoly.api.entity.*;
 import com.civka.monopoly.api.service.GameUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -95,12 +93,12 @@ public class GameUtilsImpl implements GameUtils {
     }
 
     @Override
-    public int getStrengthFromArmySpending(Member.ArmySpending armySpendingLevel) {
+    public int getStrengthFromArmySpending(ArmySpending armySpendingLevel) {
         return gameProperties.getStrengthFromArmySpending(armySpendingLevel);
     }
 
     @Override
-    public int getGoldFromArmySpending(Member.ArmySpending armySpendingLevel) {
+    public int getGoldFromArmySpending(ArmySpending armySpendingLevel) {
         return gameProperties.getGoldFromArmySpending(armySpendingLevel);
     }
 
@@ -152,7 +150,7 @@ public class GameUtilsImpl implements GameUtils {
     @Override
     public List<ArmySpendingDto> getArmySpendings() {
         List<ArmySpendingDto> armySpendings = new ArrayList<>();
-        for (Member.ArmySpending armySpending : Member.ArmySpending.values()) {
+        for (ArmySpending armySpending : ArmySpending.values()) {
             ArmySpendingDto armySpendingDto = ArmySpendingDto.builder()
                     .armySpending(armySpending)
                     .gold(gameProperties.getGoldFromArmySpending(armySpending))
@@ -191,6 +189,20 @@ public class GameUtilsImpl implements GameUtils {
     @Override
     public int getHirePrice(Event.EventType eventType) {
         return gameProperties.getHirePrice(eventType);
+    }
+
+    @Override
+    public int getBreadAndCircusesByLevel(Property.Upgrade level, boolean isPlus) {
+        if (isPlus) {
+            return gameProperties.getBreadAndCircusesByLevelPlus(level);
+        } else {
+            return gameProperties.getBreadAndCircusesByLevelMinus(level);
+        }
+    }
+
+    @Override
+    public int getGoldPerTurnByAdditionalEffect(AdditionalEffect.AdditionalEffectType type) {
+        return gameProperties.getGoldPerTurnByAdditionalEffect(type);
     }
 
     private boolean calculateRequirement(RequirementDto.Requirement requirement, Integer position, Member member) {

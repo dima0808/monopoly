@@ -86,6 +86,9 @@ public class MemberServiceImpl implements MemberService {
         }
         member.setPosition(newPosition);
         member.setGold(member.getGold() + gameUtils.calculateGeneralGoldPerTurn(member));
+        for (AdditionalEffect additionalEffect : member.getAdditionalEffects()) {
+            member.setGold(member.getGold() + gameUtils.getGoldPerTurnByAdditionalEffect(additionalEffect.getType()));
+        }
         member.setHasRolledDice(true);
         Member updatedMember = memberRepository.save(member);
 

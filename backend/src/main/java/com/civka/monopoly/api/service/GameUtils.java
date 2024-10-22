@@ -3,9 +3,7 @@ package com.civka.monopoly.api.service;
 import com.civka.monopoly.api.dto.ArmySpendingDto;
 import com.civka.monopoly.api.dto.RequirementDto;
 import com.civka.monopoly.api.dto.UpgradeDto;
-import com.civka.monopoly.api.entity.Event;
-import com.civka.monopoly.api.entity.Member;
-import com.civka.monopoly.api.entity.Property;
+import com.civka.monopoly.api.entity.*;
 
 import java.util.List;
 import java.util.Map;
@@ -28,9 +26,9 @@ public interface GameUtils {
 
     int getPriceByPositionAndLevel(Integer position, Property.Upgrade level);
 
-    int getStrengthFromArmySpending(Member.ArmySpending armySpending);
+    int getStrengthFromArmySpending(ArmySpending armySpending);
 
-    int getGoldFromArmySpending(Member.ArmySpending armySpending);
+    int getGoldFromArmySpending(ArmySpending armySpending);
 
     Map<String, String> getUpgradeProperties();
 
@@ -51,4 +49,8 @@ public interface GameUtils {
     int getHireIncome(Event.EventType eventType);
 
     int getHirePrice(Event.EventType eventType);
+
+    int getBreadAndCircusesByLevel(Property.Upgrade level, boolean isPlus);
+
+    int getGoldPerTurnByAdditionalEffect(AdditionalEffect.AdditionalEffectType type);
 }

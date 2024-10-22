@@ -7,11 +7,11 @@ import PlayerInfo from "./playerInfo/PlayerInfo";
 import Property from "./property/Property";
 import Relations from "./relations/Relations";
 import Wins from "./wins/Wins";
-import {useEffect, useState} from "react";
 
 export default function Management({
     currentUser,
     properties,
+    additionalEffects,
     gameSettings,
     managementActiveTab,
     setManagementActiveTab,
@@ -23,7 +23,7 @@ export default function Management({
     const renderContent = () => {
         switch (managementActiveTab) {
             case "Cashflow":
-                return <Cashflow properties={properties} />;
+                return <Cashflow additionalEffects={additionalEffects} properties={properties} />;
             case "Empire":
                 return (
                     <Empire

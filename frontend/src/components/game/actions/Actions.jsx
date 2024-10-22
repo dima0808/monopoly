@@ -14,6 +14,7 @@ export default function Actions({
     players,
     setPlayers,
     properties,
+    additionalEffects,
     activeTab,
     setActiveTab,
     selectedProperty,
@@ -258,6 +259,42 @@ export default function Actions({
         }
     }
 
+    const handleProjectChoice = (selectedProject) => {
+        const token = Cookies.get("token");
+        const username = Cookies.get("username");
+        if (!client || !client.publish) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message:
+                        "Client is not initialized or publish method is not available",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+            return;
+        }
+        try {
+            client.publish({
+                destination: `/app/members/${username}/makeProjectChoice/${selectedProject}`,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    username: username,
+                },
+            });
+            console.log("Handling event choice...");
+        } catch (error) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message: "Error handling event choice (no connection)",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+        }
+    }
+
     const handleSkip = (eventType) => {
         const token = Cookies.get("token");
         const username = Cookies.get("username");
@@ -466,6 +503,7 @@ export default function Actions({
                         handleBuyProperty={handleBuyProperty}
                         handlePayRent={handlePayRent}
                         handleChoice={handleChoice}
+                        handleProjectChoice={handleProjectChoice}
                         handleSkip={handleSkip}
                         handleEndTurn={handleEndTurn}
                         isCurrentUserTurn={isCurrentUserTurn}
@@ -478,6 +516,7 @@ export default function Actions({
                         gameSettings={gameSettings}
                         currentUser={currentUser}
                         properties={properties}
+                        additionalEffects={additionalEffects}
                         managementActiveTab={managementActiveTab}
                         setManagementActiveTab={setManagementActiveTab}
                         selectedProperty={selectedProperty}
@@ -503,9 +542,13 @@ export default function Actions({
                     property.member.user.username === Cookies.get("username")
             );
 
-            const totalGoldPerTurn = userProperties.reduce((sum, property) => {
+            let totalGoldPerTurn = userProperties.reduce((sum, property) => {
                 return sum + (property.goldPerTurn || 0);
             }, 0);
+
+            additionalEffects.forEach((effect) => {
+                totalGoldPerTurn += effect.goldPerTurn;
+            });
 
             setCalculatedGoldPerTurn(totalGoldPerTurn);
         }
