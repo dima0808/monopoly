@@ -2,7 +2,7 @@ import "./styles.css";
 import goldPerTurnImg from "../../../../../images/icon-gold-per-turn.png";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { propertiesInfo } from "../../../../../constraints";
+import {additionalEffectsInfo, propertiesInfo} from "../../../../../constraints";
 
 export default function Cashflow({ additionalEffects, properties }) {
     const [calculatedGoldPerTurn, setCalculatedGoldPerTurn] = useState(0);
@@ -63,7 +63,7 @@ export default function Cashflow({ additionalEffects, properties }) {
                             (property) =>
                                 property.member &&
                                 property.member.user.username ===
-                                    Cookies.get("username")
+                                Cookies.get("username")
                         )
                         .map((property, key) => (
                             <li key={key} className="value">
@@ -84,7 +84,7 @@ export default function Cashflow({ additionalEffects, properties }) {
                                             {
                                                 propertiesInfo[
                                                     property.position
-                                                ]["LEVEL_1"].name
+                                                    ]["LEVEL_1"].name
                                             }
                                             "
                                         </span>
@@ -92,7 +92,9 @@ export default function Cashflow({ additionalEffects, properties }) {
                                 </div>
                             </li>
                         ))}
-                    {additionalEffects.map((effect, key) => (
+                    {additionalEffects
+                        .filter(effect => effect.type.startsWith("COMMERCIAL_HUB_INVESTMENT"))
+                        .map((effect, key) => (
                         <li key={key} className="value">
                             <div className="player-stat-gold gold-per-turn width-full no-select">
                                 <img
@@ -104,7 +106,9 @@ export default function Cashflow({ additionalEffects, properties }) {
                             </div>
                             <div className="div-h3">
                                 <h3>
-                                    from <span className="cell-span"> "{effect.type}" </span> {effect.turnsLeft}х.
+                                    from project <span
+                                    className="cell-span"> "{additionalEffectsInfo[effect.type]}" </span>
+                                    within {" "}<b>{effect.turnsLeft}</b>х.
                                 </h3>
                             </div>
                         </li>

@@ -54,6 +54,13 @@ public class MemberController {
         return eventService.makeProjectChoice(member, choice);
     }
 
+    @MessageMapping("/members/{receiver}/doScienceProject")
+    public Event doScienceProject(@DestinationVariable String receiver) {
+        Member member = userService.findByUsername(receiver).getMember();
+        return eventService.doScienceProject(member);
+    }
+
+
     @GetMapping("/api/members/{username}/events")
     public ResponseEntity<List<Event>> getEvents(@PathVariable String username) {
         Member member = userService.findByUsername(username).getMember();

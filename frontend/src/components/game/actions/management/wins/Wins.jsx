@@ -270,10 +270,11 @@ export default function Wins() {
                                 </div>
                             </div>
                             <p className="win__victory-p">
-                                Victory is achieved through the pursuit of exploring
-                                outer space. You must have the right equipment and
-                                complete all scientific projects to win. The final
-                                goal will be to build a base on the Mars.
+                                You must have the right equipment and
+                                complete all scientific projects to win. These projects need
+                                to be carried out in the research lab or spaceport,
+                                the more scientific buildings you have, the faster the process will go.
+                                The final goal will be to build a base on the Mars.
                             </p>
                         </div>
                         <h3 className="win__victory-h2 win__victory-h3">

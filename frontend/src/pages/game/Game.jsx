@@ -114,6 +114,9 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                         setProperties(propertiesObject);
                     })
                     .catch((error) => setError({message: error.message || "An error occurred"}));
+                getAllAdditionalEffects(username)
+                    .then(setAdditionalEffects)
+                    .catch((error) => setError({message: error.message || "An error occurred"}));
                 return;
             case 'END_TURN':
                 setRoom((prevRoom) => {

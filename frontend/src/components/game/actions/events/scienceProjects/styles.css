@@ -1,0 +1,31 @@
+.chose-project-btn.decision-button-red{
+    background-color: #c42525;
+}
+.chose-project-btn.decision-button-red:hover{
+    background-color: #d22c2c;
+}
+.science-project{
+    margin: 0 0 6px 0;
+    background-color: #555559;
+}
+.science-project .project-color-h2{
+    color: #cadfe5;
+    padding: 0;
+}
+.science-project .project-div{
+    margin: 6px 2px 0 2px;
+}
+.science-project .chose-project-btn{
+    width: 124px;
+}
+.science-project .decision-buttons{
+    padding: 1px 4px 0 4px;
+}
+.science-project .project-div{
+    cursor: default;
+    background-color: rgba(111, 112, 117, 0.72)
+}
+.science-project .project-h3{
+    background-color: rgba(95, 98, 101, 0.8);
+    color: rgba(196, 210, 213, 0.95)
+}

@@ -34,6 +34,10 @@ public class AdditionalEffect {
         COMMERCIAL_HUB_INVESTMENT_2,
         COMMERCIAL_HUB_INVESTMENT_3,
         COMMERCIAL_HUB_INVESTMENT_4,
+        WONDER_DISCOUNT_1,
+        WONDER_DISCOUNT_2,
+        WONDER_DISCOUNT_3,
+        WONDER_DISCOUNT_4,
         ALLIANCE,
     }
 }

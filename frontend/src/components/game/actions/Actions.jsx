@@ -49,8 +49,7 @@ export default function Actions({
             setNotifications((prev) => [
                 ...prev,
                 {
-                    message:
-                        "Client is not initialized or publish method is not available",
+                    message: "Client is not initialized or publish method is not available",
                     duration: 3500,
                     isError: true,
                 },
@@ -85,8 +84,7 @@ export default function Actions({
             setNotifications((prev) => [
                 ...prev,
                 {
-                    message:
-                        "Client is not initialized or publish method is not available",
+                    message: "Client is not initialized or publish method is not available",
                     duration: 3500,
                     isError: true,
                 },
@@ -121,8 +119,7 @@ export default function Actions({
             setNotifications((prev) => [
                 ...prev,
                 {
-                    message:
-                        "Client is not initialized or publish method is not available",
+                    message: "Client is not initialized or publish method is not available",
                     duration: 3500,
                     isError: true,
                 },
@@ -158,8 +155,7 @@ export default function Actions({
             setNotifications((prev) => [
                 ...prev,
                 {
-                    message:
-                        "Client is not initialized or publish method is not available",
+                    message: "Client is not initialized or publish method is not available",
                     duration: 3500,
                     isError: true,
                 },
@@ -194,8 +190,7 @@ export default function Actions({
             setNotifications((prev) => [
                 ...prev,
                 {
-                    message:
-                        "Client is not initialized or publish method is not available",
+                    message: "Client is not initialized or publish method is not available",
                     duration: 3500,
                     isError: true,
                 },
@@ -266,8 +261,7 @@ export default function Actions({
             setNotifications((prev) => [
                 ...prev,
                 {
-                    message:
-                        "Client is not initialized or publish method is not available",
+                    message: "Client is not initialized or publish method is not available",
                     duration: 3500,
                     isError: true,
                 },
@@ -295,6 +289,41 @@ export default function Actions({
         }
     }
 
+    const handleScienceProject = () => {
+        const token = Cookies.get("token");
+        const username = Cookies.get("username");
+        if (!client || !client.publish) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message: "Client is not initialized or publish method is not available",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+            return;
+        }
+        try {
+            client.publish({
+                destination: `/app/members/${username}/doScienceProject`,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    username: username,
+                },
+            });
+            console.log("Handling science project...");
+        } catch (error) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message: "Error handling science project (no connection)",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+        }
+    }
+
     const handleSkip = (eventType) => {
         const token = Cookies.get("token");
         const username = Cookies.get("username");
@@ -302,8 +331,7 @@ export default function Actions({
             setNotifications((prev) => [
                 ...prev,
                 {
-                    message:
-                        "Client is not initialized or publish method is not available",
+                    message: "Client is not initialized or publish method is not available",
                     duration: 3500,
                     isError: true,
                 },
@@ -496,6 +524,8 @@ export default function Actions({
             case "Events":
                 return (
                     <Events
+                        room={room}
+                        gameSettings={gameSettings}
                         players={players}
                         events={events}
                         properties={properties}
@@ -504,6 +534,7 @@ export default function Actions({
                         handlePayRent={handlePayRent}
                         handleChoice={handleChoice}
                         handleProjectChoice={handleProjectChoice}
+                        handleScienceProject={handleScienceProject}
                         handleSkip={handleSkip}
                         handleEndTurn={handleEndTurn}
                         isCurrentUserTurn={isCurrentUserTurn}
@@ -643,15 +674,15 @@ export default function Actions({
                         ))}
                 </ul>
                 <div className="flex-between management-btns">
-                    <button
-                        onClick={() => {
-                            setActiveTab("Management");
-                            setManagementActiveTab("Relations");
-                        }}
-                        className="management-btn"
-                    >
-                        Relations
-                    </button>
+                    {/*<button*/}
+                    {/*    onClick={() => {*/}
+                    {/*        setActiveTab("Management");*/}
+                    {/*        setManagementActiveTab("Relations");*/}
+                    {/*    }}*/}
+                    {/*    className="management-btn"*/}
+                    {/*>*/}
+                    {/*    Relations*/}
+                    {/*</button>*/}
                     <button
                         onClick={() => {
                             setActiveTab("Management");

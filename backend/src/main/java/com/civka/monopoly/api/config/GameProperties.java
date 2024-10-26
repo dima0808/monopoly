@@ -1,5 +1,6 @@
 package com.civka.monopoly.api.config;
 
+import com.civka.monopoly.api.dto.ProjectType;
 import com.civka.monopoly.api.entity.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -81,7 +82,28 @@ public class GameProperties {
         return project.get("BREAD_AND_CIRCUSES." + level + ".minus");
     }
 
+    public int getProjectGoldByLevel(ProjectType type, Property.Upgrade level) {
+        Integer gold = project.get(type + "." + level + ".gold");
+        return gold == null ? 0 : gold;
+    }
+
+    public int getProjectStrengthByLevel(ProjectType type, Property.Upgrade level) {
+        Integer strength = project.get(type + "." + level + ".strength");
+        return strength == null ? 0 : strength;
+    }
+
+    public int getProjectTourismByLevel(ProjectType type, Property.Upgrade level) {
+        Integer tourism = project.get(type + "." + level + ".tourism");
+        return tourism == null ? 0 : tourism;
+    }
+
+    public int getProjectDiscountByLevel(ProjectType type, Property.Upgrade level) {
+        Integer discount = project.get(type + "." + level + ".discount");
+        return discount == null ? 0 : discount;
+    }
+
     public int getGoldPerTurnByAdditionalEffect(AdditionalEffect.AdditionalEffectType type) {
-        return additionalGoldPerTurn.get(type.toString());
+        Integer goldPerTurn = additionalGoldPerTurn.get(type.toString());
+        return goldPerTurn == null ? 0 : goldPerTurn;
     }
 }

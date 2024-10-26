@@ -42,6 +42,9 @@ public class Member {
 
     private Integer finishedRounds;
 
+    private List<ScienceProject> finishedScienceProjects;
+    private Integer turnsToNextScienceProject;
+
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Property> properties = new ArrayList<>();
@@ -74,5 +77,14 @@ public class Member {
         orange,
         pink,
         violet,
+    }
+
+    public enum ScienceProject {
+        CAMPUS,
+        SATELLITE,
+        MOON,
+        MARS,
+        EXOPLANET,
+        LASER,
     }
 }

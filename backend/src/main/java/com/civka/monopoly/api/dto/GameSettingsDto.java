@@ -15,9 +15,13 @@ public class GameSettingsDto {
 
     private List<ArmySpendingDto> armySpendings;
 
+    private List<ProjectSettingsDto> projectSettings;
+
     private Double demoteGoldCoefficient;
 
     private Double mortgageGoldCoefficient;
 
     private Double redemptionCoefficient;
+
+    private Integer scienceProjectCost;
 }

@@ -8,18 +8,15 @@ import com.civka.monopoly.api.payload.PlayerMessage;
 import com.civka.monopoly.api.payload.RoomMessage;
 import com.civka.monopoly.api.repository.EventRepository;
 import com.civka.monopoly.api.repository.MemberRepository;
-import com.civka.monopoly.api.service.ChatMessageService;
-import com.civka.monopoly.api.service.ChatService;
-import com.civka.monopoly.api.service.EventService;
-import com.civka.monopoly.api.service.PropertyService;
+import com.civka.monopoly.api.service.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -34,6 +31,9 @@ public class EventServiceImpl implements EventService {
     private final ChatService chatService;
     private final ChatMessageService chatMessageService;
     private final PropertyService propertyService;
+
+    @Value("${monopoly.app.room.game.science-project.basicTurnAmount}")
+    private Integer basicTurnAmount;
 
     @Override
     public Event save(Event event) {
@@ -163,7 +163,7 @@ public class EventServiceImpl implements EventService {
         switch (choice) {
             case BREAD_AND_CIRCUSES -> {
                 Room room = member.getRoom();
-                Property.Upgrade highestEntertainmentLevel = getHighestDistrictLevel(member, "ENTERTAINMENT");
+                Property.Upgrade highestDistrictLevel = gameUtils.getHighestDistrictLevel(member, "ENTERTAINMENT");
                 List<Member> members = room.getMembers();
 
                 for (Member m : members) {
@@ -174,7 +174,7 @@ public class EventServiceImpl implements EventService {
                         Property property = iterator.next();
                         if (property.getMortgage() != -1) {
                             property.setMortgage(property.getMortgage() +
-                                    gameUtils.getBreadAndCircusesByLevel(highestEntertainmentLevel, isCurrentMember));
+                                    gameUtils.getBreadAndCircusesByLevel(highestDistrictLevel, isCurrentMember));
                             propertyService.save(property);
                             if (!isCurrentMember && property.getMortgage() < 1) {
                                 iterator.remove();
@@ -186,21 +186,18 @@ public class EventServiceImpl implements EventService {
 
                 RoomMessage roomMessage = RoomMessage.builder()
                         .type(RoomMessage.MessageType.PROJECTS)
-                        .content("Game started")
+                        .content("Bread and Circuses project completed!")
                         .room(room)
                         .build();
                 messagingTemplate.convertAndSend("/topic/public/" + room.getName() + "/game", roomMessage);
             }
 
-            case CAMPUS_RESEARCH_GRANTS -> {
-
-            }
-
             case COMMERCIAL_HUB_INVESTMENT -> {
-                Property.Upgrade highestCommercialHubLevel = getHighestDistrictLevel(member, "COMMERCIAL_HUB");
+                Room room = member.getRoom();
+                Property.Upgrade highestDistrictLevel = gameUtils.getHighestDistrictLevel(member, "COMMERCIAL_HUB");
                 AdditionalEffect commercialHubInvestment = AdditionalEffect.builder()
                         .member(member)
-                        .type(switch (highestCommercialHubLevel) {
+                        .type(switch (highestDistrictLevel) {
                             case LEVEL_1 -> AdditionalEffect.AdditionalEffectType.COMMERCIAL_HUB_INVESTMENT_1;
                             case LEVEL_2 -> AdditionalEffect.AdditionalEffectType.COMMERCIAL_HUB_INVESTMENT_2;
                             case LEVEL_3 -> AdditionalEffect.AdditionalEffectType.COMMERCIAL_HUB_INVESTMENT_3;
@@ -211,40 +208,119 @@ public class EventServiceImpl implements EventService {
                         .build();
                 member.getAdditionalEffects().add(commercialHubInvestment);
                 memberRepository.save(member);
+
+                RoomMessage roomMessage = RoomMessage.builder()
+                        .type(RoomMessage.MessageType.PROJECTS)
+                        .content("Bread and Circuses project completed!")
+                        .room(room)
+                        .build();
+                messagingTemplate.convertAndSend("/topic/public/" + room.getName() + "/game", roomMessage);
             }
 
             case ENCAMPMENT_TRAINING -> {
-
+                Property.Upgrade highestDistrictLevel = gameUtils.getHighestDistrictLevel(member, "ENCAMPMENT");
+                member.setStrength(member.getStrength() +
+                        gameUtils.getProjectStrengthByLevel(choice, highestDistrictLevel));
+                memberRepository.save(member);
             }
+
             case HARBOR_SHIPPING -> {
-
+                Property.Upgrade highestDistrictLevel = gameUtils.getHighestDistrictLevel(member, "HARBOR");
+                member.setGold(member.getGold() + gameUtils.getProjectGoldByLevel(choice, highestDistrictLevel));
+                memberRepository.save(member);
             }
+
             case INDUSTRIAL_ZONE_LOGISTICS -> {
-
+                Property.Upgrade highestDistrictLevel = gameUtils.getHighestDistrictLevel(member, "INDUSTRIAL_ZONE");
+                AdditionalEffect industrialZoneLogistics = AdditionalEffect.builder()
+                        .member(member)
+                        .type(switch (highestDistrictLevel) {
+                            case LEVEL_1 -> AdditionalEffect.AdditionalEffectType.WONDER_DISCOUNT_1;
+                            case LEVEL_2 -> AdditionalEffect.AdditionalEffectType.WONDER_DISCOUNT_2;
+                            case LEVEL_3 -> AdditionalEffect.AdditionalEffectType.WONDER_DISCOUNT_3;
+                            case LEVEL_4 -> AdditionalEffect.AdditionalEffectType.WONDER_DISCOUNT_4;
+                            default -> null;
+                        })
+                        .turnsLeft(-1)
+                        .build();
+                member.getAdditionalEffects().add(industrialZoneLogistics);
+                memberRepository.save(member);
             }
+
             case THEATER_SQUARE_PERFORMANCES -> {
-
+                Property.Upgrade highestDistrictLevel = gameUtils.getHighestDistrictLevel(member, "THEATER_SQUARE");
+                member.setTourism(member.getTourism() +
+                        gameUtils.getProjectTourismByLevel(choice, highestDistrictLevel));
+                memberRepository.save(member);
             }
-            case LAUNCH_EARTH_SATELLITE -> {
 
+            case CAMPUS_RESEARCH_GRANTS -> {
+                if (member.getFinishedScienceProjects()
+                        .stream()
+                        .noneMatch((project) -> project.equals(Member.ScienceProject.CAMPUS))) {
+                    List<Member.ScienceProject> finishedScienceProjects = member.getFinishedScienceProjects();
+                    finishedScienceProjects.add(Member.ScienceProject.CAMPUS);
+                    memberRepository.save(member);
+                }
             }
-            case LAUNCH_MOON_LANDING -> {
 
-            }
-            case LAUNCH_MARS_COLONY -> {
-
-            }
-            case EXOPLANET_EXPEDITION -> {
-
-            }
-            case TERRESTRIAL_LASER_STATION -> {
-
+            case LAUNCH_EARTH_SATELLITE,
+                 LAUNCH_MOON_LANDING,
+                 LAUNCH_MARS_COLONY,
+                 EXOPLANET_EXPEDITION,
+                 TERRESTRIAL_LASER_STATION -> {
+                Member.ScienceProject spaceProject = switch (choice) {
+                    case LAUNCH_EARTH_SATELLITE -> Member.ScienceProject.SATELLITE;
+                    case LAUNCH_MOON_LANDING -> Member.ScienceProject.MOON;
+                    case LAUNCH_MARS_COLONY -> Member.ScienceProject.MARS;
+                    case EXOPLANET_EXPEDITION -> Member.ScienceProject.EXOPLANET;
+                    case TERRESTRIAL_LASER_STATION -> Member.ScienceProject.LASER;
+                    default -> null;
+                };
+                if ((spaceProject.equals(Member.ScienceProject.SATELLITE) ||
+                        member.getFinishedScienceProjects()
+                                .stream()
+                                .anyMatch((project) -> project.ordinal() == spaceProject.ordinal() - 1)) &&
+                        member.getProperties()
+                                .stream()
+                                .anyMatch(p -> p.getPosition().equals(47) ||
+                                        (p.getPosition().equals(15) || p.getPosition().equals(45))
+                                                && p.getUpgrades().contains(Property.Upgrade.LEVEL_4))) {
+                    List<Member.ScienceProject> finishedScienceProjects = member.getFinishedScienceProjects();
+                    finishedScienceProjects.add(spaceProject);
+                    memberRepository.save(member);
+                } else {
+                    throw new UserNotAllowedException();
+                }
             }
             default -> {
-
+                return null;
             }
         }
         return delete(member, Event.EventType.PROJECTS);
+    }
+
+    @Override
+    public Event doScienceProject(Member member) {
+        List<Member.ScienceProject> finishedProjects = member.getFinishedScienceProjects();
+        Member.ScienceProject nextProject;
+
+        if (finishedProjects.contains(Member.ScienceProject.EXOPLANET)) {
+            nextProject = Member.ScienceProject.LASER;
+        } else if (finishedProjects.contains(Member.ScienceProject.MARS)) {
+            nextProject = Member.ScienceProject.EXOPLANET;
+        } else if (finishedProjects.contains(Member.ScienceProject.MOON)) {
+            nextProject = Member.ScienceProject.MARS;
+        } else if (finishedProjects.contains(Member.ScienceProject.SATELLITE)) {
+            nextProject = Member.ScienceProject.MOON;
+        } else {
+            nextProject = Member.ScienceProject.SATELLITE;
+        }
+        finishedProjects.add(nextProject);
+        member.setTurnsToNextScienceProject(basicTurnAmount);
+        memberRepository.save(member);
+
+        return delete(member, Event.EventType.SCIENCE_PROJECTS);
     }
 
     @Override
@@ -351,28 +427,5 @@ public class EventServiceImpl implements EventService {
                         property.getPosition() == 47
                 )
                 .count() >= 3;
-    }
-
-    private Property.Upgrade getHighestDistrictLevel(Member member, String districtType) {
-        return member.getProperties().stream()
-                .filter(property -> switch (districtType) {
-                    case "ENTERTAINMENT" -> property.getPosition() == 22 || property.getPosition() == 38;
-                    case "CAMPUS" -> property.getPosition() == 15 || property.getPosition() == 45;
-                    case "COMMERCIAL_HUB" -> property.getPosition() == 19 || property.getPosition() == 43;
-                    default -> false;
-                })
-                .flatMap(property -> property.getUpgrades().stream())
-                .filter(upgrade -> upgrade == Property.Upgrade.LEVEL_1 ||
-                        upgrade == Property.Upgrade.LEVEL_2 ||
-                        upgrade == Property.Upgrade.LEVEL_3 ||
-                        upgrade == Property.Upgrade.LEVEL_4)
-                .max(Comparator.comparingInt(upgrade -> switch (upgrade) {
-                    case LEVEL_1 -> 1;
-                    case LEVEL_2 -> 2;
-                    case LEVEL_3 -> 3;
-                    case LEVEL_4 -> 4;
-                    default -> 0;
-                }))
-                .orElse(Property.Upgrade.LEVEL_1);
     }
 }

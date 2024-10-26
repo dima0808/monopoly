@@ -7,8 +7,11 @@ import ForeignProperty from "./foreignProperty/ForeignProperty";
 import GoodyHut from "./goodyHut/GoodyHut";
 import Projects from "./projects/Projects";
 import {useEffect} from "react";
+import ScienceProjects from "./scienceProjects/ScienceProjects";
 
 export default function Events({
+                                   room,
+                                   gameSettings,
                                    players,
                                    events,
                                    properties,
@@ -20,6 +23,7 @@ export default function Events({
                                    handleEndTurn,
                                    handleChoice,
                                    handleProjectChoice,
+                                   handleScienceProject,
                                    handleSkip,
                                }) {
 
@@ -77,8 +81,23 @@ export default function Events({
                 case "PROJECTS":
                     return <Projects
                         key={index}
+                        room={room}
+                        member={players.find(
+                            (player) => player.id === member.id
+                        )}
+                        gameSettings={gameSettings}
                         properties={properties}
                         handleProjectChoice={handleProjectChoice}
+                    />;
+                case "SCIENCE_PROJECTS":
+                    return <ScienceProjects
+                        key={index}
+                        member={players.find(
+                            (player) => player.id === member.id
+                        )}
+                        price={gameSettings.scienceProjectCost}
+                        onSkip={() => handleSkip("SCIENCE_PROJECTS")}
+                        handleScienceProject={handleScienceProject}
                     />;
                 case "BERMUDA":
                     return null; // moved to useEffect
@@ -110,18 +129,6 @@ export default function Events({
     return (
         <div>
             <div className="events-hole scrollable-div">
-                {/* <Peace /> */}
-                {/* <Union /> */}
-                {/* <Barbarians /> */}
-                {/* <GoodyHut /> */}
-                {/* + */}
-                {/*<BuyProperty/>*/}
-                {/* + */}
-                {/* <EnemyProperty /> */}
-                {/* + */}
-                {/* <ForeignProperty /> */}
-                {/*<Projects />*/}
-                {/*<Diplomacy />*/}
                 {renderContent()}
             </div>
             <div className="div-btn-turn-and-roll ">

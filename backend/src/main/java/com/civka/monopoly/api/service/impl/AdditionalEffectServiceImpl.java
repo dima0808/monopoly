@@ -26,7 +26,6 @@ public class AdditionalEffectServiceImpl implements AdditionalEffectService {
     @Override
     public List<AdditionalEffectDto> findByMember(Member member) {
         List<AdditionalEffect> additionalEffects = member.getAdditionalEffects();
-        System.out.println("additionalEffects: " + additionalEffects.size());
 
         return additionalEffects.stream()
                 .map(additionalEffect -> AdditionalEffectDto.builder()

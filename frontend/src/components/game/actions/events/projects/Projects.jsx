@@ -18,7 +18,7 @@ import launchTerrestrialLaserStationImg from "../../../../../images/icon_project
 import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 
-export default function Projects({properties, handleProjectChoice}) {
+export default function Projects({room, member, gameSettings, properties, handleProjectChoice}) {
 
     const [selectedProject, setSelectedProject] = useState("");
 
@@ -72,23 +72,60 @@ export default function Projects({properties, handleProjectChoice}) {
         if (properties[39]?.member?.user.username === Cookies.get("username")) {
             return "THEATER_SQUARE_PERFORMANCES";
         }
-        if (properties[47]?.member?.user.username === Cookies.get("username")) {
-            return "LAUNCH_EARTH_SATELLITE";
-        }
-        if (properties[47]?.member?.user.username === Cookies.get("username")) {
-            return "LAUNCH_MOON_LANDING";
-        }
-        if (properties[47]?.member?.user.username === Cookies.get("username")) {
-            return "LAUNCH_MARS_COLONY";
-        }
-        if (properties[47]?.member?.user.username === Cookies.get("username")) {
-            return "EXOPLANET_EXPEDITION";
-        }
-        if (properties[47]?.member?.user.username === Cookies.get("username")) {
-            return "TERRESTRIAL_LASER_STATION";
-        }
         return "";
     };
+
+    const getMaxLevel = (district) => {
+        const levels = ["LEVEL_1", "LEVEL_2", "LEVEL_3", "LEVEL_4", "LEVEL_4_1", "LEVEL_4_2", "LEVEL_4_3"];
+        const propertyLevels = [];
+
+        let positions = [];
+        switch (district) {
+            case "ENTERTAINMENT_COMPLEX":
+                positions = [22, 38];
+                break;
+            case "CAMPUS":
+                positions = [15, 45];
+                break;
+            case "COMMERCIAL_HUB":
+                positions = [19, 43];
+                break;
+            case "ENCAMPMENT":
+                positions = [7, 30];
+                break;
+            case "HARBOR":
+                positions = [17, 31];
+                break;
+            case "INDUSTRIAL_ZONE":
+                positions = [10, 34];
+                break;
+            case "THEATER_SQUARE":
+                positions = [21, 39];
+                break;
+            default:
+                break;
+        }
+        positions.forEach(position => {
+            if (properties[position].member?.user.username === Cookies.get("username")) {
+                properties[position].upgrades.forEach(upgrade => {
+                    if (upgrade.isOwned) {
+                        propertyLevels.push(upgrade.level);
+                    }
+                });
+            }
+        });
+
+        for (let i = levels.length - 1; i >= 0; i--) {
+            if (propertyLevels.includes(levels[i])) {
+                return levels[i];
+            }
+        }
+
+        return "LEVEL_1";
+    };
+
+    const isUserAbleToSpace = getMaxLevel("CAMPUS") === "LEVEL_4" ||
+        properties[47]?.member?.user.username === Cookies.get("username");
 
     const renderProjectsContent = () => {
         return (
@@ -110,7 +147,10 @@ export default function Projects({properties, handleProjectChoice}) {
                             </div>
                             <div className="project-description">
                                 <div className="project-description-p">
-                                    A project in <span>entertainment</span> that affects the time of your cell shedding by 2 and accelerates it relative to your neighboring ones by 2.
+                                    A project in <span>entertainment</span> that affects the time of your cell shedding by
+                                    <span> {gameSettings.projectSettings.find((project) => project.type === "BREAD_AND_CIRCUSES").stats[getMaxLevel("ENTERTAINMENT_COMPLEX")].plus} </span>
+                                    and accelerates it relative to your neighboring ones by
+                                    <span> {-1 * gameSettings.projectSettings.find((project) => project.type === "BREAD_AND_CIRCUSES").stats[getMaxLevel("ENTERTAINMENT_COMPLEX")].minus}</span>.
                                 </div>
                             </div>
                         </div>
@@ -166,7 +206,7 @@ export default function Projects({properties, handleProjectChoice}) {
                                                 className="recourse-img"
                                                 alt="gold"
                                             />
-                                            100
+                                            {gameSettings.projectSettings.find((project) => project.type === "COMMERCIAL_HUB_INVESTMENT").stats[getMaxLevel("COMMERCIAL_HUB")].goldPerTurn}
                                         </div>
                                     </div>
                                     {" "}for 10 turns.
@@ -201,7 +241,7 @@ export default function Projects({properties, handleProjectChoice}) {
                                                 className="recourse-img strength-recourse-img"
                                                 alt="strength"
                                             />
-                                            100
+                                            {gameSettings.projectSettings.find((project) => project.type === "ENCAMPMENT_TRAINING").stats[getMaxLevel("ENCAMPMENT")].strength}
                                         </div>
                                     </div>
                                 </div>
@@ -235,7 +275,7 @@ export default function Projects({properties, handleProjectChoice}) {
                                                 className="recourse-img"
                                                 alt="gold"
                                             />
-                                            100
+                                            {gameSettings.projectSettings.find((project) => project.type === "HARBOR_SHIPPING").stats[getMaxLevel("HARBOR")].gold}
                                         </div>
                                     </div>
                                 </div>
@@ -261,7 +301,8 @@ export default function Projects({properties, handleProjectChoice}) {
                             </div>
                             <div className="project-description">
                                 <p className="project-description-p">
-                                    A project in the <span>industrial zone</span> that provides a 40% discount on the construction of world wonders.
+                                    A project in the <span>industrial zone</span> that provides a
+                                    <span> {gameSettings.projectSettings.find((project) => project.type === "INDUSTRIAL_ZONE_LOGISTICS").stats[getMaxLevel("INDUSTRIAL_ZONE")].discount}</span>% discount on the construction of world wonders.
                                 </p>
                             </div>
                         </div>
@@ -293,7 +334,7 @@ export default function Projects({properties, handleProjectChoice}) {
                                                 className="recourse-img"
                                                 alt="gold"
                                             />
-                                            100
+                                            {gameSettings.projectSettings.find((project) => project.type === "THEATER_SQUARE_PERFORMANCES").stats[getMaxLevel("THEATER_SQUARE")].tourism}
                                         </div>
                                     </div>
                                 </div>
@@ -302,10 +343,12 @@ export default function Projects({properties, handleProjectChoice}) {
                     </div>
                 )}
 
-                {(properties[47].member?.user.username === Cookies.get("username")) && (
+                {room.turn > 50 && !member.finishedScienceProjects?.includes("SATELLITE") && (
                     <div
-                        onClick={() => setSelectedProject("LAUNCH_EARTH_SATELLITE")}
-                        className={"project-div" + (selectedProject === "LAUNCH_EARTH_SATELLITE" ? " project-div-selected" : "")}
+                        onClick={() => isUserAbleToSpace && setSelectedProject("LAUNCH_EARTH_SATELLITE")}
+                        className={"project-div" +
+                            (isUserAbleToSpace ? "" : " project-div-unable") +
+                            (selectedProject === "LAUNCH_EARTH_SATELLITE" ? " project-div-selected" : "")}
                     >
                         <h3 className="project-h3">Launch Earth Satellite</h3>
                         <div className="project-grid">
@@ -325,10 +368,13 @@ export default function Projects({properties, handleProjectChoice}) {
                     </div>
                 )}
 
-                {(properties[47].member?.user.username === Cookies.get("username")) && (
+                {room.turn > 50 && !member.finishedScienceProjects?.includes("MOON")
+                    && member.finishedScienceProjects?.includes("SATELLITE") && (
                     <div
-                        onClick={() => setSelectedProject("LAUNCH_MOON_LANDING")}
-                        className={"project-div" + (selectedProject === "LAUNCH_MOON_LANDING" ? " project-div-selected" : "")}
+                        onClick={() => isUserAbleToSpace && setSelectedProject("LAUNCH_MOON_LANDING")}
+                        className={"project-div" +
+                            (isUserAbleToSpace ? "" : " project-div-unable") +
+                            (selectedProject === "LAUNCH_MOON_LANDING" ? " project-div-selected" : "")}
                     >
                         <h3 className="project-h3">Launch Moon Landing</h3>
                         <div className="project-grid">
@@ -348,10 +394,13 @@ export default function Projects({properties, handleProjectChoice}) {
                     </div>
                 )}
 
-                {(properties[47].member?.user.username === Cookies.get("username")) && (
+                {room.turn > 50 && !member.finishedScienceProjects?.includes("MARS")
+                    && member.finishedScienceProjects?.includes("MOON") && (
                     <div
-                        onClick={() => setSelectedProject("LAUNCH_MARS_COLONY")}
-                        className={"project-div" + (selectedProject === "LAUNCH_MARS_COLONY" ? " project-div-selected" : "")}
+                        onClick={() => isUserAbleToSpace && setSelectedProject("LAUNCH_MARS_COLONY")}
+                        className={"project-div" +
+                            (isUserAbleToSpace ? "" : " project-div-unable") +
+                            (selectedProject === "LAUNCH_MARS_COLONY" ? " project-div-selected" : "")}
                     >
                         <h3 className="project-h3">Launch Mars Colony</h3>
                         <div className="project-grid">
@@ -371,10 +420,13 @@ export default function Projects({properties, handleProjectChoice}) {
                     </div>
                 )}
 
-                {(properties[47].member?.user.username === Cookies.get("username")) && (
+                {room.turn > 50 && !member.finishedScienceProjects?.includes("EXOPLANET")
+                    && member.finishedScienceProjects?.includes("MARS") && (
                     <div
-                        onClick={() => setSelectedProject("EXOPLANET_EXPEDITION")}
-                        className={"project-div" + (selectedProject === "EXOPLANET_EXPEDITION" ? " project-div-selected" : "")}
+                        onClick={() => isUserAbleToSpace && setSelectedProject("EXOPLANET_EXPEDITION")}
+                        className={"project-div" +
+                            (isUserAbleToSpace ? "" : " project-div-unable") +
+                            (selectedProject === "EXOPLANET_EXPEDITION" ? " project-div-selected" : "")}
                     >
                         <h3 className="project-h3">Exoplanet Expedition</h3>
                         <div className="project-grid">
@@ -394,10 +446,12 @@ export default function Projects({properties, handleProjectChoice}) {
                     </div>
                 )}
 
-                {(properties[47].member?.user.username === Cookies.get("username")) && (
+                {room.turn > 50 && member.finishedScienceProjects?.includes("EXOPLANET") && (
                     <div
-                        onClick={() => setSelectedProject("TERRESTRIAL_LASER_STATION")}
-                        className={"project-div" + (selectedProject === "TERRESTRIAL_LASER_STATION" ? " project-div-selected" : "")}
+                        onClick={() => isUserAbleToSpace && setSelectedProject("TERRESTRIAL_LASER_STATION")}
+                        className={"project-div" +
+                            (isUserAbleToSpace ? "" : " project-div-unable") +
+                            (selectedProject === "TERRESTRIAL_LASER_STATION" ? " project-div-selected" : "")}
                     >
                         <h3 className="project-h3">Terrestrial Laser Station</h3>
                         <div className="project-grid">

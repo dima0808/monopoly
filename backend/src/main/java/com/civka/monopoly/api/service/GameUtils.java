@@ -1,8 +1,6 @@
 package com.civka.monopoly.api.service;
 
-import com.civka.monopoly.api.dto.ArmySpendingDto;
-import com.civka.monopoly.api.dto.RequirementDto;
-import com.civka.monopoly.api.dto.UpgradeDto;
+import com.civka.monopoly.api.dto.*;
 import com.civka.monopoly.api.entity.*;
 
 import java.util.List;
@@ -38,6 +36,8 @@ public interface GameUtils {
 
     List<ArmySpendingDto> getArmySpendings();
 
+    List<ProjectSettingsDto> getProjectSettings();
+
     int getEventGold(Event.EventType eventType);
 
     int getEventStrength(Event.EventType eventType);
@@ -52,5 +52,15 @@ public interface GameUtils {
 
     int getBreadAndCircusesByLevel(Property.Upgrade level, boolean isPlus);
 
+    int getProjectGoldByLevel(ProjectType type, Property.Upgrade level);
+
+    int getProjectStrengthByLevel(ProjectType type, Property.Upgrade level);
+
+    int getProjectTourismByLevel(ProjectType type, Property.Upgrade level);
+
+    int getProjectDiscountByLevel(ProjectType type, Property.Upgrade level);
+
     int getGoldPerTurnByAdditionalEffect(AdditionalEffect.AdditionalEffectType type);
+
+    Property.Upgrade getHighestDistrictLevel(Member member, String districtType);
 }

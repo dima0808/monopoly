@@ -46,6 +46,9 @@ public class RoomServiceImpl implements RoomService {
     @Value("${monopoly.app.room.game.redemptionCoefficient}")
     private Double redemptionCoefficient;
 
+    @Value("${monopoly.app.room.game.science-project.cost}")
+    private Integer scienceProjectCost;
+
     private final RoomRepository roomRepository;
     private final UserService userService;
     private final MemberService memberService;
@@ -238,6 +241,7 @@ public class RoomServiceImpl implements RoomService {
             member.setScore(0);
             member.setHasRolledDice(true);
             member.setFinishedRounds(0);
+            member.setTurnsToNextScienceProject(-1);
             if (member.getCivilization() == Member.Civilization.Random) {
                 Member.Civilization randomCivilization = availableCivilizations.remove((int) (Math.random() * availableCivilizations.size()));
                 member.setCivilization(randomCivilization);
@@ -274,6 +278,9 @@ public class RoomServiceImpl implements RoomService {
         }
         member.setStrength(member.getStrength() + gameUtils.getStrengthFromArmySpending(armySpending));
         member.setGold(member.getGold() + gameUtils.getGoldFromArmySpending(armySpending));
+        if (member.getTurnsToNextScienceProject() != -1) {
+            member.setTurnsToNextScienceProject(member.getTurnsToNextScienceProject() - 1);
+        }
 
         List<Property> properties = member.getProperties();
         Iterator<Property> propertiesIterator = properties.iterator();
@@ -365,9 +372,11 @@ public class RoomServiceImpl implements RoomService {
     public GameSettingsDto getGameSettings() {
         return GameSettingsDto.builder()
                 .armySpendings(gameUtils.getArmySpendings())
+                .projectSettings(gameUtils.getProjectSettings())
                 .demoteGoldCoefficient(demoteGoldCoefficient)
                 .mortgageGoldCoefficient(mortgageGoldCoefficient)
                 .redemptionCoefficient(redemptionCoefficient)
+                .scienceProjectCost(scienceProjectCost)
                 .build();
     }
 

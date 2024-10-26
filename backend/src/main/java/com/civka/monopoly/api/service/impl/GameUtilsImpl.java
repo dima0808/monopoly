@@ -1,18 +1,13 @@
 package com.civka.monopoly.api.service.impl;
 
 import com.civka.monopoly.api.config.GameProperties;
-import com.civka.monopoly.api.dto.ArmySpendingDto;
-import com.civka.monopoly.api.dto.RequirementDto;
-import com.civka.monopoly.api.dto.UpgradeDto;
+import com.civka.monopoly.api.dto.*;
 import com.civka.monopoly.api.entity.*;
 import com.civka.monopoly.api.service.GameUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -162,6 +157,45 @@ public class GameUtilsImpl implements GameUtils {
     }
 
     @Override
+    public List<ProjectSettingsDto> getProjectSettings() {
+        List<ProjectSettingsDto> projectSettings = new ArrayList<>();
+        for (ProjectType projectType : ProjectType.values()) {
+            Map<String, StatsDto> stats = new HashMap<>();
+            for (Property.Upgrade level : List.of(Property.Upgrade.LEVEL_1, Property.Upgrade.LEVEL_2,
+                    Property.Upgrade.LEVEL_3, Property.Upgrade.LEVEL_4)) {
+                StatsDto statsDto = StatsDto.builder()
+                        .gold(getProjectGoldByLevel(projectType, level))
+                        .strength(getProjectStrengthByLevel(projectType, level))
+                        .tourism(getProjectTourismByLevel(projectType, level))
+                        .build();
+                if (projectType == ProjectType.BREAD_AND_CIRCUSES) {
+                    statsDto.setPlus(getBreadAndCircusesByLevel(level, true));
+                    statsDto.setMinus(getBreadAndCircusesByLevel(level, false));
+                }
+                if (projectType == ProjectType.COMMERCIAL_HUB_INVESTMENT) {
+                    statsDto.setGoldPerTurn(getGoldPerTurnByAdditionalEffect(switch (level) {
+                        case LEVEL_1 -> AdditionalEffect.AdditionalEffectType.COMMERCIAL_HUB_INVESTMENT_1;
+                        case LEVEL_2 -> AdditionalEffect.AdditionalEffectType.COMMERCIAL_HUB_INVESTMENT_2;
+                        case LEVEL_3 -> AdditionalEffect.AdditionalEffectType.COMMERCIAL_HUB_INVESTMENT_3;
+                        case LEVEL_4 -> AdditionalEffect.AdditionalEffectType.COMMERCIAL_HUB_INVESTMENT_4;
+                        default -> null;
+                    }));
+                }
+                if (projectType == ProjectType.INDUSTRIAL_ZONE_LOGISTICS) {
+                    statsDto.setDiscount(getProjectDiscountByLevel(projectType, level));
+                }
+                stats.put(level.toString(), statsDto);
+            }
+            ProjectSettingsDto projectSettingsDto = ProjectSettingsDto.builder()
+                    .type(projectType)
+                    .stats(stats)
+                    .build();
+            projectSettings.add(projectSettingsDto);
+        }
+        return projectSettings;
+    }
+
+    @Override
     public int getEventGold(Event.EventType eventType) {
         return gameProperties.getEventGold(eventType);
     }
@@ -201,8 +235,55 @@ public class GameUtilsImpl implements GameUtils {
     }
 
     @Override
+    public int getProjectGoldByLevel(ProjectType type, Property.Upgrade level) {
+        return gameProperties.getProjectGoldByLevel(type, level);
+    }
+
+    @Override
+    public int getProjectStrengthByLevel(ProjectType type, Property.Upgrade level) {
+        return gameProperties.getProjectStrengthByLevel(type, level);
+    }
+
+    @Override
+    public int getProjectTourismByLevel(ProjectType type, Property.Upgrade level) {
+        return gameProperties.getProjectTourismByLevel(type, level);
+    }
+
+    @Override
+    public int getProjectDiscountByLevel(ProjectType type, Property.Upgrade level) {
+        return gameProperties.getProjectDiscountByLevel(type, level);
+    }
+
+    @Override
     public int getGoldPerTurnByAdditionalEffect(AdditionalEffect.AdditionalEffectType type) {
         return gameProperties.getGoldPerTurnByAdditionalEffect(type);
+    }
+
+    @Override
+    public Property.Upgrade getHighestDistrictLevel(Member member, String districtType) {
+        return member.getProperties().stream()
+                .filter(property -> switch (districtType) {
+                    case "ENTERTAINMENT" -> property.getPosition() == 22 || property.getPosition() == 38;
+                    case "CAMPUS" -> property.getPosition() == 15 || property.getPosition() == 45;
+                    case "COMMERCIAL_HUB" -> property.getPosition() == 19 || property.getPosition() == 43;
+                    case "HARBOR" -> property.getPosition() == 17 || property.getPosition() == 31;
+                    case "INDUSTRIAL_ZONE" -> property.getPosition() == 10 || property.getPosition() == 34;
+                    case "THEATER_SQUARE" -> property.getPosition() == 21 || property.getPosition() == 39;
+                    default -> false;
+                })
+                .flatMap(property -> property.getUpgrades().stream())
+                .filter(upgrade -> upgrade == Property.Upgrade.LEVEL_1 ||
+                        upgrade == Property.Upgrade.LEVEL_2 ||
+                        upgrade == Property.Upgrade.LEVEL_3 ||
+                        upgrade == Property.Upgrade.LEVEL_4)
+                .max(Comparator.comparingInt(upgrade -> switch (upgrade) {
+                    case LEVEL_1 -> 1;
+                    case LEVEL_2 -> 2;
+                    case LEVEL_3 -> 3;
+                    case LEVEL_4 -> 4;
+                    default -> 0;
+                }))
+                .orElse(Property.Upgrade.LEVEL_1);
     }
 
     private boolean calculateRequirement(RequirementDto.Requirement requirement, Integer position, Member member) {
@@ -243,18 +324,18 @@ public class GameUtilsImpl implements GameUtils {
             case MAKE_FIVE_TURNS -> member.getProperties().stream()
                     .anyMatch(p -> p.getPosition().equals(position) &&
                             p.getTurnOfLastChange() + 5 <= member.getRoom().getTurn());
-            case HAVE_LOW_GOLD_PER_TURN -> calculateGeneralGoldPerTurn(member) >= 40; // TODO: flexible
-            case HAVE_MEDIUM_GOLD_PER_TURN -> calculateGeneralGoldPerTurn(member) >= 80; // TODO: flexible
-            case HAVE_HIGH_GOLD_PER_TURN -> calculateGeneralGoldPerTurn(member) >= 120; // TODO: flexible
-            case HAVE_LOW_GOLD_CAP -> member.getGold() >= 1600; // TODO: flexible
-            case HAVE_MEDIUM_GOLD_CAP -> member.getGold() >= 2000; // TODO: flexible
-            case HAVE_HIGH_GOLD_CAP -> member.getGold() >= 2600; // TODO: flexible
+            case HAVE_LOW_GOLD_PER_TURN -> calculateGeneralGoldPerTurn(member) >= 50; // TODO: flexible
+            case HAVE_MEDIUM_GOLD_PER_TURN -> calculateGeneralGoldPerTurn(member) >= 100; // TODO: flexible
+            case HAVE_HIGH_GOLD_PER_TURN -> calculateGeneralGoldPerTurn(member) >= 150; // TODO: flexible
+            case HAVE_LOW_GOLD_CAP -> member.getGold() >= 1800; // TODO: flexible
+            case HAVE_MEDIUM_GOLD_CAP -> member.getGold() >= 2600; // TODO: flexible
+            case HAVE_HIGH_GOLD_CAP -> member.getGold() >= 3400; // TODO: flexible
             case HAVE_LOW_TOURISM -> member.getTourism() >= 800; // TODO: flexible
             case HAVE_MEDIUM_TOURISM -> member.getTourism() >= 1200; // TODO: flexible
             case HAVE_HIGH_TOURISM -> member.getTourism() >= 2000; // TODO: flexible
-            case HAVE_LOW_STRENGTH -> member.getStrength() >= 300; // TODO: flexible
-            case HAVE_MEDIUM_STRENGTH -> member.getStrength() >= 400; // TODO: flexible
-            case HAVE_HIGH_STRENGTH -> member.getStrength() >= 500; // TODO: flexible
+            case HAVE_LOW_STRENGTH -> member.getStrength() >= 400; // TODO: flexible
+            case HAVE_MEDIUM_STRENGTH -> member.getStrength() >= 800; // TODO: flexible
+            case HAVE_HIGH_STRENGTH -> member.getStrength() >= 1200; // TODO: flexible
             case ON_CLASSICAL_ERA -> member.getRoom().getTurn() > 10;
             case ON_MEDIEVAL_ERA -> member.getRoom().getTurn() > 20;
             case ON_RENAISSANCE_ERA -> member.getRoom().getTurn() > 30;

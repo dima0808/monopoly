@@ -1,6 +1,5 @@
 package com.civka.monopoly.api.dto;
 
-import com.civka.monopoly.api.entity.ArmySpending;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,9 +9,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ArmySpendingDto {
+public class StatsDto {
 
-    private ArmySpending armySpending;
     private Integer gold;
+    private Integer goldPerTurn;
     private Integer strength;
+    private Integer tourism;
+
+    private Integer plus;
+    private Integer minus;
+
+    private Integer discount;
 }

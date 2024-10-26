@@ -74,7 +74,7 @@
 .management-btns {
     margin-top: 10px;
 }
-.management-btn {
+.management-btn{
     cursor: pointer;
     background-color: #3c220a;
     color: #ede1c9;
@@ -85,6 +85,11 @@
     min-width: 84px;
     padding: 2px;
     transition: all 0.3s ease-in-out;
+}
+/*без релейшнс батона*/
+.management-btn{
+    min-width: 132px;
+    margin: 0 auto;
 }
 .management-btn:hover,
 .satings-btn:hover {

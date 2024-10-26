@@ -965,3 +965,10 @@ export const requirements = {
         <p className="condition-p">You need to own a Stock Exchange in your Commercial Hub</p>
     ),
 };
+
+export const additionalEffectsInfo = {
+    "COMMERCIAL_HUB_INVESTMENT_1": "commercial hub investment",
+    "COMMERCIAL_HUB_INVESTMENT_2": "commercial hub investment",
+    "COMMERCIAL_HUB_INVESTMENT_3": "commercial hub investment",
+    "COMMERCIAL_HUB_INVESTMENT_4": "commercial hub investment",
+}

@@ -1,18 +1,19 @@
 package com.civka.monopoly.api.dto;
 
-import com.civka.monopoly.api.entity.ArmySpending;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Map;
+
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-public class ArmySpendingDto {
+public class ProjectSettingsDto {
 
-    private ArmySpending armySpending;
-    private Integer gold;
-    private Integer strength;
+    private ProjectType type;
+
+    private Map<String, StatsDto> stats;
 }

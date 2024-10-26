@@ -39,6 +39,18 @@ public class MemberServiceImpl implements MemberService {
     @Value("${monopoly.app.room.game.redemptionCoefficient}")
     private Double redemptionCoefficient;
 
+    @Value("${monopoly.app.room.game.science-project.basicTurnAmount}")
+    private Integer basicTurnAmount;
+
+    @Value("${monopoly.app.room.game.science-project.labBoost}")
+    private Integer labBoost;
+
+    @Value("${monopoly.app.room.game.science-project.governmentBoost}")
+    private Integer governmentBoost;
+
+    @Value("${monopoly.app.room.game.science-project.spaceportBoost}")
+    private Integer spaceportBoost;
+
     @Override
     public Member save(Member member) {
         return memberRepository.save(member);
@@ -90,6 +102,9 @@ public class MemberServiceImpl implements MemberService {
             member.setGold(member.getGold() + gameUtils.getGoldPerTurnByAdditionalEffect(additionalEffect.getType()));
         }
         member.setHasRolledDice(true);
+        if (calculateMemberTurnsToScienceProject(member) && isMemberAbleToSpace(member)) {
+            eventService.add(member, Event.EventType.SCIENCE_PROJECTS);
+        }
         Member updatedMember = memberRepository.save(member);
 
         eventService.handleNewPosition(newPosition, updatedMember, firstRoll, secondRoll);
@@ -123,6 +138,9 @@ public class MemberServiceImpl implements MemberService {
             throw new UserNotAllowedException();
         }
         member.setGold(member.getGold() - price);
+        if (position == 47 && member.getTurnsToNextScienceProject() == -1) {
+            member.setTurnsToNextScienceProject(basicTurnAmount);
+        }
         Member updatedMember = memberRepository.save(member);
 
         Room room = updatedMember.getRoom();
@@ -191,6 +209,10 @@ public class MemberServiceImpl implements MemberService {
                         nextLevel = upgrade;
                         break;
                     }
+                }
+                if ((property.getPosition() == 15 || property.getPosition() == 45)
+                        && nextLevel == Property.Upgrade.LEVEL_4 && member.getTurnsToNextScienceProject() == -1) {
+                    member.setTurnsToNextScienceProject(basicTurnAmount);
                 }
             }
             int price = gameUtils.getPriceByPositionAndLevel(position, nextLevel);
@@ -350,5 +372,38 @@ public class MemberServiceImpl implements MemberService {
                 .tourismOnStep(gameUtils.calculateTourismOnStep(property))
                 .goldPerTurn(gameUtils.calculateGoldPerTurn(property))
                 .build();
+    }
+
+    private boolean calculateMemberTurnsToScienceProject(Member member) {
+        int labBoostCount = 0;
+        int governmentBoostCount = 0;
+        int spaceportBoostCount = 0;
+
+        for (Property property : member.getProperties()) {
+            if ((property.getPosition() == 15 || property.getPosition() == 45) &&
+                    property.getUpgrades().contains(Property.Upgrade.LEVEL_4)) {
+                labBoostCount++;
+            }
+            if ((property.getPosition() == 9 || property.getPosition() == 18 || property.getPosition() == 44) &&
+                    property.getUpgrades().contains(Property.Upgrade.LEVEL_4_1)) {
+                governmentBoostCount++;
+            }
+            if (property.getPosition() == 47) {
+                spaceportBoostCount++;
+            }
+        }
+
+        int totalLabBoost = labBoost * labBoostCount;
+        int totalGovernmentBoost = governmentBoost * governmentBoostCount;
+        int totalSpaceportBoost = spaceportBoost * spaceportBoostCount;
+
+        return member.getTurnsToNextScienceProject() != -1 &&
+                member.getTurnsToNextScienceProject() - totalLabBoost - totalGovernmentBoost - totalSpaceportBoost <= 0;
+    }
+
+    private boolean isMemberAbleToSpace(Member member) {
+        return member.getProperties().stream().anyMatch(p -> p.getPosition().equals(47) ||
+                (p.getPosition().equals(15) || p.getPosition().equals(45)) &&
+                        p.getUpgrades().contains(Property.Upgrade.LEVEL_4));
     }
 }

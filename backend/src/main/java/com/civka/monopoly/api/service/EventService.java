@@ -21,6 +21,8 @@ public interface EventService {
 
     Event makeProjectChoice(Member member, ProjectType type);
 
+    Event doScienceProject(Member member);
+
     Event.EventType randomGoodyHutEvent();
 
     Event.EventType randomBarbariansEvent();
