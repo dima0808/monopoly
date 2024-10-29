@@ -323,6 +323,12 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
                                                 </span>
                                             </SystemMessage>
                                         );
+                                    case 'SYSTEM_WINNER':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span> виграв
+                                            </SystemMessage>
+                                        );
                                     default:
                                         return (
                                             <SystemMessage key={index} timestamp={message.timestamp}>

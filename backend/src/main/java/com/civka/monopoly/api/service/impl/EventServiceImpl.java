@@ -35,6 +35,12 @@ public class EventServiceImpl implements EventService {
     @Value("${monopoly.app.room.game.science-project.basicTurnAmount}")
     private Integer basicTurnAmount;
 
+    @Value("${monopoly.app.room.game.science-project.expeditionTurnAmount}")
+    private Integer expeditionTurnAmount;
+
+    @Value("${monopoly.app.room.game.science-project.laserBoost}")
+    private Integer laserBoost;
+
     @Override
     public Event save(Event event) {
         return eventRepository.save(event);
@@ -286,8 +292,7 @@ public class EventServiceImpl implements EventService {
                                 .anyMatch(p -> p.getPosition().equals(47) ||
                                         (p.getPosition().equals(15) || p.getPosition().equals(45))
                                                 && p.getUpgrades().contains(Property.Upgrade.LEVEL_4))) {
-                    List<Member.ScienceProject> finishedScienceProjects = member.getFinishedScienceProjects();
-                    finishedScienceProjects.add(spaceProject);
+                    handleScienceLastPhase(member, spaceProject);
                     memberRepository.save(member);
                 } else {
                     throw new UserNotAllowedException();
@@ -302,25 +307,23 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event doScienceProject(Member member) {
-        List<Member.ScienceProject> finishedProjects = member.getFinishedScienceProjects();
-        Member.ScienceProject nextProject;
-
-        if (finishedProjects.contains(Member.ScienceProject.EXOPLANET)) {
-            nextProject = Member.ScienceProject.LASER;
-        } else if (finishedProjects.contains(Member.ScienceProject.MARS)) {
-            nextProject = Member.ScienceProject.EXOPLANET;
-        } else if (finishedProjects.contains(Member.ScienceProject.MOON)) {
-            nextProject = Member.ScienceProject.MARS;
-        } else if (finishedProjects.contains(Member.ScienceProject.SATELLITE)) {
-            nextProject = Member.ScienceProject.MOON;
-        } else {
-            nextProject = Member.ScienceProject.SATELLITE;
-        }
-        finishedProjects.add(nextProject);
+        Member.ScienceProject nextProject = getScienceProject(member);
+        handleScienceLastPhase(member, nextProject);
         member.setTurnsToNextScienceProject(basicTurnAmount);
         memberRepository.save(member);
 
         return delete(member, Event.EventType.SCIENCE_PROJECTS);
+    }
+
+    private void handleScienceLastPhase(Member member, Member.ScienceProject nextProject) {
+        List<Member.ScienceProject> finishedScienceProjects = member.getFinishedScienceProjects();
+        finishedScienceProjects.add(nextProject);
+        if (nextProject.equals(Member.ScienceProject.EXOPLANET)) {
+            member.setExpeditionTurns(expeditionTurnAmount);
+        }
+        if (nextProject.equals(Member.ScienceProject.LASER)) {
+            member.setExpeditionTurns(Math.max(member.getExpeditionTurns() - laserBoost, 0));
+        }
     }
 
     @Override
@@ -406,6 +409,24 @@ public class EventServiceImpl implements EventService {
                 .build();
         messagingTemplate.convertAndSend("/topic/public/" + roomName + "/game", playerMessage);
         return member.getRoom();
+    }
+
+    private Member.ScienceProject getScienceProject(Member member) {
+        List<Member.ScienceProject> finishedScienceProjects = member.getFinishedScienceProjects();
+        Member.ScienceProject nextProject;
+
+        if (finishedScienceProjects.contains(Member.ScienceProject.EXOPLANET)) {
+            nextProject = Member.ScienceProject.LASER;
+        } else if (finishedScienceProjects.contains(Member.ScienceProject.MARS)) {
+            nextProject = Member.ScienceProject.EXOPLANET;
+        } else if (finishedScienceProjects.contains(Member.ScienceProject.MOON)) {
+            nextProject = Member.ScienceProject.MARS;
+        } else if (finishedScienceProjects.contains(Member.ScienceProject.SATELLITE)) {
+            nextProject = Member.ScienceProject.MOON;
+        } else {
+            nextProject = Member.ScienceProject.SATELLITE;
+        }
+        return nextProject;
     }
 
     private boolean hasDistrictForProjects(Member member) {

@@ -1,5 +1,6 @@
 package com.civka.monopoly.api.service.impl;
 
+import com.civka.monopoly.api.dto.ChatMessageDto;
 import com.civka.monopoly.api.dto.GameSettingsDto;
 import com.civka.monopoly.api.dto.RoomDto;
 import com.civka.monopoly.api.entity.*;
@@ -25,6 +26,7 @@ public class RoomServiceImpl implements RoomService {
     private final PropertyService propertyService;
     private final EventServiceImpl eventService;
     private final AdditionalEffectService additionalEffectService;
+    private final ChatMessageService chatMessageService;
     @Value("${monopoly.app.room.max-size}")
     private Integer maxRoomSize;
 
@@ -74,6 +76,7 @@ public class RoomServiceImpl implements RoomService {
                 .password(roomDto.getPassword() == null ? null : passwordEncoder.encode(roomDto.getPassword()))
                 .members(new ArrayList<>())
                 .isStarted(false)
+                .winner(null)
                 .turn(1)
                 .build();
         roomRepository.save(room);
@@ -242,6 +245,8 @@ public class RoomServiceImpl implements RoomService {
             member.setHasRolledDice(true);
             member.setFinishedRounds(0);
             member.setTurnsToNextScienceProject(-1);
+            member.setFinishedScienceProjects(new ArrayList<>());
+            member.setExpeditionTurns(-1);
             if (member.getCivilization() == Member.Civilization.Random) {
                 Member.Civilization randomCivilization = availableCivilizations.remove((int) (Math.random() * availableCivilizations.size()));
                 member.setCivilization(randomCivilization);
@@ -267,6 +272,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Room endTurn(Member member, ArmySpending armySpending) {
+        Room room = member.getRoom();
         if (!member.getRoom().getCurrentTurn().equals(member.getUser().getUsername()) || !member.getHasRolledDice()) {
             throw new UserNotAllowedException();
         }
@@ -279,7 +285,28 @@ public class RoomServiceImpl implements RoomService {
         member.setStrength(member.getStrength() + gameUtils.getStrengthFromArmySpending(armySpending));
         member.setGold(member.getGold() + gameUtils.getGoldFromArmySpending(armySpending));
         if (member.getTurnsToNextScienceProject() != -1) {
-            member.setTurnsToNextScienceProject(member.getTurnsToNextScienceProject() - 1);
+            int newTurnsToNextScienceProject = member.getTurnsToNextScienceProject() - 1;
+            member.setTurnsToNextScienceProject(Math.max(newTurnsToNextScienceProject, 0));
+        }
+        if (member.getExpeditionTurns() != -1) {
+            int newExpeditionTurns = member.getExpeditionTurns() - 1;
+            if (newExpeditionTurns < 0) {
+                room.setWinner(member.getUser().getUsername());
+                room.setCurrentTurn(null);
+
+                Chat roomChat = chatService.findByName(room.getName());
+                ChatMessageDto systemMessage = ChatMessageDto.builder()
+                        .type(ChatMessage.MessageType.SYSTEM_WINNER)
+                        .content(member.getUser().getNickname())
+                        .timestamp(LocalDateTime.now())
+                        .build();
+                ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
+                messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
+
+                memberService.save(member);
+                return roomRepository.save(room);
+            }
+            member.setExpeditionTurns(newExpeditionTurns);
         }
 
         List<Property> properties = member.getProperties();
@@ -309,7 +336,6 @@ public class RoomServiceImpl implements RoomService {
         }
         memberService.save(member);
 
-        Room room = member.getRoom();
         List<Member> members = room.getMembers();
         int currentIndex = members.indexOf(member);
         int nextIndex = (currentIndex + 1) % members.size();

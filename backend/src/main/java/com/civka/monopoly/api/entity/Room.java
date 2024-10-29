@@ -35,6 +35,7 @@ public class Room {
     private Boolean isStarted;
 
     private String currentTurn; // username of the member whose turn it is
+    private String winner; // username of the member who won the game
 
     private Integer turn;
 
