@@ -24,7 +24,7 @@
 }
 .actions .player-stat-gold,
 .actions .player-stat-strength,
-.actions player-stat-tourism{
+.actions player-stat-tourism {
     width: 73px;
     height: 20px;
     margin-left: 2px;
@@ -74,7 +74,7 @@
 .management-btns {
     margin-top: 10px;
 }
-.management-btn{
+.management-btn {
     cursor: pointer;
     background-color: #3c220a;
     color: #ede1c9;
@@ -87,7 +87,7 @@
     transition: all 0.3s ease-in-out;
 }
 /*без релейшнс батона*/
-.management-btn{
+.management-btn {
     min-width: 132px;
     margin: 0 auto;
 }
@@ -306,4 +306,175 @@
     height: 10px;
     width: 10px;
     border: 2px solid #3c220a;
+}
+.winner-dialog {
+    width: 560px;
+    background-color: #dac6ac;
+    border: 1px solid #271d37;
+    border-radius: 10px;
+    padding: 10px 5px 10px 5px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+}
+.vin-div {
+    background-color: #f8f4e2;
+    border: 1px solid #271d37;
+    width: 100%;
+    padding: 4px 20px;
+    border-radius: 9px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 20px;
+}
+
+.vin-div__div {
+    width: 100px;
+    height: 100px;
+}
+.vin-div__img {
+    width: 100px;
+    height: 100px;
+}
+.vin-div__h2 {
+    padding: 10px 10px 0px 0px;
+    overflow-wrap: break-word;
+    color: #321207;
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    word-spacing: 1px;
+    line-height: 1;
+}
+.vin-table {
+    background-color: #dac6ac;
+    width: 100%;
+    overflow: hidden; /* Додано, щоб уникнути білих країв поза таблицею */
+}
+
+.vin-table table {
+    width: 100%;
+    border-collapse: separate; /* Уникання злиття кордонів */
+    border-spacing: 0; /* Відсутність простору між комірками */
+    border-radius: 9px; /* Закруглені краї таблиці */
+    overflow: hidden; /* Додано для обмеження фону таблиці */
+    background-color: #dac6ac; /* Додано, щоб уникнути білого фону позаду */
+}
+
+/* Окремі бордери для комірок */
+.vin-table th,
+.vin-table td {
+    border: 1px solid #271d37; /* Бордери для комірок */
+    padding: 8px;
+}
+
+/* Закруглення кутових комірок */
+.vin-table th:first-child {
+    border-top-left-radius: 9px;
+}
+.vin-table th:last-child {
+    border-top-right-radius: 9px;
+}
+
+/* Закруглення тільки для останнього рядка */
+.vin-table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 9px;
+}
+.vin-table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 9px;
+}
+
+.tc1 {
+    min-width: 60px;
+}
+.tc2 {
+    min-width: 60px;
+    padding: 0 5px !important;
+}
+.tr-div {
+    width: 50px;
+    height: 50px;
+}
+.tr-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.tc3 {
+    width: 100%;
+}
+tbody .tc3 {
+    padding-left: 20px;
+    text-align: start;
+}
+.tc4 {
+    min-width: 58px;
+}
+.tc5 {
+    min-width: 58px;
+}
+.vin-table tr:nth-child(2n + 1) {
+    background-color: #f8f4e2;
+}
+.vin-table tr:nth-child(2n) {
+    background-color: #faf6dc;
+}
+.vin-table th {
+    color: #faf6dc;
+    background-color: #5e3815 !important;
+    cursor: default;
+    padding: 8px 0px;
+}
+.win-link {
+    cursor: pointer;
+    background-color: #5e3815;
+    color: #faf6dc;
+    font-size: 24px;
+    width: 60%;
+    height: 44px;
+    margin: 20px 20% 2px 20%;
+    border: none;
+    border-radius: 9px;
+    text-decoration: none;
+    transition: 0.3s all ease-in-out;
+}
+.win-link:hover {
+    background-color: #915d2e;
+}
+.win-link b {
+    font-weight: 700;
+    font-size: 32px;
+}
+.pause-dialog {
+    width: 320px;
+    background-color: #ad7b4b;
+    border: 1px solid #271d37;
+    border-radius: 10px;
+    padding: 4px 5px 4px 5px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -410%);
+    box-shadow: 0 4px 8px rgba(55, 50, 50, 0.1);
+    z-index: 900;
+}
+.pause__btn {
+    cursor: pointer;
+    background-color: #e5bd86;
+    color: #4a290b;
+    font-size: 34px;
+    width: 100%;
+    height: 48px;
+
+    border: none;
+    border-radius: 9px;
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 500;
+    transition: 0.3s all ease-in-out;
+}
+.pause__btn:hover {
+    background-color: #f4d5aa;
 }

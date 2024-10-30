@@ -9,6 +9,8 @@ import Events from "./events/Events";
 import Management from "./management/Management";
 import { getAllEvents, getGameSettings } from "../../../utils/http";
 import SettingsDialog from "../actions/SettingsDialog";
+import GameWinnerDialog from "../actions/GameWinnerDialog";
+import GamePauseDialog from "../actions/GamePauseDialog";
 export default function Actions({
     room,
     players,
@@ -49,7 +51,8 @@ export default function Actions({
             setNotifications((prev) => [
                 ...prev,
                 {
-                    message: "Client is not initialized or publish method is not available",
+                    message:
+                        "Client is not initialized or publish method is not available",
                     duration: 3500,
                     isError: true,
                 },
@@ -84,7 +87,8 @@ export default function Actions({
             setNotifications((prev) => [
                 ...prev,
                 {
-                    message: "Client is not initialized or publish method is not available",
+                    message:
+                        "Client is not initialized or publish method is not available",
                     duration: 3500,
                     isError: true,
                 },
@@ -119,7 +123,8 @@ export default function Actions({
             setNotifications((prev) => [
                 ...prev,
                 {
-                    message: "Client is not initialized or publish method is not available",
+                    message:
+                        "Client is not initialized or publish method is not available",
                     duration: 3500,
                     isError: true,
                 },
@@ -128,11 +133,18 @@ export default function Actions({
         }
         try {
             client.publish({
-                destination: `/app/rooms/${room.name}/upgrade${(governmentPlazaChoice === -1 ? "Property" : "GovernmentPlazaChoice")}/${position}`,
+                destination: `/app/rooms/${room.name}/upgrade${
+                    governmentPlazaChoice === -1
+                        ? "Property"
+                        : "GovernmentPlazaChoice"
+                }/${position}`,
                 headers: {
                     Authorization: `Bearer ${token}`,
                     username: username,
-                    choice: governmentPlazaChoice === -1 ? null : "LEVEL_4_" + governmentPlazaChoice,
+                    choice:
+                        governmentPlazaChoice === -1
+                            ? null
+                            : "LEVEL_4_" + governmentPlazaChoice,
                 },
             });
             console.log("Upgrading property...");
@@ -155,7 +167,8 @@ export default function Actions({
             setNotifications((prev) => [
                 ...prev,
                 {
-                    message: "Client is not initialized or publish method is not available",
+                    message:
+                        "Client is not initialized or publish method is not available",
                     duration: 3500,
                     isError: true,
                 },
@@ -190,7 +203,8 @@ export default function Actions({
             setNotifications((prev) => [
                 ...prev,
                 {
-                    message: "Client is not initialized or publish method is not available",
+                    message:
+                        "Client is not initialized or publish method is not available",
                     duration: 3500,
                     isError: true,
                 },
@@ -252,7 +266,7 @@ export default function Actions({
                 },
             ]);
         }
-    }
+    };
 
     const handleProjectChoice = (selectedProject) => {
         const token = Cookies.get("token");
@@ -261,7 +275,8 @@ export default function Actions({
             setNotifications((prev) => [
                 ...prev,
                 {
-                    message: "Client is not initialized or publish method is not available",
+                    message:
+                        "Client is not initialized or publish method is not available",
                     duration: 3500,
                     isError: true,
                 },
@@ -287,7 +302,7 @@ export default function Actions({
                 },
             ]);
         }
-    }
+    };
 
     const handleScienceProject = () => {
         const token = Cookies.get("token");
@@ -296,7 +311,8 @@ export default function Actions({
             setNotifications((prev) => [
                 ...prev,
                 {
-                    message: "Client is not initialized or publish method is not available",
+                    message:
+                        "Client is not initialized or publish method is not available",
                     duration: 3500,
                     isError: true,
                 },
@@ -322,7 +338,7 @@ export default function Actions({
                 },
             ]);
         }
-    }
+    };
 
     const handleSkip = (eventType) => {
         const token = Cookies.get("token");
@@ -331,7 +347,8 @@ export default function Actions({
             setNotifications((prev) => [
                 ...prev,
                 {
-                    message: "Client is not initialized or publish method is not available",
+                    message:
+                        "Client is not initialized or publish method is not available",
                     duration: 3500,
                     isError: true,
                 },
@@ -408,7 +425,10 @@ export default function Actions({
                 if (event.type !== "BERMUDA") {
                     setPlayers((prev) =>
                         prev.map((player) => {
-                            return player.user.username === event.member.user.username ? event.member : player;
+                            return player.user.username ===
+                                event.member.user.username
+                                ? event.member
+                                : player;
                         })
                     );
                 }
@@ -422,8 +442,10 @@ export default function Actions({
         if (gameSettings.armySpendings) {
             if (currentUser?.gold < 700 && armySpending === "High") {
                 setArmySpending("Medium");
-            } else if ((currentUser?.gold < 200 && armySpending === "Medium") ||
-                (currentUser?.strength < 50 && armySpending === "Absent")) {
+            } else if (
+                (currentUser?.gold < 200 && armySpending === "Medium") ||
+                (currentUser?.strength < 50 && armySpending === "Absent")
+            ) {
                 setArmySpending("Default");
             }
         }
@@ -483,33 +505,45 @@ export default function Actions({
         if (!currentUser) return;
         const hasAvailableUpgrades = Object.keys(properties).some((key) => {
             const property = properties[key];
-            if (!(property.member && property.member.user.username === currentUser.user.username)) {
+            if (
+                !(
+                    property.member &&
+                    property.member.user.username === currentUser.user.username
+                )
+            ) {
                 return false;
             }
             const lowestNotOwnedLevel = property.upgrades.find(
-                (upgrade) => !upgrade.isOwned && upgrade.level.startsWith("LEVEL")
+                (upgrade) =>
+                    !upgrade.isOwned && upgrade.level.startsWith("LEVEL")
             );
 
             if (!lowestNotOwnedLevel) return false;
 
             const ownedLevels = property.upgrades.filter(
                 (upgrade) =>
-                    upgrade.isOwned &&
-                    upgrade.level.startsWith("LEVEL")
+                    upgrade.isOwned && upgrade.level.startsWith("LEVEL")
             );
-            const isRedeemDisabled = property.mortgage === -1 || currentUser.gold <
-                Math.floor(ownedLevels[0].price * gameSettings.redemptionCoefficient);
+            const isRedeemDisabled =
+                property.mortgage === -1 ||
+                currentUser.gold <
+                    Math.floor(
+                        ownedLevels[0].price *
+                            gameSettings.redemptionCoefficient
+                    );
 
             if (!isRedeemDisabled) return true;
 
-            const isUpgradeDisabled = currentUser.gold < lowestNotOwnedLevel?.price ||
+            const isUpgradeDisabled =
+                currentUser.gold < lowestNotOwnedLevel?.price ||
                 (property.upgradeRequirements.length > 0 &&
                     property.upgradeRequirements.some(
                         (upg) => upg.level === lowestNotOwnedLevel?.level
                     ) &&
                     Object.values(
                         property.upgradeRequirements.find(
-                            (upgrade) => upgrade.level === lowestNotOwnedLevel?.level
+                            (upgrade) =>
+                                upgrade.level === lowestNotOwnedLevel?.level
                         ).requirements
                     ).some((req) => req === false));
 
@@ -588,6 +622,9 @@ export default function Actions({
     return (
         <section className="actions">
             {/* <SettingsDialog /> */}
+
+            <GamePauseDialog />
+            {/* <GameWinnerDialog /> */}
             <div className="static-choises">
                 <div className="flex-between top-flex">
                     <div className="value">
@@ -645,8 +682,9 @@ export default function Actions({
                                             : ""
                                     }
                                     ${
-                                        (currentUser?.gold < -spending.gold || 
-                                            currentUser?.strength < -spending.strength)
+                                        currentUser?.gold < -spending.gold ||
+                                        currentUser?.strength <
+                                            -spending.strength
                                             ? "li-army-gold-disabled"
                                             : ""
                                     }
@@ -688,7 +726,10 @@ export default function Actions({
                             setActiveTab("Management");
                             setManagementActiveTab("Empire");
                         }}
-                        className={"management-btn" + (availableUpgrades ? " available-upgrade" : "")}
+                        className={
+                            "management-btn" +
+                            (availableUpgrades ? " available-upgrade" : "")
+                        }
                     >
                         Empire
                     </button>
