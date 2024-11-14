@@ -266,11 +266,9 @@
     );
 }
 .player-stat-score {
-    background: linear-gradient(
-        145deg,
-        #6c8cad,
-        /* Небесно-блакитний */ #9ccee2 /* Сталевий синій */
-    );
+
+        background: linear-gradient( 147deg, #a33911, #fff668 );
+
 }
 .color-selector {
     position: relative;

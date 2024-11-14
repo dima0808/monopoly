@@ -308,7 +308,7 @@
     border: 2px solid #3c220a;
 }
 .winner-dialog {
-    width: 560px;
+    width: 592px;
     background-color: #dac6ac;
     border: 1px solid #271d37;
     border-radius: 10px;
@@ -407,14 +407,15 @@
     width: 100%;
 }
 tbody .tc3 {
-    padding-left: 20px;
+    padding-left: 14px;
     text-align: start;
+    font-size: 20px;
 }
 .tc4 {
     min-width: 58px;
 }
 .tc5 {
-    min-width: 58px;
+    min-width: 100px;
 }
 .vin-table tr:nth-child(2n + 1) {
     background-color: #f8f4e2;
