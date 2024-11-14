@@ -1,0 +1,50 @@
+.value-ul .value {
+    margin-top: 5px;
+}
+.value-yellow .value {
+    margin: 0;
+}
+.marg-value {
+    border-radius: 6px;
+    margin-top: 6px;
+    background-color: #ebf1cf;
+    padding: 2px 3px;
+}
+.marg-value-red {
+    background-color: #f1e2cf;
+}
+.value-yellow {
+    margin-top: 4px;
+    background-color: #f3edbd;
+    padding: 2px 4px;
+}
+.value-ul {
+    padding-left: 12px;
+    list-style-type: none;
+}
+.div-h3 {
+    max-width: 196px;
+}
+.value-ul .value h3 {
+    font-size: 16px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+}
+.value-ul .gold-per-turn {
+    width: 54px;
+
+    padding-right: 4px;
+    margin: 0 2px 0 0;
+}
+.marg-value .cell-span {
+    cursor: pointer;
+    font-weight: 500;
+    color: #32690d;
+}
+.marg-value-red .cell-span {
+    cursor: pointer;
+    font-weight: 500;
+    color: #691b0d;
+}

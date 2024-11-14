@@ -1,11 +1,13 @@
 import "../styles.css";
-import React, {useEffect, useRef, useState} from "react";
-import {getAllMessages} from "../../../utils/http";
+import React, { useEffect, useRef, useState } from "react";
+import iconAgentCheckMail from "../../../images/icon-agent-check-mail.png";
+import { getAllMessages } from "../../../utils/http";
 import Message from "./Message";
 import Cookies from "js-cookie";
-import {handleInputChange, handleKeyDown} from "../../../utils/chat";
+import { handleInputChange, handleKeyDown } from "../../../utils/chat";
+import {Link} from "react-router-dom";
 
-export default function Chat({client, isConnected, setNotifications}) {
+export default function Chat({ client, isConnected, setNotifications }) {
     const [messages, setMessages] = useState([]);
     const [error, setError] = useState(null);
     const [isInitialLoad, setIsInitialLoad] = useState(false);
@@ -24,7 +26,9 @@ export default function Chat({client, isConnected, setNotifications}) {
                             parsedMessage.content.split(" ")[0],
                             10
                         );
-                        setMessages((prevMessages) => prevMessages.slice(0, -clearCount));
+                        setMessages((prevMessages) =>
+                            prevMessages.slice(0, -clearCount)
+                        );
                     }
                     return;
                 case "DELETE":
@@ -33,7 +37,7 @@ export default function Chat({client, isConnected, setNotifications}) {
                     return;
             }
         }
-        const {id, sender, content, timestamp, receiver} = parsedMessage;
+        const { id, sender, content, timestamp, receiver } = parsedMessage;
         setMessages((prevMessages) => {
             const newMessages = [
                 ...prevMessages,
@@ -45,7 +49,9 @@ export default function Chat({client, isConnected, setNotifications}) {
                     receiver: receiver,
                 },
             ];
-            return newMessages.length > 80 ? newMessages.slice(-80) : newMessages;
+            return newMessages.length > 80
+                ? newMessages.slice(-80)
+                : newMessages;
         });
     }
 
@@ -58,7 +64,7 @@ export default function Chat({client, isConnected, setNotifications}) {
                     setIsInitialLoad(true);
                 })
                 .catch((error) =>
-                    setError({message: error.message || "An error occurred"})
+                    setError({ message: error.message || "An error occurred" })
                 );
             scrollToBottom();
             const publicMessagesSubscription = client.subscribe(
@@ -107,7 +113,8 @@ export default function Chat({client, isConnected, setNotifications}) {
             setNotifications((prev) => [
                 ...prev,
                 {
-                    message: "Client is not initialized or publish method is not available",
+                    message:
+                        "Client is not initialized or publish method is not available",
                     duration: 3500,
                     isError: true,
                 },
@@ -146,7 +153,7 @@ export default function Chat({client, isConnected, setNotifications}) {
                             Authorization: `Bearer ${token}`,
                             username: username,
                         },
-                        body: JSON.stringify({content: messageContent}),
+                        body: JSON.stringify({ content: messageContent }),
                     });
             }
 
@@ -167,14 +174,15 @@ export default function Chat({client, isConnected, setNotifications}) {
 
     function isScrolledToBottom(chatContainer, tolerance = 80) {
         if (!chatContainer) return false;
-        const {scrollHeight, scrollTop, clientHeight} = chatContainer;
+        const { scrollHeight, scrollTop, clientHeight } = chatContainer;
         return Math.abs(scrollHeight - (scrollTop + clientHeight)) <= tolerance;
     }
 
     function scrollToBottom() {
         const chatContainer = chatContainerRef.current;
         if (chatContainer) {
-            chatContainer.scrollTop = chatContainer.scrollHeight - chatContainer.clientHeight;
+            chatContainer.scrollTop =
+                chatContainer.scrollHeight - chatContainer.clientHeight;
         }
     }
 
@@ -182,7 +190,21 @@ export default function Chat({client, isConnected, setNotifications}) {
         <section className="chat">
             <div className="chat__title title-box">Public Chat</div>
             <div className="chat__text scroll" id="chat" ref={chatContainerRef}>
-                {!error &&
+                {!Cookies.get("username") && (
+                    <div className="not-authorized-div">
+                        <div className="not-authorized-div__img">
+                            <img
+                                src={iconAgentCheckMail}
+                                className="not-authorized-div__img no-select-img"
+                                alt="gold"
+                            />
+                        </div>
+                        <p className="not-authorized-div__p">
+                            You are not <Link to={`/signin`} className="not-authorized-div__a">logged in</Link>
+                        </p>
+                    </div>
+                )}
+                {(!error && Cookies.get("username")) &&
                     messages.map((message, index) => (
                         <Message key={index} nickname={message.sender.nickname}>
                             {message.content}
@@ -193,13 +215,20 @@ export default function Chat({client, isConnected, setNotifications}) {
 
             <div className="chat__typing">
                 <textarea
+                    disabled={!Cookies.get("username")}
                     className="chat__typing-input scroll"
                     ref={messageInputRef}
-                    onKeyDown={(event) => handleKeyDown(event, handleSendMessage)}
+                    onKeyDown={(event) =>
+                        handleKeyDown(event, handleSendMessage)
+                    }
                     onChange={handleInputChange}
                     maxLength={250}
                 ></textarea>
-                <button className="chat__typing-btn" onClick={handleSendMessage}>
+                <button
+                    disabled={!Cookies.get("username")}
+                    className="chat__typing-btn"
+                    onClick={handleSendMessage}
+                >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"

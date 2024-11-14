@@ -1,5 +1,7 @@
 package com.civka.monopoly.api.service.impl;
 
+import com.civka.monopoly.api.dto.ChatMessageDto;
+import com.civka.monopoly.api.dto.GameSettingsDto;
 import com.civka.monopoly.api.dto.RoomDto;
 import com.civka.monopoly.api.entity.*;
 import com.civka.monopoly.api.payload.NotificationResponse;
@@ -13,10 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -29,9 +28,32 @@ public class RoomServiceImpl implements RoomService {
     @Value("${monopoly.app.room.game.init-gold}")
     private Integer initGold;
 
+    @Value("${monopoly.app.room.game.init-additional-gold}")
+    private Integer initAdditionalGold;
+
     @Value("${monopoly.app.room.game.init-strength}")
     private Integer initStrength;
 
+    @Value("${monopoly.app.room.game.demoteGoldCoefficient}")
+    private Double demoteGoldCoefficient;
+
+    @Value("${monopoly.app.room.game.mortgageGoldCoefficient}")
+    private Double mortgageGoldCoefficient;
+
+    @Value("${monopoly.app.room.game.redemptionCoefficient}")
+    private Double redemptionCoefficient;
+
+    @Value("${monopoly.app.room.game.science-project.cost}")
+    private Integer scienceProjectCost;
+
+    @Value("${monopoly.app.room.game.culture-threshold}")
+    private Integer cultureThreshold;
+
+    private final GameUtils gameUtils;
+    private final PropertyService propertyService;
+    private final EventServiceImpl eventService;
+    private final AdditionalEffectService additionalEffectService;
+    private final ChatMessageService chatMessageService;
     private final RoomRepository roomRepository;
     private final UserService userService;
     private final MemberService memberService;
@@ -57,6 +79,8 @@ public class RoomServiceImpl implements RoomService {
                 .password(roomDto.getPassword() == null ? null : passwordEncoder.encode(roomDto.getPassword()))
                 .members(new ArrayList<>())
                 .isStarted(false)
+                .winner(null)
+                .turn(1)
                 .build();
         roomRepository.save(room);
         chatService.create(room.getName(), true);
@@ -109,21 +133,24 @@ public class RoomServiceImpl implements RoomService {
         List<Member> members = room.getMembers();
         if (user.getMember() != null) throw new UserAlreadyJoinedException(username);
         if (members.size() == room.getSize()) throw new RoomFullException(room.getId(), room.getSize());
-        List<Color> allColors = Arrays.asList(Color.values());
-        List<Color> chosenColors = members.stream()
+        List<Member.Color> allColors = Arrays.asList(Member.Color.values());
+        List<Member.Color> chosenColors = members.stream()
                 .map(Member::getColor)
                 .toList();
-        Color availableColor = allColors.stream()
+        Member.Color availableColor = allColors.stream()
                 .filter(civ -> !chosenColors.contains(civ))
                 .findFirst()
-                .orElse(Color.turquoise);
+                .orElse(Member.Color.turquoise);
         Member member = Member.builder()
                 .user(user)
                 .room(room)
                 .isLeader(members.isEmpty())
-                .civilization(Civilization.Random)
+                .civilization(Member.Civilization.Random)
                 .color(availableColor)
                 .position(0)
+                .gold(0)
+                .strength(0)
+                .tourism(0)
                 .build();
         member = memberService.save(member);
         members.add(member);
@@ -205,48 +232,217 @@ public class RoomServiceImpl implements RoomService {
         room.setIsStarted(true);
 
         List<Member> members = room.getMembers();
-        List<Civilization> allCivilizations = Arrays.asList(Civilization.values());
-        List<Civilization> chosenCivilizations = members.stream()
+        List<Member.Civilization> allCivilizations = Arrays.asList(Member.Civilization.values());
+        List<Member.Civilization> chosenCivilizations = members.stream()
                 .map(Member::getCivilization)
-                .filter(civ -> civ != Civilization.Random)
+                .filter(civ -> civ != Member.Civilization.Random)
                 .toList();
-        List<Civilization> availableCivilizations = new ArrayList<>(allCivilizations.stream()
-                .filter(civ -> !chosenCivilizations.contains(civ))
+        List<Member.Civilization> availableCivilizations = new ArrayList<>(allCivilizations.stream()
+                .filter(civ -> !chosenCivilizations.contains(civ) && civ != Member.Civilization.Random)
                 .toList());
         for (Member member : members) {
             member.setGold(initGold);
             member.setStrength(initStrength);
             member.setTourism(0);
             member.setScore(0);
-            member.setRolledDice(true);
-            if (member.getCivilization() == Civilization.Random) {
-                Civilization randomCivilization = availableCivilizations.remove((int) (Math.random() * availableCivilizations.size()));
+            member.setHasRolledDice(true);
+            member.setFinishedRounds(0);
+            member.setTurnsToNextScienceProject(-1);
+            member.setFinishedScienceProjects(new ArrayList<>());
+            member.setExpeditionTurns(-1);
+            member.setEloChange(0);
+            if (member.getCivilization() == Member.Civilization.Random) {
+                Member.Civilization randomCivilization = availableCivilizations.remove((int) (Math.random() * availableCivilizations.size()));
                 member.setCivilization(randomCivilization);
             }
             memberService.save(member);
         }
 
         Random random = new Random();
-        Member randomMember = members.get(random.nextInt(members.size()));
-        randomMember.setRolledDice(false);
+        int randomIndex = random.nextInt(members.size());
+        Member randomMember = members.get(randomIndex);
+        randomMember.setHasRolledDice(false);
+        room.setRandomMemberIndex(randomIndex);
         room.setCurrentTurn(randomMember.getUser().getUsername());
         memberService.save(randomMember);
+        int additionalMembers = members.size() - 3;
+        for (int i = 1; i <= additionalMembers; i++) {
+            Member additionalGoldMember = members.get((randomIndex - i) % members.size());
+            additionalGoldMember.setGold(additionalGoldMember.getGold() + initAdditionalGold);
+            memberService.save(additionalGoldMember);
+        }
         return roomRepository.save(room);
     }
 
     @Override
-    public Room endTurn(Member member) {
-        if (!member.getRoom().getCurrentTurn().equals(member.getUser().getUsername()) || !member.getRolledDice()) {
+    public Room endTurn(Member member, ArmySpending armySpending) {
+        Room room = member.getRoom();
+        if (!member.getRoom().getCurrentTurn().equals(member.getUser().getUsername()) || !member.getHasRolledDice()) {
             throw new UserNotAllowedException();
         }
-        Room room = member.getRoom();
+        if (!member.getEvents().isEmpty()) {
+            throw new UserNotAllowedException();
+        }
+        if (gameUtils.getGoldFromArmySpending(armySpending) > member.getGold()) {
+            throw new UserNotAllowedException();
+        }
+        member.setStrength(member.getStrength() + gameUtils.getStrengthFromArmySpending(armySpending));
+        member.setGold(member.getGold() + gameUtils.getGoldFromArmySpending(armySpending));
+        if (member.getTurnsToNextScienceProject() != -1) {
+            int newTurnsToNextScienceProject = member.getTurnsToNextScienceProject() - 1;
+            member.setTurnsToNextScienceProject(Math.max(newTurnsToNextScienceProject, 0));
+        }
+        if (member.getExpeditionTurns() != -1) {
+            int newExpeditionTurns = member.getExpeditionTurns() - 1;
+            if (newExpeditionTurns < 0) {
+                Room updatedRoom = manageVictory(room, member, Room.VictoryType.SCIENCE);
+
+                Chat roomChat = chatService.findByName(room.getName());
+                ChatMessageDto systemMessage = ChatMessageDto.builder()
+                        .type(ChatMessage.MessageType.SYSTEM_WINNER)
+                        .content(member.getUser().getNickname())
+                        .timestamp(LocalDateTime.now())
+                        .build();
+                ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
+                messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
+                return updatedRoom;
+            }
+            member.setExpeditionTurns(newExpeditionTurns);
+        }
+        if (member.getProperties().size() >= 30) {
+            Room updatedRoom = manageVictory(room, member, Room.VictoryType.MILITARY);
+
+            Chat roomChat = chatService.findByName(room.getName());
+            ChatMessageDto systemMessage = ChatMessageDto.builder()
+                    .type(ChatMessage.MessageType.SYSTEM_WINNER)
+                    .content(member.getUser().getNickname())
+                    .timestamp(LocalDateTime.now())
+                    .build();
+            ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
+            messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
+            return updatedRoom;
+        }
+        if (member.getTourism() >= room.getMembers().stream()
+                .filter(m -> m != member).mapToInt(Member::getTourism).max().orElse(0) + cultureThreshold) {
+            Room updatedRoom = manageVictory(room, member, Room.VictoryType.CULTURE);
+
+            Chat roomChat = chatService.findByName(room.getName());
+            ChatMessageDto systemMessage = ChatMessageDto.builder()
+                    .type(ChatMessage.MessageType.SYSTEM_WINNER)
+                    .content(member.getUser().getNickname())
+                    .timestamp(LocalDateTime.now())
+                    .build();
+            ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
+            messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
+            return updatedRoom;
+        }
+
+        List<Property> properties = member.getProperties();
+        Iterator<Property> propertiesIterator = properties.iterator();
+        while (propertiesIterator.hasNext()) {
+            Property property = propertiesIterator.next();
+            if (property.getMortgage() > 0) {
+                property.setMortgage(property.getMortgage() - 1);
+                propertyService.save(property);
+                if (property.getMortgage() == 0) {
+                    propertiesIterator.remove();
+                }
+            }
+        }
+
+        List<AdditionalEffect> additionalEffects = member.getAdditionalEffects();
+        Iterator<AdditionalEffect> additionalEffectsIterator = additionalEffects.iterator();
+        while (additionalEffectsIterator.hasNext()) {
+            AdditionalEffect additionalEffect = additionalEffectsIterator.next();
+            if (additionalEffect.getTurnsLeft() > 0) {
+                additionalEffect.setTurnsLeft(additionalEffect.getTurnsLeft() - 1);
+                additionalEffectService.save(additionalEffect);
+                if (additionalEffect.getTurnsLeft() == 0) {
+                    additionalEffectsIterator.remove();
+                }
+            }
+        }
+        memberService.save(member);
+
         List<Member> members = room.getMembers();
         int currentIndex = members.indexOf(member);
         int nextIndex = (currentIndex + 1) % members.size();
         Member nextMember = members.get(nextIndex);
-        nextMember.setRolledDice(false);
+        nextMember.setHasRolledDice(false);
         room.setCurrentTurn(nextMember.getUser().getUsername());
+
+        if (nextIndex == room.getRandomMemberIndex()) {
+            room.setTurn(room.getTurn() + 1);
+        }
+
         memberService.save(nextMember);
+        return roomRepository.save(room);
+    }
+
+    @Override
+    public Room addGold(Member member, Integer gold, String admin) {
+        User adminUser = userService.findByUsername(admin);
+        if (adminUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))) {
+            member.setGold(member.getGold() + gold);
+            return memberService.save(member).getRoom();
+        } else {
+            throw new UserNotAllowedException();
+        }
+    }
+
+    @Override
+    public Room addStrength(Member member, Integer strength, String admin) {
+        User adminUser = userService.findByUsername(admin);
+        if (adminUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))) {
+            member.setStrength(member.getStrength() + strength);
+            return memberService.save(member).getRoom();
+        } else {
+            throw new UserNotAllowedException();
+        }
+    }
+
+    @Override
+    public Room addEvent(Member member, Event.EventType eventType, String admin) {
+        User adminUser = userService.findByUsername(admin);
+        if (adminUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))) {
+            eventService.add(member, eventType);
+            return memberService.save(member).getRoom();
+        } else {
+            throw new UserNotAllowedException();
+        }
+    }
+
+    @Override
+    public Room goToPosition(Member member, Integer position, String admin) {
+        User adminUser = userService.findByUsername(admin);
+        if (adminUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))) {
+            return eventService.handleBermudaTriangle(member, position);
+        } else {
+            throw new UserNotAllowedException();
+        }
+    }
+
+    @Override
+    public GameSettingsDto getGameSettings() {
+        return GameSettingsDto.builder()
+                .armySpendings(gameUtils.getArmySpendings())
+                .projectSettings(gameUtils.getProjectSettings())
+                .demoteGoldCoefficient(demoteGoldCoefficient)
+                .mortgageGoldCoefficient(mortgageGoldCoefficient)
+                .redemptionCoefficient(redemptionCoefficient)
+                .scienceProjectCost(scienceProjectCost)
+                .cultureThreshold(cultureThreshold)
+                .build();
+    }
+
+    private Room manageVictory(Room room, Member member, Room.VictoryType victoryType) {
+        room.setWinner(member.getUser().getUsername());
+        room.setVictoryType(victoryType);
+        room.setCurrentTurn(null);
+        for (Member temp : room.getMembers()) {
+            temp.setEloChange(10);
+            memberService.save(temp);
+        }
         return roomRepository.save(room);
     }
 }

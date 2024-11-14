@@ -1,0 +1,20 @@
+.event-relations-btns {
+    margin: 0 !important;
+    padding: 8px 4px 4px 4px !important;
+}
+.relation-name-and-civ .union-img::before,
+.relation-name-and-civ .war-img::before {
+    width: 22px;
+    height: 22px;
+}
+.event-italic-p {
+    padding: 2px 4px;
+    width: 258px;
+    color: #2b2732;
+    font-style: italic;
+    font-size: 16px;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+    line-height: 1.1;
+    overflow-wrap: break-word;
+}

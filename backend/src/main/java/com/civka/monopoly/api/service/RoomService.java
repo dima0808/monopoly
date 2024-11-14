@@ -1,6 +1,9 @@
 package com.civka.monopoly.api.service;
 
+import com.civka.monopoly.api.dto.GameSettingsDto;
 import com.civka.monopoly.api.dto.RoomDto;
+import com.civka.monopoly.api.entity.ArmySpending;
+import com.civka.monopoly.api.entity.Event;
 import com.civka.monopoly.api.entity.Member;
 import com.civka.monopoly.api.entity.Room;
 
@@ -30,5 +33,15 @@ public interface RoomService {
 
     Room startGame(String roomName, String username);
 
-    Room endTurn(Member member);
+    Room endTurn(Member member, ArmySpending armySpending);
+
+    Room addGold(Member member, Integer gold, String admin);
+
+    Room addStrength(Member member, Integer strength, String admin);
+
+    Room addEvent(Member member, Event.EventType eventType, String admin);
+
+    Room goToPosition(Member member, Integer position, String admin);
+
+    GameSettingsDto getGameSettings();
 }

@@ -49,5 +49,13 @@ public class ChatMessage {
 
     public enum MessageType {
         SYSTEM_ROLL_DICE,
+        SYSTEM_BERMUDA,
+        SYSTEM_PAY_RENT,
+        SYSTEM_BUY_PROPERTY,
+        SYSTEM_UPGRADE_PROPERTY,
+        SYSTEM_BYPASS_START,
+        SYSTEM_DOWNGRADE_PROPERTY,
+        SYSTEM_REDEMPTION_PROPERTY,
+        SYSTEM_MORTGAGE_PROPERTY, SYSTEM_WINNER,
     }
 }

@@ -6,6 +6,8 @@ import Cookies from "js-cookie";
 import {getAllMessages} from "../../../../utils/http";
 import {handleInputChange, handleKeyDown} from "../../../../utils/chat";
 import SystemMessage from "./SystemMessage";
+import goldImg from "../../../../images/icon-gold.png";
+import {propertiesInfo} from "../../../../constraints";
 
 export default function Chat({roomName, client, isConnected, setNotifications, setSelectedUser, setIsPrivateChatOpen}) {
     const [messages, setMessages] = useState([]);
@@ -35,12 +37,13 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
 
 
     useEffect(() => {
-        if (client && isConnected) {
+        if (roomName && client && isConnected) {
             const token = Cookies.get("token");
             getAllMessages(roomName, token)
                 .then((messages) => {
                     setMessages(messages);
                     setIsInitialLoad(true);
+                    setError(false);
                 })
                 .catch((error) =>
                     setError({message: error.message || "An error occurred"})
@@ -99,15 +102,71 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
             ]);
             return;
         }
+        const [command, param, targetUser] = messageContent.split(" ").filter(Boolean);
         try {
-            client.publish({
-                destination: "/app/chat/sendPublicMessage/" + roomName,
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    username: username,
-                },
-                body: JSON.stringify({content: messageContent}),
-            });
+            switch (command) {
+                case "/addGold":
+                    if (param && targetUser) {
+                        const gold = parseInt(param, 10);
+                        client.publish({
+                            destination: "/app/rooms/" + roomName + "/addGold/" + targetUser,
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                username: username,
+                                gold: gold,
+                            },
+                        });
+                    }
+                    break;
+                case "/addStrength":
+                    if (param && targetUser) {
+                        const strength = parseInt(param, 10);
+                        client.publish({
+                            destination: "/app/rooms/" + roomName + "/addStrength/" + targetUser,
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                username: username,
+                                strength: strength,
+                            },
+                        });
+                    }
+                    break;
+                case "/addEvent":
+                    if (param && targetUser) {
+                        const event = parseInt(param, 10);
+                        client.publish({
+                            destination: "/app/rooms/" + roomName + "/addEvent/" + targetUser,
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                username: username,
+                                event: event,
+                            },
+                        });
+                    }
+                    break;
+                case "/move":
+                    if (param && targetUser) {
+                        const position = parseInt(param, 10);
+                        client.publish({
+                            destination: "/app/rooms/" + roomName + "/goToPosition/" + targetUser,
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                username: username,
+                                position: position,
+                            },
+                        });
+                    }
+                    break;
+                default:
+                    client.publish({
+                        destination: "/app/chat/sendPublicMessage/" + roomName,
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            username: username,
+                        },
+                        body: JSON.stringify({content: messageContent}),
+                    });
+            }
             console.log("Sending message: " + messageContent);
             messageInputRef.current.value = "";
             scrollToBottom();
@@ -144,14 +203,130 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
                     {!error &&
                         messages.map((message, index) => {
                             if (message.type) {
+                                const data = message.content.split(" ");
                                 switch (message.type) {
                                     case 'SYSTEM_ROLL_DICE':
-                                        const data = message.content.split(" ");
                                         return (
                                             <SystemMessage key={index} timestamp={message.timestamp}>
                                                 гравець <span className="system-span">{data[0]}</span>
                                                 кинув кубики <span className="system-tile-span">{data[1]}</span>
                                                 та <span className="system-tile-span">{data[2]}</span>
+                                            </SystemMessage>
+                                        );
+                                    case 'SYSTEM_BERMUDA':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                телепортувався на
+                                                <span className="system-tile-span"> {propertiesInfo[data[1]] ?
+                                                    propertiesInfo[data[1]]['LEVEL_1'].name : 'Адмін даун'}
+                                                </span>
+                                            </SystemMessage>
+                                        );
+                                    case 'SYSTEM_PAY_RENT':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                заплатив
+                                                <div className="inline-block">
+                                                    <div className="player-stat-gold width-full pointer no-select">
+                                                        <img
+                                                            src={goldImg}
+                                                            className="recourse-img"
+                                                            alt="gold"
+                                                        />
+                                                        {data[1]}
+                                                    </div>
+                                                </div>
+                                                гравцю <span className="system-span">{data[2]}</span>
+                                            </SystemMessage>
+                                        );
+                                    case 'SYSTEM_BUY_PROPERTY':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                купив
+                                                <span className="system-tile-span"> {propertiesInfo[data[1]]['LEVEL_1'].name}
+                                                </span>за
+                                                <div className="inline-block">
+                                                    <div className="player-stat-gold width-full no-select">
+                                                        <img
+                                                            src={goldImg}
+                                                            className="recourse-img"
+                                                            alt="gold"
+                                                        />
+                                                        {data[2]}
+                                                    </div>
+                                                </div>
+                                            </SystemMessage>
+                                        );
+                                    case 'SYSTEM_UPGRADE_PROPERTY':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                вдосконалив
+                                                <span className="system-span"> {propertiesInfo[data[1]]['LEVEL_1'].name}
+                                                </span>за
+                                                <div className="inline-block">
+                                                    <div className="player-stat-gold width-full no-select">
+                                                        <img
+                                                            src={goldImg}
+                                                            className="recourse-img"
+                                                            alt="gold"
+                                                        />
+                                                        {data[2]}
+                                                    </div>
+                                                </div>
+                                            </SystemMessage>
+                                        );
+                                    case 'SYSTEM_BYPASS_START':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                проходить коло та отримує
+                                                <div className="inline-block">
+                                                    <div className="player-stat-gold width-full no-select">
+                                                        <img
+                                                            src={goldImg}
+                                                            className="recourse-img"
+                                                            alt="gold"
+                                                        />
+                                                        {data[1]}
+                                                    </div>
+                                                </div>
+                                            </SystemMessage>
+                                        );
+                                    case 'SYSTEM_MORTGAGE_PROPERTY':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                заклав під заставу
+                                                <span className="system-span"> {propertiesInfo[data[1]]['LEVEL_1'].name}
+                                                </span>
+                                            </SystemMessage>
+                                        );
+                                    case 'SYSTEM_REDEMPTION_PROPERTY':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                вертає з-під застави
+                                                <span className="system-span"> {propertiesInfo[data[1]]['LEVEL_1'].name}
+                                                </span>
+                                            </SystemMessage>
+                                        );
+                                    case 'SYSTEM_DOWNGRADE_PROPERTY':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                продає поліпшення для
+                                                <span className="system-span"> {propertiesInfo[data[1]]['LEVEL_1'].name}
+                                                </span>
+                                            </SystemMessage>
+                                        );
+                                    case 'SYSTEM_WINNER':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span> виграв
                                             </SystemMessage>
                                         );
                                     default:

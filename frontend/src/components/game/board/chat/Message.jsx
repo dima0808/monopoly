@@ -5,11 +5,11 @@ export default function Message({ nickname, timestamp, setSelectedUser, children
 
     return (
         <div className="chat-zone-monopoly-div">
-            <p className="chat-zone-monopoly-message">
+            <div className="chat-zone-monopoly-message">
                 {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                 <a onClick={setSelectedUser} className="nickname-span">{nickname}:</a>
                 {children}
-            </p>
+            </div>
             <p className="chat-zone-monopoly-time">{formattedTime}</p>
         </div>
     );

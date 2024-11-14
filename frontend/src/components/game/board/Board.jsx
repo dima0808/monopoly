@@ -1,146 +1,42 @@
 import "./styles.css";
 
-// import blueStarImg from '../../../images/star-blue.png';
-// import yellowStarImg from '../../../images/star-yellow.png';
-
 import startImg from "../../../images/corner_start.png";
 import projectsImg from "../../../images/corner-projects.png";
 import bermudaTriangleImg from "../../../images/corner_bermuda_triangle.png";
 
-import resourceBananasImg from "../../../images/icon_resource_bananas.png";
-import resourceCrabsImg from "../../../images/icon_resource_crabs.png";
-import resourceDeerImg from "../../../images/icon_resource_deer.png";
-import resourceFursImg from "../../../images/icon_resource_furs.png";
-import resourceHorsesImg from "../../../images/icon_resource_horses.png";
-import resourceIronImg from "../../../images/icon_resource_iron.png";
-import resourceMaizeImg from "../../../images/icon_resource_maize.png";
-import resourceRiceImg from "../../../images/icon_resource_rice.png";
-import resourceWheatImg from "../../../images/icon_resource_wheat.png";
-
-import featureReefImg from "../../../images/icon_feature_reef.png";
-
-import goodyHutImg from "../../../images/goody_hut.png";
-import barbariansImg from "../../../images/barbarians.png";
-
-import districtAqueductImg from "../../../images/icon_district_aqueduct.png";
-import districtCampusImg from "../../../images/icon_district_campus.png";
-import districtCommercialHubImg from "../../../images/icon_district_commercial_hub.png";
-import districtDamImg from "../../../images/icon_district_dam.png";
-import districtEncampmentImg from "../../../images/icon_district_encampment.png";
-import districtEntertainmentComplexImg from "../../../images/icon_district_entertainment_complex.png";
-import districtGovernmentPlazaImg from "../../../images/icon_district_government.png";
-import districtHarborImg from "../../../images/icon_district_harbor.png";
-import districtIndustrialZoneImg from "../../../images/icon_district_industrial_zone.png";
-import districtNeighborhoodImg from "../../../images/icon_district_neighborhood.png";
-import districtSpaceportImg from "../../../images/icon_district_spaceport.png";
-import districtTheatreSquareImg from "../../../images/icon_district_theatre_square.png";
-
-import wonderBigBenImg from "../../../images/wonder_big_ben.png";
-import wonderCasaDeContratacionImg from "../../../images/wonder_casa_de_contratacion.png";
-import wonderColosseumImg from "../../../images/wonder_colosseum.png";
-import wonderEstadioDoMaracanaImg from "../../../images/wonder_estadio_do_maracana.png";
-import wonderEtemenankiImg from "../../../images/wonder_etemenanki.png";
-import wonderGreatLibraryImg from "../../../images/wonder_great_library.png";
-import wonderMausoleumAtHalicarnassusImg from "../../../images/wonder_mausoleum_at_halicarnassus.png";
-import wonderOxfordUniversityImg from "../../../images/wonder_oxford_university.png";
-import wonderRuhrValleyImg from "../../../images/wonder_ruhr_valley.png";
-import wonderTempleOfArtemisImg from "../../../images/wonder_temple_of_artemis.png";
-import wonderTerracottaArmyImg from "../../../images/wonder_terracotta_army.png";
-
 import Chat from "./chat/Chat";
 import Dice from "./dice/Dice";
-
-function EdgeCell({src, alt, position}) {
-    const positionClass = `edge__img-${position}`;
-    return (
-        <div className="board__element board__element-edge">
-            <img
-                src={src}
-                alt={alt}
-                className={`edge__img ${positionClass} border`}
-            />
-        </div>
-    );
-}
-
-function Cell({
-                  src,
-                  alt,
-                  position,
-                  mirror = false,
-                  noneUpgrades = false,
-                  specialType,
-              }) {
-    const baseClass = `object-${position}`;
-    const priceClass = specialType
-        ? `${baseClass}__price ${baseClass}__price-${specialType}`
-        : `${baseClass}__price`;
-    const cellClass = noneUpgrades
-        ? `${baseClass}__cell ${baseClass}__cell-none-upgrades`
-        : `${baseClass}__cell`;
-    return (
-        <div className={` ${baseClass} ${mirror && "mirror"} border`}>
-            <div className={priceClass}></div>
-            <div className={cellClass}>
-                <img src={src} alt={alt} className="cell-img"/>
-            </div>
-            {noneUpgrades ? null : <div className={`${baseClass}__upgrades`}></div>}
-        </div>
-    );
-}
-
-function BarbCell() {
-    return (
-        <div className="object-vertical mirror border">
-            <div className="object-vertical__barbarians-color"></div>
-            <div className="object-vertical__cell">
-                <img src={barbariansImg} alt="barbarians" className="cell-img-unique"/>
-            </div>
-            <div className="object-vertical__barbarians-color"></div>
-        </div>
-    );
-}
-
-function GoodyHutCell() {
-    return (
-        <div className="object-vertical border">
-            <div className="object-vertical__village-color"></div>
-            <div className="object-vertical__cell">
-                <img src={goodyHutImg} alt="goody hut" className="cell-img-unique"/>
-            </div>
-            <div className="object-vertical__village-color"></div>
-        </div>
-    );
-}
+import GoodyHutCell from "./cells/GoodyHutCell";
+import Cell from "./cells/Cell";
+import EdgeCell from "./cells/EdgeCell";
+import BarbCell from "./cells/BarbCell";
 
 export default function Board({
-                                  room,
-                                  players,
-                                  dice,
-                                  client,
-                                  isConnected,
+                                  room, players, dice, properties,
+                                  setSelectedUser, setIsPrivateChatOpen,
+                                  setActiveTab, setManagementActiveTab,
+                                  setSelectedProperty,
+                                  client, isConnected,
                                   setNotifications,
-                                  setSelectedUser,
-                                  setIsPrivateChatOpen,
                               }) {
 
     function calculatePosition(position) {
         if (position === 0) {
-            return { topValue: 42, leftValue: 42, position: "vertical" };
+            return {topValue: 42, leftValue: 42, position: "vertical"};
         } else if (position < 13) {
-            return { topValue: 42, leftValue: 122 + 50 * (position - 1), position: "vertical" };
+            return {topValue: 42, leftValue: 122 + 50 * (position - 1), position: "vertical"};
         } else if (position === 13) {
-            return { topValue: 42, leftValue: 752, position: "horizontal" };
+            return {topValue: 42, leftValue: 752, position: "horizontal"};
         } else if (position < 24) {
-            return { topValue: 122 + 50 * (position - 14), leftValue: 752, position: "horizontal" };
+            return {topValue: 122 + 50 * (position - 14), leftValue: 752, position: "horizontal"};
         } else if (position === 24) {
-            return { topValue: 652, leftValue: 752, position: "vertical" };
+            return {topValue: 652, leftValue: 752, position: "vertical"};
         } else if (position < 37) {
-            return { topValue: 652, leftValue: 672 - 50 * (position - 25), position: "vertical" };
+            return {topValue: 652, leftValue: 672 - 50 * (position - 25), position: "vertical"};
         } else if (position === 37) {
-            return { topValue: 652, leftValue: 42, position: "horizontal" };
+            return {topValue: 652, leftValue: 42, position: "horizontal"};
         } else {
-            return { topValue: 572 - 50 * (position - 38), leftValue: 42, position: "horizontal" };
+            return {topValue: 572 - 50 * (position - 38), leftValue: 42, position: "horizontal"};
         }
     }
 
@@ -158,107 +54,162 @@ export default function Board({
         return position === "vertical" ? `translate(${x}px, ${y}px)` : `translate(${y}px, ${x}px)`;
     }
 
+    const selectProperty = (position) => {
+        setSelectedProperty(position);
+        setActiveTab("Management");
+        setManagementActiveTab("Property");
+    }
+
     return (
         <section className="board">
-            <EdgeCell src={startImg} alt="start" position="left-up"/>
+            <EdgeCell src={startImg} alt="start" direction="left-up"/>
 
             <div className="board__element board__element-side board__element-side-vertical up">
-                <Cell src={resourceHorsesImg} alt="horses" position="vertical"/>
-                <Cell src={resourceBananasImg} alt="bananas" position="vertical"/>
-                <Cell src={resourceDeerImg} alt="deer" position="vertical"/>
                 <Cell
-                    src={wonderTempleOfArtemisImg}
-                    alt="temple of artemis"
-                    position="vertical"
+                    direction="vertical"
+                    position={1}
+                    property={properties[1]}
+                    selectProperty={() => selectProperty(1)}
+                />
+                <Cell
+                    direction="vertical"
+                    position={2}
+                    property={properties[2]}
+                    selectProperty={() => selectProperty(2)}
+                />
+                <Cell
+                    direction="vertical"
+                    position={3}
+                    property={properties[3]}
+                    selectProperty={() => selectProperty(3)}
+                />
+                <Cell
+                    direction="vertical"
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={4}
+                    property={properties[4]}
+                    selectProperty={() => selectProperty(4)}
                 />
-                <Cell src={resourceFursImg} alt="furs" position="vertical"/>
+                <Cell
+                    direction="vertical"
+                    position={5}
+                    property={properties[5]}
+                    selectProperty={() => selectProperty(5)}
+                />
                 <GoodyHutCell/>
                 <Cell
-                    src={districtEncampmentImg}
-                    alt="encampment"
-                    position="vertical"
+                    direction="vertical"
                     specialType="encampment"
+                    position={7}
+                    property={properties[7]}
+                    selectProperty={() => selectProperty(7)}
                 />
                 <Cell
-                    src={wonderTerracottaArmyImg}
-                    alt="terrakota army"
-                    position="vertical"
+                    direction="vertical"
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={8}
+                    property={properties[8]}
+                    selectProperty={() => selectProperty(8)}
                 />
                 <Cell
-                    src={districtGovernmentPlazaImg}
-                    alt="government plaza"
-                    position="vertical"
+                    direction="vertical"
                     specialType="government"
+                    position={9}
+                    property={properties[9]}
+                    selectProperty={() => selectProperty(9)}
                 />
                 <Cell
-                    src={districtIndustrialZoneImg}
-                    alt="industrial zone"
-                    position="vertical"
+                    direction="vertical"
+                    position={10}
+                    property={properties[10]}
+                    selectProperty={() => selectProperty(10)}
                 />
-                <Cell src={resourceIronImg} alt="iron" position="vertical"/>
-                <Cell src={resourceCrabsImg} alt="crabs" position="vertical"/>
+                <Cell
+                    direction="vertical"
+                    position={11}
+                    property={properties[11]}
+                    selectProperty={() => selectProperty(11)}
+                />
+                <Cell
+                    direction="vertical"
+                    position={12}
+                    property={properties[12]}
+                    selectProperty={() => selectProperty(12)}
+                />
             </div>
 
-            <EdgeCell src={projectsImg} alt="projects" position="right-up"/>
+            <EdgeCell src={projectsImg} alt="projects" direction="right-up"/>
 
             <div className="board__element board__element-side board__element-side-horizontal left">
                 <Cell
-                    src={districtSpaceportImg}
-                    alt="spaceport"
-                    position="horizontal"
+                    direction="horizontal"
                     noneUpgrades={true}
+                    position={47}
+                    property={properties[47]}
+                    selectProperty={() => selectProperty(47)}
                 />
                 <Cell
-                    src={wonderOxfordUniversityImg}
-                    alt="oxford university"
-                    position="horizontal"
+                    direction="horizontal"
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={46}
+                    property={properties[46]}
+                    selectProperty={() => selectProperty(46)}
                 />
-                <Cell src={districtCampusImg} alt="campus" position="horizontal"/>
                 <Cell
-                    src={districtGovernmentPlazaImg}
-                    alt="government plaza"
-                    position="horizontal"
+                    direction="horizontal"
+                    position={45}
+                    property={properties[45]}
+                    selectProperty={() => selectProperty(45)}
+                />
+                <Cell
+                    direction="horizontal"
                     specialType="government"
+                    position={44}
+                    property={properties[44]}
+                    selectProperty={() => selectProperty(44)}
                 />
                 <Cell
-                    src={districtCommercialHubImg}
-                    alt="commercial hub"
-                    position="horizontal"
+                    direction="horizontal"
+                    position={43}
+                    property={properties[43]}
+                    selectProperty={() => selectProperty(43)}
                 />
                 <Cell
-                    src={wonderBigBenImg}
-                    alt="big ben"
-                    position="horizontal"
+                    direction="horizontal"
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={42}
+                    property={properties[42]}
+                    selectProperty={() => selectProperty(42)}
                 />
                 <Cell
-                    src={districtNeighborhoodImg}
-                    alt="neighborhood"
-                    position="horizontal"
+                    direction="horizontal"
+                    position={41}
+                    property={properties[41]}
+                    selectProperty={() => selectProperty(41)}
                 />
                 <Cell
-                    src={wonderEstadioDoMaracanaImg}
-                    alt="estadio do maracana"
-                    position="horizontal"
+                    direction="horizontal"
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={40}
+                    property={properties[40]}
+                    selectProperty={() => selectProperty(40)}
                 />
                 <Cell
-                    src={districtTheatreSquareImg}
-                    alt="theatre square"
-                    position="horizontal"
+                    direction="horizontal"
+                    position={39}
+                    property={properties[39]}
+                    selectProperty={() => selectProperty(39)}
                 />
                 <Cell
-                    src={districtEntertainmentComplexImg}
-                    alt="entertainment complex"
-                    position="horizontal"
+                    direction="horizontal"
+                    position={38}
+                    property={properties[38]}
+                    selectProperty={() => selectProperty(38)}
                 />
             </div>
 
@@ -273,166 +224,188 @@ export default function Board({
 
             <div className="board__element board__element-side board__element-side-horizontal right">
                 <Cell
-                    src={featureReefImg}
-                    alt="reef"
-                    position="horizontal"
+                    direction="horizontal"
                     mirror={true}
                     noneUpgrades={true}
+                    position={14}
+                    property={properties[14]}
+                    selectProperty={() => selectProperty(14)}
                 />
                 <Cell
-                    src={districtCampusImg}
-                    alt="campus"
-                    position="horizontal"
+                    direction="horizontal"
                     mirror={true}
+                    position={15}
+                    property={properties[15]}
+                    selectProperty={() => selectProperty(15)}
                 />
                 <Cell
-                    src={wonderGreatLibraryImg}
-                    alt="great library"
-                    position="horizontal"
+                    direction="horizontal"
                     mirror={true}
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={16}
+                    property={properties[16]}
+                    selectProperty={() => selectProperty(16)}
                 />
                 <Cell
-                    src={districtHarborImg}
-                    alt="harbor"
-                    position="horizontal"
+                    direction="horizontal"
                     mirror={true}
+                    position={17}
+                    property={properties[17]}
+                    selectProperty={() => selectProperty(17)}
                 />
                 <Cell
-                    src={districtGovernmentPlazaImg}
-                    alt="government plaza"
-                    position="horizontal"
+                    direction="horizontal"
                     mirror={true}
                     specialType="government"
+                    position={18}
+                    property={properties[18]}
+                    selectProperty={() => selectProperty(18)}
                 />
                 <Cell
-                    src={districtCommercialHubImg}
-                    alt="commercial hub"
-                    position="horizontal"
+                    direction="horizontal"
                     mirror={true}
+                    position={19}
+                    property={properties[19]}
+                    selectProperty={() => selectProperty(19)}
                 />
                 <Cell
-                    src={wonderCasaDeContratacionImg}
-                    alt="cas de contratacion"
-                    position="horizontal"
-                    mirror={true}
-                    noneUpgrades={true}
-                    specialType="wonder"
-                />
-                <Cell
-                    src={districtTheatreSquareImg}
-                    alt="theatre square"
-                    position="horizontal"
-                    mirror={true}
-                />
-                <Cell
-                    src={districtEntertainmentComplexImg}
-                    alt="entertainment complex"
-                    position="horizontal"
-                    mirror={true}
-                />
-                <Cell
-                    src={wonderColosseumImg}
-                    alt="colosseum"
-                    position="horizontal"
+                    direction="horizontal"
                     mirror={true}
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={20}
+                    property={properties[20]}
+                    selectProperty={() => selectProperty(20)}
+                />
+                <Cell
+                    direction="horizontal"
+                    mirror={true}
+                    position={21}
+                    property={properties[21]}
+                    selectProperty={() => selectProperty(21)}
+                />
+                <Cell
+                    direction="horizontal"
+                    mirror={true}
+                    position={22}
+                    property={properties[22]}
+                    selectProperty={() => selectProperty(22)}
+                />
+                <Cell
+                    direction="horizontal"
+                    mirror={true}
+                    noneUpgrades={true}
+                    specialType="wonder"
+                    position={23}
+                    property={properties[23]}
+                    selectProperty={() => selectProperty(23)}
                 />
             </div>
 
-            <EdgeCell src={projectsImg} alt="projects" position="left-down"/>
+            <EdgeCell src={projectsImg} alt="projects" direction="left-down"/>
 
             <div className="board__element board__element-side board__element-side-vertical down">
                 <Cell
-                    src={wonderRuhrValleyImg}
-                    alt="ruhr valley"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={36}
+                    property={properties[36]}
+                    selectProperty={() => selectProperty(36)}
                 />
                 <Cell
-                    src={districtDamImg}
-                    alt="dam"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
+                    position={35}
+                    property={properties[35]}
+                    selectProperty={() => selectProperty(35)}
                 />
                 <Cell
-                    src={districtIndustrialZoneImg}
-                    alt="industrial zone"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
+                    position={34}
+                    property={properties[34]}
+                    selectProperty={() => selectProperty(34)}
                 />
                 <Cell
-                    src={districtAqueductImg}
-                    alt="aqueduct"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
                     noneUpgrades={true}
+                    position={33}
+                    property={properties[33]}
+                    selectProperty={() => selectProperty(33)}
                 />
                 <Cell
-                    src={wonderMausoleumAtHalicarnassusImg}
-                    alt="mausoleum at halicarnassus"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={32}
+                    property={properties[32]}
+                    selectProperty={() => selectProperty(32)}
                 />
                 <Cell
-                    src={districtHarborImg}
-                    alt="harbor"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
+                    position={31}
+                    property={properties[31]}
+                    selectProperty={() => selectProperty(31)}
                 />
                 <Cell
-                    src={districtEncampmentImg}
-                    alt="encampment"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
                     specialType="encampment"
+                    position={30}
+                    property={properties[30]}
+                    selectProperty={() => selectProperty(30)}
                 />
                 <BarbCell/>
                 <Cell
-                    src={resourceRiceImg}
-                    alt="rice"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
+                    position={28}
+                    property={properties[28]}
+                    selectProperty={() => selectProperty(28)}
                 />
                 <Cell
-                    src={wonderEtemenankiImg}
-                    alt="etemenanki"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
                     noneUpgrades={true}
                     specialType="wonder"
+                    position={27}
+                    property={properties[27]}
+                    selectProperty={() => selectProperty(27)}
                 />
                 <Cell
-                    src={resourceWheatImg}
-                    alt="wheat"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
+                    position={26}
+                    property={properties[26]}
+                    selectProperty={() => selectProperty(26)}
                 />
                 <Cell
-                    src={resourceMaizeImg}
-                    alt="maize"
-                    position="vertical"
+                    direction="vertical"
                     mirror={true}
+                    position={25}
+                    property={properties[25]}
+                    selectProperty={() => selectProperty(25)}
                 />
             </div>
 
             <EdgeCell
                 src={bermudaTriangleImg}
                 alt="bermuda triangle"
-                position="right-down"
+                direction="right-down"
             />
             {players.map((player, index) => {
-                const { topValue, leftValue, position } = calculatePosition(player.position);
+                const {topValue, leftValue, position} = calculatePosition(player.position);
                 const samePositionPlayers = players.filter(p => p.position === player.position);
                 const transform = getTransform(samePositionPlayers.indexOf(player), samePositionPlayers.length, position);
                 return (
-                    <div key={index} style={{ top: `${topValue}px`, left: `${leftValue}px`, transform }} className={"game-chip color-" + player.color}></div>
+                    <div key={index} style={{top: `${topValue}px`, left: `${leftValue}px`, transform}}
+                         className={"game-chip color-" + player.color}></div>
                 );
             })}
             <Dice dice={dice}/>

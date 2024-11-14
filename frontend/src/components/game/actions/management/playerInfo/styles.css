@@ -1,0 +1,273 @@
+.player-info-managment .property-cell-name {
+    background-color: #4d4450de;
+    color: #eeeeeeb2;
+    font-size: 22px;
+}
+.color-red .property-player-name {
+    color: #db4444;
+    font-size: 26px;
+    font-weight: 600;
+}
+.property-player-name {
+    font-size: 26px;
+    padding-bottom: 0;
+}
+
+.player-abilitys {
+    overflow-wrap: break-word;
+    padding-bottom: 2px;
+    height: fit-content;
+    background-color: #eee;
+}
+.player-info-managment .radiant-white-gradient {
+    background: -moz-radial-gradient(#807285d5, #80728500);
+    border-bottom: 2px solid #6d6670;
+}
+.color-blue .property-player-name {
+    color: #5f65a8 !important;
+    font-size: 26px;
+    font-weight: 600;
+}
+.color-green .property-player-name {
+    color: #56aa59 !important;
+    font-size: 26px;
+    font-weight: 600;
+}
+.color-yellow .property-player-name {
+    color: #ffef62 !important;
+    font-size: 26px;
+    font-weight: 600;
+}
+.color-orange .property-player-name {
+    color: #f79633 !important;
+    font-size: 26px;
+    font-weight: 600;
+}
+.color-turquoise .property-player-name {
+    color: #1e9eae !important;
+    font-size: 26px;
+    font-weight: 600;
+}
+.color-pink .property-player-name {
+    color: #ff87c3 !important;
+    font-size: 26px;
+    font-weight: 600;
+}
+.color-violet .property-player-name {
+    color: #b052c0 !important;
+    font-size: 26px;
+    font-weight: 600;
+}
+.player-relations-div {
+    padding: 2px 5px;
+}
+.player-relations-h3 {
+    color: #041241;
+    margin-left: 5px;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+}
+.player-relations {
+    display: flex;
+    gap: 2px;
+}
+.player-relation-civ-div {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+.player-relation-civ-div .property-img {
+    width: 50px;
+    height: 50px;
+}
+.war-img,
+.union-img,
+.peace-img {
+    position: relative;
+}
+.relation-status-img {
+}
+.war-img::before {
+    content: "";
+    z-index: 100;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 100%;
+    left: 100%;
+    transform: translate(-100%, -100%);
+    background-image: url("../../../../../images/icon-war.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: all 0.3s ease-in-out;
+    border-radius: 4px;
+}
+.union-img::before {
+    content: "";
+    z-index: 100;
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    top: 100%;
+    left: 100%;
+    transform: translate(-100%, -100%);
+    background-image: url("../../../../../images/icon-union.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: all 0.3s ease-in-out;
+    border-radius: 50%;
+}
+.peace-img::before {
+    content: "";
+    z-index: 100;
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    top: 100%;
+    left: 100%;
+    transform: translate(-100%, -100%);
+    background-image: url("../../../../../images/icon-peace.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: all 0.3s ease-in-out;
+    border-radius: 50%;
+}
+.player-relation-civ-div {
+    z-index: 10;
+}
+.civ-color-red::after {
+    content: " ";
+    z-index: -1;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-color: #db4444;
+    top: 0;
+    left: 0;
+    transition: all 0.3s ease-in-out;
+    border-radius: 50%;
+}
+.civ-color-blue::after {
+    content: " ";
+    z-index: -1;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-color: #5f65a8;
+    top: 0;
+    left: 0;
+    transition: all 0.3s ease-in-out;
+    border-radius: 50%;
+}
+.civ-color-green::after {
+    content: " ";
+    z-index: -1;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-color: #56aa59;
+    top: 0;
+    left: 0;
+    transition: all 0.3s ease-in-out;
+    border-radius: 50%;
+}
+.civ-color-yellow::after {
+    content: " ";
+    z-index: -1;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-color: #ffef62;
+    top: 0;
+    left: 0;
+    transition: all 0.3s ease-in-out;
+    border-radius: 50%;
+}
+.civ-color-orange::after {
+    content: " ";
+    z-index: -1;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-color: #f79633;
+    top: 0;
+    left: 0;
+    transition: all 0.3s ease-in-out;
+    border-radius: 50%;
+}
+.civ-color-turquoise::after {
+    content: " ";
+    z-index: -1;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-color: #1e9eae;
+    top: 0;
+    left: 0;
+    transition: all 0.3s ease-in-out;
+    border-radius: 50%;
+}
+.civ-color-turquoise::after {
+    content: " ";
+    z-index: -1;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-color: #1e9eae;
+    top: 0;
+    left: 0;
+    transition: all 0.3s ease-in-out;
+    border-radius: 50%;
+}
+.civ-color-pink::after {
+    content: " ";
+    z-index: -1;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-color: #ff87c3;
+    top: 0;
+    left: 0;
+    transition: all 0.3s ease-in-out;
+    border-radius: 50%;
+}
+.civ-color-violet::after {
+    content: " ";
+    z-index: -1;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-color: #b052c0;
+    top: 0;
+    left: 0;
+    transition: all 0.3s ease-in-out;
+    border-radius: 50%;
+}
+.decision-button-blue {
+    background-color: #44768a;
+}
+.decision-button-blue:hover {
+    background-color: #6098ad;
+}
+.decision-button-blue:active {
+    background-color: #9dcddf;
+}
+.relation-btns {
+    margin-top: 6px;
+}
+.get-union-img {
+    margin: 3px 0 0 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+.relation-btns .decision-button {
+    width: 129px;
+    font-size: 17px;
+}
