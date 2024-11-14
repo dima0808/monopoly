@@ -10,6 +10,7 @@ import Wins from "./wins/Wins";
 
 export default function Management({
     currentUser,
+    players,
     properties,
     additionalEffects,
     gameSettings,
@@ -61,7 +62,11 @@ export default function Management({
             case "Relations":
                 return <Relations />;
             case "Wins":
-                return <Wins />;
+                return <Wins
+                    players={players}
+                    properties={properties}
+                    cultureThreshold={gameSettings.cultureThreshold}
+                />;
             default:
                 return null;
         }

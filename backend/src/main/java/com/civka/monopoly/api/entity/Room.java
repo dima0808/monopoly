@@ -36,6 +36,7 @@ public class Room {
 
     private String currentTurn; // username of the member whose turn it is
     private String winner; // username of the member who won the game
+    private VictoryType victoryType;
 
     private Integer turn;
 
@@ -44,4 +45,11 @@ public class Room {
     @OneToMany(mappedBy = "room", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Property> properties = new ArrayList<>();
+
+    public enum VictoryType {
+        MILITARY,
+        CULTURE,
+        SCIENCE,
+        SCORE
+    }
 }

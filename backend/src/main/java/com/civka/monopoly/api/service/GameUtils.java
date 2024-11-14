@@ -24,6 +24,8 @@ public interface GameUtils {
 
     int getPriceByPositionAndLevel(Integer position, Property.Upgrade level);
 
+    int getScoreByPositionAndLevel(Integer position, Property.Upgrade level);
+
     int getStrengthFromArmySpending(ArmySpending armySpending);
 
     int getGoldFromArmySpending(ArmySpending armySpending);

@@ -158,7 +158,8 @@ export default function Projects({room, member, gameSettings, properties, handle
                 )}
 
                 {(properties[15].member?.user.username === Cookies.get("username") ||
-                    properties[45].member?.user.username === Cookies.get("username")) && (
+                    properties[45].member?.user.username === Cookies.get("username")) &&
+                    !member.finishedScienceProjects.includes("CAMPUS") && (
                     <div
                         onClick={() => setSelectedProject("CAMPUS_RESEARCH_GRANTS")}
                         className={"project-div" + (selectedProject === "CAMPUS_RESEARCH_GRANTS" ? " project-div-selected" : "")}

@@ -152,6 +152,8 @@ import hydroelectricDamImg from "./images/building_dam_build1_icon_hydroelectric
 import foodMarketImg from "./images/building_neighborhood_build1_icon_food_market.png";
 import shoppingMallImg from "./images/building_neighborhood_build2_icon_shopping_mall.png";
 
+import wondersImg from "./images/wonders.png";
+
 export const IP = "26.239.28.186";
 // 26.239.28.186
 // 192.168.0.X
@@ -812,158 +814,269 @@ export const upgradesImages = {
 
 export const requirements = {
     OWN_DEER_OR_FURS: (
-        <p priority={1} className="condition-p">You need to own Deer or Furs</p>
+        <p key={1} priority={1} className="condition-p">You need to own Deer or Furs</p>
     ),
     OWN_CAMP: (
-        <p className="condition-p">You need to own a Camp</p>
+        <p key={2} className="condition-p">You need to own a Camp</p>
     ),
     MAKE_ONE_ROUND: (
-        <p priority={1} className="condition-p">You need to make 1 round</p>
+        <p key={3} priority={1} className="condition-p">You need to make 1 round</p>
     ),
     MAKE_TWO_ROUNDS: (
-        <p priority={1} className="condition-p">You need to make 2 rounds</p>
+        <p key={5} priority={1} className="condition-p">You need to make 2 rounds</p>
     ),
     MAKE_THREE_ROUNDS: (
-        <p priority={1} className="condition-p">You need to make 3 rounds</p>
+        <p key={6} priority={1} className="condition-p">You need to make 3 rounds</p>
     ),
     MAKE_FOUR_ROUNDS: (
-        <p priority={1} className="condition-p">You need to make 4 rounds</p>
+        <p key={7} priority={1} className="condition-p">You need to make 4 rounds</p>
     ),
     MAKE_FIVE_ROUNDS: (
-        <p priority={1} className="condition-p">You need to make 5 rounds</p>
+        <p key={8} priority={1} className="condition-p">You need to make 5 rounds</p>
     ),
     MAKE_ONE_TURN: (
-        <p priority={3} className="condition-p">Wait for 1 turns</p>
+        <p key={9} priority={3} className="condition-p">Wait for 1 turns</p>
     ),
     MAKE_TWO_TURNS: (
-        <p priority={3} className="condition-p">Wait for 2 turns</p>
+        <p key={10} priority={3} className="condition-p">Wait for 2 turns</p>
     ),
     MAKE_THREE_TURNS: (
-        <p priority={3} className="condition-p">Wait for 3 turns</p>
+        <p key={11} priority={3} className="condition-p">Wait for 3 turns</p>
     ),
     MAKE_FOUR_TURNS: (
-        <p priority={3} className="condition-p">Wait for 4 turns</p>
+        <p key={12} priority={3} className="condition-p">Wait for 4 turns</p>
     ),
     MAKE_FIVE_TURNS: (
-        <p priority={3} className="condition-p">Wait for 5 turns</p>
+        <p key={13} priority={3} className="condition-p">Wait for 5 turns</p>
     ),
     HAVE_LOW_GOLD_PER_TURN: (
-        <p className="condition-p">You need to have 40 g.p.t.</p>
+        <p key={14} className="condition-p">You need to have 40 g.p.t.</p>
     ),
     HAVE_MEDIUM_GOLD_PER_TURN: (
-        <p className="condition-p">You need to have 80 g.p.t.</p>
+        <p key={15} className="condition-p">You need to have 80 g.p.t.</p>
     ),
     HAVE_HIGH_GOLD_PER_TURN: (
-        <p className="condition-p">You need to have 120 g.p.t.</p>
+        <p key={16} className="condition-p">You need to have 120 g.p.t.</p>
     ),
     HAVE_LOW_GOLD_CAP: (
-        <p className="condition-p">You need to have 1600 gold</p>
+        <p key={17} className="condition-p">You need to have 1600 gold</p>
     ),
     HAVE_MEDIUM_GOLD_CAP: (
-        <p className="condition-p">You need to have 2000 gold</p>
+        <p key={18} className="condition-p">You need to have 2000 gold</p>
     ),
     HAVE_HIGH_GOLD_CAP: (
-        <p className="condition-p">You need to have 2600 gold</p>
+        <p key={19} className="condition-p">You need to have 2600 gold</p>
     ),
     HAVE_LOW_TOURISM: (
-        <p className="condition-p">You need to have 800 tourism</p>
+        <p key={20} className="condition-p">You need to have 800 tourism</p>
     ),
     HAVE_MEDIUM_TOURISM: (
-        <p className="condition-p">You need to have 1200 tourism</p>
+        <p key={21} className="condition-p">You need to have 1200 tourism</p>
     ),
     HAVE_HIGH_TOURISM: (
-        <p className="condition-p">You need to have 2000 tourism</p>
+        <p key={22} className="condition-p">You need to have 2000 tourism</p>
     ),
     HAVE_LOW_STRENGTH: (
-        <p className="condition-p">You need to have 300 strength</p>
+        <p key={23} className="condition-p">You need to have 300 strength</p>
     ),
     HAVE_MEDIUM_STRENGTH: (
-        <p className="condition-p">You need to have 400 strength</p>
+        <p key={24} className="condition-p">You need to have 400 strength</p>
     ),
     HAVE_HIGH_STRENGTH: (
-        <p className="condition-p">You need to have 500 strength</p>
+        <p key={25} className="condition-p">You need to have 500 strength</p>
     ),
     ON_CLASSICAL_ERA: (
-        <p priority={1} className="condition-p">You need to be at least in Classical Era</p>
+        <p key={26} priority={1} className="condition-p">You need to be at least in Classical Era</p>
     ),
     ON_MEDIEVAL_ERA: (
-        <p priority={1} className="condition-p">You need to be at least in Medieval Era</p>
+        <p key={27} priority={1} className="condition-p">You need to be at least in Medieval Era</p>
     ),
     ON_RENAISSANCE_ERA: (
-        <p priority={1} className="condition-p">You need to be at least in Renaissance Era</p>
+        <p key={28} priority={1} className="condition-p">You need to be at least in Renaissance Era</p>
     ),
     ON_INDUSTRIAL_ERA: (
-        <p priority={1} className="condition-p">You need to be at least in Industrial Era</p>
+        <p key={29} priority={1} className="condition-p">You need to be at least in Industrial Era</p>
     ),
     ON_MODERN_ERA: (
-        <p priority={1} className="condition-p">You need to be at least in Modern Era</p>
+        <p key={30} priority={1} className="condition-p">You need to be at least in Modern Era</p>
     ),
     ON_ATOMIC_ERA: (
-        <p priority={1} className="condition-p">You need to be at least in Atomic Era</p>
+        <p key={31} priority={1} className="condition-p">You need to be at least in Atomic Era</p>
     ),
     ON_INFORMATION_ERA: (
-        <p priority={1} className="condition-p">You need to be at least in Information Era</p>
+        <p key={32} priority={1} className="condition-p">You need to be at least in Information Era</p>
     ),
     HAVE_TWO_RESOURCES: (
-        <p className="condition-p">You need to have at least 2 upgraded resources</p>
+        <p key={33} className="condition-p">You need to have at least 2 upgraded resources</p>
     ),
     HAVE_TWO_WONDERS: (
-        <p className="condition-p">You need to have at least 2 wonders</p>
+        <p key={34} className="condition-p">You need to have at least 2 wonders</p>
+    ),
+    OWN_RESEARCH_GRANTS: (
+        <p key={35} className="condition-p">You need to own Research Grants Project</p>
     ),
     WIDE_EMPIRE: (
-        <p className="condition-p">You need to have 7 tiles</p>
+        <p key={36} className="condition-p">You need to have 7 tiles</p>
     ),
     SUPER_WIDE_EMPIRE: (
-        <p className="condition-p">You need to have 11 tiles</p>
+        <p key={37} className="condition-p">You need to have 11 tiles</p>
     ),
     TALL_EMPIRE: (
-        <p className="condition-p">You need to have 9 upgrades</p>
+        <p key={38} className="condition-p">You need to have 9 upgrades</p>
     ),
     SUPER_TALL_EMPIRE: (
-        <p className="condition-p">You need to have 15 upgrades</p>
+        <p key={39} className="condition-p">You need to have 15 upgrades</p>
     ),
     OWN_ENCAMPMENT: (
-        <p className="condition-p">You must own an Encampment</p>
+        <p key={40} className="condition-p">You must own an Encampment</p>
     ),
     OWN_CAMPUS: (
-        <p priority={1} className="condition-p">You should have a Campus</p>
+        <p key={41} priority={1} className="condition-p">You should have a Campus</p>
     ),
     OWN_LIBRARY: (
-        <p className="condition-p">You should have a Library on Campus</p>
+        <p key={42} className="condition-p">You should have a Library on Campus</p>
     ),
     OWN_UNIVERSITY: (
-        <p className="condition-p">You should have a University on Campus</p>
+        <p key={43} className="condition-p">You should have a University on Campus</p>
     ),
     OWN_GOVERNMENT_PLAZA: (
-        <p className="condition-p">You should have a Government Plaza</p>
+        <p key={44} className="condition-p">You should have a Government Plaza</p>
     ),
     NOT_OWN_GOVERNMENT_PLAZA: (
-        <p className="condition-p">You shouldn't have a Government Plaza</p>
+        <p key={45} className="condition-p">You shouldn't have a Government Plaza</p>
     ),
     OWN_ENTERTAINMENT_COMPLEX: (
-        <p priority={1} className="condition-p">You should have an Entertainment Complex</p>
+        <p key={46} priority={1} className="condition-p">You should have an Entertainment Complex</p>
     ),
     OWN_ARENA: (
-        <p className="condition-p">You should have an Arena in your Entertainment Complex</p>
+        <p key={47} className="condition-p">You should have an Arena in your Entertainment Complex</p>
     ),
     OWN_HARBOR: (
-        <p className="condition-p">You should have a Harbor</p>
+        <p key={48} className="condition-p">You should have a Harbor</p>
     ),
     OWN_INDUSTRIAL_ZONE: (
-        <p priority={1} className="condition-p">You should have an Industrial Zone</p>
+        <p key={49} priority={1} className="condition-p">You should have an Industrial Zone</p>
     ),
     OWN_FACTORY: (
-        <p className="condition-p">You should have a Factory in your Industrial Zone</p>
+        <p key={50} className="condition-p">You should have a Factory in your Industrial Zone</p>
     ),
     OWN_STADIUM: (
-        <p className="condition-p">You should have a Stadium in your Entertainment Complex</p>
+        <p key={51} className="condition-p">You should have a Stadium in your Entertainment Complex</p>
     ),
     OWN_COMMERCIAL_HUB: (
-        <p priority={1} className="condition-p">You should have a Commercial Hub</p>
+        <p key={52} priority={1} className="condition-p">You should have a Commercial Hub</p>
     ),
     OWN_STOCK_EXCHANGE: (
-        <p className="condition-p">You need to own a Stock Exchange in your Commercial Hub</p>
+        <p key={53} className="condition-p">You need to own a Stock Exchange in your Commercial Hub</p>
     ),
+};
+
+export const uniqueUpgrades = {
+    WONDER_TEMPLE_OF_ARTEMIS: {
+        name: "Temple of Artemis",
+        description: (
+            <p className="condition-p">improves <span>horses</span>, <span>bananas</span>, <span>dears</span> and <span>furs</span></p>
+        ),
+        src: wonderTempleOfArtemisImg,
+    },
+    WONDER_CASA_DE_CONTRATACION: {
+        name: "Casa De Contratacion",
+        description: (
+            <p className="condition-p">Improves every single tile opposite to your government plaza</p>
+        ),
+        src: wonderCasaDeContratacionImg,
+    },
+    WONDER_ETEMENANKI: {
+        name: "Etemenanki",
+        description: (
+            <p className="condition-p">Improves <span>maize</span>, <span>wheat</span> and <span>rice</span></p>
+        ),
+        src: wonderEtemenankiImg,
+    },
+    WONDER_MAUSOLEUM_AT_HALICARNASSUS: {
+        name: "Mausoleum at Halicarnassus",
+        description: (
+            <p className="condition-p">Improves <span>crabs</span>, <span>reefs</span> and <span>harbors</span></p>
+        ),
+        src: wonderMausoleumAtHalicarnassusImg,
+    },
+    WONDER_RUHR_VALLEY: {
+        name: "Ruhr Valley",
+        description: (
+            <p className="condition-p">Improves <span>industrial zones</span></p>
+        ),
+        src: wonderRuhrValleyImg,
+    },
+    ADJACENCY_GOVERNMENT_PLAZA: {
+        name: "Government Plaza Adjacency",
+        description: (
+            <p className="condition-p">Provides bonuses to adjacent districts</p>
+        ),
+        src: districtGovernmentPlazaImg,
+    },
+    ADJACENCY_IRON: {
+        name: "Iron Adjacency",
+        description: (
+            <p className="condition-p">Provides bonuses to adjacent <span>industrial zone</span></p>
+        ),
+        src: resourceIronImg,
+    },
+    ADJACENCY_FABRIC: {
+        name: "Fabric Adjacency",
+        description: (
+            <p className="condition-p">Provides bonuses to <span>iron</span></p>
+        ),
+        src: resourceFursImg,
+    },
+    ADJACENCY_SHIPYARD: {
+        name: "Shipyard Adjacency",
+        description: (
+            <p className="condition-p">Provides bonuses to <span>crabs</span> and <span>reefs</span></p>
+        ),
+        src: districtHarborImg,
+    },
+    ADJACENCY_REEF: {
+        name: "Reef Adjacency",
+        description: (
+            <p className="condition-p">Provides bonuses to <span>campus</span></p>
+        ),
+        src: featureReefImg,
+    },
+    ADJACENCY_WONDER: {
+        name: "Wonder Adjacency",
+        description: (
+            <p className="condition-p">Provides bonuses to adjacent <span>neighborhood</span> and <span>theatre squares</span></p>
+        ),
+        src: wondersImg,
+    },
+    ADJACENCY_ENTERTAINMENT_COMPLEX: {
+        name: "Entertainment Complex Adjacency",
+        description: (
+            <p className="condition-p">Provides bonuses to adjacent <span>theatre squares</span></p>
+        ),
+        src: districtEntertainmentComplexImg,
+    },
+    ADJACENCY_FARMS: {
+        name: "Farms Adjacency",
+        description: (
+            <p className="condition-p">Provides bonuses to <span>farms</span> if you have 2 of them</p>
+        ),
+        src: farmImg,
+    },
+    ADJACENCY_AQUEDUCT: {
+        name: "Aqueduct Adjacency",
+        description: (
+            <p className="condition-p">Provides bonuses to adjacent <span>industrial zone</span></p>
+        ),
+        src: districtAqueductImg,
+    },
+    ADJACENCY_DAM: {
+        name: "Dam Adjacency",
+        description: (
+            <p className="condition-p">Provides bonuses to adjacent <span>industrial zone</span></p>
+        ),
+        src: districtDamImg,
+    },
 };
 
 export const additionalEffectsInfo = {

@@ -88,6 +88,11 @@ public class GameUtilsImpl implements GameUtils {
     }
 
     @Override
+    public int getScoreByPositionAndLevel(Integer position, Property.Upgrade level) {
+        return gameProperties.getScoreByPositionAndLevel(position, level);
+    }
+
+    @Override
     public int getStrengthFromArmySpending(ArmySpending armySpendingLevel) {
         return gameProperties.getStrengthFromArmySpending(armySpendingLevel);
     }
@@ -367,6 +372,9 @@ public class GameUtilsImpl implements GameUtils {
                             p.getPosition().equals(42) ||
                             p.getPosition().equals(46))
                     .count() >= 2;
+            case OWN_RESEARCH_GRANTS -> member.getFinishedScienceProjects() != null &&
+                    member.getFinishedScienceProjects().stream()
+                            .anyMatch((project) -> project.equals(Member.ScienceProject.CAMPUS));
             case WIDE_EMPIRE -> member.getProperties().size() >= 7; // TODO: flexible
             case SUPER_WIDE_EMPIRE -> member.getProperties().size() >= 11; // TODO: flexible
             case TALL_EMPIRE -> member.getProperties().stream()

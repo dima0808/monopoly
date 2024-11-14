@@ -123,6 +123,8 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                     return {
                         ...prevRoom,
                         currentTurn: room.currentTurn,
+                        winner: room.winner,
+                        victoryType: room.victoryType,
                         turn: room.turn
                     };
                 });
@@ -231,6 +233,8 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                     size: roomData.size,
                     isStarted: roomData.isStarted,
                     currentTurn: roomData.currentTurn,
+                    winner: roomData.winner,
+                    victoryType: roomData.victoryType,
                     turn: roomData.turn,
                     randomMemberIndex: roomData.randomMemberIndex
                 });

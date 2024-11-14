@@ -16,7 +16,6 @@ export default function BuyProperty({
         (upgrade) => upgrade.level === "LEVEL_1"
     );
 
-    console.log(property);
     return (
         <div className="property-color">
             <h2 className="property-cell-name">

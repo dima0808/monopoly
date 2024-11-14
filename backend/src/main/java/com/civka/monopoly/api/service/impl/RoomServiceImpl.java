@@ -22,11 +22,6 @@ import java.util.*;
 @Transactional
 public class RoomServiceImpl implements RoomService {
 
-    private final GameUtils gameUtils;
-    private final PropertyService propertyService;
-    private final EventServiceImpl eventService;
-    private final AdditionalEffectService additionalEffectService;
-    private final ChatMessageService chatMessageService;
     @Value("${monopoly.app.room.max-size}")
     private Integer maxRoomSize;
 
@@ -51,6 +46,14 @@ public class RoomServiceImpl implements RoomService {
     @Value("${monopoly.app.room.game.science-project.cost}")
     private Integer scienceProjectCost;
 
+    @Value("${monopoly.app.room.game.culture-threshold}")
+    private Integer cultureThreshold;
+
+    private final GameUtils gameUtils;
+    private final PropertyService propertyService;
+    private final EventServiceImpl eventService;
+    private final AdditionalEffectService additionalEffectService;
+    private final ChatMessageService chatMessageService;
     private final RoomRepository roomRepository;
     private final UserService userService;
     private final MemberService memberService;
@@ -247,6 +250,7 @@ public class RoomServiceImpl implements RoomService {
             member.setTurnsToNextScienceProject(-1);
             member.setFinishedScienceProjects(new ArrayList<>());
             member.setExpeditionTurns(-1);
+            member.setEloChange(0);
             if (member.getCivilization() == Member.Civilization.Random) {
                 Member.Civilization randomCivilization = availableCivilizations.remove((int) (Math.random() * availableCivilizations.size()));
                 member.setCivilization(randomCivilization);
@@ -291,8 +295,7 @@ public class RoomServiceImpl implements RoomService {
         if (member.getExpeditionTurns() != -1) {
             int newExpeditionTurns = member.getExpeditionTurns() - 1;
             if (newExpeditionTurns < 0) {
-                room.setWinner(member.getUser().getUsername());
-                room.setCurrentTurn(null);
+                Room updatedRoom = manageVictory(room, member, Room.VictoryType.SCIENCE);
 
                 Chat roomChat = chatService.findByName(room.getName());
                 ChatMessageDto systemMessage = ChatMessageDto.builder()
@@ -302,11 +305,36 @@ public class RoomServiceImpl implements RoomService {
                         .build();
                 ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
                 messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
-
-                memberService.save(member);
-                return roomRepository.save(room);
+                return updatedRoom;
             }
             member.setExpeditionTurns(newExpeditionTurns);
+        }
+        if (member.getProperties().size() >= 30) {
+            Room updatedRoom = manageVictory(room, member, Room.VictoryType.MILITARY);
+
+            Chat roomChat = chatService.findByName(room.getName());
+            ChatMessageDto systemMessage = ChatMessageDto.builder()
+                    .type(ChatMessage.MessageType.SYSTEM_WINNER)
+                    .content(member.getUser().getNickname())
+                    .timestamp(LocalDateTime.now())
+                    .build();
+            ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
+            messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
+            return updatedRoom;
+        }
+        if (member.getTourism() >= room.getMembers().stream()
+                .filter(m -> m != member).mapToInt(Member::getTourism).max().orElse(0) + cultureThreshold) {
+            Room updatedRoom = manageVictory(room, member, Room.VictoryType.CULTURE);
+
+            Chat roomChat = chatService.findByName(room.getName());
+            ChatMessageDto systemMessage = ChatMessageDto.builder()
+                    .type(ChatMessage.MessageType.SYSTEM_WINNER)
+                    .content(member.getUser().getNickname())
+                    .timestamp(LocalDateTime.now())
+                    .build();
+            ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
+            messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
+            return updatedRoom;
         }
 
         List<Property> properties = member.getProperties();
@@ -403,8 +431,18 @@ public class RoomServiceImpl implements RoomService {
                 .mortgageGoldCoefficient(mortgageGoldCoefficient)
                 .redemptionCoefficient(redemptionCoefficient)
                 .scienceProjectCost(scienceProjectCost)
+                .cultureThreshold(cultureThreshold)
                 .build();
     }
 
-
+    private Room manageVictory(Room room, Member member, Room.VictoryType victoryType) {
+        room.setWinner(member.getUser().getUsername());
+        room.setVictoryType(victoryType);
+        room.setCurrentTurn(null);
+        for (Member temp : room.getMembers()) {
+            temp.setEloChange(10);
+            memberService.save(temp);
+        }
+        return roomRepository.save(room);
+    }
 }

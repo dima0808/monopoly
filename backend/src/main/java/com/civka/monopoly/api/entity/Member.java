@@ -46,6 +46,8 @@ public class Member {
     private Integer turnsToNextScienceProject;
     private Integer expeditionTurns;
 
+    private Integer eloChange;
+
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Property> properties = new ArrayList<>();

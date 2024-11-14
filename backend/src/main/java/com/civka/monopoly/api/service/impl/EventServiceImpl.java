@@ -217,7 +217,7 @@ public class EventServiceImpl implements EventService {
 
                 RoomMessage roomMessage = RoomMessage.builder()
                         .type(RoomMessage.MessageType.PROJECTS)
-                        .content("Bread and Circuses project completed!")
+                        .content("Commercial Hub Investment project completed!")
                         .room(room)
                         .build();
                 messagingTemplate.convertAndSend("/topic/public/" + room.getName() + "/game", roomMessage);
@@ -261,6 +261,7 @@ public class EventServiceImpl implements EventService {
             }
 
             case CAMPUS_RESEARCH_GRANTS -> {
+                Room room = member.getRoom();
                 if (member.getFinishedScienceProjects()
                         .stream()
                         .noneMatch((project) -> project.equals(Member.ScienceProject.CAMPUS))) {
@@ -268,6 +269,13 @@ public class EventServiceImpl implements EventService {
                     finishedScienceProjects.add(Member.ScienceProject.CAMPUS);
                     memberRepository.save(member);
                 }
+
+                RoomMessage roomMessage = RoomMessage.builder()
+                        .type(RoomMessage.MessageType.PROJECTS)
+                        .content("Campus Research Grants project completed!")
+                        .room(room)
+                        .build();
+                messagingTemplate.convertAndSend("/topic/public/" + room.getName() + "/game", roomMessage);
             }
 
             case LAUNCH_EARTH_SATELLITE,

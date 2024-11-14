@@ -579,6 +579,7 @@ export default function Actions({
                 return (
                     <Management
                         gameSettings={gameSettings}
+                        players={players}
                         currentUser={currentUser}
                         properties={properties}
                         additionalEffects={additionalEffects}
@@ -623,8 +624,13 @@ export default function Actions({
         <section className="actions">
             {/* <SettingsDialog /> */}
 
-            <GamePauseDialog />
-            {/* <GameWinnerDialog /> */}
+            {/*<GamePauseDialog />*/}
+            {room.winner &&
+                <GameWinnerDialog
+                    winner={room.winner}
+                    victoryType={room.victoryType}
+                    players={players}
+                />}
             <div className="static-choises">
                 <div className="flex-between top-flex">
                     <div className="value">

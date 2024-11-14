@@ -24,4 +24,6 @@ public class GameSettingsDto {
     private Double redemptionCoefficient;
 
     private Integer scienceProjectCost;
+
+    private Integer cultureThreshold;
 }
