@@ -135,6 +135,10 @@ public class MemberServiceImpl implements MemberService {
             throw new UserNotAllowedException();
         }
         int price = gameUtils.getPriceByPositionAndLevel(position, Property.Upgrade.LEVEL_1);
+        if (member.getDiscount() > 0) {
+            price = (int) (price * (1 - Math.min(1, member.getDiscount())));
+            member.setDiscount(member.getDiscount() - Math.min(1, member.getDiscount()));
+        }
         if (member.getGold() < price) {
             throw new UserNotAllowedException();
         }
@@ -159,8 +163,8 @@ public class MemberServiceImpl implements MemberService {
                 .turnOfLastChange(room.getTurn())
                 .mortgage(-1)
                 .build();
-        Member updatedMember = checkForUniqueUpgradesOnUpgrade(property, member);
-        Property updatedProperty = propertyService.save(property);
+        Property updatedProperty = checkForUniqueUpgradesOnUpgrade(property, member);
+        Member updatedMember = updatedProperty.getMember();
         eventService.delete(updatedMember, Event.EventType.BUY_PROPERTY);
 
         Chat roomChat = chatService.findByName(room.getName());
@@ -240,8 +244,7 @@ public class MemberServiceImpl implements MemberService {
         }
         property.setRoundOfLastChange(member.getFinishedRounds());
         property.setTurnOfLastChange(member.getRoom().getTurn());
-        checkForUniqueUpgradesOnUpgrade(property, member);
-        Property updatedProperty = propertyService.save(property);
+        Property updatedProperty = checkForUniqueUpgradesOnUpgrade(property, member);
 
         ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
         messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
@@ -322,8 +325,7 @@ public class MemberServiceImpl implements MemberService {
         }
         property.setRoundOfLastChange(member.getFinishedRounds());
         property.setTurnOfLastChange(member.getRoom().getTurn());
-        checkForUniqueUpgradesOnDowngrade(property, member);
-        Property updatedProperty = propertyService.save(property);
+        Property updatedProperty = checkForUniqueUpgradesOnDowngrade(property, member);
 
         ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
         messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
@@ -424,98 +426,116 @@ public class MemberServiceImpl implements MemberService {
 
     private List<Property.Upgrade> checkForUniqueUpgradesOnBuy(Integer position, Member member) {
         List<Property.Upgrade> uniqueUpgrades = new ArrayList<>();
-        if ((position == 1 || position == 2 || position == 3 || position == 5) &&
-                member.getProperties().stream()
-                        .anyMatch(p -> p.getPosition().equals(4))) {
-            uniqueUpgrades.add(Property.Upgrade.WONDER_TEMPLE_OF_ARTEMIS);
-        } else if (position == 10) {
-            if (member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(9))) {
+        if (position == 10) {
+            if (isMemberHasProperty(member, 9)) {
                 uniqueUpgrades.add(Property.Upgrade.ADJACENCY_GOVERNMENT_PLAZA);
             }
-            if (member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(11))) {
+            if (isMemberHasProperty(member, 11)) {
                 uniqueUpgrades.add(Property.Upgrade.ADJACENCY_IRON);
             }
-            if (member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(36))) {
+            if (isMemberHasProperty(member, 36)) {
                 uniqueUpgrades.add(Property.Upgrade.WONDER_RUHR_VALLEY);
             }
-        } else if (position == 11 &&
-                member.getProperties().stream()
-                        .anyMatch(p -> (p.getPosition().equals(10) || p.getPosition().equals(34)) &&
-                                p.getUpgrades().contains(Property.Upgrade.LEVEL_3))) {
-            uniqueUpgrades.add(Property.Upgrade.ADJACENCY_FABRIC);
         } else if (position == 12 || position == 14) {
-            if (member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(32))) {
+            if (isMemberHasProperty(member, 32)) {
                 uniqueUpgrades.add(Property.Upgrade.WONDER_MAUSOLEUM_AT_HALICARNASSUS);
             }
-            if (member.getProperties().stream()
-                    .anyMatch(p -> (p.getPosition().equals(17) || p.getPosition().equals(31)) &&
-                            p.getUpgrades().contains(Property.Upgrade.LEVEL_3))) {
+            if (isMemberHasProperty(member, Property.Upgrade.LEVEL_3, 17, 31)) {
                 uniqueUpgrades.add(Property.Upgrade.ADJACENCY_SHIPYARD);
             }
-        } else if (position == 15 &&
-                member.getProperties().stream()
-                        .anyMatch(p -> p.getPosition().equals(14))) {
+        } else if (position == 15 && isMemberHasProperty(member, 14)) {
             uniqueUpgrades.add(Property.Upgrade.ADJACENCY_REEF);
-        } else if ((position == 17 || position == 31) &&
-                member.getProperties().stream()
-                        .anyMatch(p -> p.getPosition().equals(32))) {
-            uniqueUpgrades.add(Property.Upgrade.WONDER_MAUSOLEUM_AT_HALICARNASSUS);
+        } else if (position == 17) {
+            if (isMemberHasProperty(member, 18)) {
+                uniqueUpgrades.add(Property.Upgrade.ADJACENCY_GOVERNMENT_PLAZA);
+            }
+            if (isMemberHasProperty(member, 23)) {
+                uniqueUpgrades.add(Property.Upgrade.WONDER_COLOSSEUM);
+            }
+            if (isMemberHasProperty(member, 32)) {
+                uniqueUpgrades.add(Property.Upgrade.WONDER_MAUSOLEUM_AT_HALICARNASSUS);
+            }
+        } else if (position == 18) {
+            if (isMemberHasProperty(member, 23)) {
+                uniqueUpgrades.add(Property.Upgrade.WONDER_COLOSSEUM);
+            }
+        } else if (position == 19) {
+            if (isMemberHasProperty(member, 18)) {
+                uniqueUpgrades.add(Property.Upgrade.ADJACENCY_GOVERNMENT_PLAZA);
+            }
+            if (isMemberHasProperty(member, 23)) {
+                uniqueUpgrades.add(Property.Upgrade.WONDER_COLOSSEUM);
+            }
+        } else if (position == 20) {
+            if (isMemberHasProperty(member, 23)) {
+                uniqueUpgrades.add(Property.Upgrade.WONDER_COLOSSEUM);
+            }
         } else if (position == 21) {
-            if (member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(20))) {
+            if (isMemberHasProperty(member, 20)) {
                 uniqueUpgrades.add(Property.Upgrade.ADJACENCY_WONDER);
             }
-            if (member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(22))) {
+            if (isMemberHasProperty(member, 22)) {
                 uniqueUpgrades.add(Property.Upgrade.ADJACENCY_ENTERTAINMENT_COMPLEX);
             }
-        } else if ((position == 25 || position == 26 || position == 28) &&
-                member.getProperties().stream()
-                        .anyMatch(p -> p.getPosition().equals(27))) {
-            uniqueUpgrades.add(Property.Upgrade.WONDER_ETEMENANKI);
+            if (isMemberHasProperty(member, 23)) {
+                uniqueUpgrades.add(Property.Upgrade.WONDER_COLOSSEUM);
+            }
+        } else if ((position == 25 || position == 26 || position == 28)) {
+            if (isMemberHasProperty(member, 23)) {
+                uniqueUpgrades.add(Property.Upgrade.WONDER_COLOSSEUM);
+            }
+            if (isMemberHasProperty(member, 27)) {
+                uniqueUpgrades.add(Property.Upgrade.WONDER_ETEMENANKI);
+            }
+        } else if (position == 31) {
+            if (isMemberHasProperty(member, 23)) {
+                uniqueUpgrades.add(Property.Upgrade.WONDER_COLOSSEUM);
+            }
+            if (isMemberHasProperty(member, 32)) {
+                uniqueUpgrades.add(Property.Upgrade.WONDER_MAUSOLEUM_AT_HALICARNASSUS);
+            }
+        } else if (List.of(32, 33, 35, 36, 38, 47).contains(position)) {
+            if (isMemberHasProperty(member, 40)) {
+                uniqueUpgrades.add(Property.Upgrade.WONDER_ESTADIO_DO_MARACANA);
+            }
         } else if (position == 34) {
-            if (member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(33))) {
+            if (isMemberHasProperty(member, 33)) {
                 uniqueUpgrades.add(Property.Upgrade.ADJACENCY_AQUEDUCT);
             }
-            if (member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(35))) {
+            if (isMemberHasProperty(member, 35)) {
                 uniqueUpgrades.add(Property.Upgrade.ADJACENCY_DAM);
             }
-            if (member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(36))) {
+            if (isMemberHasProperty(member, 36)) {
                 uniqueUpgrades.add(Property.Upgrade.WONDER_RUHR_VALLEY);
             }
+            if (isMemberHasProperty(member, 40)) {
+                uniqueUpgrades.add(Property.Upgrade.WONDER_ESTADIO_DO_MARACANA);
+            }
         } else if (position == 39) {
-            if (member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(38))) {
+            if (isMemberHasProperty(member, 38)) {
                 uniqueUpgrades.add(Property.Upgrade.ADJACENCY_ENTERTAINMENT_COMPLEX);
             }
-            if (member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(40))) {
+            if (isMemberHasProperty(member, 40)) {
                 uniqueUpgrades.add(Property.Upgrade.ADJACENCY_WONDER);
+                uniqueUpgrades.add(Property.Upgrade.WONDER_ESTADIO_DO_MARACANA);
             }
         } else if (position == 41) {
-            if (member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(40))) {
+            if (isMemberHasProperty(member, 40)) {
                 uniqueUpgrades.add(Property.Upgrade.ADJACENCY_WONDER);
+                uniqueUpgrades.add(Property.Upgrade.WONDER_ESTADIO_DO_MARACANA);
             }
-            if (member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(42))) {
+            if (isMemberHasProperty(member, 42)) {
                 uniqueUpgrades.add(Property.Upgrade.ADJACENCY_WONDER);
             }
         } else if (position == 43 || position == 45) {
-            if (member.getProperties().stream()
-                    .anyMatch(p -> p.getPosition().equals(44))) {
+            if (isMemberHasProperty(member, 40)) {
+                uniqueUpgrades.add(Property.Upgrade.WONDER_ESTADIO_DO_MARACANA);
+            }
+            if (isMemberHasProperty(member, 44)) {
                 uniqueUpgrades.add(Property.Upgrade.ADJACENCY_GOVERNMENT_PLAZA);
             }
         }
-        if (position != 20 && member.getProperties().stream()
-                .anyMatch(p -> p.getPosition().equals(20))) {
+        if (position != 20 && isMemberHasProperty(member, 20)) {
             if (member.getProperties().stream()
                     .anyMatch(p -> p.getPosition().equals(9)) && position >= 14) {
                 uniqueUpgrades.add(Property.Upgrade.WONDER_CASA_DE_CONTRATACION);
@@ -530,10 +550,16 @@ public class MemberServiceImpl implements MemberService {
         return uniqueUpgrades;
     }
 
-    private Member checkForUniqueUpgradesOnUpgrade(Property property, Member member) {
-        if (property.getPosition() == 4) {
+    private Property checkForUniqueUpgradesOnUpgrade(Property property, Member member) {
+        if (List.of(1, 2, 3, 5).contains(property.getPosition()) &&
+                property.getUpgrades().contains(Property.Upgrade.LEVEL_2)) {
+            if (isMemberHasProperty(member, 4)) {
+                property.getUpgrades().add(Property.Upgrade.WONDER_TEMPLE_OF_ARTEMIS);
+            }
+        } else if (property.getPosition() == 4) {
             member.getProperties().forEach(p -> {
-                if (List.of(1, 2, 3, 5).contains(p.getPosition())) {
+                if (List.of(1, 2, 3, 5).contains(p.getPosition()) &&
+                        p.getUpgrades().contains(Property.Upgrade.LEVEL_2)) {
                     p.getUpgrades().add(Property.Upgrade.WONDER_TEMPLE_OF_ARTEMIS);
                 }
             });
@@ -546,16 +572,28 @@ public class MemberServiceImpl implements MemberService {
         } else if ((property.getPosition() == 10 || property.getPosition() == 34) &&
                 property.getUpgrades().contains(Property.Upgrade.LEVEL_3)) {
             member.getProperties().forEach(p -> {
-                if (p.getPosition() == 11 && !p.getUpgrades().contains(Property.Upgrade.ADJACENCY_FABRIC)) {
+                if (p.getPosition() == 11 && p.getUpgrades().contains(Property.Upgrade.LEVEL_2) &&
+                        !p.getUpgrades().contains(Property.Upgrade.ADJACENCY_FABRIC)) {
                     p.getUpgrades().add(Property.Upgrade.ADJACENCY_FABRIC);
                 }
             });
         } else if (property.getPosition() == 11) {
-            member.getProperties().forEach(p -> {
-                if (p.getPosition() == 10 && !p.getUpgrades().contains(Property.Upgrade.ADJACENCY_IRON)) {
-                    p.getUpgrades().add(Property.Upgrade.ADJACENCY_IRON);
+            if (property.getUpgrades().contains(Property.Upgrade.LEVEL_2)) {
+                if (isMemberHasProperty(member, Property.Upgrade.LEVEL_3, 10, 34) &&
+                        !property.getUpgrades().contains(Property.Upgrade.ADJACENCY_FABRIC)) {
+                    property.getUpgrades().add(Property.Upgrade.ADJACENCY_FABRIC);
                 }
-            });
+                if (isMemberHasProperty(member, 36) &&
+                        !property.getUpgrades().contains(Property.Upgrade.WONDER_RUHR_VALLEY)) {
+                    property.getUpgrades().add(Property.Upgrade.WONDER_RUHR_VALLEY);
+                }
+            } else {
+                member.getProperties().forEach(p -> {
+                    if (p.getPosition() == 10 && !p.getUpgrades().contains(Property.Upgrade.ADJACENCY_IRON)) {
+                        p.getUpgrades().add(Property.Upgrade.ADJACENCY_IRON);
+                    }
+                });
+            }
         } else if (property.getPosition() == 14) {
             member.getProperties().forEach(p -> {
                 if (p.getPosition() == 15) {
@@ -602,6 +640,27 @@ public class MemberServiceImpl implements MemberService {
                     p.getUpgrades().add(Property.Upgrade.ADJACENCY_ENTERTAINMENT_COMPLEX);
                 }
             });
+        } else if (property.getPosition() == 23) {
+            member.getProperties().forEach(p -> {
+                if (p.getPosition() >= 17 && p.getPosition() <= 31 && p.getPosition() != 23) {
+                    p.getUpgrades().add(Property.Upgrade.WONDER_COLOSSEUM);
+                }
+            });
+        } else if (List.of(25, 26, 28).contains(property.getPosition()) &&
+                property.getUpgrades().contains(Property.Upgrade.LEVEL_2)) {
+            List<Property> farmProperties = member.getProperties().stream()
+                    .filter(p -> !p.getPosition().equals(property.getPosition()) &&
+                            List.of(25, 26, 28).contains(p.getPosition()) &&
+                            p.getUpgrades().contains(Property.Upgrade.LEVEL_2))
+                    .toList();
+            if (!farmProperties.isEmpty()) {
+                farmProperties.forEach(p -> {
+                    if (!p.getUpgrades().contains(Property.Upgrade.ADJACENCY_FARMS)) {
+                        p.getUpgrades().add(Property.Upgrade.ADJACENCY_FARMS);
+                    }
+                });
+                property.getUpgrades().add(Property.Upgrade.ADJACENCY_FARMS);
+            }
         } else if (property.getPosition() == 27) {
             member.getProperties().forEach(p -> {
                 if (List.of(25, 26, 28).contains(p.getPosition())) {
@@ -631,6 +690,9 @@ public class MemberServiceImpl implements MemberService {
                 if (List.of(10, 34).contains(p.getPosition())) {
                     p.getUpgrades().add(Property.Upgrade.WONDER_RUHR_VALLEY);
                 }
+                if (p.getPosition() == 11 && p.getUpgrades().contains(Property.Upgrade.LEVEL_2)) {
+                    p.getUpgrades().add(Property.Upgrade.WONDER_RUHR_VALLEY);
+                }
             });
         } else if (property.getPosition() == 38) {
             member.getProperties().forEach(p -> {
@@ -642,6 +704,9 @@ public class MemberServiceImpl implements MemberService {
             member.getProperties().forEach(p -> {
                 if (List.of(39, 41).contains(p.getPosition())) {
                     p.getUpgrades().add(Property.Upgrade.ADJACENCY_WONDER);
+                }
+                if (p.getPosition() >= 32 && p.getPosition() <= 47 && p.getPosition() != 40) {
+                    p.getUpgrades().add(Property.Upgrade.WONDER_ESTADIO_DO_MARACANA);
                 }
             });
         } else if (property.getPosition() == 42) {
@@ -666,11 +731,18 @@ public class MemberServiceImpl implements MemberService {
                 member.getProperties().forEach(p -> p.getUpgrades().add(Property.Upgrade.WONDER_CASA_DE_CONTRATACION));
             }
         }
-        return memberRepository.save(member);
+        Member updatedMember = memberRepository.save(member);
+        property.setMember(updatedMember);
+        return propertyService.save(property);
     }
 
-    private void checkForUniqueUpgradesOnDowngrade(Property property, Member member) {
-        if (property.getPosition() == 4) {
+    private Property checkForUniqueUpgradesOnDowngrade(Property property, Member member) {
+        if (List.of(1, 2, 3, 5).contains(property.getPosition()) &&
+                !property.getUpgrades().contains(Property.Upgrade.LEVEL_2)) {
+            if (isMemberHasProperty(member, 4)) {
+                property.getUpgrades().remove(Property.Upgrade.WONDER_TEMPLE_OF_ARTEMIS);
+            }
+        } else if (property.getPosition() == 4) {
             member.getProperties().forEach(p -> {
                 if (List.of(1, 2, 3, 5).contains(p.getPosition())) {
                     p.getUpgrades().remove(Property.Upgrade.WONDER_TEMPLE_OF_ARTEMIS);
@@ -686,7 +758,8 @@ public class MemberServiceImpl implements MemberService {
                 !property.getUpgrades().contains(Property.Upgrade.LEVEL_3)) {
             boolean isMaxLevel3 = member.getProperties().stream()
                     .filter(p -> p.getPosition() == 10 || p.getPosition() == 34)
-                    .anyMatch(p -> p.getUpgrades().contains(Property.Upgrade.LEVEL_3));
+                    .anyMatch(p -> p.getUpgrades().contains(Property.Upgrade.LEVEL_3) &&
+                            !p.getPosition().equals(property.getPosition()));
             if (!isMaxLevel3) {
                 member.getProperties().forEach(p -> {
                     if (p.getPosition() == 11) {
@@ -694,12 +767,17 @@ public class MemberServiceImpl implements MemberService {
                     }
                 });
             }
-        } else if (property.getPosition() == 11 && property.getMortgage() != -1) {
-            member.getProperties().forEach(p -> {
-                if (p.getPosition() == 10) {
-                    p.getUpgrades().remove(Property.Upgrade.ADJACENCY_IRON);
-                }
-            });
+        } else if (property.getPosition() == 11) {
+            if (property.getMortgage() != -1) {
+                member.getProperties().forEach(p -> {
+                    if (p.getPosition() == 10) {
+                        p.getUpgrades().remove(Property.Upgrade.ADJACENCY_IRON);
+                    }
+                });
+            } else if (!property.getUpgrades().contains(Property.Upgrade.LEVEL_2)) {
+                property.getUpgrades().remove(Property.Upgrade.ADJACENCY_FABRIC);
+                property.getUpgrades().remove(Property.Upgrade.WONDER_RUHR_VALLEY);
+            }
         } else if (property.getPosition() == 14) {
             member.getProperties().forEach(p -> {
                 if (p.getPosition() == 15) {
@@ -746,6 +824,23 @@ public class MemberServiceImpl implements MemberService {
                     p.getUpgrades().remove(Property.Upgrade.ADJACENCY_ENTERTAINMENT_COMPLEX);
                 }
             });
+        } else if (property.getPosition() == 23) {
+            member.getProperties().forEach(p -> {
+                if (p.getPosition() >= 17 && p.getPosition() <= 31 && p.getPosition() != 23) {
+                    p.getUpgrades().remove(Property.Upgrade.WONDER_COLOSSEUM);
+                }
+            });
+        } else if (List.of(25, 26, 28).contains(property.getPosition()) &&
+                !property.getUpgrades().contains(Property.Upgrade.LEVEL_2)) {
+            List<Property> farmProperties = member.getProperties().stream()
+                    .filter(p -> !p.getPosition().equals(property.getPosition()) &&
+                            List.of(25, 26, 28).contains(p.getPosition()) &&
+                            p.getUpgrades().contains(Property.Upgrade.LEVEL_2))
+                    .toList();
+            if (farmProperties.size() == 1) {
+                farmProperties.forEach(p -> p.getUpgrades().remove(Property.Upgrade.ADJACENCY_FARMS));
+            }
+            property.getUpgrades().remove(Property.Upgrade.ADJACENCY_FARMS);
         } else if (property.getPosition() == 27) {
             member.getProperties().forEach(p -> {
                 if (List.of(25, 26, 28).contains(p.getPosition())) {
@@ -775,6 +870,9 @@ public class MemberServiceImpl implements MemberService {
                 if (List.of(10, 34).contains(p.getPosition())) {
                     p.getUpgrades().remove(Property.Upgrade.WONDER_RUHR_VALLEY);
                 }
+                if (p.getPosition() == 11) {
+                    p.getUpgrades().remove(Property.Upgrade.WONDER_RUHR_VALLEY);
+                }
             });
         } else if (property.getPosition() == 38) {
             member.getProperties().forEach(p -> {
@@ -786,6 +884,9 @@ public class MemberServiceImpl implements MemberService {
             member.getProperties().forEach(p -> {
                 if (List.of(39, 41).contains(p.getPosition())) {
                     p.getUpgrades().remove(Property.Upgrade.ADJACENCY_WONDER);
+                }
+                if (p.getPosition() >= 32 && p.getPosition() <= 47 && p.getPosition() != 40) {
+                    p.getUpgrades().remove(Property.Upgrade.WONDER_ESTADIO_DO_MARACANA);
                 }
             });
         } else if (property.getPosition() == 42) {
@@ -809,6 +910,19 @@ public class MemberServiceImpl implements MemberService {
                         .forEach(p -> p.getUpgrades().remove(Property.Upgrade.WONDER_CASA_DE_CONTRATACION));
             }
         }
-        memberRepository.save(member);
+        Member updatedMember = memberRepository.save(member);
+        property.setMember(updatedMember);
+        return propertyService.save(property);
+    }
+
+    private boolean isMemberHasProperty(Member member, Property.Upgrade upgrade, Integer... positions) {
+        return member.getProperties().stream()
+                .anyMatch(p -> List.of(positions).contains(p.getPosition()) &&
+                        p.getMortgage() == -1 &&
+                        p.getUpgrades().contains(upgrade));
+    }
+
+    private boolean isMemberHasProperty(Member member, Integer... positions) {
+        return isMemberHasProperty(member, Property.Upgrade.LEVEL_1, positions);
     }
 }

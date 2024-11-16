@@ -12,14 +12,16 @@ import cultureDepartmentImg
 
 import {
   propertiesInfo,
-  requirements, uniqueUpgrades,
+  requirements, uniqueEffectsInfo,
   upgradesImages,
 } from "../../../../../constraints";
 import Cookies from "js-cookie";
 import {useState} from "react";
+import InfoBlock from "./InfoBlock";
 
 export default function Property({
   currentUser,
+  isCurrentUserTurn,
   property,
   gameSettings,
   handleUpgradeProperty,
@@ -163,153 +165,9 @@ export default function Property({
               </div>}
             </div>
           </div>
+          {propertyLevelInfo.info && <InfoBlock info={propertyLevelInfo.info} isOpened={true}/>}
         </div>
     );
-  }
-
-  const renderDepartmentBuff = (department) => {
-    switch (department) {
-      case "War":
-        return (
-            <div className="property-modifier-div government-efect modifiered">
-              <h3 className="property-modifier-h3">War</h3>
-              <div className="property-grid-3">
-                <div className="property-gridimg-img-div">
-                  <img
-                      src={goldImg}
-                      className="property-img"
-                      alt="government"
-                  />
-                </div>
-                <p className="condition-p">
-                  Вайна вайна убивать резать
-                </p>
-                <div className="property-new-stats">
-                  <div className="property-mini-flex">
-                    <p className="property-new-stats-p">
-                      g.o.s
-                    </p>
-                    <div className="player-stat-gold width-full pointer no-select">
-                      <img
-                          src={goldImg}
-                          className="recourse-img"
-                          alt="gold"
-                      />
-                      100
-                    </div>
-                  </div>
-                  <div className="property-mini-flex">
-                    <p className="property-new-stats-p">
-                      g.o.t
-                    </p>
-                    <div className="player-stat-gold gold-per-turn width-full pointer no-select">
-                      <img
-                          src={goldPerTurnImg}
-                          className="recourse-img"
-                          alt="gold"
-                      />
-                      1
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-        );
-      case "Science":
-        return (
-            <div className="property-modifier-div government-efect modifiered">
-              <h3 className="property-modifier-h3">Science</h3>
-              <div className="property-grid-3">
-                <div className="property-gridimg-img-div">
-                  <img
-                      src={goldImg}
-                      className="property-img"
-                      alt="government"
-                  />
-                </div>
-                <p className="condition-p">
-                  фрі сім
-                </p>
-                <div className="property-new-stats">
-                  <div className="property-mini-flex">
-                    <p className="property-new-stats-p">
-                      g.o.s
-                    </p>
-                    <div className="player-stat-gold width-full pointer no-select">
-                      <img
-                          src={goldImg}
-                          className="recourse-img"
-                          alt="gold"
-                      />
-                      100
-                    </div>
-                  </div>
-                  <div className="property-mini-flex">
-                    <p className="property-new-stats-p">
-                      g.o.t
-                    </p>
-                    <div className="player-stat-gold gold-per-turn width-full pointer no-select">
-                      <img
-                          src={goldPerTurnImg}
-                          className="recourse-img"
-                          alt="gold"
-                      />
-                      1
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-        );
-      case "Culture":
-        return (
-            <div className="property-modifier-div government-efect modifiered">
-              <h3 className="property-modifier-h3">Culture</h3>
-              <div className="property-grid-3">
-                <div className="property-gridimg-img-div">
-                  <img
-                      src={goldImg}
-                      className="property-img"
-                      alt="government"
-                  />
-                </div>
-                <p className="condition-p">
-                  культура культура культура
-                </p>
-                <div className="property-new-stats">
-                  <div className="property-mini-flex">
-                    <p className="property-new-stats-p">
-                      g.o.s
-                    </p>
-                    <div className="player-stat-gold width-full pointer no-select">
-                      <img
-                          src={goldImg}
-                          className="recourse-img"
-                          alt="gold"
-                      />
-                      100
-                    </div>
-                  </div>
-                  <div className="property-mini-flex">
-                    <p className="property-new-stats-p">
-                      g.o.t
-                    </p>
-                    <div className="player-stat-gold gold-per-turn width-full pointer no-select">
-                      <img
-                          src={goldPerTurnImg}
-                          className="recourse-img"
-                          alt="gold"
-                      />
-                      1
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-        );
-      default:
-        return null;
-    }
   }
 
   if (!property.member) {
@@ -421,7 +279,12 @@ export default function Property({
                             const priorityB = requirements[keyB].props.priority || 0;
                             return priorityB - priorityA;
                           });
-                          return sortedRequirements.map(([key]) => requirements[key]);
+                          return sortedRequirements.map(([key, value]) => (
+                              <div key={key} className={(value || upgrade.isOwned) ?
+                                  "condition-p-compleated" : ""}>
+                                {requirements[key]}
+                              </div>
+                          ));
                         })()}
                       </div>
                       <div className="property-new-stats">
@@ -481,6 +344,7 @@ export default function Property({
                         </div>}
                       </div>
                     </div>
+                    {propertyLevelInfo.info && <InfoBlock info={propertyLevelInfo.info}/>}
                   </div>
               );
             })}
@@ -522,10 +386,6 @@ export default function Property({
                     </div>
                   </div>
                   {renderDepartmentContent(selectedDepartment)}
-
-                  <h2 className="government-efect-h2">Government effect:</h2>
-
-                  {renderDepartmentBuff(selectedDepartment)}
                 </div>}
           </div>
         </div>
@@ -589,17 +449,6 @@ export default function Property({
                       ((property.position === 7 || property.position === 30) ? "x" : "")}
                 </div>
               </div>
-              {property.tourismOnStep > 0 && <div className="gold-on-step stats-div">
-                Tourism on step:
-                <div className="player-stat-tourism width-full no-select">
-                  <img
-                      src={tourismImg}
-                      className="recourse-img"
-                      alt="tourism"
-                  />
-                  {property.tourismOnStep}
-                </div>
-              </div>}
               {property.goldPerTurn > 0 && <div className="gold-on-step stats-div">
                 Gold per turn:
                 <div className="player-stat-gold gold-per-turn width-full pointer no-select">
@@ -609,6 +458,17 @@ export default function Property({
                       alt="gold"
                   />
                   +{property.goldPerTurn}
+                </div>
+              </div>}
+              {property.tourismOnStep > 0 && <div className="gold-on-step stats-div">
+                Tourism on step:
+                <div className="player-stat-tourism width-full no-select">
+                  <img
+                      src={tourismImg}
+                      className="recourse-img"
+                      alt="tourism"
+                  />
+                  {property.tourismOnStep}
                 </div>
               </div>}
             </div>
@@ -716,7 +576,7 @@ export default function Property({
                           {upgrade.tourismOnStep}
                         </div>
                       </div>}
-                      {upgrade.goldPerTurn > 0 && <div className="property-mini-flex">
+                      {upgrade.goldPerTurn !== 0 && <div className="property-mini-flex">
                         <p className="property-new-stats-p">
                           g.p.t
                         </p>
@@ -732,13 +592,72 @@ export default function Property({
                       </div>}
                     </div>
                   </div>
+                  {propertyLevelInfo.info && <InfoBlock info={propertyLevelInfo.info}/>}
                 </div>
             );
           })}
 
-          {property.upgrades.find((upgrade) => upgrade.level.startsWith("WONDER_") && upgrade.isOwned) && (
+          {(property.position === 9 ||
+                  property.position === 18 ||
+                  property.position === 44) &&
+              <div className="property-color project-color property-color-government">
+                {!highestOwnedLevel.level.startsWith("LEVEL_4_") && (
+                    <>
+                      <h2 className="project-color-h2">Choose your building</h2>
+                      <div className="property-government-choose">
+                        <div
+                            onClick={() => setSelectedDepartment("Science")}
+                            className={"project-div-img" +
+                                (handleUpgradeRequirement(property, "Science")[2] ?
+                                    " project-div-img-compleated" : "") +
+                                (selectedDepartment === "Science" ? " project-div-img-selected"
+                                    : "")}>
+                          <img
+                              src={scienceDepartmentImg}
+                              className="project-img"
+                              alt="government"
+                          />
+                        </div>
+                        <div
+                            onClick={() => setSelectedDepartment("War")}
+                            className={"project-div-img" +
+                                (handleUpgradeRequirement(property, "War")[2] ?
+                                    " project-div-img-compleated" : "") +
+                                (selectedDepartment === "War" ? " project-div-img-selected" : "")}>
+                          <img
+                              src={warDepartmentImg}
+                              className="project-img"
+                              alt="government"
+                          />
+                        </div>
+                        <div
+                            onClick={() => setSelectedDepartment("Culture")}
+                            className={"project-div-img" +
+                                (handleUpgradeRequirement(property, "Culture")[2] ?
+                                    " project-div-img-compleated" : "") +
+                                (selectedDepartment === "Culture" ? " project-div-img-selected"
+                                    : "")}>
+                          <img
+                              src={cultureDepartmentImg}
+                              className="project-img"
+                              alt="governmentd"
+                          />
+                        </div>
+                      </div>
+                    </>
+                )}
+                {renderDepartmentContent(selectedDepartment)}
+              </div>
+          }
+
+          {property.upgrades.find((upgrade) =>
+              (upgrade.level.startsWith("WONDER_") || upgrade.level.startsWith("ADJACENCY_"))
+              && upgrade.isOwned) && (
+              <h2 className="buffs-h">Buffs:</h2>
+          )}
+          {property.upgrades.find(
+              (upgrade) => upgrade.level.startsWith("WONDER_") && upgrade.isOwned) && (
               <>
-                <h2 className="wonder-efect">Wonder buff:</h2>
                 {property.upgrades
                 .filter((upgrade) => upgrade.level.startsWith("WONDER_") && upgrade.isOwned)
                 .map((upgrade, index) => (
@@ -746,16 +665,83 @@ export default function Property({
                         key={index}
                         className="property-modifier-div property-div-compleated modifiered-by-wonder"
                     >
-                      <h3 className="property-modifier-h3">{uniqueUpgrades[upgrade.level].name}</h3>
+                      <h3 className="property-modifier-h3">{uniqueEffectsInfo[upgrade.level].name}</h3>
                       <div className="property-grid-3">
                         <div className="property-gridimg-img-div">
                           <img
-                              src={uniqueUpgrades[upgrade.level].src}
+                              src={uniqueEffectsInfo[upgrade.level].src}
                               className="property-img"
                               alt="gold"
                           />
                         </div>
-                        {uniqueUpgrades[upgrade.level].description}
+                        {uniqueEffectsInfo[upgrade.level].description}
+                        <div className="property-new-stats">
+                          <div className="property-mini-flex">
+                            <p className="property-new-stats-p">g.o.s</p>
+                            <div
+                                className="player-stat-gold width-full pointer no-select">
+                              <img
+                                  src={goldImg}
+                                  className="recourse-img"
+                                  alt="gold"
+                              />
+                              {upgrade.goldOnStep}
+                            </div>
+                          </div>
+                          {upgrade.tourismOnStep > 0 && <div className="property-mini-flex">
+                            <p className="property-new-stats-p">
+                              t.o.s
+                            </p>
+                            <div className="player-stat-tourism width-full no-select">
+                              <img
+                                  src={tourismImg}
+                                  className="recourse-img"
+                                  alt="tourism"
+                              />
+                              {upgrade.tourismOnStep}
+                            </div>
+                          </div>}
+                          {upgrade.goldPerTurn > 0 && <div className="property-mini-flex">
+                            <p className="property-new-stats-p">
+                              g.p.t
+                            </p>
+                            <div
+                                className="player-stat-gold gold-per-turn width-full pointer no-select">
+                              <img
+                                  src={goldPerTurnImg}
+                                  className="recourse-img"
+                                  alt="gold"
+                              />
+                              {upgrade.goldPerTurn}
+                            </div>
+                          </div>}
+                        </div>
+                      </div>
+                    </div>
+                ))}
+              </>
+          )}
+
+          {property.upgrades.find(
+              (upgrade) => upgrade.level.startsWith("ADJACENCY_") && upgrade.isOwned) && (
+              <>
+                {property.upgrades
+                .filter((upgrade) => upgrade.level.startsWith("ADJACENCY_") && upgrade.isOwned)
+                .map((upgrade, index) => (
+                    <div
+                        key={index}
+                        className="property-modifier-div property-div-compleated neighborhood-bonus modifiered"
+                    >
+                      <h3 className="property-modifier-h3">{uniqueEffectsInfo[upgrade.level].name}</h3>
+                      <div className="property-grid-3">
+                        <div className="property-gridimg-img-div">
+                          <img
+                              src={uniqueEffectsInfo[upgrade.level].src}
+                              className="property-img"
+                              alt="gold"
+                          />
+                        </div>
+                        {uniqueEffectsInfo[upgrade.level].description}
                         <div className="property-new-stats">
                           <div className="property-mini-flex">
                             <p className="property-new-stats-p">g.o.s</p>
@@ -968,136 +954,30 @@ export default function Property({
           {/*        </div>*/}
           {/*    </div>*/}
           {/*</div>*/}
-          {/*<h2 className="neighborhood-bonus-h2">Neighborhood bonus:</h2>*/}
-          {/*<div className="property-modifier-div property-div-compleated neighborhood-bonus modifiered">*/}
-          {/*    <h3 className="property-modifier-h3">iron</h3>*/}
-          {/*    <div className="property-grid-3">*/}
-          {/*        <div className="property-gridimg-img-div">*/}
-          {/*            <img*/}
-          {/*                src={resourceHorsesImg}*/}
-          {/*                className="property-img"*/}
-          {/*                alt="gold"*/}
-          {/*            />*/}
-          {/*        </div>*/}
-          {/*        <p className="condition-p">*/}
-          {/*            buff <span>промишлєну зону</span>*/}
-          {/*        </p>*/}
-          {/*        <div className="property-new-stats">*/}
-          {/*            <div className="property-mini-flex">*/}
-          {/*                <p className="property-new-stats-p">g.o.s</p>*/}
-          {/*                <div className="player-stat-gold width-full pointer no-select">*/}
-          {/*                    <img*/}
-          {/*                        src={goldImg}*/}
-          {/*                        className="recourse-img"*/}
-          {/*                        alt="gold"*/}
-          {/*                    />*/}
-          {/*                    100*/}
-          {/*                </div>*/}
-          {/*            </div>*/}
-
-          {/*            <div className="property-mini-flex">*/}
-          {/*                <p className="property-new-stats-p">tour.</p>*/}
-          {/*                <div className="player-stat-tourism width-full no-select">*/}
-          {/*                    <img*/}
-          {/*                        src={tourismImg}*/}
-          {/*                        className="recourse-img"*/}
-          {/*                        alt="tourism"*/}
-          {/*                    />*/}
-          {/*                    400*/}
-          {/*                </div>*/}
-          {/*            </div>*/}
-          {/*            /!* <div className="property-mini-flex">*/}
-          {/*                <p className="property-new-stats-p">g.o.t</p>*/}
-          {/*                <div className="player-stat-gold gold-per-turn width-full pointer no-select">*/}
-          {/*                    <img*/}
-          {/*                        src={goldPerTurnImg}*/}
-          {/*                        className="recourse-img"*/}
-          {/*                        alt="gold"*/}
-          {/*                    />*/}
-          {/*                    1*/}
-          {/*                </div>*/}
-          {/*            </div> *!/*/}
-          {/*        </div>*/}
-          {/*    </div>*/}
-          {/*</div>*/}
-          {(property.position === 9 ||
-                  property.position === 18 ||
-                  property.position === 44) &&
-              <div className="property-color project-color property-color-government">
-                {!highestOwnedLevel.level.startsWith("LEVEL_4_") && (
-                    <>
-                      <h2 className="project-color-h2">Choose your building</h2>
-                      <div className="property-government-choose">
-                        <div
-                            onClick={() => setSelectedDepartment("Science")}
-                            className={"project-div-img" +
-                                (handleUpgradeRequirement(property, "Science")[2] ?
-                                    " project-div-img-compleated" : "") +
-                                (selectedDepartment === "Science" ? " project-div-img-selected"
-                                    : "")}>
-                          <img
-                              src={scienceDepartmentImg}
-                              className="project-img"
-                              alt="government"
-                          />
-                        </div>
-                        <div
-                            onClick={() => setSelectedDepartment("War")}
-                            className={"project-div-img" +
-                                (handleUpgradeRequirement(property, "War")[2] ?
-                                    " project-div-img-compleated" : "") +
-                                (selectedDepartment === "War" ? " project-div-img-selected" : "")}>
-                          <img
-                              src={warDepartmentImg}
-                              className="project-img"
-                              alt="government"
-                          />
-                        </div>
-                        <div
-                            onClick={() => setSelectedDepartment("Culture")}
-                            className={"project-div-img" +
-                                (handleUpgradeRequirement(property, "Culture")[2] ?
-                                    " project-div-img-compleated" : "") +
-                                (selectedDepartment === "Culture" ? " project-div-img-selected"
-                                    : "")}>
-                          <img
-                              src={cultureDepartmentImg}
-                              className="project-img"
-                              alt="governmentd"
-                          />
-                        </div>
-                      </div>
-                    </>
-                )}
-                {renderDepartmentContent(selectedDepartment)}
-
-                <h2 className="government-efect-h2">Government effect:</h2>
-
-                {renderDepartmentBuff(selectedDepartment)}
-              </div>}
           {Cookies.get("username") === property.member.user.username &&
               <div className="proprty-btns-div flex-between">
                 {!highestOwnedLevel.level.startsWith("LEVEL_4_") && lowestNotOwnedLevel
                     && property.mortgage === -1 && (
                         <button
                             disabled={
-                                currentUser.gold < lowestNotOwnedLevel.price ||
-                                (property.upgradeRequirements.length > 0 &&
-                                    property.upgradeRequirements.some(
-                                        (upg) =>
-                                            upg.level ===
-                                            lowestNotOwnedLevel.level
-                                    ) &&
-                                    Object.values(
-                                        property.upgradeRequirements.find(
-                                            (upgrade) =>
-                                                upgrade.level ===
+                                !isCurrentUserTurn ||
+                                (currentUser.gold < lowestNotOwnedLevel.price ||
+                                    (property.upgradeRequirements.length > 0 &&
+                                        property.upgradeRequirements.some(
+                                            (upg) =>
+                                                upg.level ===
                                                 lowestNotOwnedLevel.level
-                                        ).requirements
-                                    ).some((req) => req === false)) ||
-                                ("LEVEL_4_1" === lowestNotOwnedLevel.level &&
-                                    !handleUpgradeRequirement(property, selectedDepartment)[2])
-                            }
+                                        ) &&
+                                        Object.values(
+                                            property.upgradeRequirements.find(
+                                                (upgrade) =>
+                                                    upgrade.level ===
+                                                    lowestNotOwnedLevel.level
+                                            ).requirements
+                                        ).some((req) => req === false)) ||
+                                    ("LEVEL_4_1" === lowestNotOwnedLevel.level &&
+                                        !handleUpgradeRequirement(property, selectedDepartment)[2])
+                                )}
                             onClick={() => {
                               if ("LEVEL_4_1" === lowestNotOwnedLevel.level) {
                                 const selectedDepartmentAsNumber = selectedDepartment === "Science"
@@ -1125,6 +1005,7 @@ export default function Property({
                 {property.mortgage !== -1 && (
                     <button
                         disabled={
+                            !isCurrentUserTurn ||
                             currentUser.gold <
                             ownedLevels[0].price *
                             gameSettings.redemptionCoefficient
@@ -1149,6 +1030,7 @@ export default function Property({
                 )}
                 {property.mortgage === -1 && (
                     <button
+                        disabled={!isCurrentUserTurn}
                         className="pay-btn decision-button decision-button-red"
                         onClick={() =>
                             handleDowngradeProperty(property.position)

@@ -581,6 +581,7 @@ export default function Actions({
                         gameSettings={gameSettings}
                         players={players}
                         currentUser={currentUser}
+                        isCurrentUserTurn={isCurrentUserTurn}
                         properties={properties}
                         additionalEffects={additionalEffects}
                         managementActiveTab={managementActiveTab}

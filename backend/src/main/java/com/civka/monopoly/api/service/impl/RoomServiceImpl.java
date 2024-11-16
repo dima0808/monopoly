@@ -245,6 +245,7 @@ public class RoomServiceImpl implements RoomService {
             member.setStrength(initStrength);
             member.setTourism(0);
             member.setScore(0);
+            member.setDiscount(0.0);
             member.setHasRolledDice(true);
             member.setFinishedRounds(0);
             member.setTurnsToNextScienceProject(-1);

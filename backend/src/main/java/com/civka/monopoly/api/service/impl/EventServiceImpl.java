@@ -41,6 +41,9 @@ public class EventServiceImpl implements EventService {
     @Value("${monopoly.app.room.game.science-project.laserBoost}")
     private Integer laserBoost;
 
+    @Value("${monopoly.app.room.game.wonder-effect.16}")
+    private Integer goldForProjectGreatLibrary;
+
     @Override
     public Event save(Event event) {
         return eventRepository.save(event);
@@ -124,11 +127,16 @@ public class EventServiceImpl implements EventService {
                 break;
             case GOODY_HUT_HAPPY_BIRTHDAY:
                 for (Member m : member.getRoom().getMembers()) {
-                    m.setGold(m.getGold() - gameUtils.getEventGold(type));
+                    m.setGold(Math.max(0, m.getGold() - gameUtils.getEventGold(type)));
                     member.setGold(member.getGold() + gameUtils.getEventGold(type));
                 }
                 break;
             case GOODY_HUT_WONDER_DISCOUNT:
+                member.getAdditionalEffects().add(AdditionalEffect.builder()
+                        .member(member)
+                        .type(AdditionalEffect.AdditionalEffectType.GOODY_HUT_WONDER_DISCOUNT)
+                        .turnsLeft(-1)
+                        .build());
             case GOODY_HUT_DICE_BUFF:
                 // todo
                 break;
@@ -136,7 +144,7 @@ public class EventServiceImpl implements EventService {
                 if (choice == 1) {
                     member.setGold(member.getGold() - gameUtils.getEventGold(type));
                 } else {
-                    member.setStrength(member.getStrength() - gameUtils.getEventStrength(type));
+                    member.setStrength(Math.max(0, member.getStrength() - gameUtils.getEventStrength(type)));
                 }
                 break;
             case BARBARIANS_PAY_GOLD_OR_HIRE:
@@ -148,7 +156,7 @@ public class EventServiceImpl implements EventService {
                 }
                 break;
             case BARBARIANS_PAY_STRENGTH:
-                member.setStrength(member.getStrength() - gameUtils.getEventStrength(type));
+                member.setStrength(Math.max(0, member.getStrength() - gameUtils.getEventStrength(type)));
                 break;
             case BARBARIANS_ATTACK_NEIGHBOR:
             case BARBARIANS_RAID:
@@ -187,7 +195,12 @@ public class EventServiceImpl implements EventService {
                             }
                         }
                     }
-                    memberRepository.save(m);
+                    if (!isCurrentMember) {
+                        memberRepository.save(m);
+                    } else {
+                        Member updatedMember = memberRepository.save(m);
+                        handleGreatLibrary(updatedMember);
+                    }
                 }
 
                 RoomMessage roomMessage = RoomMessage.builder()
@@ -213,7 +226,8 @@ public class EventServiceImpl implements EventService {
                         .turnsLeft(10)
                         .build();
                 member.getAdditionalEffects().add(commercialHubInvestment);
-                memberRepository.save(member);
+                Member updatedMember = memberRepository.save(member);
+                handleGreatLibrary(updatedMember);
 
                 RoomMessage roomMessage = RoomMessage.builder()
                         .type(RoomMessage.MessageType.PROJECTS)
@@ -227,37 +241,41 @@ public class EventServiceImpl implements EventService {
                 Property.Upgrade highestDistrictLevel = gameUtils.getHighestDistrictLevel(member, "ENCAMPMENT");
                 member.setStrength(member.getStrength() +
                         gameUtils.getProjectStrengthByLevel(choice, highestDistrictLevel));
-                memberRepository.save(member);
+                Member updatedMember = memberRepository.save(member);
+                handleGreatLibrary(updatedMember);
             }
 
             case HARBOR_SHIPPING -> {
                 Property.Upgrade highestDistrictLevel = gameUtils.getHighestDistrictLevel(member, "HARBOR");
                 member.setGold(member.getGold() + gameUtils.getProjectGoldByLevel(choice, highestDistrictLevel));
-                memberRepository.save(member);
+                Member updatedMember = memberRepository.save(member);
+                handleGreatLibrary(updatedMember);
             }
 
             case INDUSTRIAL_ZONE_LOGISTICS -> {
                 Property.Upgrade highestDistrictLevel = gameUtils.getHighestDistrictLevel(member, "INDUSTRIAL_ZONE");
-                AdditionalEffect industrialZoneLogistics = AdditionalEffect.builder()
-                        .member(member)
-                        .type(switch (highestDistrictLevel) {
-                            case LEVEL_1 -> AdditionalEffect.AdditionalEffectType.WONDER_DISCOUNT_1;
-                            case LEVEL_2 -> AdditionalEffect.AdditionalEffectType.WONDER_DISCOUNT_2;
-                            case LEVEL_3 -> AdditionalEffect.AdditionalEffectType.WONDER_DISCOUNT_3;
-                            case LEVEL_4 -> AdditionalEffect.AdditionalEffectType.WONDER_DISCOUNT_4;
-                            default -> null;
-                        })
-                        .turnsLeft(-1)
-                        .build();
-                member.getAdditionalEffects().add(industrialZoneLogistics);
-                memberRepository.save(member);
+                AdditionalEffect.AdditionalEffectType discountType = switch (highestDistrictLevel) {
+                    case LEVEL_1 -> AdditionalEffect.AdditionalEffectType.WONDER_DISCOUNT_1;
+                    case LEVEL_2 -> AdditionalEffect.AdditionalEffectType.WONDER_DISCOUNT_2;
+                    case LEVEL_3 -> AdditionalEffect.AdditionalEffectType.WONDER_DISCOUNT_3;
+                    case LEVEL_4 -> AdditionalEffect.AdditionalEffectType.WONDER_DISCOUNT_4;
+                    default -> null;
+                };
+                Double discount = gameUtils.getDiscountByAdditionalEffect(discountType);
+                member.setDiscount(member.getDiscount() + discount);
+                if (member.getProperties().stream().anyMatch(p -> p.getPosition().equals(32))) {
+                    member.setDiscount(member.getDiscount() + discount);
+                }
+                Member updatedMember = memberRepository.save(member);
+                handleGreatLibrary(updatedMember);
             }
 
             case THEATER_SQUARE_PERFORMANCES -> {
                 Property.Upgrade highestDistrictLevel = gameUtils.getHighestDistrictLevel(member, "THEATER_SQUARE");
                 member.setTourism(member.getTourism() +
                         gameUtils.getProjectTourismByLevel(choice, highestDistrictLevel));
-                memberRepository.save(member);
+                Member updatedMember = memberRepository.save(member);
+                handleGreatLibrary(updatedMember);
             }
 
             case CAMPUS_RESEARCH_GRANTS -> {
@@ -267,7 +285,8 @@ public class EventServiceImpl implements EventService {
                         .noneMatch((project) -> project.equals(Member.ScienceProject.CAMPUS))) {
                     List<Member.ScienceProject> finishedScienceProjects = member.getFinishedScienceProjects();
                     finishedScienceProjects.add(Member.ScienceProject.CAMPUS);
-                    memberRepository.save(member);
+                    Member updatedMember = memberRepository.save(member);
+                    handleGreatLibrary(updatedMember);
                 }
 
                 RoomMessage roomMessage = RoomMessage.builder()
@@ -301,7 +320,8 @@ public class EventServiceImpl implements EventService {
                                         (p.getPosition().equals(15) || p.getPosition().equals(45))
                                                 && p.getUpgrades().contains(Property.Upgrade.LEVEL_4))) {
                     handleScienceLastPhase(member, spaceProject);
-                    memberRepository.save(member);
+                    Member updatedMember = memberRepository.save(member);
+                    handleGreatLibrary(updatedMember);
                 } else {
                     throw new UserNotAllowedException();
                 }
@@ -318,20 +338,10 @@ public class EventServiceImpl implements EventService {
         Member.ScienceProject nextProject = getScienceProject(member);
         handleScienceLastPhase(member, nextProject);
         member.setTurnsToNextScienceProject(basicTurnAmount);
-        memberRepository.save(member);
+        Member updatedMember = memberRepository.save(member);
+        handleGreatLibrary(updatedMember);
 
         return delete(member, Event.EventType.SCIENCE_PROJECTS);
-    }
-
-    private void handleScienceLastPhase(Member member, Member.ScienceProject nextProject) {
-        List<Member.ScienceProject> finishedScienceProjects = member.getFinishedScienceProjects();
-        finishedScienceProjects.add(nextProject);
-        if (nextProject.equals(Member.ScienceProject.EXOPLANET)) {
-            member.setExpeditionTurns(expeditionTurnAmount);
-        }
-        if (nextProject.equals(Member.ScienceProject.LASER)) {
-            member.setExpeditionTurns(Math.max(member.getExpeditionTurns() - laserBoost, 0));
-        }
     }
 
     @Override
@@ -417,6 +427,33 @@ public class EventServiceImpl implements EventService {
                 .build();
         messagingTemplate.convertAndSend("/topic/public/" + roomName + "/game", playerMessage);
         return member.getRoom();
+    }
+
+    private void handleGreatLibrary(Member member) {
+        Property property = propertyService.findByRoomAndPosition(member.getRoom(), 16);
+        if (property != null) {
+            property.getMember().setGold(property.getMember().getGold() + goldForProjectGreatLibrary);
+            Property updatedProperty = propertyService.save(property);
+
+            RoomMessage playerMessage = RoomMessage.builder()
+                    .type(RoomMessage.MessageType.GREAT_LIBRARY_PAYMENT)
+                    .content("Member " + updatedProperty.getMember().getUser().getUsername() + " received money for Great Library")
+                    .room(updatedProperty.getMember().getRoom())
+                    .build();
+            messagingTemplate.convertAndSend("/topic/public/" + updatedProperty.getMember().getRoom().getName() + "/game", playerMessage);
+        }
+
+    }
+
+    private void handleScienceLastPhase(Member member, Member.ScienceProject nextProject) {
+        List<Member.ScienceProject> finishedScienceProjects = member.getFinishedScienceProjects();
+        finishedScienceProjects.add(nextProject);
+        if (nextProject.equals(Member.ScienceProject.EXOPLANET)) {
+            member.setExpeditionTurns(expeditionTurnAmount);
+        }
+        if (nextProject.equals(Member.ScienceProject.LASER)) {
+            member.setExpeditionTurns(Math.max(member.getExpeditionTurns() - laserBoost, 0));
+        }
     }
 
     private Member.ScienceProject getScienceProject(Member member) {

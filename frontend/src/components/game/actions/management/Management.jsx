@@ -10,6 +10,7 @@ import Wins from "./wins/Wins";
 
 export default function Management({
     currentUser,
+    isCurrentUserTurn,
     players,
     properties,
     additionalEffects,
@@ -29,6 +30,7 @@ export default function Management({
                 return (
                     <Empire
                         currentUser={currentUser}
+                        isCurrentUserTurn={isCurrentUserTurn}
                         properties={properties}
                         gameSettings={gameSettings}
                         selectProperty={(position) => {
@@ -51,6 +53,7 @@ export default function Management({
                 return (
                     <Property
                         currentUser={currentUser}
+                        isCurrentUserTurn={isCurrentUserTurn}
                         property={selectedProperty}
                         gameSettings={gameSettings}
                         handleUpgradeProperty={handleUpgradeProperty}

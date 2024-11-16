@@ -30,6 +30,8 @@ public interface GameUtils {
 
     int getGoldFromArmySpending(ArmySpending armySpending);
 
+    double getDiscountByAdditionalEffect(AdditionalEffect.AdditionalEffectType type);
+
     Map<String, String> getUpgradeProperties();
 
     List<RequirementDto> getRequirements(Integer position, Member member);
@@ -44,8 +46,6 @@ public interface GameUtils {
 
     int getEventStrength(Event.EventType eventType);
 
-    float getEventCoefficient(Event.EventType eventType);
-
     int getEventDice(Event.EventType eventType);
 
     int getHireIncome(Event.EventType eventType);
@@ -59,8 +59,6 @@ public interface GameUtils {
     int getProjectStrengthByLevel(ProjectType type, Property.Upgrade level);
 
     int getProjectTourismByLevel(ProjectType type, Property.Upgrade level);
-
-    int getProjectDiscountByLevel(ProjectType type, Property.Upgrade level);
 
     int getGoldPerTurnByAdditionalEffect(AdditionalEffect.AdditionalEffectType type);
 

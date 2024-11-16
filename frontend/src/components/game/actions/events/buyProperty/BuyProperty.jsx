@@ -3,6 +3,7 @@ import goldImg from "../../../../../images/icon-gold.png";
 import goldPerTurnImg from "../../../../../images/icon-gold-per-turn.png";
 import { propertiesInfo, requirements } from "../../../../../constraints";
 import tourismImg from "../../../../../images/icon-tourism.png";
+import InfoBlock from "../../management/property/InfoBlock";
 // import tourismImg from "../../../../../images/icon-tourism.png";
 
 export default function BuyProperty({
@@ -17,7 +18,7 @@ export default function BuyProperty({
     );
 
     return (
-        <div className="property-color">
+        <div className="property-color buy-property-section">
             <h2 className="property-cell-name">
                 {propertyInfoFirstLevel.name}
             </h2>
@@ -52,17 +53,7 @@ export default function BuyProperty({
                             {propertyFirstLevel.goldOnStep}
                         </div>
                     </div>
-                    {propertyFirstLevel.tourismOnStep > 0 && <div className="gold-on-step stats-div">
-                        Tourism on step:
-                        <div className="player-stat-tourism width-full no-select">
-                            <img
-                                src={tourismImg}
-                                className="recourse-img"
-                                alt="tourism"
-                            />
-                            {propertyFirstLevel.tourismOnStep}
-                        </div>
-                    </div>}
+
                     {propertyFirstLevel.goldPerTurn > 0 && <div className="gold-on-step stats-div">
                         Gold per turn:
                         <div className="player-stat-gold gold-per-turn width-full pointer no-select">
@@ -72,6 +63,17 @@ export default function BuyProperty({
                                 alt="gold"
                             />
                             {propertyFirstLevel.goldPerTurn}
+                        </div>
+                    </div>}
+                    {propertyFirstLevel.tourismOnStep > 0 && <div className="gold-on-step stats-div">
+                        Tourism on step:
+                        <div className="player-stat-tourism width-full no-select">
+                            <img
+                                src={tourismImg}
+                                className="recourse-img"
+                                alt="tourism"
+                            />
+                            {propertyFirstLevel.tourismOnStep}
                         </div>
                     </div>}
                 </div>
@@ -94,6 +96,13 @@ export default function BuyProperty({
                     </div>
                 ))}
 
+            {propertyInfoFirstLevel.info && <InfoBlock info={propertyInfoFirstLevel.info} />}
+
+            {member.discount > 0 && <div className="p-discount flex-between">
+                <p className="your-chance">
+                    ({Math.min(100, Math.floor(member.discount * 100))}%) discount
+                </p>
+            </div>}
             <div className="decision-buttons flex-between">
                 <button
                     disabled={
@@ -116,7 +125,7 @@ export default function BuyProperty({
                             className="recourse-img"
                             alt="gold"
                         />
-                        <p>{propertyFirstLevel.price}</p>
+                        <p>{Math.floor(propertyFirstLevel.price * (1 - Math.min(1, member.discount)))}</p>
                     </div>
                 </button>
                 <button

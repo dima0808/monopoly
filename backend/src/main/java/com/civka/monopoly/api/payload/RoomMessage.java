@@ -32,6 +32,8 @@ public class RoomMessage {
         CHEAT_ADD_GOLD,
         CHEAT_ADD_STRENGTH,
         CHEAT_ADD_EVENT,
-        DOWNGRADE_PROPERTY, PROJECTS,
+        DOWNGRADE_PROPERTY,
+        PROJECTS,
+        GREAT_LIBRARY_PAYMENT,
     }
 }

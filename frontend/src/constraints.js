@@ -201,6 +201,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Temple of Artemis",
             src: wonderTempleOfArtemisImg,
+            info: ["WONDER_TEMPLE_OF_ARTEMIS"],
         },
         position: 4,
     },
@@ -250,6 +251,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Government Plaza",
             src: districtGovernmentPlazaImg,
+            info: ["ADJACENCY_GOVERNMENT_PLAZA"],
         },
         LEVEL_2: {
             name: "Warlord's Throne",
@@ -262,6 +264,7 @@ export const propertiesInfo = {
         LEVEL_4_1: {
             name: "Science Department",
             src: districtGovernmentPlaza41Img,
+            info: ["SPACE_BOOST"],
         },
         LEVEL_4_2: {
             name: "War Department",
@@ -285,6 +288,7 @@ export const propertiesInfo = {
         LEVEL_3: {
             name: "Factory",
             src: districtIndustrialZone3Img,
+            info: ["ADJACENCY_FABRIC"],
         },
         LEVEL_4: {
             name: "Power Plant",
@@ -296,6 +300,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Iron",
             src: resourceIronImg,
+            info: ["ADJACENCY_IRON"],
         },
         LEVEL_2: {
             name: "Mine",
@@ -323,6 +328,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Reef",
             src: featureReefImg,
+            info: ["ADJACENCY_REEF"],
         },
         position: 14,
     },
@@ -342,6 +348,7 @@ export const propertiesInfo = {
         LEVEL_4: {
             name: "Research Lab",
             src: districtCampus4Img,
+            info: ["SPACE_ALLOWED", "SPACE_BOOST"],
         },
         position: 15,
     },
@@ -349,6 +356,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Great Library",
             src: wonderGreatLibraryImg,
+            info: ["WONDER_GREAT_LIBRARY"]
         },
         position: 16,
     },
@@ -364,6 +372,7 @@ export const propertiesInfo = {
         LEVEL_3: {
             name: "Shipyard",
             src: districtHarbor3Img,
+            info: ["ADJACENCY_SHIPYARD"],
         },
         LEVEL_4: {
             name: "Seaport",
@@ -375,6 +384,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Government Plaza",
             src: districtGovernmentPlazaImg,
+            info: ["ADJACENCY_GOVERNMENT_PLAZA"],
         },
         LEVEL_2: {
             name: "Warlord's Throne",
@@ -387,6 +397,7 @@ export const propertiesInfo = {
         LEVEL_4_1: {
             name: "Science Department",
             src: districtGovernmentPlaza41Img,
+            info: ["SPACE_BOOST"],
         },
         LEVEL_4_2: {
             name: "War Department",
@@ -421,6 +432,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Casa De Contratacion",
             src: wonderCasaDeContratacionImg,
+            info: ["WONDER_CASA_DE_CONTRATACION", "ADJACENCY_WONDER"],
         },
         position: 20,
     },
@@ -447,6 +459,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Entertainment Complex",
             src: districtEntertainmentComplexImg,
+            info: ["ADJACENCY_ENTERTAINMENT_COMPLEX"],
         },
         LEVEL_2: {
             name: "Arena",
@@ -466,6 +479,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Colosseum",
             src: wonderColosseumImg,
+            info: ["WONDER_COLOSSEUM"],
         },
         position: 23,
     },
@@ -482,6 +496,7 @@ export const propertiesInfo = {
         LEVEL_2: {
             name: "Farm",
             src: resourceMaize2Img,
+            info: ["ADJACENCY_FARMS"],
         },
         LEVEL_3: {
             name: "Water Mill",
@@ -497,6 +512,7 @@ export const propertiesInfo = {
         LEVEL_2: {
             name: "Farm",
             src: resourceWheat2Img,
+            info: ["ADJACENCY_FARMS"],
         },
         LEVEL_3: {
             name: "Water Mill",
@@ -508,6 +524,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Etemenanki",
             src: wonderEtemenankiImg,
+            info: ["WONDER_ETEMENANKI"],
         },
         position: 27,
     },
@@ -519,6 +536,7 @@ export const propertiesInfo = {
         LEVEL_2: {
             name: "Farm",
             src: resourceRice2Img,
+            info: ["ADJACENCY_FARMS"],
         },
         LEVEL_3: {
             name: "Water Mill",
@@ -562,6 +580,7 @@ export const propertiesInfo = {
         LEVEL_3: {
             name: "Shipyard",
             src: districtHarbor3Img,
+            info: ["ADJACENCY_SHIPYARD"],
         },
         LEVEL_4: {
             name: "Seaport",
@@ -573,6 +592,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Mausoleum at Halicarnassus",
             src: wonderMausoleumAtHalicarnassusImg,
+            info: ["WONDER_MAUSOLEUM_AT_HALICARNASSUS"],
         },
         position: 32,
     },
@@ -580,6 +600,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Aqueduct",
             src: districtAqueductImg,
+            info: ["ADJACENCY_AQUEDUCT"],
         },
         position: 33,
     },
@@ -595,6 +616,7 @@ export const propertiesInfo = {
         LEVEL_3: {
             name: "Factory",
             src: districtIndustrialZone3Img,
+            info: ["ADJACENCY_FABRIC"],
         },
         LEVEL_4: {
             name: "Power Plant",
@@ -606,6 +628,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Dam",
             src: districtDamImg,
+            info: ["ADJACENCY_DAM"],
         },
         LEVEL_2: {
             name: "Hydroelectric Dam",
@@ -617,6 +640,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Ruhr Valley",
             src: wonderRuhrValleyImg,
+            info: ["WONDER_RUHR_VALLEY"],
         },
         position: 36,
     },
@@ -629,6 +653,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Entertainment Complex",
             src: districtEntertainmentComplexImg,
+            info: ["ADJACENCY_ENTERTAINMENT_COMPLEX"],
         },
         LEVEL_2: {
             name: "Arena",
@@ -667,6 +692,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Estadio Do Maracana",
             src: wonderEstadioDoMaracanaImg,
+            info: ["WONDER_ESTADIO_DO_MARACANA", "ADJACENCY_WONDER"],
         },
         position: 40,
     },
@@ -689,6 +715,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Big Ben",
             src: wonderBigBenImg,
+            info: ["ADJACENCY_WONDER"],
         },
         position: 42,
     },
@@ -715,6 +742,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Government Plaza",
             src: districtGovernmentPlazaImg,
+            info: ["ADJACENCY_GOVERNMENT_PLAZA"],
         },
         LEVEL_2: {
             name: "Warlord's Throne",
@@ -727,6 +755,7 @@ export const propertiesInfo = {
         LEVEL_4_1: {
             name: "Science Department",
             src: districtGovernmentPlaza41Img,
+            info: ["SPACE_BOOST"],
         },
         LEVEL_4_2: {
             name: "War Department",
@@ -754,6 +783,7 @@ export const propertiesInfo = {
         LEVEL_4: {
             name: "Research Lab",
             src: districtCampus4Img,
+            info: ["SPACE_ALLOWED", "SPACE_BOOST"],
         },
         position: 45,
     },
@@ -768,6 +798,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Spaceport",
             src: districtSpaceportImg,
+            info: ["SPACE_ALLOWED", "SPACE_BOOST"],
         },
         position: 47,
     },
@@ -850,13 +881,13 @@ export const requirements = {
         <p key={13} priority={3} className="condition-p">Wait for 5 turns</p>
     ),
     HAVE_LOW_GOLD_PER_TURN: (
-        <p key={14} className="condition-p">You need to have 40 g.p.t.</p>
+        <p key={14} className="condition-p">You need to have 50 g.p.t.</p>
     ),
     HAVE_MEDIUM_GOLD_PER_TURN: (
-        <p key={15} className="condition-p">You need to have 80 g.p.t.</p>
+        <p key={15} className="condition-p">You need to have 120 g.p.t.</p>
     ),
     HAVE_HIGH_GOLD_PER_TURN: (
-        <p key={16} className="condition-p">You need to have 120 g.p.t.</p>
+        <p key={16} className="condition-p">You need to have 200 g.p.t.</p>
     ),
     HAVE_LOW_GOLD_CAP: (
         <p key={17} className="condition-p">You need to have 1600 gold</p>
@@ -971,13 +1002,27 @@ export const requirements = {
     ),
 };
 
-export const uniqueUpgrades = {
+export const uniqueEffectsInfo = {
     WONDER_TEMPLE_OF_ARTEMIS: {
         name: "Temple of Artemis",
         description: (
-            <p className="condition-p">improves <span>horses</span>, <span>bananas</span>, <span>dears</span> and <span>furs</span></p>
+            <p className="condition-p">Improves upgrades from <span>horses</span>, <span>bananas</span>, <span>dears</span> and <span>furs</span></p>
         ),
         src: wonderTempleOfArtemisImg,
+    },
+    WONDER_GREAT_LIBRARY: {
+        name: "Great Library",
+        description: (
+            <p className="condition-p">Gives you some gold every time someone do a project</p>
+        ),
+        src: wonderGreatLibraryImg,
+    },
+    WONDER_COLOSSEUM: {
+        name: "Colosseum",
+        description: (
+            <p className="condition-p">Improves every single tile in radius 6</p>
+        ),
+        src: wonderColosseumImg,
     },
     WONDER_CASA_DE_CONTRATACION: {
         name: "Casa De Contratacion",
@@ -996,87 +1041,106 @@ export const uniqueUpgrades = {
     WONDER_MAUSOLEUM_AT_HALICARNASSUS: {
         name: "Mausoleum at Halicarnassus",
         description: (
-            <p className="condition-p">Improves <span>crabs</span>, <span>reefs</span> and <span>harbors</span></p>
+            <p className="condition-p">Improves <span>crabs</span>, <span>reefs</span> and <span>harbors</span>.
+                Doubles all <span>industrial zone logistics</span> bonuses.
+            </p>
         ),
         src: wonderMausoleumAtHalicarnassusImg,
     },
     WONDER_RUHR_VALLEY: {
         name: "Ruhr Valley",
         description: (
-            <p className="condition-p">Improves <span>industrial zones</span></p>
+            <p className="condition-p">Improves <span>industrial zones</span> and <span>mines</span></p>
         ),
         src: wonderRuhrValleyImg,
     },
-    ADJACENCY_GOVERNMENT_PLAZA: {
-        name: "Government Plaza Adjacency",
+    WONDER_ESTADIO_DO_MARACANA: {
+        name: "Estadio Do Maracana",
         description: (
-            <p className="condition-p">Provides bonuses to adjacent districts</p>
+            <p className="condition-p">Improves every single tile in radius 7</p>
+        ),
+        src: wonderEstadioDoMaracanaImg,
+    },
+    ADJACENCY_GOVERNMENT_PLAZA: {
+        name: "Government Plaza",
+        description: (
+            <p className="condition-p adjacency-p">Provides bonuses to adjacent districts</p>
         ),
         src: districtGovernmentPlazaImg,
     },
     ADJACENCY_IRON: {
-        name: "Iron Adjacency",
+        name: "Iron",
         description: (
-            <p className="condition-p">Provides bonuses to adjacent <span>industrial zone</span></p>
+            <p className="condition-p adjacency-p">Provides bonuses to adjacent <span>industrial zone</span></p>
         ),
         src: resourceIronImg,
     },
     ADJACENCY_FABRIC: {
-        name: "Fabric Adjacency",
+        name: "Factory",
         description: (
-            <p className="condition-p">Provides bonuses to <span>iron</span></p>
+            <p className="condition-p modifier-p">Provides bonuses to <span>mines</span></p>
         ),
-        src: resourceFursImg,
+        src: factoryImg,
     },
     ADJACENCY_SHIPYARD: {
-        name: "Shipyard Adjacency",
+        name: "Shipyard",
         description: (
-            <p className="condition-p">Provides bonuses to <span>crabs</span> and <span>reefs</span></p>
+            <p className="condition-p modifier-p">Provides bonuses to <span>crabs</span> and <span>reefs</span></p>
         ),
         src: districtHarborImg,
     },
     ADJACENCY_REEF: {
-        name: "Reef Adjacency",
+        name: "Reef",
         description: (
-            <p className="condition-p">Provides bonuses to <span>campus</span></p>
+            <p className="condition-p adjacency-p">Provides bonuses to a nearby <span>campus</span></p>
         ),
         src: featureReefImg,
     },
     ADJACENCY_WONDER: {
-        name: "Wonder Adjacency",
+        name: "Wonder",
         description: (
-            <p className="condition-p">Provides bonuses to adjacent <span>neighborhood</span> and <span>theatre squares</span></p>
+            <p className="condition-p adjacency-p">Provides bonuses to adjacent <span>neighborhood</span> and <span>theatre squares</span></p>
         ),
         src: wondersImg,
     },
     ADJACENCY_ENTERTAINMENT_COMPLEX: {
-        name: "Entertainment Complex Adjacency",
+        name: "Entertainment Complex",
         description: (
-            <p className="condition-p">Provides bonuses to adjacent <span>theatre squares</span></p>
+            <p className="condition-p adjacency-p">Provides bonuses to adjacent <span>theatre squares</span></p>
         ),
         src: districtEntertainmentComplexImg,
     },
     ADJACENCY_FARMS: {
-        name: "Farms Adjacency",
+        name: "Farms",
         description: (
-            <p className="condition-p">Provides bonuses to <span>farms</span> if you have 2 of them</p>
+            <p className="condition-p adjacency-p">Provides bonuses to <span>farms</span> if you have 2 of them</p>
         ),
         src: farmImg,
     },
     ADJACENCY_AQUEDUCT: {
-        name: "Aqueduct Adjacency",
+        name: "Aqueduct",
         description: (
-            <p className="condition-p">Provides bonuses to adjacent <span>industrial zone</span></p>
+            <p className="condition-p adjacency-p">Provides bonuses to adjacent <span>industrial zone</span></p>
         ),
         src: districtAqueductImg,
     },
     ADJACENCY_DAM: {
-        name: "Dam Adjacency",
+        name: "Dam",
         description: (
-            <p className="condition-p">Provides bonuses to adjacent <span>industrial zone</span></p>
+            <p className="condition-p adjacency-p">Provides bonuses to adjacent <span>industrial zone</span></p>
         ),
         src: districtDamImg,
     },
+    SPACE_ALLOWED: {
+        description: (
+            <p className="condition-p">Allows you to go in space</p>
+        )
+    },
+    SPACE_BOOST: {
+        description: (
+            <p className="condition-p">Speeds up the time between space projects</p>
+        )
+    }
 };
 
 export const additionalEffectsInfo = {

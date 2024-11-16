@@ -102,6 +102,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                     .catch((error) => setError({message: error.message || "An error occurred"}));
                 return;
             case 'PAY_RENT':
+            case 'GREAT_LIBRARY_PAYMENT':
                 setPlayers(room.members);
                 return;
             case 'PROJECTS':

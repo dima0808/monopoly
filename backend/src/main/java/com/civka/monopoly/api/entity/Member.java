@@ -37,6 +37,8 @@ public class Member {
     private Integer tourism;
     private Integer score;
 
+    private Double discount;
+
     private Integer position;
     private Boolean hasRolledDice;
 

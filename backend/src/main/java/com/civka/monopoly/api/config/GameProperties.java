@@ -26,6 +26,7 @@ public class GameProperties {
     private Map<String, Integer> event;
     private Map<String, Integer> project;
     private Map<String, Integer> additionalGoldPerTurn;
+    private Map<String, Double> wonderDiscount;
 
     public Integer getPriceByPositionAndLevel(Integer position, Property.Upgrade level) {
         Integer price = this.price.get(position + "." + level);
@@ -68,10 +69,6 @@ public class GameProperties {
         return event.get(eventType + ".strength");
     }
 
-    public float getEventCoefficient(Event.EventType eventType) {
-        return event.get(eventType + ".coefficient") / 100f;
-    }
-
     public int getEventDice(Event.EventType eventType) {
         return event.get(eventType + ".dice");
     }
@@ -107,13 +104,13 @@ public class GameProperties {
         return tourism == null ? 0 : tourism;
     }
 
-    public int getProjectDiscountByLevel(ProjectType type, Property.Upgrade level) {
-        Integer discount = project.get(type + "." + level + ".discount");
-        return discount == null ? 0 : discount;
-    }
-
     public int getGoldPerTurnByAdditionalEffect(AdditionalEffect.AdditionalEffectType type) {
         Integer goldPerTurn = additionalGoldPerTurn.get(type.toString());
         return goldPerTurn == null ? 0 : goldPerTurn;
+    }
+
+    public double getDiscountByAdditionalEffect(AdditionalEffect.AdditionalEffectType type) {
+        Double discount = wonderDiscount.get(type.toString());
+        return discount == null ? 0.0 : discount;
     }
 }

@@ -51,3 +51,6 @@
     filter: grayscale(55%);
     -webkit-filter: grayscale(55%);
 }
+.empireSection .property-cell-name, .empireSection .property-img-div{
+    cursor:pointer;
+}

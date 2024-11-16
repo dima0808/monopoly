@@ -1,7 +1,7 @@
 import "./styles.css";
 import goldImg from "../../../../../images/icon-gold.png";
 import goldPerTurnImg from "../../../../../images/icon-gold-per-turn.png";
-// import tourismImg from "../../../../../images/icon-tourism/.png";
+import tourismImg from "../../../../../images/icon-tourism.png";
 import { propertiesInfo } from "../../../../../constraints";
 export default function ForeignProperty({ property, roll, member, handlePayRent, onSkip }) {
     const propertyName = propertiesInfo[property.position]["LEVEL_1"].name;
@@ -38,7 +38,7 @@ export default function ForeignProperty({ property, roll, member, handlePayRent,
                                     ((property.position === 7 || property.position === 30) ? "x" : "")}
                             </div>
                         </div>
-                        <div className="gold-on-step stats-div">
+                        {property.goldPerTurn > 0 && <div className="gold-on-step stats-div">
                             Gold per turn:
                             <div className="player-stat-gold gold-per-turn width-full pointer no-select">
                                 <img
@@ -48,17 +48,18 @@ export default function ForeignProperty({ property, roll, member, handlePayRent,
                                 />
                                 {property.goldPerTurn}
                             </div>
-                        </div>
-                        {/*<div className="gold-on-step stats-div">*/}
-                        {/*    Tourism:*/}
-                        {/*    <div className="player-stat-tourism width-full no-select">*/}
-                        {/*        <img*/}
-                        {/*            src={tourismImg}*/}
-                        {/*            className="recourse-img"*/}
-                        {/*            alt="tourism"*/}
-                        {/*        />*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
+                        </div>}
+                        {property.tourismOnStep > 0 && <div className="gold-on-step stats-div">
+                            Tourism on step:
+                            <div className="player-stat-tourism width-full no-select">
+                                <img
+                                    src={tourismImg}
+                                    className="recourse-img"
+                                    alt="tourism"
+                                />
+                                {property.tourismOnStep}
+                            </div>
+                        </div>}
                     </div>
                 </div>
 

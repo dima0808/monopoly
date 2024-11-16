@@ -103,6 +103,11 @@ public class GameUtilsImpl implements GameUtils {
     }
 
     @Override
+    public double getDiscountByAdditionalEffect(AdditionalEffect.AdditionalEffectType type) {
+        return gameProperties.getDiscountByAdditionalEffect(type);
+    }
+
+    @Override
     public Map<String, String> getUpgradeProperties() {
         return gameProperties.getUpgrade();
     }
@@ -187,7 +192,13 @@ public class GameUtilsImpl implements GameUtils {
                     }));
                 }
                 if (projectType == ProjectType.INDUSTRIAL_ZONE_LOGISTICS) {
-                    statsDto.setDiscount(getProjectDiscountByLevel(projectType, level));
+                    statsDto.setDiscount((int) (getDiscountByAdditionalEffect(switch (level) {
+                        case LEVEL_1 -> AdditionalEffect.AdditionalEffectType.WONDER_DISCOUNT_1;
+                        case LEVEL_2 -> AdditionalEffect.AdditionalEffectType.WONDER_DISCOUNT_2;
+                        case LEVEL_3 -> AdditionalEffect.AdditionalEffectType.WONDER_DISCOUNT_3;
+                        case LEVEL_4 -> AdditionalEffect.AdditionalEffectType.WONDER_DISCOUNT_4;
+                        default -> null;
+                    }) * 100));
                 }
                 stats.put(level.toString(), statsDto);
             }
@@ -208,11 +219,6 @@ public class GameUtilsImpl implements GameUtils {
     @Override
     public int getEventStrength(Event.EventType eventType) {
         return gameProperties.getEventStrength(eventType);
-    }
-
-    @Override
-    public float getEventCoefficient(Event.EventType eventType) {
-        return gameProperties.getEventCoefficient(eventType);
     }
 
     @Override
@@ -252,11 +258,6 @@ public class GameUtilsImpl implements GameUtils {
     @Override
     public int getProjectTourismByLevel(ProjectType type, Property.Upgrade level) {
         return gameProperties.getProjectTourismByLevel(type, level);
-    }
-
-    @Override
-    public int getProjectDiscountByLevel(ProjectType type, Property.Upgrade level) {
-        return gameProperties.getProjectDiscountByLevel(type, level);
     }
 
     @Override
@@ -330,8 +331,8 @@ public class GameUtilsImpl implements GameUtils {
                     .anyMatch(p -> p.getPosition().equals(position) &&
                             p.getTurnOfLastChange() + 5 <= member.getRoom().getTurn());
             case HAVE_LOW_GOLD_PER_TURN -> calculateGeneralGoldPerTurn(member) >= 50; // TODO: flexible
-            case HAVE_MEDIUM_GOLD_PER_TURN -> calculateGeneralGoldPerTurn(member) >= 100; // TODO: flexible
-            case HAVE_HIGH_GOLD_PER_TURN -> calculateGeneralGoldPerTurn(member) >= 150; // TODO: flexible
+            case HAVE_MEDIUM_GOLD_PER_TURN -> calculateGeneralGoldPerTurn(member) >= 120; // TODO: flexible
+            case HAVE_HIGH_GOLD_PER_TURN -> calculateGeneralGoldPerTurn(member) >= 200; // TODO: flexible
             case HAVE_LOW_GOLD_CAP -> member.getGold() >= 1800; // TODO: flexible
             case HAVE_MEDIUM_GOLD_CAP -> member.getGold() >= 2600; // TODO: flexible
             case HAVE_HIGH_GOLD_CAP -> member.getGold() >= 3400; // TODO: flexible
@@ -342,12 +343,12 @@ public class GameUtilsImpl implements GameUtils {
             case HAVE_MEDIUM_STRENGTH -> member.getStrength() >= 800; // TODO: flexible
             case HAVE_HIGH_STRENGTH -> member.getStrength() >= 1200; // TODO: flexible
             case ON_CLASSICAL_ERA -> member.getRoom().getTurn() > 10;
-            case ON_MEDIEVAL_ERA -> member.getRoom().getTurn() > 20;
-            case ON_RENAISSANCE_ERA -> member.getRoom().getTurn() > 30;
-            case ON_INDUSTRIAL_ERA -> member.getRoom().getTurn() > 40;
-            case ON_MODERN_ERA -> member.getRoom().getTurn() > 50;
-            case ON_ATOMIC_ERA -> member.getRoom().getTurn() > 60;
-            case ON_INFORMATION_ERA -> member.getRoom().getTurn() > 70;
+            case ON_MEDIEVAL_ERA -> member.getRoom().getTurn() > 25;
+            case ON_RENAISSANCE_ERA -> member.getRoom().getTurn() > 40;
+            case ON_INDUSTRIAL_ERA -> member.getRoom().getTurn() > 55;
+            case ON_MODERN_ERA -> member.getRoom().getTurn() > 70;
+            case ON_ATOMIC_ERA -> member.getRoom().getTurn() > 85;
+            case ON_INFORMATION_ERA -> member.getRoom().getTurn() > 100;
             case HAVE_TWO_RESOURCES -> member.getProperties().stream()
                     .filter(p -> (p.getPosition().equals(1) ||
                             p.getPosition().equals(2) ||
@@ -381,13 +382,19 @@ public class GameUtilsImpl implements GameUtils {
                     .flatMap(property -> property.getUpgrades().stream())
                     .filter(upgrade -> upgrade == Property.Upgrade.LEVEL_2 ||
                             upgrade == Property.Upgrade.LEVEL_3 ||
-                            upgrade == Property.Upgrade.LEVEL_4)
+                            upgrade == Property.Upgrade.LEVEL_4 ||
+                            upgrade == Property.Upgrade.LEVEL_4_1 ||
+                            upgrade == Property.Upgrade.LEVEL_4_2 ||
+                            upgrade == Property.Upgrade.LEVEL_4_3)
                     .count() >= 9; // TODO: flexible
             case SUPER_TALL_EMPIRE -> member.getProperties().stream()
                     .flatMap(property -> property.getUpgrades().stream())
                     .filter(upgrade -> upgrade == Property.Upgrade.LEVEL_2 ||
                             upgrade == Property.Upgrade.LEVEL_3 ||
-                            upgrade == Property.Upgrade.LEVEL_4)
+                            upgrade == Property.Upgrade.LEVEL_4 ||
+                            upgrade == Property.Upgrade.LEVEL_4_1 ||
+                            upgrade == Property.Upgrade.LEVEL_4_2 ||
+                            upgrade == Property.Upgrade.LEVEL_4_3)
                     .count() >= 15; // TODO: flexible
             case OWN_ENCAMPMENT -> member.getProperties().stream()
                     .anyMatch(p -> p.getPosition().equals(7) || p.getPosition().equals(30));

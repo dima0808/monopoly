@@ -176,7 +176,7 @@ export default function PlayerList({
                     </div>
                 </div>
             );
-        } else if (turn <= 20) {
+        } else if (turn <= 25) {
             return (
                 <div className="turn">
                     <img
@@ -185,11 +185,11 @@ export default function PlayerList({
                         alt="Classical era"
                     />
                     <div className="turn-div epoch-div">
-                        <p>Classical era:11-20</p>
+                        <p>Classical era:11-25</p>
                     </div>
                 </div>
             );
-        } else if (turn <= 30) {
+        } else if (turn <= 40) {
             return (
                 <div className="turn">
                     <img
@@ -198,11 +198,11 @@ export default function PlayerList({
                         alt="Medieval era"
                     />
                     <div className="turn-div epoch-div">
-                        <p>Medieval era:21-30</p>
+                        <p>Medieval era:26-40</p>
                     </div>
                 </div>
             );
-        } else if (turn <= 40) {
+        } else if (turn <= 55) {
             return (
                 <div className="turn">
                     <img
@@ -211,11 +211,11 @@ export default function PlayerList({
                         alt="Renaissance era"
                     />
                     <div className="turn-div epoch-div">
-                        <p>Renaissance era:31-40</p>
+                        <p>Renaissance era:41-55</p>
                     </div>
                 </div>
             );
-        } else if (turn <= 50) {
+        } else if (turn <= 70) {
             return (
                 <div className="turn">
                     <img
@@ -224,11 +224,11 @@ export default function PlayerList({
                         alt="Industrial era"
                     />
                     <div className="turn-div epoch-div">
-                        <p>Industrial era:41-50</p>
+                        <p>Industrial era:56-70</p>
                     </div>
                 </div>
             );
-        } else if (turn <= 60) {
+        } else if (turn <= 85) {
             return (
                 <div className="turn">
                     <img
@@ -237,11 +237,11 @@ export default function PlayerList({
                         alt="Modern era"
                     />
                     <div className="turn-div epoch-div">
-                        <p>Modern era:51-60</p>
+                        <p>Modern era:71-85</p>
                     </div>
                 </div>
             );
-        } else if (turn <= 70) {
+        } else if (turn <= 100) {
             return (
                 <div className="turn">
                     <img
@@ -250,11 +250,11 @@ export default function PlayerList({
                         alt="Atomic era"
                     />
                     <div className="turn-div epoch-div">
-                        <p>Atomic era:61-70</p>
+                        <p>Atomic era:86-100</p>
                     </div>
                 </div>
             );
-        } else if (turn >= 71) {
+        } else if (turn >= 101) {
             return (
                 <div className="turn">
                     <img
@@ -263,7 +263,7 @@ export default function PlayerList({
                         alt="Information era"
                     />
                     <div className="turn-div epoch-div">
-                        <p>Information era:{" "}71+</p>
+                        <p>Information era:{" "}100+</p>
                     </div>
                 </div>
             );
