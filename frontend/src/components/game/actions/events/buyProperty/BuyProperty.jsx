@@ -12,6 +12,7 @@ export default function BuyProperty({
     handleBuyProperty,
     onSkip,
 }) {
+    const wonderPositions = [4, 8, 16, 20, 23, 27, 32, 36, 40, 42, 46];
     const propertyInfoFirstLevel = propertiesInfo[property.position]["LEVEL_1"];
     const propertyFirstLevel = property.upgrades.find(
         (upgrade) => upgrade.level === "LEVEL_1"
@@ -98,11 +99,12 @@ export default function BuyProperty({
 
             {propertyInfoFirstLevel.info && <InfoBlock info={propertyInfoFirstLevel.info} />}
 
-            {member.discount > 0 && <div className="p-discount flex-between">
-                <p className="your-chance">
-                    ({Math.min(100, Math.floor(member.discount * 100))}%) discount
-                </p>
-            </div>}
+            {member.discount > 0 && wonderPositions.includes(property.position) &&
+                <div className="p-discount flex-between">
+                    <p className="your-chance">
+                        ({Math.min(100, Math.floor(member.discount * 100))}%) discount
+                    </p>
+                </div>}
             <div className="decision-buttons flex-between">
                 <button
                     disabled={
@@ -125,11 +127,15 @@ export default function BuyProperty({
                             className="recourse-img"
                             alt="gold"
                         />
-                        <p>{Math.floor(propertyFirstLevel.price * (1 - Math.min(1, member.discount)))}</p>
+                      {wonderPositions.includes(property.position) ?
+                          <p>{Math.floor(propertyFirstLevel.price * (1 - Math.min(1, member.discount)))}</p>
+                          :
+                          <p>{propertyFirstLevel.price}</p>
+                      }
                     </div>
                 </button>
-                <button
-                    onClick={onSkip}
+              <button
+                  onClick={onSkip}
                     className="decision-button decision-button-red"
                 >
                     skip

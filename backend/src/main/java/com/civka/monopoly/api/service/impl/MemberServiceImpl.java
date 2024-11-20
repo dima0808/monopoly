@@ -49,8 +49,17 @@ public class MemberServiceImpl implements MemberService {
     @Value("${monopoly.app.room.game.science-project.governmentBoost}")
     private Integer governmentBoost;
 
+    @Value("${monopoly.app.room.game.science-project.oxfordBoost}")
+    private Integer oxfordBoost;
+
     @Value("${monopoly.app.room.game.science-project.spaceportBoost}")
     private Integer spaceportBoost;
+
+    @Value("${monopoly.app.room.game.science-project.expeditionTurnAmount}")
+    private Integer expeditionTurnAmount;
+
+    @Value("${monopoly.app.room.game.science-project.laserBoost}")
+    private Integer laserBoost;
 
     @Override
     public Member save(Member member) {
@@ -135,9 +144,36 @@ public class MemberServiceImpl implements MemberService {
             throw new UserNotAllowedException();
         }
         int price = gameUtils.getPriceByPositionAndLevel(position, Property.Upgrade.LEVEL_1);
-        if (member.getDiscount() > 0) {
-            price = (int) (price * (1 - Math.min(1, member.getDiscount())));
-            member.setDiscount(member.getDiscount() - Math.min(1, member.getDiscount()));
+        if (isPropertyWonder(position)) {
+            if (member.getDiscount() > 0) {
+                price = (int) (price * (1 - Math.min(1, member.getDiscount())));
+                member.setDiscount(member.getDiscount() - Math.min(1, member.getDiscount()));
+            }
+            if (position == 46) {
+                List<Member.ScienceProject> finishedScienceProjects = member.getFinishedScienceProjects();
+                if (member.getFinishedScienceProjects()
+                        .stream()
+                        .noneMatch((project) -> project.equals(Member.ScienceProject.CAMPUS))) {
+                    finishedScienceProjects.add(Member.ScienceProject.CAMPUS);
+                }
+                List<Member.ScienceProject> scienceProjects = List.of(
+                        Member.ScienceProject.SATELLITE,
+                        Member.ScienceProject.MOON,
+                        Member.ScienceProject.MARS,
+                        Member.ScienceProject.EXOPLANET
+                );
+                for (Member.ScienceProject project : scienceProjects) {
+                    if (!member.getFinishedScienceProjects().contains(project)) {
+                        finishedScienceProjects.add(project);
+                        if (project.equals(Member.ScienceProject.EXOPLANET)) {
+                            member.setExpeditionTurns(expeditionTurnAmount);
+                        } else if (project.equals(Member.ScienceProject.LASER)) {
+                            member.setExpeditionTurns(Math.max(member.getExpeditionTurns() - laserBoost, 0));
+                        }
+                        break;
+                    }
+                }
+            }
         }
         if (member.getGold() < price) {
             throw new UserNotAllowedException();
@@ -395,27 +431,29 @@ public class MemberServiceImpl implements MemberService {
         int labBoostCount = 0;
         int governmentBoostCount = 0;
         int spaceportBoostCount = 0;
+        int oxfordBoostCount = 0;
 
         for (Property property : member.getProperties()) {
             if ((property.getPosition() == 15 || property.getPosition() == 45) &&
                     property.getUpgrades().contains(Property.Upgrade.LEVEL_4)) {
                 labBoostCount++;
-            }
-            if ((property.getPosition() == 9 || property.getPosition() == 18 || property.getPosition() == 44) &&
+            } else if ((property.getPosition() == 9 || property.getPosition() == 18 || property.getPosition() == 44) &&
                     property.getUpgrades().contains(Property.Upgrade.LEVEL_4_1)) {
                 governmentBoostCount++;
-            }
-            if (property.getPosition() == 47) {
+            } else if (property.getPosition() == 46) {
+                oxfordBoostCount++;
+            } else if (property.getPosition() == 47) {
                 spaceportBoostCount++;
             }
         }
 
         int totalLabBoost = labBoost * labBoostCount;
         int totalGovernmentBoost = governmentBoost * governmentBoostCount;
+        int totalOxfordBoost = oxfordBoost * oxfordBoostCount;
         int totalSpaceportBoost = spaceportBoost * spaceportBoostCount;
 
         return member.getTurnsToNextScienceProject() != -1 &&
-                member.getTurnsToNextScienceProject() - totalLabBoost - totalGovernmentBoost - totalSpaceportBoost <= 0;
+                member.getTurnsToNextScienceProject() - totalLabBoost - totalGovernmentBoost - totalOxfordBoost - totalSpaceportBoost <= 0;
     }
 
     private boolean isMemberAbleToSpace(Member member) {
@@ -494,7 +532,7 @@ public class MemberServiceImpl implements MemberService {
             if (isMemberHasProperty(member, 32)) {
                 uniqueUpgrades.add(Property.Upgrade.WONDER_MAUSOLEUM_AT_HALICARNASSUS);
             }
-        } else if (List.of(32, 33, 35, 36, 38, 47).contains(position)) {
+        } else if (List.of(32, 33, 35, 36, 38, 40, 42, 46, 47).contains(position)) {
             if (isMemberHasProperty(member, 40)) {
                 uniqueUpgrades.add(Property.Upgrade.WONDER_ESTADIO_DO_MARACANA);
             }
@@ -924,5 +962,9 @@ public class MemberServiceImpl implements MemberService {
 
     private boolean isMemberHasProperty(Member member, Integer... positions) {
         return isMemberHasProperty(member, Property.Upgrade.LEVEL_1, positions);
+    }
+
+    private boolean isPropertyWonder(int position) {
+        return List.of(4, 8, 16, 20, 23, 27, 32, 36, 40, 42, 46).contains(position);
     }
 }

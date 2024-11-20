@@ -35,5 +35,6 @@ public class RoomMessage {
         DOWNGRADE_PROPERTY,
         PROJECTS,
         GREAT_LIBRARY_PAYMENT,
+        BIG_BEN_PAYMENT,
     }
 }

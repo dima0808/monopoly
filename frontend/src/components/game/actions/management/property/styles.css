@@ -299,6 +299,11 @@ padding: 0 0 0 1px;
     border-top: solid 2px rgb(103, 110, 154);
     background-color: rgba(168, 172, 192, 0.76);
 }
+.government .info-block .condition-p{
+
+    border-top: solid 2px #9453a9e2 !important;
+    background-color: rgba(222, 178, 239, 0.70) !important;
+}
 .info-block .modifier-p{
     border-top: solid 2px rgb(114, 159, 105);
     background-color: rgba(171, 192, 168, 0.76);

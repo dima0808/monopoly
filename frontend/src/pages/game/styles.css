@@ -3,6 +3,7 @@
   align-items: center;
   display: grid;
   grid-template-columns: 250px 820px 300px;
+  padding-top: 4px;
   gap: 40px;
 }
 .grid-3 img {
@@ -22,5 +23,5 @@
 .game-html body {
   height: 100%;
   display: grid;
-  place-items: center;
+
 }

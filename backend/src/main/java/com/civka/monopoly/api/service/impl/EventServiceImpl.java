@@ -56,6 +56,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event add(Member member, Event.EventType type, Integer roll) {
+        if (eventRepository.existsByMemberAndType(member, type)) {
+            throw new UserNotAllowedException();
+        }
         if (type == Event.EventType.FOREIGN_PROPERTY) {
             Property property = propertyService.findByRoomAndPosition(member.getRoom(), member.getPosition());
             Member owner = property.getMember();
@@ -180,6 +183,7 @@ public class EventServiceImpl implements EventService {
                 Property.Upgrade highestDistrictLevel = gameUtils.getHighestDistrictLevel(member, "ENTERTAINMENT");
                 List<Member> members = room.getMembers();
 
+                Member updatedMember = null;
                 for (Member m : members) {
                     boolean isCurrentMember = m.equals(member);
                     List<Property> properties = m.getProperties();
@@ -198,9 +202,12 @@ public class EventServiceImpl implements EventService {
                     if (!isCurrentMember) {
                         memberRepository.save(m);
                     } else {
-                        Member updatedMember = memberRepository.save(m);
-                        handleGreatLibrary(updatedMember);
+                        updatedMember = memberRepository.save(m);
                     }
+                }
+                if (updatedMember != null) {
+                    handleGreatLibrary(updatedMember);
+                    handleBigBen(updatedMember, false);
                 }
 
                 RoomMessage roomMessage = RoomMessage.builder()
@@ -228,6 +235,7 @@ public class EventServiceImpl implements EventService {
                 member.getAdditionalEffects().add(commercialHubInvestment);
                 Member updatedMember = memberRepository.save(member);
                 handleGreatLibrary(updatedMember);
+                handleBigBen(updatedMember, true);
 
                 RoomMessage roomMessage = RoomMessage.builder()
                         .type(RoomMessage.MessageType.PROJECTS)
@@ -243,6 +251,7 @@ public class EventServiceImpl implements EventService {
                         gameUtils.getProjectStrengthByLevel(choice, highestDistrictLevel));
                 Member updatedMember = memberRepository.save(member);
                 handleGreatLibrary(updatedMember);
+                handleBigBen(updatedMember, false);
             }
 
             case HARBOR_SHIPPING -> {
@@ -250,6 +259,7 @@ public class EventServiceImpl implements EventService {
                 member.setGold(member.getGold() + gameUtils.getProjectGoldByLevel(choice, highestDistrictLevel));
                 Member updatedMember = memberRepository.save(member);
                 handleGreatLibrary(updatedMember);
+                handleBigBen(updatedMember, false);
             }
 
             case INDUSTRIAL_ZONE_LOGISTICS -> {
@@ -268,6 +278,7 @@ public class EventServiceImpl implements EventService {
                 }
                 Member updatedMember = memberRepository.save(member);
                 handleGreatLibrary(updatedMember);
+                handleBigBen(updatedMember, false);
             }
 
             case THEATER_SQUARE_PERFORMANCES -> {
@@ -276,6 +287,7 @@ public class EventServiceImpl implements EventService {
                         gameUtils.getProjectTourismByLevel(choice, highestDistrictLevel));
                 Member updatedMember = memberRepository.save(member);
                 handleGreatLibrary(updatedMember);
+                handleBigBen(updatedMember, false);
             }
 
             case CAMPUS_RESEARCH_GRANTS -> {
@@ -431,7 +443,7 @@ public class EventServiceImpl implements EventService {
 
     private void handleGreatLibrary(Member member) {
         Property property = propertyService.findByRoomAndPosition(member.getRoom(), 16);
-        if (property != null) {
+        if (property != null && !member.equals(property.getMember())) {
             property.getMember().setGold(property.getMember().getGold() + goldForProjectGreatLibrary);
             Property updatedProperty = propertyService.save(property);
 
@@ -442,7 +454,38 @@ public class EventServiceImpl implements EventService {
                     .build();
             messagingTemplate.convertAndSend("/topic/public/" + updatedProperty.getMember().getRoom().getName() + "/game", playerMessage);
         }
+    }
 
+    private void handleBigBen(Member member, boolean isCommercialHubInvestment) {
+        if (member.getProperties().stream()
+                .anyMatch(p -> p.getPosition().equals(42))) {
+            int income = 0;
+            int change;
+            for (Member m : member.getRoom().getMembers()) {
+                if (!m.equals(member)) {
+                    change = isCommercialHubInvestment ? m.getGold() : (int) (m.getGold() * 0.5);
+                    income += change;
+                    m.setGold(m.getGold() - change);
+                    memberRepository.save(m);
+                }
+            }
+            member.setGold(member.getGold() + income);
+            Member updatedMember = memberRepository.save(member);
+            RoomMessage playerMessage = RoomMessage.builder()
+                    .type(RoomMessage.MessageType.BIG_BEN_PAYMENT)
+                    .content("Member " + updatedMember.getUser().getUsername() + " stole money using Big Ben")
+                    .room(updatedMember.getRoom())
+                    .build();
+            messagingTemplate.convertAndSend("/topic/public/" + updatedMember.getRoom().getName() + "/game", playerMessage);
+            Chat roomChat = chatService.findByName(updatedMember.getRoom().getName());
+            ChatMessageDto systemMessage = ChatMessageDto.builder()
+                    .type(ChatMessage.MessageType.SYSTEM_BIG_BEN)
+                    .content(updatedMember.getUser().getNickname() + " " + income)
+                    .timestamp(LocalDateTime.now())
+                    .build();
+            ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
+            messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
+        }
     }
 
     private void handleScienceLastPhase(Member member, Member.ScienceProject nextProject) {
@@ -450,8 +493,7 @@ public class EventServiceImpl implements EventService {
         finishedScienceProjects.add(nextProject);
         if (nextProject.equals(Member.ScienceProject.EXOPLANET)) {
             member.setExpeditionTurns(expeditionTurnAmount);
-        }
-        if (nextProject.equals(Member.ScienceProject.LASER)) {
+        } else if (nextProject.equals(Member.ScienceProject.LASER)) {
             member.setExpeditionTurns(Math.max(member.getExpeditionTurns() - laserBoost, 0));
         }
     }

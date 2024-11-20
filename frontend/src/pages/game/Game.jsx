@@ -103,6 +103,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                 return;
             case 'PAY_RENT':
             case 'GREAT_LIBRARY_PAYMENT':
+            case 'BIG_BEN_PAYMENT':
                 setPlayers(room.members);
                 return;
             case 'PROJECTS':

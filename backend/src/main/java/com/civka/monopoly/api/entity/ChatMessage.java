@@ -57,5 +57,6 @@ public class ChatMessage {
         SYSTEM_DOWNGRADE_PROPERTY,
         SYSTEM_REDEMPTION_PROPERTY,
         SYSTEM_MORTGAGE_PROPERTY, SYSTEM_WINNER,
+        SYSTEM_BIG_BEN,
     }
 }

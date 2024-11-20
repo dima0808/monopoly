@@ -223,13 +223,35 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
                                                 </span>
                                             </SystemMessage>
                                         );
+                                    case 'SYSTEM_BIG_BEN':
+                                        return (
+                                            <SystemMessage key={index}
+                                                           timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                обшарпав кожного на
+                                                <div className="inline-block">
+                                                    <div
+                                                        className="player-stat-gold width-full pointer no-select">
+                                                        <img
+                                                            src={goldImg}
+                                                            className="recourse-img"
+                                                            alt="gold"
+                                                        />
+                                                        {data[1]}
+                                                    </div>
+                                                </div>
+                                            </SystemMessage>
+                                        );
                                     case 'SYSTEM_PAY_RENT':
                                         return (
-                                            <SystemMessage key={index} timestamp={message.timestamp}>
-                                                гравець <span className="system-span">{data[0]}</span>
+                                            <SystemMessage key={index}
+                                                           timestamp={message.timestamp}>
+                                                гравець <span
+                                                className="system-span">{data[0]}</span>
                                                 заплатив
                                                 <div className="inline-block">
-                                                    <div className="player-stat-gold width-full pointer no-select">
+                                                    <div
+                                                        className="player-stat-gold width-full pointer no-select">
                                                         <img
                                                             src={goldImg}
                                                             className="recourse-img"

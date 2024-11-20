@@ -14,11 +14,11 @@ export default function Header({ nickname, onLogout, setIsPrivateChatOpen, setSe
           </Link>
           <Link to={`/rules`} className="header__anchor">
             {" "}
-            Правила{" "}
+            Rules{" "}
           </Link>
           {Cookies.get("role") === "ROLE_ADMIN" && (
             <Link to={`/admin`} className="header__anchor">
-              Адмін
+              Admin
             </Link>
           )}
         </ul>
@@ -82,7 +82,7 @@ export default function Header({ nickname, onLogout, setIsPrivateChatOpen, setSe
             </>
           ) : (
             <Link to={`/signin`} className="header__anchor">
-              Логін
+              Login
             </Link>
           )}
         </ul>

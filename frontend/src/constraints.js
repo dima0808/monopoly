@@ -153,6 +153,7 @@ import foodMarketImg from "./images/building_neighborhood_build1_icon_food_marke
 import shoppingMallImg from "./images/building_neighborhood_build2_icon_shopping_mall.png";
 
 import wondersImg from "./images/wonders.png";
+import goldImg from "./images/icon-gold.png";
 
 export const IP = "26.239.28.186";
 // 26.239.28.186
@@ -715,7 +716,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Big Ben",
             src: wonderBigBenImg,
-            info: ["ADJACENCY_WONDER"],
+            info: ["WONDER_BIG_BEN", "ADJACENCY_WONDER"],
         },
         position: 42,
     },
@@ -791,6 +792,7 @@ export const propertiesInfo = {
         LEVEL_1: {
             name: "Oxford University",
             src: wonderOxfordUniversityImg,
+            info: ["WONDER_OXFORD_UNIVERSITY", "SPACE_BOOST"],
         },
         position: 46,
     },
@@ -1013,7 +1015,17 @@ export const uniqueEffectsInfo = {
     WONDER_GREAT_LIBRARY: {
         name: "Great Library",
         description: (
-            <p className="condition-p">Gives you some gold every time someone do a project</p>
+            <div className="condition-p">Gives you&nbsp;
+                <div className="inline-block">
+                <div className="player-stat-gold width-full pointer no-select">
+                    <img
+                        src={goldImg}
+                        className="recourse-img"
+                        alt="gold"
+                    />
+                    <p>250</p>
+                </div>
+            </div> every time someone do a project</div>
         ),
         src: wonderGreatLibraryImg,
     },
@@ -1027,8 +1039,9 @@ export const uniqueEffectsInfo = {
     WONDER_CASA_DE_CONTRATACION: {
         name: "Casa De Contratacion",
         description: (
-            <p className="condition-p">Improves every single tile opposite to your government plaza</p>
-        ),
+            <p className="condition-p">Improves every single tile opposite to your <span>government
+                plaza</span></p>
+),
         src: wonderCasaDeContratacionImg,
     },
     WONDER_ETEMENANKI: {
@@ -1050,7 +1063,7 @@ export const uniqueEffectsInfo = {
     WONDER_RUHR_VALLEY: {
         name: "Ruhr Valley",
         description: (
-            <p className="condition-p">Improves <span>industrial zones</span> and <span>mines</span></p>
+            <p className="condition-p">Improves <span>industrial zones</span> and <span>mine</span></p>
         ),
         src: wonderRuhrValleyImg,
     },
@@ -1060,6 +1073,22 @@ export const uniqueEffectsInfo = {
             <p className="condition-p">Improves every single tile in radius 7</p>
         ),
         src: wonderEstadioDoMaracanaImg,
+    },
+    WONDER_BIG_BEN: {
+        name: "Big Ben",
+        description: (
+            <p className="condition-p">Steals 100% of the gold every time you do <span>commercial hub</span> project or steals 50% of the gold whenever you do any project except for scientific ones
+            </p>
+),
+        src: wonderBigBenImg,
+    },
+    WONDER_OXFORD_UNIVERSITY: {
+        name: "Oxford University",
+        description: (
+            <p className="condition-p"><span>On buy:</span> Performs a <span>campus</span> project and a scientific project.
+            </p>
+),
+        src: wonderOxfordUniversityImg,
     },
     ADJACENCY_GOVERNMENT_PLAZA: {
         name: "Government Plaza",
@@ -1133,12 +1162,12 @@ export const uniqueEffectsInfo = {
     },
     SPACE_ALLOWED: {
         description: (
-            <p className="condition-p">Allows you to go in space</p>
+            <p className="condition-p modifier-p">Allows you to go in space</p>
         )
     },
     SPACE_BOOST: {
         description: (
-            <p className="condition-p">Speeds up the time between space projects</p>
+            <p className="condition-p modifier-p">Speeds up the time between space projects</p>
         )
     }
 };

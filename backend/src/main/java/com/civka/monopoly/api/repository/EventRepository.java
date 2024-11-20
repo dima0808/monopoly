@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface EventRepository extends JpaRepository<Event, Long> {
 
     Optional<Event> findByMemberAndType(Member member, Event.EventType type);
+
+    boolean existsByMemberAndType(Member member, Event.EventType type);
 }
