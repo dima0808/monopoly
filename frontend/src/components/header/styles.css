@@ -1,0 +1,114 @@
+.header {
+  height: 80px;
+  width: 100%;
+  background-color: #d1b5e8;
+  /* background-color: #e4cef5; */
+  /* box-shadow: 0 2px 50px 1px rgba(178, 135, 213, 0.5); */
+  /* #C49FE3 */
+}
+.header-flex {
+  width: 90%;
+  height: 100%;
+
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header__ul {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.header-img {
+  margin-top: 4px;
+  width: 75px;
+  height: 75px;
+}
+body {
+  background-color: #f1e4fb;
+}
+.header__anchor-img:hover,
+.header__anchor-img:active {
+  filter: brightness(250%);
+}
+.header__anchor-img {
+  transition: 0.3s ease-out;
+}
+.header__anchor {
+  transition: 0.2s ease-out;
+}
+.header__anchor {
+  font-size: 24px;
+  /* text-shadow: 0 0 5px rgba(92, 66, 132, 0.5); */
+  transition: box-shadow 0.3s ease;
+}
+.header__anchor:link,
+.header__anchor:visited {
+  transition: 0.2s ease-in-out;
+  color: #23053c;
+  text-decoration: none;
+}
+.header__anchor:active,
+.header__anchor:hover {
+  color: #5c4284;
+  text-shadow: 0 0 5px rgba(241, 228, 251, 0.8);
+}
+.header-svg-exit {
+  width: 36px;
+  height: 36px;
+  margin-top: 6px;
+}
+.header-svg-exit {
+  transition: 0.3s ease-out;
+}
+.header-svg-exit:hover,
+.header-svg-exit:active {
+  color: #e03131;
+}
+.private-chat-svg {
+  width: 36px;
+  height: 36px;
+}
+.private-chat-btn {
+  margin-right: -6px;
+  cursor: pointer;
+  margin-top: 3px;
+  color: #23053c;
+  border: none;
+  background-color: transparent;
+  transition: all 0.3s ease-in-out;
+}
+.private-chat-btn:hover {
+  color: #8063ad;
+}
+.private-chat-btn:active {
+  color: #bfa4e8;
+}
+.header-localization {
+  margin-top: 2px;
+  width: 48px;
+  height: 32px;
+  /* border: 1px solid #23053c; */
+  background-image: url("../../images/language_eng.jpg");
+  background-size: cover; /* Зображення покриває всю площу кнопки */
+  background-position: center; /* Центрування зображення */
+  background-repeat: no-repeat; /* Вимикаємо повторення */
+
+  border: none; /* Відсутність рамки */
+
+  cursor: pointer; /* Курсор при наведенні */
+  text-align: center; /* Вирівнювання тексту по центру */
+  border-radius: 5px; /* Закруглені кути */
+
+  box-shadow: 0 0 15px rgba(92, 66, 132, 0.5);
+  transition: box-shadow 0.3s ease;
+}
+
+.header-localization:hover,
+.header-localization:active {
+  box-shadow: 0 0 15px rgba(92, 66, 132, 0.75);
+}
+.header__anchor-username {
+  margin-right: -10px;
+}

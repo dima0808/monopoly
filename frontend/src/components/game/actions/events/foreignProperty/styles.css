@@ -1,0 +1,11 @@
+.decision-button-reder {
+    background-color: #810611;
+}
+.decision-button-reder:hover {
+    background-color: #df1728;
+}
+.decision-button-reder:active {
+    background-color: #e93443;
+}
+.pay-btn {
+}

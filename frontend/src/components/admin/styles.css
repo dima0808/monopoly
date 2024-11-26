@@ -1,0 +1,90 @@
+.update-user-dialog {
+  display: grid;
+  overflow: hidden;
+  grid-template-columns: auto 1fr;
+  position: relative;
+  width: 500px;
+  height: 540px;
+  background-color: #f1e4fb;
+  border: 1px solid #271d37;
+  border-radius: 10px;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1001; /* Ensure the dialog is above the blurred background */
+}
+.admin-dialog-close {
+  left: 100%;
+  top: 0;
+  transform: translate(-150%, 50%);
+}
+.admin-violet-square {
+  margin: 15px;
+}
+.admin-labels {
+  grid-column: 1/3;
+}
+.report-buttons {
+  margin: 50px 15px 15px 0;
+}
+.his-messages {
+  margin: 0;
+  font-size: 16px;
+  height: 30px;
+  padding: 0 5px;
+  width: auto;
+}
+.sett-avatar:hover {
+  background-color: #fe0e3ee3;
+}
+.sett-avatar:active {
+  background-color: #ff2853e3;
+}
+.admin-red-flag {
+  padding: 6px 4px;
+  background-color: #fe0e3e6c;
+  margin-top: 10px;
+  border-radius: 6px;
+}
+.admin-flex-between {
+  display: flex;
+  align-items: center;
+}
+.admin-profile-input {
+  width: 100px;
+}
+.admin-red-flag .profile-input {
+  border: 1px solid #4d1513;
+  background-color: #ffc7c5;
+  color: #4d1513;
+  font-size: 20px;
+}
+.admin-red-flag .his-messages {
+  color: #4d1513;
+  background-color: #fe220ef1;
+}
+.admin-red-flag .his-messages:hover {
+  color: #eacfce;
+  background-color: #9b2420;
+}
+.admin-flex-between {
+  margin-top: 6px;
+}
+.admin-red-flag .sett-avatar:hover {
+  background-color: #4d1513;
+}
+
+.admin-flex-labels {
+  display: flex;
+  padding: 5px 6px;
+  gap: 8px;
+}
+.admin-btns-flex-between {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-left: 40px;
+}

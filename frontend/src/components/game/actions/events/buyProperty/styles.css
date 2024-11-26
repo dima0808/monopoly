@@ -1,0 +1,115 @@
+.property-img {
+    width: 80px;
+    height: 80px;
+}
+.property-img-div {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+.property-color {
+    border-radius: 6px;
+    background-color: #eee;
+    border: 1px solid #636466;
+    overflow: hidden;
+}
+.property-grid {
+    display: grid;
+    padding-bottom: 2px;
+    grid-template-columns: 80px 1fr;
+}
+.property-cell-name {
+    text-align: center;
+    cursor: default;
+    background-color: #636466cd;
+    padding: 0 15px 2px 10px;
+    overflow-wrap: break-word;
+    color: #eee;
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+    line-height: 1;
+}
+.stats-div {
+    display: flex;
+    font-size: 18px;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+    color: #2b2732;
+}
+.stats-div:not(:first-child){
+    margin-top: 2px;
+}
+.property-stats-div {
+    margin-top: 4px;
+}
+.decision-buttons {
+    padding: 5px 10px;
+}
+.decision-button {
+    font-family: "Ubuntu", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 6px;
+    border: 1px solid #2b2732;
+    background-color: #636466cd;
+    font-size: 18px;
+    height: 26px;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+    width: 120px;
+    color: #eee;
+    transition: all 0.3s ease-in-out;
+}
+.decision-button:disabled {
+    background-color: #7c7d7fcd;
+    color: #eee;
+    border: none;
+}
+.decision-button-green {
+    background-color: #668a44;
+}
+.decision-button-green:hover {
+    background-color: #7da558;
+}
+.decision-button-green:active {
+    background-color: #95c06e;
+}
+.decision-button-red {
+    background-color: #df1728;
+}
+.decision-button-red:hover {
+    background-color: #e93443;
+}
+.decision-button-red:active {
+    background-color: #f14d5a;
+}
+.condition-div {
+    background-color: #9a9c9ecd;
+    border-radius: 6px;
+    margin: 3px 8px;
+    padding: 2px 4px;
+}
+.condition-p {
+    max-width: 240px;
+    color: #641a2b;
+    overflow-wrap: break-word;
+    font-size: 18px;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+    line-height: 1.1;
+}
+.condition-p-compleated .condition-p {
+    color:#2b2732
+}
+.condition-div-compleated {
+    background-color: #cfd1d3cd !important;
+}
+.property-modifier-div span,
+.condition-div span {
+    color: #1f0847;
+    font-weight: 500;
+}

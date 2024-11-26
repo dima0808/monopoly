@@ -1,0 +1,315 @@
+/* .property-div-compleated означає чи умова виконана */
+/* .modifiered означає шо апгрейд найявний в тебе*/
+/* .modifiered-by-wonder обводка для евекту чуда, .property-div-compleated тут означає шо чудо куплене і евект є*/
+.proprty-btns-div {
+    padding: 5px 4px;
+    gap: 2px;
+}
+.proprty-btns-div .decision-button {
+    width: 130px;
+    font-size: 16px;
+    margin: 0 auto;
+}
+.property-modifier-div {
+    position:relative;
+    margin: 9px 4px 5px 4px;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #747677b8;
+}
+
+.property-modifier-h3 {
+    text-align: center;
+    cursor: default;
+    padding: 0 20px 2px 15px;
+    overflow-wrap: break-word;
+    color: #eeeeeeee;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+    line-height: 1;
+
+    background-color: #63646694;
+}
+.modifiered-by-wonder .property-modifier-h3 {
+    background-color: #44165a82;
+}
+.property-div-compleated.modifiered-by-wonder .property-modifier-h3 {
+    background-color: #44165ac3;
+}
+.property-div-compleated {
+    background-color: #cfd1d3f7 !important;
+}
+.property-div-compleated .property-modifier-h3 {
+    color: #f0f0f0;
+}
+.property-grid-3 {
+    display: grid;
+    grid-template-columns: 40px 1fr 85px;
+    align-items: center;
+    justify-content: center;
+}
+.property-gridimg-img-div {
+    width: 40px;
+    height: 40px;
+}
+.property-gridimg-img-div .property-img {
+    width: 40px;
+    height: 40px;
+}
+.property-new-stats-p {
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: -1px;
+    word-spacing: 1px;
+    color: #2b2732;
+}
+.property-new-stats {
+    display: flex;
+    flex-direction: column;
+    gap:2px;
+    background-color: #eeeeee53;
+    height: 100%;
+    min-height: 44px;
+    padding: 1px 0 2px 0;
+    border-radius: 0 0 0 6px;
+}
+.property-new-stats .player-stat-gold,
+.property-new-stats .player-stat-tourism,
+.war-modeficator .player-stat-strength {
+    margin: 1px 0 0 3px;
+    height: 16px;
+    font-size: 15px;
+    padding-left: 18px;
+}
+.property-new-stats .recourse-img,
+.war-modeficator .recourse-img {
+    height: 15px;
+    width: 15px;
+}
+.property-mini-flex {
+    padding-right: 3px;
+    display: flex;
+    justify-content: flex-end;
+}
+.property-grid-3 .condition-p {
+    text-indent: 4px;
+    line-height: 0.95;
+padding: 0 0 0 1px;
+    font-size: 13px;
+}
+.property-grid-3 .condition-p:not(:first-child){
+    margin: 2px 0;
+}
+.modifiered {
+    outline: 3px solid #116908;
+}
+.modifiered-by-wonder {
+    outline: 3px solid #44165a;
+}
+.wonder-efect {
+    text-align: center;
+    color: #38114a;
+    margin-top: -2px;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+}
+.modifier-efect-h2 {
+    text-align: center;
+    color: #0a4104;
+    margin-top: -2px;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+}
+.modifier-efect .property-modifier-h3 {
+    background-color: #0a41047d;
+}
+.property-div-compleated.modifier-efect .property-modifier-h3 {
+    background-color: #0a4104de;
+}
+.modifier-efect.modifiered {
+    outline: 3px solid #0a4104;
+}
+.neighborhood-bonus-h2 {
+    text-align: center;
+    color: #041241;
+    margin-top: -2px;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+}
+.neighborhood-bonus .property-modifier-h3 {
+    background-color: #0412418a;
+}
+.property-div-compleated.neighborhood-bonus .property-modifier-h3 {
+    background-color: #041241c9;
+}
+.neighborhood-bonus.modifiered {
+    outline: 3px solid #041241;
+}
+.property-color-government {
+    margin: 9px 0 4px 0;
+    background-color: #403646e2;
+    padding: 0 0 2px 0;
+}
+.property-color-government .project-color-h2 {
+    font-size: 22px;
+    color: #e2cae5;
+}
+.property-government-choose {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 58px;
+    margin: 2px 16px;
+    background-color: #b09bb372;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+.property-government-choose .project-div-img {
+    background-color: #58545aca;
+    cursor: pointer;
+    width: 42px;
+    height: 42px;
+}
+.property-government-choose .project-div-img-compleated {
+    background-color: #a299a5e2;
+}
+.property-government-choose .project-div-img .project-img {
+    width: 42px;
+    height: 42px;
+}
+.project-div-img-selected {
+    width: 48px !important;
+    height: 48px !important;
+    outline: 2px solid #e2cae5;
+}
+.project-div-img-selected .project-img {
+    width: 48px !important;
+    height: 48px !important;
+}
+.government,
+.government-efect {
+    background-color: #726e74e6;
+}
+.property-div-compleated.government,
+.property-div-compleated.government-efect {
+    background-color: rgba(190, 176, 194, 0.8) !important;
+}
+.government .property-modifier-h3 {
+    background-color: #bea6c175;
+}
+.government .property-new-stats,
+.government-efect .property-new-stats {
+    background-color: #e2d1e34f;
+}
+.property-div-compleated.government .property-modifier-h3 {
+    background-color: #bea6c1e0;
+}
+.government.modifiered {
+    outline: 3px solid #a47ea8;
+}
+.property-color-government .government-efect-h2 {
+    margin-bottom: -2px;
+}
+.government-efect-h2 {
+    text-align: center;
+    color: #9353a9;
+    margin-top: -2px;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+}
+.government-efect .property-modifier-h3 {
+    background-color: #9453a9b6;
+}
+.property-div-compleated.government-efect .property-modifier-h3 {
+    background-color: #9453a9e2;
+}
+.government-efect.modifiered {
+    outline: 3px solid #9353a9;
+}
+.no-stats .property-new-stats{
+    opacity: 0;
+}
+.no-stats{
+    grid-template-columns: 40px 1fr !important;
+}
+
+.info-btn{
+    cursor:pointer;
+    position: absolute;
+    top:0;
+    left:0;
+    margin: 2px 0 0 2px;
+    font-size:16px;
+    font-weight: 500;
+    width:20px;
+    height: 20px;
+    background-color: rgba(84, 91, 100, 0.98);
+    border-radius: 6px;
+    text-align: center;
+    color: #d9d7d3;
+    z-index: 100;
+    transition: all 0.3s ease-in-out;
+}
+.info-btn:hover{
+    background-color: rgba(111, 131, 134, 0.98);
+}
+.info-btn:active{
+    background-color: rgba(133, 152, 155, 0.98);
+}
+.buy-property-section{
+    position: relative;
+}
+.buy-property-section .info-block .condition-p{
+    border: none;
+    margin: 4px 8px 2px 8px;
+    border-radius: 6px;
+    min-width: 240px;
+    overflow-wrap: break-word;
+    font-size: 18px;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+    line-height: 1.1;
+    padding: 2px 4px 2px 4px;
+}
+.info-block{
+    margin-top: 4px;
+
+
+    width: 100%;
+}
+.info-block .condition-p{
+    border-top: solid 2px rgb(129, 103, 154);
+    padding: 2px 4px 4px 8px;
+    font-size: 16px;
+    max-width: 100%;
+    color: #2b2732;
+    background-color: rgba(184, 168, 192, 0.76);
+}
+.info-block .adjacency-p{
+    border-top: solid 2px rgb(103, 110, 154);
+    background-color: rgba(168, 172, 192, 0.76);
+}
+.government .info-block .condition-p{
+
+    border-top: solid 2px #9453a9e2 !important;
+    background-color: rgba(222, 178, 239, 0.70) !important;
+}
+.info-block .modifier-p{
+    border-top: solid 2px rgb(114, 159, 105);
+    background-color: rgba(171, 192, 168, 0.76);
+}
+.buy-property-section .info-block .condition-p span{
+    color: #1f0847;
+    font-weight: 500;
+    cursor: pointer;
+}

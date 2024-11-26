@@ -1,0 +1,56 @@
+:root {
+    --mortgage-value: "5";
+}
+
+.empire-component .proprty-btns-div {
+    padding: 1px 4px 5px 4px;
+}
+.empire-component:not(:first-child) {
+    margin-top: 4px;
+}
+.p-discount {
+    padding: 0 4px 2px 4px;
+}
+.p-discount .your-chance {
+    width: 130px;
+}
+.decision-button:disabled .player-stat-gold {
+    filter: grayscale(80%);
+    -webkit-filter: grayscale(80%);
+}
+.white-blur {
+    background-color: #aba6a671;
+    padding-bottom: 4px;
+}
+.gray-blur {
+    background-color: rgba(125, 123, 123, 0.687);
+    position: relative;
+}
+.gray-blur::after {
+    position: absolute;
+    content: var(--mortgage-value);
+    height: 28px;
+    width: 28px;
+    z-index: 50;
+    top: 0;
+    left: 100%;
+    transform: translate(calc(-100% + 2px), 0);
+    background-image: url("../../../../../images/icon-locked.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding-top: 10px;
+    text-align: center;
+    font-size: 16px;
+    color: #eee;
+}
+.property-color .gray-blur::after {
+    transform: translate(calc(-100% - 190px), 4px);
+}
+.gray-blur .property-img-div,
+.gray-blur .cell-img {
+    filter: grayscale(55%);
+    -webkit-filter: grayscale(55%);
+}
+.empireSection .property-cell-name, .empireSection .property-img-div{
+    cursor:pointer;
+}
