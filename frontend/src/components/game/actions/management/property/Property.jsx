@@ -33,21 +33,20 @@ export default function Property({
 
   let lowestNotOwnedLevel;
 
+  const levelByDepartment = {
+    "Science": "LEVEL_4_1",
+    "War": "LEVEL_4_2",
+    "Culture": "LEVEL_4_3",
+  }
+
+  const departmentByLevel = {
+    "LEVEL_4_1": "Science",
+    "LEVEL_4_2": "War",
+    "LEVEL_4_3": "Culture",
+  }
+
   const handleUpgradeRequirement = (property, department) => {
-    let levelToFind;
-    switch (department) {
-      case "Science":
-        levelToFind = "LEVEL_4_1";
-        break;
-      case "War":
-        levelToFind = "LEVEL_4_2";
-        break;
-      case "Culture":
-        levelToFind = "LEVEL_4_3";
-        break;
-      default:
-        return null;
-    }
+    let levelToFind = levelByDepartment[department];
     const upgrade = property.upgrades.find((upgrade) => upgrade.level === levelToFind);
     const upgradeRequirement =
         property.upgradeRequirements.find(
@@ -646,7 +645,8 @@ export default function Property({
                       </div>
                     </>
                 )}
-                {renderDepartmentContent(selectedDepartment)}
+                {renderDepartmentContent(highestOwnedLevel.level.startsWith("LEVEL_4_") ?
+                    departmentByLevel[highestOwnedLevel.level] : selectedDepartment)}
               </div>
           }
 
@@ -788,172 +788,7 @@ export default function Property({
                 ))}
               </>
           )}
-          {/*<div className="property-modifier-div property-div-compleated unic">*/}
-          {/*    <h3 className="property-modifier-h3">Ganza</h3>*/}
-          {/*    <div className="property-grid-3">*/}
-          {/*        <div className="property-gridimg-img-div">*/}
-          {/*            <img*/}
-          {/*                src={resourceHorsesImg}*/}
-          {/*                className="property-img"*/}
-          {/*                alt="gold"*/}
-          {/*            />*/}
-          {/*        </div>*/}
-          {/*        <p className="condition-p">*/}
-          {/*            Can bye if you are on the cell*/}
-          {/*        </p>*/}
-          {/*        <div className="property-new-stats">*/}
-          {/*            <div className="property-mini-flex">*/}
-          {/*                <p className="property-new-stats-p">t.c</p>*/}
-          {/*                <div className="player-stat-gold width-full pointer no-select">*/}
-          {/*                    <img*/}
-          {/*                        src={goldImg}*/}
-          {/*                        className="recourse-img"*/}
-          {/*                        alt="gold"*/}
-          {/*                    />*/}
-          {/*                    1000*/}
-          {/*                </div>*/}
-          {/*            </div>*/}
-          {/*            <div className="property-mini-flex">*/}
-          {/*                <p className="property-new-stats-p">g.o.s</p>*/}
-          {/*                <div className="player-stat-gold width-full pointer no-select">*/}
-          {/*                    <img*/}
-          {/*                        src={goldImg}*/}
-          {/*                        className="recourse-img"*/}
-          {/*                        alt="gold"*/}
-          {/*                    />*/}
-          {/*                    100*/}
-          {/*                </div>*/}
-          {/*            </div>*/}
 
-          {/*            <div className="property-mini-flex">*/}
-          {/*                <p className="property-new-stats-p">tour.</p>*/}
-          {/*                <div className="player-stat-tourism width-full no-select">*/}
-          {/*                    <img*/}
-          {/*                        src={tourismImg}*/}
-          {/*                        className="recourse-img"*/}
-          {/*                        alt="tourism"*/}
-          {/*                    />*/}
-          {/*                    400*/}
-          {/*                </div>*/}
-          {/*            </div>*/}
-          {/*            /!* <div className="property-mini-flex">*/}
-          {/*                <p className="property-new-stats-p">g.o.t</p>*/}
-          {/*                <div className="player-stat-gold gold-per-turn width-full pointer no-select">*/}
-          {/*                    <img*/}
-          {/*                        src={goldPerTurnImg}*/}
-          {/*                        className="recourse-img"*/}
-          {/*                        alt="gold"*/}
-          {/*                    />*/}
-          {/*                    1*/}
-          {/*                </div>*/}
-          {/*            </div> *!/*/}
-          {/*        </div>*/}
-          {/*    </div>*/}
-          {/*</div>*/}
-          {/*<h2 className="unic-efect-h2">Unique effect:</h2>*/}
-          {/*<div className="property-modifier-div property-div-compleated unic-efect modifiered">*/}
-          {/*    <h3 className="property-modifier-h3">Ganza</h3>*/}
-          {/*    <div className="property-grid-3">*/}
-          {/*        <div className="property-gridimg-img-div">*/}
-          {/*            <img*/}
-          {/*                src={resourceHorsesImg}*/}
-          {/*                className="property-img"*/}
-          {/*                alt="gold"*/}
-          {/*            />*/}
-          {/*        </div>*/}
-          {/*        <p className="condition-p">*/}
-          {/*            Can bye if you are on the cell*/}
-          {/*        </p>*/}
-          {/*        <div className="property-new-stats">*/}
-          {/*            <div className="property-mini-flex">*/}
-          {/*                <p className="property-new-stats-p">g.o.s</p>*/}
-          {/*                <div className="player-stat-gold width-full pointer no-select">*/}
-          {/*                    <img*/}
-          {/*                        src={goldImg}*/}
-          {/*                        className="recourse-img"*/}
-          {/*                        alt="gold"*/}
-          {/*                    />*/}
-          {/*                    100*/}
-          {/*                </div>*/}
-          {/*            </div>*/}
-
-          {/*            <div className="property-mini-flex">*/}
-          {/*                <p className="property-new-stats-p">tour.</p>*/}
-          {/*                <div className="player-stat-tourism width-full no-select">*/}
-          {/*                    <img*/}
-          {/*                        src={tourismImg}*/}
-          {/*                        className="recourse-img"*/}
-          {/*                        alt="tourism"*/}
-          {/*                    />*/}
-          {/*                    400*/}
-          {/*                </div>*/}
-          {/*            </div>*/}
-          {/*            /!* <div className="property-mini-flex">*/}
-          {/*                <p className="property-new-stats-p">g.o.t</p>*/}
-          {/*                <div className="player-stat-gold gold-per-turn width-full pointer no-select">*/}
-          {/*                    <img*/}
-          {/*                        src={goldPerTurnImg}*/}
-          {/*                        className="recourse-img"*/}
-          {/*                        alt="gold"*/}
-          {/*                    />*/}
-          {/*                    1*/}
-          {/*                </div>*/}
-          {/*            </div> *!/*/}
-          {/*        </div>*/}
-          {/*    </div>*/}
-          {/*</div>*/}
-          {/*<h2 className="modifier-efect-h2">Modifier efect:</h2>*/}
-          {/*<div className="property-modifier-div property-div-compleated modifier-efect modifiered">*/}
-          {/*    <h3 className="property-modifier-h3">iron</h3>*/}
-          {/*    <div className="property-grid-3">*/}
-          {/*        <div className="property-gridimg-img-div">*/}
-          {/*            <img*/}
-          {/*                src={resourceHorsesImg}*/}
-          {/*                className="property-img"*/}
-          {/*                alt="gold"*/}
-          {/*            />*/}
-          {/*        </div>*/}
-          {/*        <p className="condition-p">*/}
-          {/*            buff <span>промишлєну зону</span>*/}
-          {/*        </p>*/}
-          {/*        <div className="property-new-stats">*/}
-          {/*            <div className="property-mini-flex">*/}
-          {/*                <p className="property-new-stats-p">g.o.s</p>*/}
-          {/*                <div className="player-stat-gold width-full pointer no-select">*/}
-          {/*                    <img*/}
-          {/*                        src={goldImg}*/}
-          {/*                        className="recourse-img"*/}
-          {/*                        alt="gold"*/}
-          {/*                    />*/}
-          {/*                    100*/}
-          {/*                </div>*/}
-          {/*            </div>*/}
-
-          {/*            <div className="property-mini-flex">*/}
-          {/*                <p className="property-new-stats-p">tour.</p>*/}
-          {/*                <div className="player-stat-tourism width-full no-select">*/}
-          {/*                    <img*/}
-          {/*                        src={tourismImg}*/}
-          {/*                        className="recourse-img"*/}
-          {/*                        alt="tourism"*/}
-          {/*                    />*/}
-          {/*                    400*/}
-          {/*                </div>*/}
-          {/*            </div>*/}
-          {/*            /!* <div className="property-mini-flex">*/}
-          {/*                <p className="property-new-stats-p">g.o.t</p>*/}
-          {/*                <div className="player-stat-gold gold-per-turn width-full pointer no-select">*/}
-          {/*                    <img*/}
-          {/*                        src={goldPerTurnImg}*/}
-          {/*                        className="recourse-img"*/}
-          {/*                        alt="gold"*/}
-          {/*                    />*/}
-          {/*                    1*/}
-          {/*                </div>*/}
-          {/*            </div> *!/*/}
-          {/*        </div>*/}
-          {/*    </div>*/}
-          {/*</div>*/}
           {Cookies.get("username") === property.member.user.username &&
               <div className="proprty-btns-div flex-between">
                 {!highestOwnedLevel.level.startsWith("LEVEL_4_") && lowestNotOwnedLevel
@@ -964,15 +799,14 @@ export default function Property({
                                 (currentUser.gold < lowestNotOwnedLevel.price ||
                                     (property.upgradeRequirements.length > 0 &&
                                         property.upgradeRequirements.some(
-                                            (upg) =>
-                                                upg.level ===
-                                                lowestNotOwnedLevel.level
+                                            (upg) => upg.level === lowestNotOwnedLevel.level
                                         ) &&
                                         Object.values(
                                             property.upgradeRequirements.find(
                                                 (upgrade) =>
                                                     upgrade.level ===
-                                                    lowestNotOwnedLevel.level
+                                                    (lowestNotOwnedLevel.level === "LEVEL_4_1" ?
+                                                        levelByDepartment[selectedDepartment] : lowestNotOwnedLevel.level)
                                             ).requirements
                                         ).some((req) => req === false)) ||
                                     ("LEVEL_4_1" === lowestNotOwnedLevel.level &&

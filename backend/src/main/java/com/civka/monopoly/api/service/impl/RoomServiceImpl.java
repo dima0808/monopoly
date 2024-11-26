@@ -4,6 +4,7 @@ import com.civka.monopoly.api.dto.ChatMessageDto;
 import com.civka.monopoly.api.dto.GameSettingsDto;
 import com.civka.monopoly.api.dto.RoomDto;
 import com.civka.monopoly.api.entity.*;
+import com.civka.monopoly.api.payload.EventMessage;
 import com.civka.monopoly.api.payload.NotificationResponse;
 import com.civka.monopoly.api.repository.RoomRepository;
 import com.civka.monopoly.api.service.*;
@@ -45,6 +46,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Value("${monopoly.app.room.game.science-project.cost}")
     private Integer scienceProjectCost;
+
+    @Value("${monopoly.app.room.game.concert.cost}")
+    private Integer concertCost;
 
     @Value("${monopoly.app.room.game.culture-threshold}")
     private Integer cultureThreshold;
@@ -246,6 +250,7 @@ public class RoomServiceImpl implements RoomService {
             member.setTourism(0);
             member.setScore(0);
             member.setDiscount(0.0);
+            member.setIsLost(false);
             member.setHasRolledDice(true);
             member.setFinishedRounds(0);
             member.setTurnsToNextScienceProject(-1);
@@ -287,16 +292,32 @@ public class RoomServiceImpl implements RoomService {
         if (gameUtils.getGoldFromArmySpending(armySpending) > member.getGold()) {
             throw new UserNotAllowedException();
         }
-        member.setStrength(member.getStrength() + gameUtils.getStrengthFromArmySpending(armySpending));
-        member.setGold(member.getGold() + gameUtils.getGoldFromArmySpending(armySpending));
-        if (member.getTurnsToNextScienceProject() != -1) {
-            int newTurnsToNextScienceProject = member.getTurnsToNextScienceProject() - 1;
-            member.setTurnsToNextScienceProject(Math.max(newTurnsToNextScienceProject, 0));
-        }
-        if (member.getExpeditionTurns() != -1) {
-            int newExpeditionTurns = member.getExpeditionTurns() - 1;
-            if (newExpeditionTurns < 0) {
-                Room updatedRoom = manageVictory(room, member, Room.VictoryType.SCIENCE);
+        if (!member.getIsLost()) {
+            member.setStrength(member.getStrength() + gameUtils.getStrengthFromArmySpending(armySpending));
+            member.setGold(member.getGold() + gameUtils.getGoldFromArmySpending(armySpending));
+            if (member.getTurnsToNextScienceProject() != -1) {
+                int newTurnsToNextScienceProject = member.getTurnsToNextScienceProject() - 1;
+                member.setTurnsToNextScienceProject(Math.max(newTurnsToNextScienceProject, 0));
+            }
+            if (member.getExpeditionTurns() != -1) {
+                int newExpeditionTurns = member.getExpeditionTurns() - 1;
+                if (newExpeditionTurns < 0) {
+                    Room updatedRoom = manageVictory(room, member, Room.VictoryType.SCIENCE);
+
+                    Chat roomChat = chatService.findByName(room.getName());
+                    ChatMessageDto systemMessage = ChatMessageDto.builder()
+                            .type(ChatMessage.MessageType.SYSTEM_WINNER)
+                            .content(member.getUser().getNickname())
+                            .timestamp(LocalDateTime.now())
+                            .build();
+                    ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
+                    messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
+                    return updatedRoom;
+                }
+                member.setExpeditionTurns(newExpeditionTurns);
+            }
+            if (member.getProperties().size() >= 30) {
+                Room updatedRoom = manageVictory(room, member, Room.VictoryType.MILITARY);
 
                 Chat roomChat = chatService.findByName(room.getName());
                 ChatMessageDto systemMessage = ChatMessageDto.builder()
@@ -308,66 +329,72 @@ public class RoomServiceImpl implements RoomService {
                 messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
                 return updatedRoom;
             }
-            member.setExpeditionTurns(newExpeditionTurns);
-        }
-        if (member.getProperties().size() >= 30) {
-            Room updatedRoom = manageVictory(room, member, Room.VictoryType.MILITARY);
+            if (member.getTourism() >= room.getMembers().stream()
+                    .filter(m -> m != member).mapToInt(Member::getTourism).max().orElse(0) + cultureThreshold) {
+                Room updatedRoom = manageVictory(room, member, Room.VictoryType.CULTURE);
 
-            Chat roomChat = chatService.findByName(room.getName());
-            ChatMessageDto systemMessage = ChatMessageDto.builder()
-                    .type(ChatMessage.MessageType.SYSTEM_WINNER)
-                    .content(member.getUser().getNickname())
-                    .timestamp(LocalDateTime.now())
-                    .build();
-            ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
-            messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
-            return updatedRoom;
-        }
-        if (member.getTourism() >= room.getMembers().stream()
-                .filter(m -> m != member).mapToInt(Member::getTourism).max().orElse(0) + cultureThreshold) {
-            Room updatedRoom = manageVictory(room, member, Room.VictoryType.CULTURE);
+                Chat roomChat = chatService.findByName(room.getName());
+                ChatMessageDto systemMessage = ChatMessageDto.builder()
+                        .type(ChatMessage.MessageType.SYSTEM_WINNER)
+                        .content(member.getUser().getNickname())
+                        .timestamp(LocalDateTime.now())
+                        .build();
+                ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
+                messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
+                return updatedRoom;
+            }
 
-            Chat roomChat = chatService.findByName(room.getName());
-            ChatMessageDto systemMessage = ChatMessageDto.builder()
-                    .type(ChatMessage.MessageType.SYSTEM_WINNER)
-                    .content(member.getUser().getNickname())
-                    .timestamp(LocalDateTime.now())
-                    .build();
-            ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
-            messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
-            return updatedRoom;
-        }
-
-        List<Property> properties = member.getProperties();
-        Iterator<Property> propertiesIterator = properties.iterator();
-        while (propertiesIterator.hasNext()) {
-            Property property = propertiesIterator.next();
-            if (property.getMortgage() > 0) {
-                property.setMortgage(property.getMortgage() - 1);
-                propertyService.save(property);
-                if (property.getMortgage() == 0) {
-                    propertiesIterator.remove();
+            List<Property> properties = member.getProperties();
+            Iterator<Property> propertiesIterator = properties.iterator();
+            while (propertiesIterator.hasNext()) {
+                Property property = propertiesIterator.next();
+                if (property.getMortgage() > 0) {
+                    property.setMortgage(property.getMortgage() - 1);
+                    propertyService.save(property);
+                    if (property.getMortgage() == 0) {
+                        propertiesIterator.remove();
+                    }
                 }
             }
-        }
 
-        List<AdditionalEffect> additionalEffects = member.getAdditionalEffects();
-        Iterator<AdditionalEffect> additionalEffectsIterator = additionalEffects.iterator();
-        while (additionalEffectsIterator.hasNext()) {
-            AdditionalEffect additionalEffect = additionalEffectsIterator.next();
-            if (additionalEffect.getTurnsLeft() > 0) {
-                additionalEffect.setTurnsLeft(additionalEffect.getTurnsLeft() - 1);
-                additionalEffectService.save(additionalEffect);
-                if (additionalEffect.getTurnsLeft() == 0) {
-                    additionalEffectsIterator.remove();
+            List<AdditionalEffect> additionalEffects = member.getAdditionalEffects();
+            Iterator<AdditionalEffect> additionalEffectsIterator = additionalEffects.iterator();
+            while (additionalEffectsIterator.hasNext()) {
+                AdditionalEffect additionalEffect = additionalEffectsIterator.next();
+                if (additionalEffect.getTurnsLeft() > 0) {
+                    additionalEffect.setTurnsLeft(additionalEffect.getTurnsLeft() - 1);
+                    additionalEffectService.save(additionalEffect);
+                    if (additionalEffect.getTurnsLeft() == 0) {
+                        additionalEffectsIterator.remove();
+                    }
                 }
             }
+            memberService.save(member);
         }
-        memberService.save(member);
 
         List<Member> members = room.getMembers();
         int currentIndex = members.indexOf(member);
-        int nextIndex = (currentIndex + 1) % members.size();
+        int nextIndex = currentIndex;
+        for (int i = 1; i <= members.size(); i++) {
+            nextIndex = (currentIndex + i) % members.size();
+            if (members.get(nextIndex).getIsLost()) {
+                continue;
+            }
+            break;
+        }
+        if (nextIndex == currentIndex) {
+            Room updatedRoom = manageVictory(room, member, Room.VictoryType.SCORE);
+
+            Chat roomChat = chatService.findByName(room.getName());
+            ChatMessageDto systemMessage = ChatMessageDto.builder()
+                    .type(ChatMessage.MessageType.SYSTEM_WINNER)
+                    .content(member.getUser().getNickname())
+                    .timestamp(LocalDateTime.now())
+                    .build();
+            ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
+            messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
+            return updatedRoom;
+        }
         Member nextMember = members.get(nextIndex);
         nextMember.setHasRolledDice(false);
         room.setCurrentTurn(nextMember.getUser().getUsername());
@@ -378,6 +405,28 @@ public class RoomServiceImpl implements RoomService {
 
         memberService.save(nextMember);
         return roomRepository.save(room);
+    }
+
+    @Override
+    public Room forceEndTurn(Member member, ArmySpending armySpending) {
+        Iterator<Event> events = member.getEvents().iterator();
+        while (events.hasNext()) {
+            Event event = events.next();
+            if (event.getType() == Event.EventType.FOREIGN_PROPERTY ||
+                    event.getType().toString().startsWith("BARBARIANS_")) {
+                member.setIsLost(true);
+                member.setGold(0);
+                member.setStrength(0);
+                member.getProperties().forEach((p) -> p.setMortgage(5));
+            }
+            events.remove();
+        }
+        EventMessage eventMessage = EventMessage.builder()
+                .type(EventMessage.MessageType.DELETE_ALL_EVENTS)
+                .build();
+        messagingTemplate.convertAndSendToUser(member.getUser().getUsername(), "/queue/events", eventMessage);
+        Member updatedMember = memberService.save(member);
+        return endTurn(updatedMember, armySpending);
     }
 
     @Override
@@ -432,6 +481,7 @@ public class RoomServiceImpl implements RoomService {
                 .mortgageGoldCoefficient(mortgageGoldCoefficient)
                 .redemptionCoefficient(redemptionCoefficient)
                 .scienceProjectCost(scienceProjectCost)
+                .concertCost(concertCost)
                 .cultureThreshold(cultureThreshold)
                 .build();
     }
@@ -441,7 +491,7 @@ public class RoomServiceImpl implements RoomService {
         room.setVictoryType(victoryType);
         room.setCurrentTurn(null);
         for (Member temp : room.getMembers()) {
-            temp.setEloChange(10);
+            temp.setEloChange(0);
             memberService.save(temp);
         }
         return roomRepository.save(room);

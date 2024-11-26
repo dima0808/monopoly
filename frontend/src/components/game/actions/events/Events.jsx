@@ -8,6 +8,7 @@ import GoodyHut from "./goodyHut/GoodyHut";
 import Projects from "./projects/Projects";
 import {useEffect} from "react";
 import ScienceProjects from "./scienceProjects/ScienceProjects";
+import GiveConcert from "./giveConcert/GiveConcert";
 
 export default function Events({
   room,
@@ -24,6 +25,7 @@ export default function Events({
   handleChoice,
   handleProjectChoice,
   handleScienceProject,
+  handleConcert,
   handleSkip,
 }) {
 
@@ -104,6 +106,16 @@ export default function Events({
               price={gameSettings.scienceProjectCost}
               onSkip={() => handleSkip("SCIENCE_PROJECTS")}
               handleScienceProject={handleScienceProject}
+          />;
+        case "GIVE_CONCERT":
+          return <GiveConcert
+              key={index}
+              member={players.find(
+                  (player) => player.id === member.id
+              )}
+              price={gameSettings.concertCost}
+              onSkip={() => handleSkip("GIVE_CONCERT")}
+              handleConcert={handleConcert}
           />;
         case "BERMUDA":
           return null; // moved to useEffect

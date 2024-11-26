@@ -7,6 +7,7 @@ import {getAllMessages} from "../../../../utils/http";
 import {handleInputChange, handleKeyDown} from "../../../../utils/chat";
 import SystemMessage from "./SystemMessage";
 import goldImg from "../../../../images/icon-gold.png";
+import tourismImg from "../../../../images/icon-tourism.png";
 import {propertiesInfo} from "../../../../constraints";
 
 export default function Chat({roomName, client, isConnected, setNotifications, setSelectedUser, setIsPrivateChatOpen}) {
@@ -223,11 +224,40 @@ export default function Chat({roomName, client, isConnected, setNotifications, s
                                                 </span>
                                             </SystemMessage>
                                         );
+                                    case 'SYSTEM_SCIENCE_PROJECT':
+                                        return (
+                                            <SystemMessage key={index} timestamp={message.timestamp}>
+                                                гравець <span className="system-span">{data[0]}</span>
+                                                виконав проєкт
+                                                <span className="system-tile-span"> {data[1]}</span>
+                                            </SystemMessage>
+                                        );
+                                    case 'SYSTEM_CONCERT':
+                                        return (
+                                            <SystemMessage key={index}
+                                                           timestamp={message.timestamp}>
+                                                гравець <span
+                                                className="system-span">{data[0]}</span>
+                                                провів концерт і отримав
+                                                <div className="inline-block">
+                                                    <div
+                                                        className="player-stat-tourism width-full pointer no-select">
+                                                        <img
+                                                            src={tourismImg}
+                                                            className="recourse-img"
+                                                            alt="tourism"
+                                                        />
+                                                        {data[1]}
+                                                    </div>
+                                                </div>
+                                            </SystemMessage>
+                                        );
                                     case 'SYSTEM_BIG_BEN':
                                         return (
                                             <SystemMessage key={index}
                                                            timestamp={message.timestamp}>
-                                                гравець <span className="system-span">{data[0]}</span>
+                                                гравець <span
+                                                className="system-span">{data[0]}</span>
                                                 обшарпав кожного на
                                                 <div className="inline-block">
                                                     <div

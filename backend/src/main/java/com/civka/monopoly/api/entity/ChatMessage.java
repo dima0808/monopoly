@@ -58,5 +58,7 @@ public class ChatMessage {
         SYSTEM_REDEMPTION_PROPERTY,
         SYSTEM_MORTGAGE_PROPERTY, SYSTEM_WINNER,
         SYSTEM_BIG_BEN,
+        SYSTEM_SCIENCE_PROJECT,
+        SYSTEM_CONCERT,
     }
 }

@@ -274,6 +274,7 @@ export const propertiesInfo = {
         LEVEL_4_3: {
             name: "Culture Department",
             src: districtGovernmentPlaza43Img,
+            info: ["CONCERT"],
         },
         position: 9,
     },
@@ -407,6 +408,7 @@ export const propertiesInfo = {
         LEVEL_4_3: {
             name: "Culture Department",
             src: districtGovernmentPlaza43Img,
+            info: ["CONCERT"],
         },
         position: 18,
     },
@@ -765,6 +767,7 @@ export const propertiesInfo = {
         LEVEL_4_3: {
             name: "Culture Department",
             src: districtGovernmentPlaza43Img,
+            info: ["CONCERT"],
         },
         position: 44,
     },
@@ -1002,6 +1005,9 @@ export const requirements = {
     OWN_STOCK_EXCHANGE: (
         <p key={53} className="condition-p">You need to own a Stock Exchange in your Commercial Hub</p>
     ),
+    OWN_SPACEPORT_OR_LAB: (
+        <p key={54} className="condition-p">You need to own a Spaceport or Lab</p>
+    ),
 };
 
 export const uniqueEffectsInfo = {
@@ -1168,6 +1174,11 @@ export const uniqueEffectsInfo = {
     SPACE_BOOST: {
         description: (
             <p className="condition-p modifier-p">Speeds up the time between space projects</p>
+        )
+    },
+    CONCERT: {
+        description: (
+            <p className="condition-p modifier-p">Allows you to make concerts and gain tourism</p>
         )
     }
 };

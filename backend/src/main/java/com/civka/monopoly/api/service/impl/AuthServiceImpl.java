@@ -54,6 +54,10 @@ public class AuthServiceImpl implements AuthService {
                 .username(signUpDto.getUsername())
                 .nickname(signUpDto.getUsername())
                 .email(signUpDto.getEmail())
+                .elo(0)
+                .matchesPlayed(0)
+                .matchesWon(0)
+                .averagePlacement(0.0f)
                 .password(passwordEncoder.encode(signUpDto.getPassword())).build();
 
         Role userRole = roleRepository.findByName("ROLE_USER")

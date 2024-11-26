@@ -59,7 +59,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                     });
                 });
                 setDice({ firstRoll: firstRoll, secondRoll: secondRoll });
-                diceRollAudio.play().then();
+                diceRollAudio.play().catch(() => {});
                 return;
             case 'BERMUDA':
             case 'TOURIST':
@@ -121,6 +121,7 @@ export default function Game({setNotifications, setSelectedUser, setIsPrivateCha
                     .catch((error) => setError({message: error.message || "An error occurred"}));
                 return;
             case 'END_TURN':
+            case 'FORCE_END_TURN':
                 setRoom((prevRoom) => {
                     return {
                         ...prevRoom,

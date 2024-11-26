@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -29,6 +28,8 @@ public class Member {
 
     private Boolean isLeader;
 
+    private Boolean isLost;
+
     private Civilization civilization;
     private Color color;
 
@@ -52,11 +53,11 @@ public class Member {
 
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Property> properties = new ArrayList<>();
+    private List<Property> properties;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Event> events = new ArrayList<>();
+    private List<Event> events;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonIgnore

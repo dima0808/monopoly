@@ -11,6 +11,7 @@ import { getAllEvents, getGameSettings } from "../../../utils/http";
 import SettingsDialog from "../actions/SettingsDialog";
 import GameWinnerDialog from "../actions/GameWinnerDialog";
 import GamePauseDialog from "../actions/GamePauseDialog";
+import {handleLeaveRoom} from "../../../utils/lobby";
 export default function Actions({
     room,
     players,
@@ -31,6 +32,7 @@ export default function Actions({
     const [error, setError] = useState(null);
 
     const [events, setEvents] = useState([]);
+    const [isEventsDeleted, setIsEventsDeleted] = useState(false);
     const [gameSettings, setGameSettings] = useState({});
 
     const [calculatedGoldPerTurn, setCalculatedGoldPerTurn] = useState(0);
@@ -51,8 +53,7 @@ export default function Actions({
             setNotifications((prev) => [
                 ...prev,
                 {
-                    message:
-                        "Client is not initialized or publish method is not available",
+                    message: "Client is not initialized or publish method is not available",
                     duration: 3500,
                     isError: true,
                 },
@@ -68,11 +69,49 @@ export default function Actions({
                 },
             });
             console.log("Rolling dice...");
+            localStorage.setItem("diceRollTimer", 5000);
         } catch (error) {
             setNotifications((prev) => [
                 ...prev,
                 {
                     message: "Error rolling dice (no connection)",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+        }
+    }, [client, room.name, setNotifications]);
+
+    const handleForcedEndTurn = useCallback(() => {
+        const token = Cookies.get("token");
+        const username = Cookies.get("username");
+        if (!client || !client.publish) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message: "Client is not initialized or publish method is not available",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+            return;
+        }
+        try {
+            client.publish({
+                destination: `/app/rooms/${room.name}/forceEndTurn`,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    username: username,
+                    armySpending: armySpending,
+                },
+            });
+            console.log("Forcing end turn...");
+            localStorage.setItem("endTurnTimer", 90000);
+        } catch (error) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message: "Error forcing end turn (no connection)",
                     duration: 3500,
                     isError: true,
                 },
@@ -340,6 +379,42 @@ export default function Actions({
         }
     };
 
+    const handleConcert = () => {
+        const token = Cookies.get("token");
+        const username = Cookies.get("username");
+        if (!client || !client.publish) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message:
+                        "Client is not initialized or publish method is not available",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+            return;
+        }
+        try {
+            client.publish({
+                destination: `/app/members/${username}/doConcert`,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    username: username,
+                },
+            });
+            console.log("Handling concert...");
+        } catch (error) {
+            setNotifications((prev) => [
+                ...prev,
+                {
+                    message: "Error handling concert (no connection)",
+                    duration: 3500,
+                    isError: true,
+                },
+            ]);
+        }
+    };
+
     const handleSkip = (eventType) => {
         const token = Cookies.get("token");
         const username = Cookies.get("username");
@@ -401,6 +476,7 @@ export default function Actions({
                 },
             });
             console.log("Ending turn...");
+            localStorage.setItem("endTurnTimer", 90000);
         } catch (error) {
             setNotifications((prev) => [
                 ...prev,
@@ -433,6 +509,10 @@ export default function Actions({
                     );
                 }
                 return;
+            case "DELETE_ALL_EVENTS":
+                setIsEventsDeleted(true);
+                setEvents([]);
+                return;
             default:
                 return;
         }
@@ -455,7 +535,13 @@ export default function Actions({
         if (client && isConnected) {
             const username = Cookies.get("username");
             getAllEvents(username)
-                .then(setEvents)
+                .then((events) => {
+                    if (!isEventsDeleted) {
+                        setEvents(events);
+                    } else {
+                        setEvents([]);
+                    }
+                })
                 .catch((error) =>
                     setError({ message: error.message || "An error occurred" })
                 );
@@ -467,31 +553,52 @@ export default function Actions({
                 eventsSubscription.unsubscribe();
             };
         }
-    }, [client, isConnected]);
+    }, [client, isConnected, isEventsDeleted]);
 
     useEffect(() => {
+        const handleBeforeUnload = (event) => {
+            event.preventDefault();
+            event.returnValue = '';
+            saveTimers();
+        };
+        const storedDiceTimer = localStorage.getItem("diceRollTimer") || 5000;
+        const storedEndTurnTimer = localStorage.getItem("endTurnTimer") || 90000;
+
+        const saveTimers = () => {
+            const currentTime = Date.now();
+            if (isCurrentUserTurn && !hasRolledDice) {
+                const elapsed = currentTime - startTime;
+                const remainingTime = Math.max(storedDiceTimer - elapsed, 0);
+                localStorage.setItem("diceRollTimer", remainingTime);
+            } else if (isCurrentUserTurn && hasRolledDice) {
+                const elapsed = currentTime - startTime;
+                const remainingTime = Math.max(storedEndTurnTimer - elapsed, 0);
+                localStorage.setItem("endTurnTimer", remainingTime);
+            }
+        };
+
+        let startTime;
+        let timerId;
+
         if (isCurrentUserTurn && !hasRolledDice) {
-            const timerId = setTimeout(() => {
+            startTime = Date.now();
+            timerId = setTimeout(() => {
                 handleRollDice();
-                localStorage.removeItem("diceRollTimer");
-            }, 5000);
-
-            localStorage.setItem("diceRollTimer", timerId);
-
-            return () => {
-                clearTimeout(timerId);
-                localStorage.removeItem("diceRollTimer");
-            };
+            }, storedDiceTimer);
+        } else if (isCurrentUserTurn && hasRolledDice) {
+            startTime = Date.now();
+            timerId = setTimeout(() => {
+                handleForcedEndTurn();
+            }, storedEndTurnTimer);
         }
-    }, [isCurrentUserTurn, hasRolledDice, handleRollDice]);
 
-    useEffect(() => {
-        const timerId = localStorage.getItem("diceRollTimer");
-        if (timerId && client && isConnected) {
-            handleRollDice();
-            localStorage.removeItem("diceRollTimer");
-        }
-    }, [client, isConnected, handleRollDice]);
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        return () => {
+            clearTimeout(timerId);
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, [isCurrentUserTurn, hasRolledDice, handleRollDice, handleForcedEndTurn]);
 
     useEffect(() => {
         getGameSettings()
@@ -569,6 +676,7 @@ export default function Actions({
                         handleChoice={handleChoice}
                         handleProjectChoice={handleProjectChoice}
                         handleScienceProject={handleScienceProject}
+                        handleConcert={handleConcert}
                         handleSkip={handleSkip}
                         handleEndTurn={handleEndTurn}
                         isCurrentUserTurn={isCurrentUserTurn}
@@ -628,6 +736,7 @@ export default function Actions({
             {/*<GamePauseDialog />*/}
             {room.winner &&
                 <GameWinnerDialog
+                    handleLeaveRoom={() => {handleLeaveRoom(room.name, client, setNotifications)}}
                     winner={room.winner}
                     victoryType={room.victoryType}
                     players={players}

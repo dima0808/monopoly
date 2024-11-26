@@ -18,6 +18,6 @@ public class EventMessage {
 
     public enum MessageType {
         ADD_EVENT,
-        DELETE_EVENT,
+        DELETE_EVENT, DELETE_ALL_EVENTS,
     }
 }

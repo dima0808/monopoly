@@ -14,7 +14,7 @@ import romeImg from "../../../images/rome-leader.png";
 import swedenImg from "../../../images/sweden-leader.png";
 import {useNavigate} from "react-router-dom";
 
-export default function GameWinnerDialog({winner, victoryType, players}) {
+export default function GameWinnerDialog({handleLeaveRoom, winner, victoryType, players}) {
   const navigate = useNavigate();
 
   const leaderImages = {
@@ -68,7 +68,11 @@ export default function GameWinnerDialog({winner, victoryType, players}) {
               </thead>
               <tbody>
               {players
-              .sort((a, b) => b.score - a.score)
+              .sort((a, b) => {
+                if (a.user.username === winner) return -1;
+                if (b.user.username === winner) return 1;
+                return b.score - a.score;
+              })
               .map((player, index) => (
                   <tr>
                     <td className="tc1">{index + 1}</td>
@@ -91,7 +95,10 @@ export default function GameWinnerDialog({winner, victoryType, players}) {
               </tbody>
             </table>
           </div>
-          <button onClick={() => navigate('/')} className="win-link">
+          <button onClick={() => {
+            handleLeaveRoom();
+            navigate('/');
+          }} className="win-link">
             homepage <b>→</b>
           </button>
         </div>

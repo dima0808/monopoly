@@ -40,5 +40,6 @@ public class RequirementDto {
         OWN_HARBOR,
         OWN_INDUSTRIAL_ZONE, OWN_FACTORY,
         OWN_COMMERCIAL_HUB, OWN_STOCK_EXCHANGE,
+        OWN_SPACEPORT_OR_LAB
     }
 }

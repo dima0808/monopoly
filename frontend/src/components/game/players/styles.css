@@ -409,7 +409,7 @@
     margin-bottom: 2px;
 }
 
-.timer-roll-dice {
+.timer-roll-dice, .timer-end-turn {
     position: absolute;
     top: 9px;
     left: 5px;
@@ -421,22 +421,42 @@
     fill: none;
     stroke-width: 3;
     stroke-dasharray: 189; /* Довжина кола */
-    stroke-dashoffset: 0;
     transform: rotate(-90deg);
     transform-origin: 50% 50%;
-    animation: timer-roll-dice 5s linear forwards;
+    animation: timer-roll-dice var(--roll-dice-duration) linear forwards;
+    stroke-dashoffset: var(--roll-dice-progress);
 }
 
 @keyframes timer-roll-dice {
     from {
-        stroke: rgb(47, 255, 0);
-        stroke-dashoffset: 0;
+        stroke: rgb(34, 255, 0);
     }
     to {
-        stroke: rgb(179, 144, 0);
+        stroke: rgb(255, 101, 54);
         stroke-dashoffset: -189;
     }
 }
+
+.timer-end-turn circle {
+    fill: none;
+    stroke-width: 3;
+    stroke-dasharray: 189; /* Довжина кола */
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    animation: timer-end-turn var(--end-turn-duration) linear forwards;
+    stroke-dashoffset: var(--end-turn-progress);
+}
+
+@keyframes timer-end-turn {
+    from {
+        stroke: rgb(34, 255, 0);
+    }
+    to {
+        stroke: rgb(255, 101, 54);
+        stroke-dashoffset: -189;
+    }
+}
+
 .turn {
     position: relative;
     display: flex;
@@ -476,7 +496,7 @@
     padding-top: 4px;
     border-radius: 50%;
     color: #29170f;
-    font-size: 24px;
+    font-size: 22px;
     width: 41px;
     height: 41px;
     border: solid 2px #222;
@@ -489,4 +509,10 @@
     left: 0;
     width: 100%;
     height: auto;
+}
+.dead-color{
+    position: relative;
+}
+.dead-color{
+    filter: grayscale(75%);
 }

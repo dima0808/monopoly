@@ -84,6 +84,18 @@ public class LobbyController {
                 .build();
     }
 
+    @MessageMapping("/rooms/{roomName}/forceEndTurn")
+    @SendTo("/topic/public/{roomName}/game")
+    public RoomMessage forceEndTurn(@Header("username") String username,
+                               @Header("armySpending") ArmySpending armySpending) {
+        Member member = userService.findByUsername(username).getMember();
+        return RoomMessage.builder()
+                .type(RoomMessage.MessageType.FORCE_END_TURN)
+                .content(username + "'s turn ended")
+                .room(roomService.forceEndTurn(member, armySpending))
+                .build();
+    }
+
     @MessageMapping("/rooms/{roomName}/buyProperty/{position}")
     @SendTo("/topic/public/{roomName}/game")
     public RoomMessage buyProperty(@DestinationVariable Integer position,

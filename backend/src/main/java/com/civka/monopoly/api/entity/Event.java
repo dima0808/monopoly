@@ -32,6 +32,7 @@ public class Event {
         UPGRADE_PROPERTY,
         PROJECTS,
         SCIENCE_PROJECTS,
+        GIVE_CONCERT,
         BERMUDA,
         FOREIGN_PROPERTY,
         GOODY_HUT_FREE_GOLD,

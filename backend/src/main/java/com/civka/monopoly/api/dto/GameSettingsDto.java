@@ -25,5 +25,7 @@ public class GameSettingsDto {
 
     private Integer scienceProjectCost;
 
+    private Integer concertCost;
+
     private Integer cultureThreshold;
 }

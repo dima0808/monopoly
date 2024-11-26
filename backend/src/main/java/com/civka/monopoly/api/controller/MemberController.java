@@ -60,6 +60,11 @@ public class MemberController {
         return eventService.doScienceProject(member);
     }
 
+    @MessageMapping("/members/{receiver}/doConcert")
+    public Event doConcert(@DestinationVariable String receiver) {
+        Member member = userService.findByUsername(receiver).getMember();
+        return eventService.doConcert(member);
+    }
 
     @GetMapping("/api/members/{username}/events")
     public ResponseEntity<List<Event>> getEvents(@PathVariable String username) {

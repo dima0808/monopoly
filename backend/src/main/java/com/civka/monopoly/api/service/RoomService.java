@@ -35,6 +35,8 @@ public interface RoomService {
 
     Room endTurn(Member member, ArmySpending armySpending);
 
+    Room forceEndTurn(Member member, ArmySpending armySpending);
+
     Room addGold(Member member, Integer gold, String admin);
 
     Room addStrength(Member member, Integer strength, String admin);

@@ -8,8 +8,6 @@ import launchTerrestrialLaserStationImg from "../../../../../images/icon_project
 
 export default function ScienceProjects({member, price, handleScienceProject, onSkip}) {
 
-
-
     return (
         <div className="property-color project-color science-project">
             <h2 className="project-color-h2">Science project</h2>

@@ -434,6 +434,10 @@ public class GameUtilsImpl implements GameUtils {
             case OWN_UNIVERSITY -> member.getProperties().stream()
                     .anyMatch(p -> (p.getPosition().equals(15) || p.getPosition().equals(45)) &&
                             p.getUpgrades().contains(Property.Upgrade.LEVEL_3));
+            case OWN_SPACEPORT_OR_LAB -> member.getProperties().stream()
+                    .anyMatch(p -> p.getPosition().equals(47) ||
+                            ((p.getPosition().equals(15) || p.getPosition().equals(45)) &&
+                                    p.getUpgrades().contains(Property.Upgrade.LEVEL_4)));
         };
     }
 }

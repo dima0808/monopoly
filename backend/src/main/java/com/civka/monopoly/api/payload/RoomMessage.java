@@ -25,7 +25,7 @@ public class RoomMessage {
         KICK,
         DELETE,
         START,
-        END_TURN,
+        END_TURN, FORCE_END_TURN,
         BUY_PROPERTY,
         UPGRADE_PROPERTY,
         PAY_RENT,

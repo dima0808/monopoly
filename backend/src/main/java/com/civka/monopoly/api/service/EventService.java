@@ -23,6 +23,8 @@ public interface EventService {
 
     Event doScienceProject(Member member);
 
+    Event doConcert(Member member);
+
     Event.EventType randomGoodyHutEvent();
 
     Event.EventType randomBarbariansEvent();

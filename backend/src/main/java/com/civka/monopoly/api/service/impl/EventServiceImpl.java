@@ -44,6 +44,18 @@ public class EventServiceImpl implements EventService {
     @Value("${monopoly.app.room.game.wonder-effect.16}")
     private Integer goldForProjectGreatLibrary;
 
+    @Value("${monopoly.app.room.game.science-project.cost}")
+    private Integer scienceProjectCost;
+
+    @Value("${monopoly.app.room.game.concert.cost}")
+    private Integer concertCost;
+
+    @Value("${monopoly.app.room.game.concert.tourismLowerBound}")
+    private Integer concertTourismLowerBound;
+
+    @Value("${monopoly.app.room.game.concert.tourismUpperBound}")
+    private Integer concertTourismUpperBound;
+
     @Override
     public Event save(Event event) {
         return eventRepository.save(event);
@@ -94,13 +106,17 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event delete(Member member, Event.EventType type) {
-        Event event = findByMemberAndType(member, type);
+        Event event = member.getEvents().stream()
+                .filter(e -> e.getType().equals(type))
+                .findFirst()
+                .orElse(null);
 
         if (event != null) {
             if (type == Event.EventType.BERMUDA) {
                 handleBermudaTriangle(member, -1);
             }
-            eventRepository.delete(event);
+            member.getEvents().removeIf(e -> e.getType().equals(type));
+            memberRepository.save(member);
             EventMessage eventMessage = EventMessage.builder()
                     .type(EventMessage.MessageType.DELETE_EVENT)
                     .content("Event deleted: " + type)
@@ -350,10 +366,36 @@ public class EventServiceImpl implements EventService {
         Member.ScienceProject nextProject = getScienceProject(member);
         handleScienceLastPhase(member, nextProject);
         member.setTurnsToNextScienceProject(basicTurnAmount);
+        if (member.getGold() < scienceProjectCost) {
+            throw new UserNotAllowedException();
+        }
+        member.setGold(member.getGold() - scienceProjectCost);
         Member updatedMember = memberRepository.save(member);
         handleGreatLibrary(updatedMember);
 
         return delete(member, Event.EventType.SCIENCE_PROJECTS);
+    }
+
+    @Override
+    public Event doConcert(Member member) {
+        if (member.getGold() < concertCost) {
+            throw new UserNotAllowedException();
+        }
+        member.setGold(member.getGold() - concertCost);
+        int tourism = concertTourismLowerBound
+                + (int) (Math.random() * (concertTourismUpperBound - concertTourismLowerBound));
+        member.setTourism(member.getTourism() + tourism);
+        memberRepository.save(member);
+
+        Chat roomChat = chatService.findByName(member.getRoom().getName());
+        ChatMessageDto systemMessage = ChatMessageDto.builder()
+                .type(ChatMessage.MessageType.SYSTEM_CONCERT)
+                .content(member.getUser().getNickname() + " " + tourism)
+                .timestamp(LocalDateTime.now())
+                .build();
+        ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
+        messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
+        return delete(member, Event.EventType.GIVE_CONCERT);
     }
 
     @Override
@@ -407,6 +449,11 @@ public class EventServiceImpl implements EventService {
                 add(member, Event.EventType.FOREIGN_PROPERTY, firstRoll + secondRoll);
             } else {
                 add(member, Event.EventType.FOREIGN_PROPERTY);
+            }
+            if (member.getProperties().stream()
+                    .anyMatch(property -> List.of(9, 18, 44).contains(property.getPosition()) &&
+                            property.getUpgrades().contains(Property.Upgrade.LEVEL_4_3))) {
+                add(member, Event.EventType.GIVE_CONCERT);
             }
         }
     }
@@ -496,6 +543,14 @@ public class EventServiceImpl implements EventService {
         } else if (nextProject.equals(Member.ScienceProject.LASER)) {
             member.setExpeditionTurns(Math.max(member.getExpeditionTurns() - laserBoost, 0));
         }
+        Chat roomChat = chatService.findByName(member.getRoom().getName());
+        ChatMessageDto systemMessage = ChatMessageDto.builder()
+                .type(ChatMessage.MessageType.SYSTEM_SCIENCE_PROJECT)
+                .content(member.getUser().getNickname() + " " + nextProject)
+                .timestamp(LocalDateTime.now())
+                .build();
+        ChatMessage chatMessage = chatMessageService.save(roomChat, systemMessage);
+        messagingTemplate.convertAndSend("/topic/chat/" + roomChat.getName(), chatMessage);
     }
 
     private Member.ScienceProject getScienceProject(Member member) {
